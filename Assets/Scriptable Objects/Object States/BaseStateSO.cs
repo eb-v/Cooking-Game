@@ -14,4 +14,5 @@ public class BaseStateSO : ScriptableObject
     public virtual void DoFixedUpdateLogic() { }
     public virtual void DoExitLogic() { ResetValues(); }
     public virtual void ResetValues() { }
+    public virtual void DoAnimationTriggerEventLogic(AnimationTypeEvents type) { }
 }

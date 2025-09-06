@@ -339,6 +339,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
   speed: 10
   rotationSpeed: 10
+--- !u!114 &374850623
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 374850617}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8959e2170102e864fb4ead16ca8cc25f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Player
+  initialState: {fileID: 11400000, guid: ec4a801a21d1a5642953ef7332eee9b5, type: 2}
+  availableStates:
+  - {fileID: 11400000, guid: ec4a801a21d1a5642953ef7332eee9b5, type: 2}
+  - {fileID: 11400000, guid: 76cb6efec3dec5e40ba308d438da48e0, type: 2}
 --- !u!1 &410087039
 GameObject:
   m_ObjectHideFlags: 0
@@ -719,7 +735,7 @@ Animator:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1381189821}
   m_Enabled: 1
-  m_Avatar: {fileID: 0}
+  m_Avatar: {fileID: 9000000, guid: 966d0799beeb37246a6636b336be44f6, type: 3}
   m_Controller: {fileID: 9100000, guid: 40d777a42a65a4a43aa8e66cfcfb144c, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
@@ -1221,6 +1237,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 1194440349584926958, guid: cafd60621bdf56442b5679170d46d5c7, type: 3}
       insertIndex: -1
       addedObject: {fileID: 374850622}
+    - targetCorrespondingSourceObject: {fileID: 1194440349584926958, guid: cafd60621bdf56442b5679170d46d5c7, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 374850623}
     - targetCorrespondingSourceObject: {fileID: 1366784723400604331, guid: cafd60621bdf56442b5679170d46d5c7, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1381189826}
