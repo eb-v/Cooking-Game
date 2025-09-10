@@ -23,8 +23,6 @@ public class PlayerIdleSO : BaseStateSO
     
     public override void DoEnterLogic()
     {
-        // Implement idle enter logic here
-        animator.ResetTrigger("Run");
         animator.SetTrigger("Idle");
     }
 
@@ -40,7 +38,7 @@ public class PlayerIdleSO : BaseStateSO
 
     public override void DoExitLogic()
     {
-        // Implement idle exit logic here
+        animator.ResetTrigger("Idle");
     }
 
     public override void ResetValues()

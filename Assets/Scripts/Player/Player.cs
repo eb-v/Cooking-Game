@@ -30,6 +30,9 @@ public class Player : MonoBehaviour
 
         GenericEvent<Move>.GetEvent(gameObject.GetInstanceID()).AddListener(ChangeToRun);
         GenericEvent<Idle>.GetEvent(gameObject.GetInstanceID()).AddListener(ChangeToIdle);
+        //GenericEvent<HasLanded>.GetEvent(gameObject.GetInstanceID()).AddListener(ChangeToIdle);
+        GenericEvent<HasLanded>.GetEvent(gameObject.GetInstanceID()).AddListener(Landed);
+        GenericEvent<OnJumpInput>.GetEvent(gameObject.GetInstanceID()).AddListener(ChangeToJump);
     }
 
     public void Start()
@@ -57,6 +60,12 @@ public class Player : MonoBehaviour
 
         }   
 
+        if (currentStateType == typeof(PlayerJumpSO))
+        {
+            // check if grounded
+
+        }
+
         // state Transition Logic
     }
 
@@ -76,6 +85,16 @@ public class Player : MonoBehaviour
     }
 
     private void ChangeToIdle()
+    {
+        stateMachine.ChangeState(stateInstanceMap[typeof(PlayerIdleSO)]);
+    }
+
+    private void ChangeToJump()
+    {
+        stateMachine.ChangeState(stateInstanceMap[typeof(PlayerJumpSO)]);
+    }
+
+    private void Landed()
     {
         stateMachine.ChangeState(stateInstanceMap[typeof(PlayerIdleSO)]);
     }

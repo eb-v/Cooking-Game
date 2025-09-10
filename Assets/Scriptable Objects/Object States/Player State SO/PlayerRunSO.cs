@@ -18,13 +18,13 @@ public class PlayerRunSO : BaseStateSO
     public override void DoEnterLogic()
     {
         base.DoEnterLogic();
-        animator.ResetTrigger("Idle");
         animator.SetTrigger("Run");
     }
 
     public override void DoExitLogic()
     {
         base.DoExitLogic();
+        animator.ResetTrigger("Run");
     }
 
     public override void DoFixedUpdateLogic()
