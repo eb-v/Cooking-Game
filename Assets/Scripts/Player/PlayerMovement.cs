@@ -41,4 +41,9 @@ public class PlayerMovement : MonoBehaviour
     {
         _rb.linearVelocity = new Vector3 (_rb.linearVelocity.x, jumpForce, _rb.linearVelocity.z);
     }
+
+    public Vector3 GetDirection()
+    {
+        return direction;
+    }
 }

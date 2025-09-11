@@ -46,8 +46,8 @@ public class RagDollController : MonoBehaviour
     {
         if (direction.sqrMagnitude > 0.01f)
         {
-            Quaternion targetRotation = Quaternion.LookRotation(-direction);
-            _hipJoint.targetRotation = Quaternion.Inverse(targetRotation);
+            Quaternion targetRotation = Quaternion.LookRotation(direction);
+            _hipJoint.targetRotation = targetRotation;
             Quaternion deltaRotation = targetRotation * Quaternion.Inverse(_hips.rotation);
 
             deltaRotation.ToAngleAxis(out float angle, out Vector3 axis);
@@ -55,9 +55,12 @@ public class RagDollController : MonoBehaviour
 
             Vector3 torque = axis * angle * torqueMultiplier; // adjust multiplier
             _hips.AddTorque(torque);
-
-            
         }
+    }
+
+    public Vector3 GetDirection()
+    {
+        return direction;
     }
 
 }
