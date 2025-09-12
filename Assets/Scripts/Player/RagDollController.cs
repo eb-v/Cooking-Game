@@ -9,6 +9,7 @@ public class RagDollController : MonoBehaviour
     private Vector3 direction;
     private bool isGrounded;
     public float torqueMultiplier = 10f;
+    private Vector3 lastDirection;
 
     private void Awake()
     {
@@ -20,12 +21,21 @@ public class RagDollController : MonoBehaviour
 
     private void UpdateDirection(Vector2 direction)
     {
+        lastDirection = this.direction;
         this.direction = new Vector3(direction.x, 0, direction.y);
     }
 
     private void FixedUpdate()
     {
-        SetRotation();
+        if (direction == Vector3.zero)
+        {
+            SetRotation(lastDirection);
+        }
+        else
+        {
+            SetRotation(direction);
+        }
+
         _hips.AddForce(direction * speed);
     }
 
@@ -42,20 +52,18 @@ public class RagDollController : MonoBehaviour
         } 
     }
 
-    private void SetRotation()
+    private void SetRotation(Vector3 moveDir)
     {
-        if (direction.sqrMagnitude > 0.01f)
-        {
-            Quaternion targetRotation = Quaternion.LookRotation(direction);
-            _hipJoint.targetRotation = targetRotation;
-            Quaternion deltaRotation = targetRotation * Quaternion.Inverse(_hips.rotation);
+        Quaternion targetRotation = Quaternion.LookRotation(moveDir);
+        _hipJoint.targetRotation = targetRotation;
+        Quaternion deltaRotation = targetRotation * Quaternion.Inverse(_hips.rotation);
 
-            deltaRotation.ToAngleAxis(out float angle, out Vector3 axis);
-            if (angle > 180f) angle -= 360f;
+        deltaRotation.ToAngleAxis(out float angle, out Vector3 axis);
+        if (angle > 180f) angle -= 360f;
 
-            Vector3 torque = axis * angle * torqueMultiplier; // adjust multiplier
-            _hips.AddTorque(torque);
-        }
+        Vector3 torque = axis * angle * torqueMultiplier; // adjust multiplier
+        _hips.AddTorque(torque);
+
     }
 
     public Vector3 GetDirection()
