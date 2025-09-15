@@ -19,3 +19,5 @@ public class OnRightGrabInput : UnityEvent { }
 public class OnLeftGrabReleased : UnityEvent { }
 public class OnRightGrabReleased : UnityEvent { }
 
+public class OnGrabCollisionEnter : UnityEvent<Collision> { }
+

@@ -4,6 +4,10 @@ public class RagDollController : MonoBehaviour
 {
     [SerializeField] private Rigidbody _hips;
     [SerializeField] private ConfigurableJoint _hipJoint;
+    [SerializeField] private ConfigurableJoint _leftArm;
+    [SerializeField] private ConfigurableJoint _rightArm;
+    [SerializeField] private GameObject _leftGrabCollider;
+    [SerializeField] private GameObject _rightGrabCollider;
     public float speed = 5f;
     public float jumpForce = 5f;
     private Vector3 direction;
@@ -16,6 +20,11 @@ public class RagDollController : MonoBehaviour
         GenericEvent<OnMoveInput>.GetEvent(gameObject.GetInstanceID()).AddListener(UpdateDirection);
         GenericEvent<GroundedStatusChanged>.GetEvent(gameObject.GetInstanceID()).AddListener(UpdateIsGrounded);
         GenericEvent<OnJumpInput>.GetEvent(gameObject.GetInstanceID()).AddListener(Jump);
+        GenericEvent<OnLeftGrabInput>.GetEvent(gameObject.GetInstanceID()).AddListener(OnLeftGrab);
+        GenericEvent<OnLeftGrabReleased>.GetEvent(gameObject.GetInstanceID()).AddListener(OnLeftGrabRelease);
+        GenericEvent<OnRightGrabInput>.GetEvent(gameObject.GetInstanceID()).AddListener(OnRightGrab);
+        GenericEvent<OnRightGrabReleased>.GetEvent(gameObject.GetInstanceID()).AddListener(OnRightGrabRelease);
+
     }
 
 
@@ -69,6 +78,30 @@ public class RagDollController : MonoBehaviour
     public Vector3 GetDirection()
     {
         return direction;
+    }
+
+    private void OnLeftGrab()
+    {
+        ConfigurableJointExtensions.SetTargetRotationLocal(_leftArm, Quaternion.Euler(90, 0, 0), Quaternion.Euler(0, 0, 0));
+        _leftGrabCollider.SetActive(true);
+    }
+
+    private void OnLeftGrabRelease()
+    {
+        ConfigurableJointExtensions.SetTargetRotationLocal(_leftArm, Quaternion.Euler(0, 0, 0), Quaternion.Euler(0, 0, 0));
+        _leftGrabCollider.SetActive(false);
+    }
+
+    private void OnRightGrab()
+    {
+        ConfigurableJointExtensions.SetTargetRotationLocal(_rightArm, Quaternion.Euler(90, 0, 0), Quaternion.Euler(0, 0, 0));
+        _rightGrabCollider.SetActive(true);
+    }
+    
+    private void OnRightGrabRelease()
+    {
+        ConfigurableJointExtensions.SetTargetRotationLocal(_rightArm, Quaternion.Euler(0, 0, 0), Quaternion.Euler(0, 0, 0));
+        _rightGrabCollider.SetActive(false);
     }
 
 }
