@@ -3,6 +3,9 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
+    [SerializeField] private GameObject leftHandObj;
+    [SerializeField] private GameObject rightHandObj;
+
     public void OnMove(InputAction.CallbackContext context)
     {
         if (context.performed || context.canceled)
@@ -34,11 +37,11 @@ public class PlayerController : MonoBehaviour
     {
         if (context.started) // button pressed
         {
-            GenericEvent<OnLeftGrabInput>.GetEvent(gameObject.GetInstanceID()).Invoke();
+            GenericEvent<OnGrabInput>.GetEvent(leftHandObj.GetInstanceID()).Invoke();
         }
         else if (context.canceled) // button released
         {
-            GenericEvent<OnLeftGrabReleased>.GetEvent(gameObject.GetInstanceID()).Invoke();
+            GenericEvent<OnGrabReleased>.GetEvent(leftHandObj.GetInstanceID()).Invoke();
         }
     }
 
@@ -46,12 +49,37 @@ public class PlayerController : MonoBehaviour
     {
         if (context.started) // pressed down
         {
-            GenericEvent<OnRightGrabInput>.GetEvent(gameObject.GetInstanceID()).Invoke();
+            GenericEvent<OnGrabInput>.GetEvent(rightHandObj.GetInstanceID()).Invoke();
         }
         else if (context.canceled) // button released
         {
-            GenericEvent<OnRightGrabReleased>.GetEvent(gameObject.GetInstanceID()).Invoke();
+            GenericEvent<OnGrabReleased>.GetEvent(rightHandObj.GetInstanceID()).Invoke();
         }
     }
+
+    public void OnLeanBackwards(InputAction.CallbackContext context)
+    {
+        if (context.performed) // pressed down
+        {
+            GenericEvent<OnLeanBackwardsHold>.GetEvent(gameObject.GetInstanceID()).Invoke();
+        }
+        else if (context.canceled) // button released
+        {
+            GenericEvent<OnLeanBackwardsCancel>.GetEvent(gameObject.GetInstanceID()).Invoke();
+        }
+    }
+
+    public void OnLeanForwards(InputAction.CallbackContext context)
+    {
+        if (context.performed) // pressed down
+        {
+            GenericEvent<OnLeanForwardsHold>.GetEvent(gameObject.GetInstanceID()).Invoke();
+        }
+        else if (context.canceled) // button released
+        {
+            GenericEvent<OnLeanForwardsCancel>.GetEvent(gameObject.GetInstanceID()).Invoke();
+        }
+    }
+
 }
 
