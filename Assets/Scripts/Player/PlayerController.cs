@@ -57,29 +57,28 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void OnLeanBackwards(InputAction.CallbackContext context)
-    {
-        if (context.performed) // pressed down
-        {
-            GenericEvent<OnLeanBackwardsHold>.GetEvent(gameObject.GetInstanceID()).Invoke();
-        }
-        else if (context.canceled) // button released
-        {
-            GenericEvent<OnLeanBackwardsCancel>.GetEvent(gameObject.GetInstanceID()).Invoke();
-        }
-    }
-
     public void OnLeanForwards(InputAction.CallbackContext context)
     {
-        if (context.performed) // pressed down
+        if (context.started) // pressed down
         {
-            GenericEvent<OnLeanForwardsHold>.GetEvent(gameObject.GetInstanceID()).Invoke();
+            GenericEvent<OnLeanForwardInput>.GetEvent(gameObject.GetInstanceID()).Invoke();
         }
         else if (context.canceled) // button released
         {
-            GenericEvent<OnLeanForwardsCancel>.GetEvent(gameObject.GetInstanceID()).Invoke();
+            GenericEvent<OnLeanForwardCancel>.GetEvent(gameObject.GetInstanceID()).Invoke();
         }
     }
 
+    public void OnLeanBackwards(InputAction.CallbackContext context)
+    {
+        if (context.started) // pressed down
+        {
+            GenericEvent<OnLeanBackwardInput>.GetEvent(gameObject.GetInstanceID()).Invoke();
+        }
+        else if (context.canceled) // button released
+        {
+            GenericEvent<OnLeanBackwardCancel>.GetEvent(gameObject.GetInstanceID()).Invoke();
+        }
+    }
 }
 

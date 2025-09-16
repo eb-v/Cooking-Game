@@ -21,18 +21,10 @@ public class RagDollController : MonoBehaviour
     private void Awake()
     {
         GenericEvent<OnMoveInput>.GetEvent(gameObject.GetInstanceID()).AddListener(UpdateDirection);
-        
-
         GenericEvent<OnGrabInput>.GetEvent(_leftGrabCollider.GetInstanceID()).AddListener(OnLeftGrab);
         GenericEvent<OnGrabReleased>.GetEvent(_leftGrabCollider.GetInstanceID()).AddListener(OnLeftGrabRelease);
         GenericEvent<OnGrabInput>.GetEvent(_rightGrabCollider.GetInstanceID()).AddListener(OnRightGrab);
         GenericEvent<OnGrabReleased>.GetEvent(_rightGrabCollider.GetInstanceID()).AddListener(OnRightGrabRelease);
-
-        //GenericEvent<OnLeanBackwardsHold>.GetEvent(gameObject.GetInstanceID()).AddListener(OnLeanBackwardsHeld);
-        //GenericEvent<OnLeanForwardsHold>.GetEvent(gameObject.GetInstanceID()).AddListener(OnLeanForwardsHeld);
-        //GenericEvent<OnLeanBackwardsCancel>.GetEvent(gameObject.GetInstanceID()).AddListener(OnLeftBackwardsReleased);
-        //GenericEvent<OnLeanForwardsCancel>.GetEvent(gameObject.GetInstanceID()).AddListener(OnLeanForwardsReleased);
-
     }
 
 
@@ -127,32 +119,7 @@ public class RagDollController : MonoBehaviour
         _rightGrabCollider.GetComponent<Collider>().enabled = false;
     }
 
-    private void OnLeanBackwardsHeld()
-    {
-        _isLeaningBackwards = true;
-    }
-
-    private void OnLeanForwardsHeld()
-    {
-        _isLeaningForwards = true;
-    }
-
-    private void OnLeftBackwardsReleased()
-    {
-       _isLeaningForwards = false;
-       
-        Vector3 currentRotation = _body.targetRotation.eulerAngles;
-        currentRotation.x = 0;
-        _body.targetRotation = Quaternion.Euler(currentRotation);
-    }
-
-    private void OnLeanForwardsReleased()
-    {
-        _isLeaningForwards = false;
-        Vector3 currentRotation = _body.targetRotation.eulerAngles;
-        currentRotation.x = 0;
-        _body.targetRotation = Quaternion.Euler(currentRotation);
-    }
+    
 
 }
 

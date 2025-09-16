@@ -18,10 +18,12 @@ public class OnGrabReleased : UnityEvent { }
 public class OnHandCollisionEnter : UnityEvent<GameObject> { }
 public class OnHandCollisionExit : UnityEvent { }
 
-public class OnLeanBackwardsHold : UnityEvent { }
-public class OnLeanForwardsHold : UnityEvent { }
-public class OnLeanBackwardsCancel : UnityEvent { }
-public class OnLeanForwardsCancel : UnityEvent { }
+public class OnLeanForwardInput : UnityEvent { }
+public class OnLeanForwardCancel : UnityEvent { }
+public class OnLeanBackwardInput : UnityEvent { }
+public class OnLeanBackwardCancel : UnityEvent { }
+
+
 
 
 
