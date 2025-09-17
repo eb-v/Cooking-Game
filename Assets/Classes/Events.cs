@@ -12,14 +12,20 @@ public class GroundedStatusChanged : UnityEvent<bool> { }
 
 public class OnWalkStatusChange : UnityEvent<bool> { }
 
-public class OnLeftGrabInput : UnityEvent { }
+public class OnGrabInput : UnityEvent { }
+public class OnGrabReleased : UnityEvent { }
 
-public class OnRightGrabInput : UnityEvent { }
+public class OnHandCollisionEnter : UnityEvent<GameObject> { }
+public class OnHandCollisionExit : UnityEvent { }
 
-public class OnLeftGrabReleased : UnityEvent { }
-public class OnRightGrabReleased : UnityEvent { }
+public class OnLeanForwardInput : UnityEvent { }
+public class OnLeanForwardCancel : UnityEvent { }
+public class OnLeanBackwardInput : UnityEvent { }
+public class OnLeanBackwardCancel : UnityEvent { }
 
-public class OnGrabCollisionEnter : UnityEvent<Collision> { }
+
+
+
 
 public class Interact : UnityEvent { }
 

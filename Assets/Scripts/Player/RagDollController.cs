@@ -3,6 +3,7 @@ using UnityEngine;
 public class RagDollController : MonoBehaviour
 {
     [SerializeField] private Rigidbody _hips;
+    [SerializeField] private ConfigurableJoint _body;
     [SerializeField] private ConfigurableJoint _hipJoint;
     [SerializeField] private ConfigurableJoint _leftArm;
     [SerializeField] private ConfigurableJoint _rightArm;
@@ -14,17 +15,16 @@ public class RagDollController : MonoBehaviour
     private bool isGrounded;
     public float torqueMultiplier = 10f;
     private Vector3 lastDirection;
+    private bool _isLeaningBackwards = false;
+    private bool _isLeaningForwards = false;
 
     private void Awake()
     {
         GenericEvent<OnMoveInput>.GetEvent(gameObject.GetInstanceID()).AddListener(UpdateDirection);
-        GenericEvent<GroundedStatusChanged>.GetEvent(gameObject.GetInstanceID()).AddListener(UpdateIsGrounded);
-        GenericEvent<OnJumpInput>.GetEvent(gameObject.GetInstanceID()).AddListener(Jump);
-        GenericEvent<OnLeftGrabInput>.GetEvent(gameObject.GetInstanceID()).AddListener(OnLeftGrab);
-        GenericEvent<OnLeftGrabReleased>.GetEvent(gameObject.GetInstanceID()).AddListener(OnLeftGrabRelease);
-        GenericEvent<OnRightGrabInput>.GetEvent(gameObject.GetInstanceID()).AddListener(OnRightGrab);
-        GenericEvent<OnRightGrabReleased>.GetEvent(gameObject.GetInstanceID()).AddListener(OnRightGrabRelease);
-
+        GenericEvent<OnGrabInput>.GetEvent(_leftGrabCollider.GetInstanceID()).AddListener(OnLeftGrab);
+        GenericEvent<OnGrabReleased>.GetEvent(_leftGrabCollider.GetInstanceID()).AddListener(OnLeftGrabRelease);
+        GenericEvent<OnGrabInput>.GetEvent(_rightGrabCollider.GetInstanceID()).AddListener(OnRightGrab);
+        GenericEvent<OnGrabReleased>.GetEvent(_rightGrabCollider.GetInstanceID()).AddListener(OnRightGrabRelease);
     }
 
 
@@ -46,6 +46,21 @@ public class RagDollController : MonoBehaviour
         }
 
         _hips.AddForce(direction * speed);
+
+        if (_isLeaningBackwards && !_isLeaningForwards)
+        {
+            Vector3 currentRotation = _body.targetRotation.eulerAngles;
+            currentRotation.x = Mathf.Clamp(currentRotation.x + 10f, -45f, 45f);
+            _body.targetRotation = Quaternion.Euler(currentRotation);
+        }
+        if (_isLeaningForwards && !_isLeaningBackwards)
+        {
+            Vector3 currentRotation = _body.targetRotation.eulerAngles;
+            currentRotation.x = Mathf.Clamp(currentRotation.x - 10f, -45f, 45f);
+            _body.targetRotation = Quaternion.Euler(currentRotation);
+        }
+        
+
     }
 
     private void UpdateIsGrounded(bool value)
@@ -83,26 +98,28 @@ public class RagDollController : MonoBehaviour
     private void OnLeftGrab()
     {
         ConfigurableJointExtensions.SetTargetRotationLocal(_leftArm, Quaternion.Euler(90, 0, 0), Quaternion.Euler(0, 0, 0));
-        _leftGrabCollider.SetActive(true);
+        _leftGrabCollider.GetComponent<Collider>().enabled = true;
     }
 
     private void OnLeftGrabRelease()
     {
         ConfigurableJointExtensions.SetTargetRotationLocal(_leftArm, Quaternion.Euler(0, 0, 0), Quaternion.Euler(0, 0, 0));
-        _leftGrabCollider.SetActive(false);
+        _leftGrabCollider.GetComponent<Collider>().enabled = false;
     }
 
     private void OnRightGrab()
     {
         ConfigurableJointExtensions.SetTargetRotationLocal(_rightArm, Quaternion.Euler(90, 0, 0), Quaternion.Euler(0, 0, 0));
-        _rightGrabCollider.SetActive(true);
+        _rightGrabCollider.GetComponent<Collider>().enabled = true;
     }
     
     private void OnRightGrabRelease()
     {
         ConfigurableJointExtensions.SetTargetRotationLocal(_rightArm, Quaternion.Euler(0, 0, 0), Quaternion.Euler(0, 0, 0));
-        _rightGrabCollider.SetActive(false);
+        _rightGrabCollider.GetComponent<Collider>().enabled = false;
     }
+
+    
 
 }
 

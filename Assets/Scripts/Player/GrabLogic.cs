@@ -2,35 +2,37 @@ using UnityEngine;
 
 public class GrabLogic : MonoBehaviour
 {
-    [SerializeField] private Rigidbody _armRb;
+    private bool isGrabbing = false;
     private GameObject grabbedObject;
+    private FixedJoint grabJoint;
 
-    private void OnTriggerEnter(Collider collider)
+    private void Awake()
     {
-        if (collider.CompareTag("Grabbable"))
+        GenericEvent<OnHandCollisionEnter>.GetEvent(gameObject.GetInstanceID()).AddListener(GrabObject);
+        //GenericEvent<OnHandCollisionExit>.GetEvent(gameObject.GetInstanceID()).AddListener(ReleaseObject);
+        GenericEvent<OnGrabReleased>.GetEvent(gameObject.GetInstanceID()).AddListener(ReleaseObject);
+    }
+
+    private void GrabObject(GameObject obj)
+    {
+        if (!isGrabbing)
         {
-            grabbedObject = collider.gameObject;
-            FixedJoint fj = grabbedObject.AddComponent<FixedJoint>();
-            fj.connectedBody = _armRb;
-            fj.breakForce = 9000;
+            grabbedObject = obj;
+            grabJoint = grabbedObject.AddComponent<FixedJoint>();
+            grabJoint.connectedBody = transform.parent.gameObject.GetComponent<Rigidbody>();
+            // set breakforce to infinity
+            grabJoint.breakForce = Mathf.Infinity;
+            isGrabbing = true;
         }
     }
 
-    private void OnTriggerExit(Collider other)
+    private void ReleaseObject()
     {
-        if (other.gameObject == grabbedObject)
+        if (isGrabbing)
         {
-            Destroy(grabbedObject.GetComponent<FixedJoint>());
+            Destroy(grabJoint);
             grabbedObject = null;
-        }
-    }
-
-    private void OnDisable()
-    {
-        if (grabbedObject != null)
-        {
-            Destroy(grabbedObject.GetComponent<FixedJoint>());
-            grabbedObject = null;
+            isGrabbing = false;
         }
     }
 }

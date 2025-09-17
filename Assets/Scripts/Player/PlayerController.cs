@@ -1,16 +1,26 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerController : MonoBehaviour {
-    public void OnMove(InputAction.CallbackContext context) {
-        if (context.performed || context.canceled) {
+
+public class PlayerController : MonoBehaviour
+{
+    [SerializeField] private GameObject leftHandObj;
+    [SerializeField] private GameObject rightHandObj;
+
+    public void OnMove(InputAction.CallbackContext context)
+    {
+        if (context.performed || context.canceled)
+        {
             Vector2 moveInput = context.ReadValue<Vector2>();
 
             GenericEvent<OnMoveInput>.GetEvent(gameObject.GetInstanceID()).Invoke(moveInput);
 
-            if (moveInput == Vector2.zero) {
+            if (moveInput == Vector2.zero)
+            {
                 GenericEvent<OnWalkStatusChange>.GetEvent(gameObject.GetInstanceID()).Invoke(false);
-            } else {
+            }
+            else
+            {
                 GenericEvent<OnWalkStatusChange>.GetEvent(gameObject.GetInstanceID()).Invoke(true);
             }
         }
@@ -23,29 +33,58 @@ public class PlayerController : MonoBehaviour {
         }
     }
 
-    public void OnLeftGrab(InputAction.CallbackContext context) {
+    public void OnLeftGrab(InputAction.CallbackContext context)
+    {
         if (context.started) // button pressed
         {
-            GenericEvent<OnLeftGrabInput>.GetEvent(gameObject.GetInstanceID()).Invoke();
-        } else if (context.canceled) // button released
-          {
-            GenericEvent<OnLeftGrabReleased>.GetEvent(gameObject.GetInstanceID()).Invoke();
+            GenericEvent<OnGrabInput>.GetEvent(leftHandObj.GetInstanceID()).Invoke();
+        }
+        else if (context.canceled) // button released
+        {
+            GenericEvent<OnGrabReleased>.GetEvent(leftHandObj.GetInstanceID()).Invoke();
         }
     }
 
-    public void OnRightGrab(InputAction.CallbackContext context) {
+     public void OnRightGrab(InputAction.CallbackContext context)
+    {
         if (context.started) // pressed down
         {
-            GenericEvent<OnRightGrabInput>.GetEvent(gameObject.GetInstanceID()).Invoke();
-        } else if (context.canceled) // button released
-          {
-            GenericEvent<OnRightGrabReleased>.GetEvent(gameObject.GetInstanceID()).Invoke();
+            GenericEvent<OnGrabInput>.GetEvent(rightHandObj.GetInstanceID()).Invoke();
+        }
+        else if (context.canceled) // button released
+        {
+            GenericEvent<OnGrabReleased>.GetEvent(rightHandObj.GetInstanceID()).Invoke();
+        }
+    }
+
+    public void OnLeanForwards(InputAction.CallbackContext context)
+    {
+        if (context.started) // pressed down
+        {
+            GenericEvent<OnLeanForwardInput>.GetEvent(gameObject.GetInstanceID()).Invoke();
+        }
+        else if (context.canceled) // button released
+        {
+            GenericEvent<OnLeanForwardCancel>.GetEvent(gameObject.GetInstanceID()).Invoke();
+        }
+    }
+
+  public void OnLeanBackwards(InputAction.CallbackContext context)
+    {
+        if (context.started) // pressed down
+        {
+            GenericEvent<OnLeanBackwardInput>.GetEvent(gameObject.GetInstanceID()).Invoke();
+        }
+        else if (context.canceled) // button released
+        {
+            GenericEvent<OnLeanBackwardCancel>.GetEvent(gameObject.GetInstanceID()).Invoke();
         }
     }
 
     public void OnInteract(InputAction.CallbackContext context) {
         if (context.started)
         {
+
             Debug.Log("F Pressed");
             GenericEvent<Interact>.GetEvent(gameObject.GetInstanceID()).Invoke();
 
@@ -53,6 +92,8 @@ public class PlayerController : MonoBehaviour {
         {
             Debug.Log("F not");
             GenericEvent<StopInteract>.GetEvent(gameObject.GetInstanceID()).Invoke();
+
+            GenericEvent<OnLeanBackwardCancel>.GetEvent(gameObject.GetInstanceID()).Invoke()
         }
     }
 }
