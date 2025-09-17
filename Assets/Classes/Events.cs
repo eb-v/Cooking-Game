@@ -21,3 +21,7 @@ public class OnRightGrabReleased : UnityEvent { }
 
 public class OnGrabCollisionEnter : UnityEvent<Collision> { }
 
+public class Interact : UnityEvent { }
+
+public class StopInteract : UnityEvent { }
+
