@@ -93,7 +93,7 @@ public class PlayerController : MonoBehaviour
             Debug.Log("F not");
             GenericEvent<StopInteract>.GetEvent(gameObject.GetInstanceID()).Invoke();
 
-            GenericEvent<OnLeanBackwardCancel>.GetEvent(gameObject.GetInstanceID()).Invoke()
+            GenericEvent<OnLeanBackwardCancel>.GetEvent(gameObject.GetInstanceID()).Invoke();
         }
     }
 }
