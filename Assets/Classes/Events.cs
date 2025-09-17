@@ -27,3 +27,7 @@ public class OnLeanBackwardCancel : UnityEvent { }
 
 
 
+public class Interact : UnityEvent { }
+
+public class StopInteract : UnityEvent { }
+

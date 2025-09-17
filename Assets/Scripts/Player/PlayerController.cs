@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] private GameObject leftHandObj;
@@ -25,8 +26,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void OnJump(InputAction.CallbackContext context)
-    {
+    public void OnJump(InputAction.CallbackContext context) {
         if (context.started) // pressed down
         {
             GenericEvent<OnJumpInput>.GetEvent(gameObject.GetInstanceID()).Invoke();
@@ -45,7 +45,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void OnRightGrab(InputAction.CallbackContext context)
+     public void OnRightGrab(InputAction.CallbackContext context)
     {
         if (context.started) // pressed down
         {
@@ -69,7 +69,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void OnLeanBackwards(InputAction.CallbackContext context)
+  public void OnLeanBackwards(InputAction.CallbackContext context)
     {
         if (context.started) // pressed down
         {
@@ -78,6 +78,22 @@ public class PlayerController : MonoBehaviour
         else if (context.canceled) // button released
         {
             GenericEvent<OnLeanBackwardCancel>.GetEvent(gameObject.GetInstanceID()).Invoke();
+        }
+    }
+
+    public void OnInteract(InputAction.CallbackContext context) {
+        if (context.started)
+        {
+
+            Debug.Log("F Pressed");
+            GenericEvent<Interact>.GetEvent(gameObject.GetInstanceID()).Invoke();
+
+        } else if (context.canceled)
+        {
+            Debug.Log("F not");
+            GenericEvent<StopInteract>.GetEvent(gameObject.GetInstanceID()).Invoke();
+
+            GenericEvent<OnLeanBackwardCancel>.GetEvent(gameObject.GetInstanceID()).Invoke()
         }
     }
 }
