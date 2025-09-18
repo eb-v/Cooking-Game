@@ -7,6 +7,7 @@ public class GrabDetection : MonoBehaviour
         if (other.CompareTag("Grabbable"))
         {
             GenericEvent<OnHandCollisionEnter>.GetEvent(gameObject.GetInstanceID()).Invoke(other.gameObject);
+            Debug.Log("Collided with grabbable object: " + other.gameObject.name);  
         }
     }
 
