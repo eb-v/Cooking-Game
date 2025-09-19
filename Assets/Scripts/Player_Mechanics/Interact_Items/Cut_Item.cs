@@ -1,72 +1,77 @@
-//using UnityEngine;
-//using UnityEngine.InputSystem;
+using System.Security.Cryptography.X509Certificates;
+using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.Rendering;
 
-//public class Cut_Item : MonoBehaviour
-//{
+public class Cut_Item : MonoBehaviour {
+    private InputSystem_Actions cut;
 
-//    private Input_Mechanincs Cut;
+    private bool isHolding = false;
+    private float holdTime = 0f;
 
-//    private bool isHolding = false;
-//    private float holdTime = 0f;            // amount of time the player held interact button
+    public float requiredHoldTime = 5f;
+    public GameObject Finished_Item;
 
-//    public float requiredHoldTime = 5f;     // needs to be 5 seconds
+    public void Awake() {
+        cut = new InputSystem_Actions();
+        GenericEvent<Interact>.GetEvent(gameObject.GetInstanceID()).AddListener(OnCutItem);
+    }
+
+    public void OnEnable() {
+        cut.Player.Interact.started += StartHolding;
+        cut.Player.Interact.canceled += StopHolding;
+
+        cut.Player.Enable();
+    }
+
+    public void OnDisable() {
+        cut.Player.Interact.started -= StartHolding;
+        cut.Player.Interact.canceled -= StopHolding;
+
+        cut.Player.Disable();
+    }
+
+    private void StartHolding(InputAction.CallbackContext context) {
+        isHolding = true;
+        holdTime = 0f;
+
+        Debug.Log("Started Cutting");
+        GenericEvent<Interact>.GetEvent(gameObject.GetInstanceID()).Invoke();
+    }
+
+    private void StopHolding(InputAction.CallbackContext context) { // has to hold for 5 secs consequtively
+        if (isHolding) {
+            isHolding = false;
+            holdTime = 0f;
+            Debug.Log("Stopped Cutting");
+            GenericEvent<Interact>.GetEvent(gameObject.GetInstanceID()).Invoke();
+        }
+    }
+
+    private void Update() {
+        if (isHolding) {
+            holdTime += Time.deltaTime;
+
+            if (holdTime >= requiredHoldTime) {
+                Finish_Cut();
+            }
+        }
+    }
 
 
-//    public GameObject Finished_Item;        // so you can add in inspector B)
+    private void Finish_Cut() {
+        Debug.Log("The item is finished cutting");
 
-//    public void Awake() {
-//        Cut = new Input_Mechanincs();
-//    }
+        if (Finished_Item != null) {
+            Instantiate(Finished_Item, transform.position, transform.rotation);
 
-//    private void OnEnable() {                 // check if player is holding
-//        Cut.Player.Enable();
-//        Cut.Player.Interact.started += StartHolding;
-//        Cut.Player.Interact.canceled += StopHolding;
-//    }
-
-//    private void OnDisable() {
-//        Cut.Player.Interact.started -= StartHolding;
-//        Cut.Player.Interact.canceled -= StopHolding;
-
-//        Cut.Player.Disable();
-
-//    }
+            Destroy(gameObject);
+        }
+    }
+    private void OnCutItem() {
+        Debug.Log("The player is cutting an item");
 
 
-//    private void Update() {                 // while holding add time
-//        if (isHolding) {
-//            holdTime += Time.deltaTime;
+    }
 
-//            if (holdTime >= requiredHoldTime) {
-//                Finish_Cut();
-//                isHolding = false;
-//                holdTime = 0f;
-//            }
-//        }
-//    }
-
-//    private void StartHolding(InputAction.CallbackContext context) {
-//        isHolding = true;
-//        holdTime = 0f;
-
-//        Debug.Log("Started Cutting");
-//    }
-
-//    private void StopHolding(InputAction.CallbackContext context) { // has to hold for 5 secs consequtively
-//        if (isHolding) {
-//            isHolding = false;
-//            holdTime = 0f;
-//            Debug.Log("Stopped Cutting");
-//        }
-//    }
-
-//    private void Finish_Cut() {     // spawn the cut item
-//        Debug.Log("Item Cut!");
-
-//        if( Finished_Item != null) {
-//            Instantiate(Finished_Item, transform.position, transform.rotation);
-
-//            Destroy(gameObject);
-//        }
-//    }
-//}
+}
