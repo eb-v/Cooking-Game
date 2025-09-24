@@ -35,4 +35,8 @@ public class GrabLogic : MonoBehaviour
             isGrabbing = false;
         }
     }
+
+    public GameObject GetGrabbedObject() {
+        return isGrabbing ? grabbedObject : null;
+    }
 }

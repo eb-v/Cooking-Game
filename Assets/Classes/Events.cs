@@ -31,3 +31,5 @@ public class Interact : UnityEvent { }
 
 public class StopInteract : UnityEvent { }
 
+public class EnterCounter : UnityEvent { }
+public class ExitCounter : UnityEvent { }

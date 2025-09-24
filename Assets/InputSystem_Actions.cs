@@ -181,6 +181,15 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""CounterSnap"",
+                    ""type"": ""Button"",
+                    ""id"": ""ad3ab2cd-f948-4a9d-9997-d918cfc7786b"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -546,6 +555,17 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""action"": ""Interact"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3a8a218f-6a1a-4d10-bb93-fd0057f00e51"",
+                    ""path"": ""<Keyboard>/r"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""CounterSnap"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -625,6 +645,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         m_Player_LeanBack = m_Player.FindAction("LeanBack", throwIfNotFound: true);
         m_Player_LeanForward = m_Player.FindAction("LeanForward", throwIfNotFound: true);
         m_Player_Interact = m_Player.FindAction("Interact", throwIfNotFound: true);
+        m_Player_CounterSnap = m_Player.FindAction("CounterSnap", throwIfNotFound: true);
     }
 
     ~@InputSystem_Actions()
@@ -715,6 +736,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_LeanBack;
     private readonly InputAction m_Player_LeanForward;
     private readonly InputAction m_Player_Interact;
+    private readonly InputAction m_Player_CounterSnap;
     /// <summary>
     /// Provides access to input actions defined in input action map "Player".
     /// </summary>
@@ -766,6 +788,10 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Player/Interact".
         /// </summary>
         public InputAction @Interact => m_Wrapper.m_Player_Interact;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/CounterSnap".
+        /// </summary>
+        public InputAction @CounterSnap => m_Wrapper.m_Player_CounterSnap;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -822,6 +848,9 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @Interact.started += instance.OnInteract;
             @Interact.performed += instance.OnInteract;
             @Interact.canceled += instance.OnInteract;
+            @CounterSnap.started += instance.OnCounterSnap;
+            @CounterSnap.performed += instance.OnCounterSnap;
+            @CounterSnap.canceled += instance.OnCounterSnap;
         }
 
         /// <summary>
@@ -863,6 +892,9 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @Interact.started -= instance.OnInteract;
             @Interact.performed -= instance.OnInteract;
             @Interact.canceled -= instance.OnInteract;
+            @CounterSnap.started -= instance.OnCounterSnap;
+            @CounterSnap.performed -= instance.OnCounterSnap;
+            @CounterSnap.canceled -= instance.OnCounterSnap;
         }
 
         /// <summary>
@@ -1038,5 +1070,12 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnInteract(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "CounterSnap" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnCounterSnap(InputAction.CallbackContext context);
     }
 }
