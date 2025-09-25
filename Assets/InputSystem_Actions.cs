@@ -120,10 +120,10 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""SpawnIngredient"",
+                    ""name"": ""Jump"",
                     ""type"": ""Button"",
                     ""id"": ""f1ba0d36-48eb-4cd5-b651-1c94a6531f70"",
-                    ""expectedControlType"": """",
+                    ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
@@ -183,18 +183,9 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""DettatchBody"",
+                    ""name"": ""CounterSnap"",
                     ""type"": ""Button"",
-                    ""id"": ""3aa20f65-f4c1-4a89-aa22-dbc897f72309"",
-                    ""expectedControlType"": """",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""ReattatchBody"",
-                    ""type"": ""Button"",
-                    ""id"": ""ddd02fad-5268-4c36-aacf-1b059a452d75"",
+                    ""id"": ""ad3ab2cd-f948-4a9d-9997-d918cfc7786b"",
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
@@ -407,7 +398,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
-                    ""action"": ""SpawnIngredient"",
+                    ""action"": ""Jump"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -418,7 +409,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
-                    ""action"": ""SpawnIngredient"",
+                    ""action"": ""Jump"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -429,7 +420,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""XR"",
-                    ""action"": ""SpawnIngredient"",
+                    ""action"": ""Jump"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -567,23 +558,12 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""bda29828-90a9-4f82-8e21-aef5a4767736"",
-                    ""path"": ""<Keyboard>/g"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";Keyboard&Mouse"",
-                    ""action"": ""DettatchBody"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""7f99a9d2-2f4b-41c3-8f4b-91d85ec4fe7a"",
-                    ""path"": ""<Keyboard>/h"",
+                    ""id"": ""3a8a218f-6a1a-4d10-bb93-fd0057f00e51"",
+                    ""path"": ""<Keyboard>/r"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""ReattatchBody"",
+                    ""action"": ""CounterSnap"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -658,15 +638,14 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         m_Player_Move = m_Player.FindAction("Move", throwIfNotFound: true);
         m_Player_Look = m_Player.FindAction("Look", throwIfNotFound: true);
         m_Player_Crouch = m_Player.FindAction("Crouch", throwIfNotFound: true);
-        m_Player_SpawnIngredient = m_Player.FindAction("SpawnIngredient", throwIfNotFound: true);
+        m_Player_Jump = m_Player.FindAction("Jump", throwIfNotFound: true);
         m_Player_Sprint = m_Player.FindAction("Sprint", throwIfNotFound: true);
         m_Player_LeftGrab = m_Player.FindAction("LeftGrab", throwIfNotFound: true);
         m_Player_RightGrab = m_Player.FindAction("RightGrab", throwIfNotFound: true);
         m_Player_LeanBack = m_Player.FindAction("LeanBack", throwIfNotFound: true);
         m_Player_LeanForward = m_Player.FindAction("LeanForward", throwIfNotFound: true);
         m_Player_Interact = m_Player.FindAction("Interact", throwIfNotFound: true);
-        m_Player_DettatchBody = m_Player.FindAction("DettatchBody", throwIfNotFound: true);
-        m_Player_ReattatchBody = m_Player.FindAction("ReattatchBody", throwIfNotFound: true);
+        m_Player_CounterSnap = m_Player.FindAction("CounterSnap", throwIfNotFound: true);
     }
 
     ~@InputSystem_Actions()
@@ -750,15 +729,14 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Move;
     private readonly InputAction m_Player_Look;
     private readonly InputAction m_Player_Crouch;
-    private readonly InputAction m_Player_SpawnIngredient;
+    private readonly InputAction m_Player_Jump;
     private readonly InputAction m_Player_Sprint;
     private readonly InputAction m_Player_LeftGrab;
     private readonly InputAction m_Player_RightGrab;
     private readonly InputAction m_Player_LeanBack;
     private readonly InputAction m_Player_LeanForward;
     private readonly InputAction m_Player_Interact;
-    private readonly InputAction m_Player_DettatchBody;
-    private readonly InputAction m_Player_ReattatchBody;
+    private readonly InputAction m_Player_CounterSnap;
     /// <summary>
     /// Provides access to input actions defined in input action map "Player".
     /// </summary>
@@ -783,9 +761,9 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// </summary>
         public InputAction @Crouch => m_Wrapper.m_Player_Crouch;
         /// <summary>
-        /// Provides access to the underlying input action "Player/SpawnIngredient".
+        /// Provides access to the underlying input action "Player/Jump".
         /// </summary>
-        public InputAction @SpawnIngredient => m_Wrapper.m_Player_SpawnIngredient;
+        public InputAction @Jump => m_Wrapper.m_Player_Jump;
         /// <summary>
         /// Provides access to the underlying input action "Player/Sprint".
         /// </summary>
@@ -811,13 +789,9 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// </summary>
         public InputAction @Interact => m_Wrapper.m_Player_Interact;
         /// <summary>
-        /// Provides access to the underlying input action "Player/DettatchBody".
+        /// Provides access to the underlying input action "Player/CounterSnap".
         /// </summary>
-        public InputAction @DettatchBody => m_Wrapper.m_Player_DettatchBody;
-        /// <summary>
-        /// Provides access to the underlying input action "Player/ReattatchBody".
-        /// </summary>
-        public InputAction @ReattatchBody => m_Wrapper.m_Player_ReattatchBody;
+        public InputAction @CounterSnap => m_Wrapper.m_Player_CounterSnap;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -853,9 +827,9 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @Crouch.started += instance.OnCrouch;
             @Crouch.performed += instance.OnCrouch;
             @Crouch.canceled += instance.OnCrouch;
-            @SpawnIngredient.started += instance.OnSpawnIngredient;
-            @SpawnIngredient.performed += instance.OnSpawnIngredient;
-            @SpawnIngredient.canceled += instance.OnSpawnIngredient;
+            @Jump.started += instance.OnJump;
+            @Jump.performed += instance.OnJump;
+            @Jump.canceled += instance.OnJump;
             @Sprint.started += instance.OnSprint;
             @Sprint.performed += instance.OnSprint;
             @Sprint.canceled += instance.OnSprint;
@@ -874,12 +848,9 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @Interact.started += instance.OnInteract;
             @Interact.performed += instance.OnInteract;
             @Interact.canceled += instance.OnInteract;
-            @DettatchBody.started += instance.OnDettatchBody;
-            @DettatchBody.performed += instance.OnDettatchBody;
-            @DettatchBody.canceled += instance.OnDettatchBody;
-            @ReattatchBody.started += instance.OnReattatchBody;
-            @ReattatchBody.performed += instance.OnReattatchBody;
-            @ReattatchBody.canceled += instance.OnReattatchBody;
+            @CounterSnap.started += instance.OnCounterSnap;
+            @CounterSnap.performed += instance.OnCounterSnap;
+            @CounterSnap.canceled += instance.OnCounterSnap;
         }
 
         /// <summary>
@@ -900,9 +871,9 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @Crouch.started -= instance.OnCrouch;
             @Crouch.performed -= instance.OnCrouch;
             @Crouch.canceled -= instance.OnCrouch;
-            @SpawnIngredient.started -= instance.OnSpawnIngredient;
-            @SpawnIngredient.performed -= instance.OnSpawnIngredient;
-            @SpawnIngredient.canceled -= instance.OnSpawnIngredient;
+            @Jump.started -= instance.OnJump;
+            @Jump.performed -= instance.OnJump;
+            @Jump.canceled -= instance.OnJump;
             @Sprint.started -= instance.OnSprint;
             @Sprint.performed -= instance.OnSprint;
             @Sprint.canceled -= instance.OnSprint;
@@ -921,12 +892,9 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @Interact.started -= instance.OnInteract;
             @Interact.performed -= instance.OnInteract;
             @Interact.canceled -= instance.OnInteract;
-            @DettatchBody.started -= instance.OnDettatchBody;
-            @DettatchBody.performed -= instance.OnDettatchBody;
-            @DettatchBody.canceled -= instance.OnDettatchBody;
-            @ReattatchBody.started -= instance.OnReattatchBody;
-            @ReattatchBody.performed -= instance.OnReattatchBody;
-            @ReattatchBody.canceled -= instance.OnReattatchBody;
+            @CounterSnap.started -= instance.OnCounterSnap;
+            @CounterSnap.performed -= instance.OnCounterSnap;
+            @CounterSnap.canceled -= instance.OnCounterSnap;
         }
 
         /// <summary>
@@ -1054,12 +1022,12 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnCrouch(InputAction.CallbackContext context);
         /// <summary>
-        /// Method invoked when associated input action "SpawnIngredient" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// Method invoked when associated input action "Jump" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnSpawnIngredient(InputAction.CallbackContext context);
+        void OnJump(InputAction.CallbackContext context);
         /// <summary>
         /// Method invoked when associated input action "Sprint" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
@@ -1103,18 +1071,11 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnInteract(InputAction.CallbackContext context);
         /// <summary>
-        /// Method invoked when associated input action "DettatchBody" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// Method invoked when associated input action "CounterSnap" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnDettatchBody(InputAction.CallbackContext context);
-        /// <summary>
-        /// Method invoked when associated input action "ReattatchBody" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
-        /// </summary>
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnReattatchBody(InputAction.CallbackContext context);
+        void OnCounterSnap(InputAction.CallbackContext context);
     }
 }

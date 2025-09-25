@@ -36,4 +36,8 @@ public class GrabLogic
         }
     }
 
+
+    public GameObject GetGrabbedObject() {
+        return isGrabbing ? grabbedObject : null;
+    }
 }

@@ -25,7 +25,8 @@ public class CounterZone : MonoBehaviour
 
         playerCollidersInside++;
         if (playerCollidersInside == 1){
-            GenericEvent<EnterCounter>.GetEvent(counterParent.name).Invoke();
+
+            GenericEvent<EnterCounter>.GetEvent(counterParent.GetInstanceID()).Invoke();
         }
 
         var grabLogic = root.GetComponentInChildren<GrabLogic>();
@@ -36,7 +37,8 @@ public class CounterZone : MonoBehaviour
         else
             Debug.Log("Player entered zone but is not holding anything.");
 
-        Debug.Log("Invoking EnterCounter for ID " + counterParent.name);
+
+        Debug.Log("Invoking EnterCounter for ID " + counterParent.GetInstanceID());
     }
 
     private void OnTriggerExit(Collider other)
@@ -46,8 +48,9 @@ public class CounterZone : MonoBehaviour
 
         playerCollidersInside = Mathf.Max(0, playerCollidersInside -1);
         if (playerCollidersInside == 0){
-            GenericEvent<ExitCounter>.GetEvent(counterParent.name).Invoke();
-            Debug.Log("ExitCounter invoked for ID " + counterParent.name);
+
+            GenericEvent<ExitCounter>.GetEvent(counterParent.GetInstanceID()).Invoke();
+            Debug.Log("ExitCounter invoked for ID " + counterParent.GetInstanceID());
 
         }
 

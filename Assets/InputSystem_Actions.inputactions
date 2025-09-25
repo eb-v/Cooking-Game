@@ -34,10 +34,10 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "SpawnIngredient",
+                    "name": "Jump",
                     "type": "Button",
                     "id": "f1ba0d36-48eb-4cd5-b651-1c94a6531f70",
-                    "expectedControlType": "",
+                    "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -97,18 +97,9 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "DettatchBody",
+                    "name": "CounterSnap",
                     "type": "Button",
-                    "id": "3aa20f65-f4c1-4a89-aa22-dbc897f72309",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "ReattatchBody",
-                    "type": "Button",
-                    "id": "ddd02fad-5268-4c36-aacf-1b059a452d75",
+                    "id": "ad3ab2cd-f948-4a9d-9997-d918cfc7786b",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -321,7 +312,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard&Mouse",
-                    "action": "SpawnIngredient",
+                    "action": "Jump",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -332,7 +323,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepad",
-                    "action": "SpawnIngredient",
+                    "action": "Jump",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -343,7 +334,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "XR",
-                    "action": "SpawnIngredient",
+                    "action": "Jump",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -481,23 +472,12 @@
                 },
                 {
                     "name": "",
-                    "id": "bda29828-90a9-4f82-8e21-aef5a4767736",
-                    "path": "<Keyboard>/g",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Keyboard&Mouse",
-                    "action": "DettatchBody",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "7f99a9d2-2f4b-41c3-8f4b-91d85ec4fe7a",
-                    "path": "<Keyboard>/h",
+                    "id": "3a8a218f-6a1a-4d10-bb93-fd0057f00e51",
+                    "path": "<Keyboard>/r",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "ReattatchBody",
+                    "action": "CounterSnap",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
