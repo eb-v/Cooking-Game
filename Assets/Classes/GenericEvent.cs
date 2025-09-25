@@ -3,11 +3,11 @@ using UnityEngine;
 
 public static class GenericEvent<T> where T : class, new()
 {
-    private static Dictionary<int, T> _eventMap = new Dictionary<int, T>();
+    private static Dictionary<string, T> _eventMap = new Dictionary<string, T>();
 
-    public static T GetEvent(int id)
+    public static T GetEvent(string channel)
     {
-        _eventMap.TryAdd(id, new T());
-        return _eventMap[id];
+        _eventMap.TryAdd(channel, new T());
+        return _eventMap[channel];
     }
 }
