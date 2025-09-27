@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class GrabLogic
+public class GrabLogic : MonoBehaviour
 {
     private bool isGrabbing = false;
     private GameObject grabbedObject;
@@ -8,7 +8,7 @@ public class GrabLogic
 
     private void Awake()
     {
-        GenericEvent<OnHandCollisionEnter>.GetEvent(gameObject.name).AddListener(GrabObject);
+        //GenericEvent<OnHandCollisionEnter>.GetEvent(gameObject.name).AddListener(GrabObject);
         //GenericEvent<OnHandCollisionExit>.GetEvent(gameObject.GetInstanceID()).AddListener(ReleaseObject);
         GenericEvent<OnHandCollisionExit>.GetEvent(gameObject.name).AddListener(ReleaseObject);
     }

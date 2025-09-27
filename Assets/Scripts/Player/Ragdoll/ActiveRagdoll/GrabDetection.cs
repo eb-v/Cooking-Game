@@ -6,7 +6,7 @@ public class GrabDetection : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-            GenericEvent<OnObjectGrabbed>.GetEvent(transform.root.name).Invoke(gameObject ,other.gameObject);
+            GenericEvent<OnHandCollisionEnter>.GetEvent(transform.root.name).Invoke(gameObject ,other.gameObject);
     }
 
     private void OnTriggerExit(Collider other)

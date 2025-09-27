@@ -87,7 +87,8 @@ public class RagdollController : MonoBehaviour
     private bool rightGrab;
     private bool leftHandColliding;
     private bool rightHandColliding;
-
+    private bool leanForward;
+    private bool leanBackward;
 
     [HideInInspector] public bool jumping;
     [HideInInspector] public bool isJumping;
@@ -116,11 +117,22 @@ public class RagdollController : MonoBehaviour
     private Quaternion UpperLeftLegTarget;
     private Quaternion LowerLeftLegTarget;
 
+    private bool _leanForward;
+    private bool _leanBackward;
+    [Header("Lean Value")]
+    [SerializeField] private float _angleMultiplier = 5f;
+    private float _leanAngleX = 0f;
 
-    private Dictionary<string, FixedJoint> grabJoints;
+
+    public Dictionary<string, FixedJoint> grabJoints;
 
     private static int groundLayer;
     private WaitForSeconds punchDelayWaitTime = new WaitForSeconds(0.3f);
+
+    private void Awake()
+    {
+        grabJoints = new Dictionary<string, FixedJoint>();
+    }
 
     void Start()
     {
@@ -134,9 +146,15 @@ public class RagdollController : MonoBehaviour
         GenericEvent<OnLeftGrabInput>.GetEvent(gameObject.name).AddListener(SetLeftGrab);
         GenericEvent<OnMoveInput>.GetEvent(gameObject.name).AddListener(SetDirection);
 
-        GenericEvent<OnObjectGrabbed>.GetEvent(gameObject.name).AddListener(PlayerGrab);
+        GenericEvent<OnLeanForwardInput>.GetEvent(gameObject.name).AddListener(() => { _leanForward = true; });
+        GenericEvent<OnLeanForwardCancel>.GetEvent(gameObject.name).AddListener(() => { _leanForward = false; });
+        GenericEvent<OnLeanBackwardInput>.GetEvent(gameObject.name).AddListener(() => { _leanBackward = true; });
+        GenericEvent<OnLeanBackwardCancel>.GetEvent(gameObject.name).AddListener(() => { _leanBackward = false; });
 
-        grabJoints = new Dictionary<string, FixedJoint>();
+        GenericEvent<OnHandCollisionEnter>.GetEvent(gameObject.name).AddListener(PlayerGrab);
+
+        //GenericEvent<Interact>.GetEvent(gameObject.name).AddListener(PlayerReleaseGrab);
+
     }
 
 
@@ -204,6 +222,16 @@ public class RagdollController : MonoBehaviour
         PerformPlayerRotation();
         ResetPlayerPose();
         PerformPlayerGetUpJumping();
+
+        if (_leanForward && !_leanBackward)
+        {
+            PerformLeanForward();
+        }
+
+        if (_leanBackward && !_leanForward)
+        {
+            PerformLeanBackward();
+        }
     }
 
     //private void PerformPlayerRotation()
@@ -257,6 +285,7 @@ public class RagdollController : MonoBehaviour
 
             // Desired rotation
             Quaternion targetRot = Quaternion.LookRotation(moveDir, Vector3.up);
+            centerOfMass.forward = Vector3.Slerp(centerOfMass.forward, moveDir, Time.deltaTime * turnSpeed);
 
             //Smoothly rotate joint
             rootJoint.targetRotation = Quaternion.Slerp(
@@ -268,6 +297,29 @@ public class RagdollController : MonoBehaviour
 
 
         }
+    }
+
+    private void PerformLeanForward()
+    {
+        ConfigurableJoint _bodyJoint = RagdollDict[BODY].Joint;
+        Vector3 axis = Vector3.right;
+        _leanAngleX = Mathf.Clamp(_leanAngleX - _angleMultiplier * Time.deltaTime, -80f, 80f);
+
+        // Quaternion deltaRotation = Quaternion.AngleAxis(_leanAngleX, axis);
+
+        Quaternion newTargetRotation = Quaternion.Euler(_leanAngleX, 0f, 0f);
+        _bodyJoint.targetRotation = newTargetRotation;
+    }
+
+    private void PerformLeanBackward()
+    {
+        ConfigurableJoint _bodyJoint = RagdollDict[BODY].Joint;
+        Vector3 axis = Vector3.right;
+        _leanAngleX = Mathf.Clamp(_leanAngleX + _angleMultiplier * Time.deltaTime, -80f, 80f);
+
+        //Quaternion deltaRotation = Quaternion.AngleAxis(_leanAngleX, axis);
+        Quaternion newTargetRotation = Quaternion.Euler(_leanAngleX, 0f, 0f);
+        _bodyJoint.targetRotation = newTargetRotation;
     }
 
 
@@ -294,7 +346,7 @@ public class RagdollController : MonoBehaviour
             ResetPose = true;
         }
     }
-
+    
     private bool CanResetPoseAfterLanding()
     {
         return inAir && !isJumping && !jumping;
@@ -761,6 +813,7 @@ public class RagdollController : MonoBehaviour
         grabJoints.Add(hand.name, grabJoint);
 
         hand.GetComponent<GrabDetection>().isGrabbing = true;
+        GenericEvent<ObjectGrabbed>.GetEvent(gameObject.name).Invoke(objToGrab);
     }
 
     private void PlayerReleaseGrab(GameObject hand)
@@ -775,6 +828,12 @@ public class RagdollController : MonoBehaviour
         }
 
         hand.GetComponent<GrabDetection>().isGrabbing = false;
+        GenericEvent<ObjectReleased>.GetEvent(gameObject.name).Invoke();
+    }
+
+    private void DestroyGrabJoint()
+    {
+        
     }
 
     //private void PerformPlayerPunch()

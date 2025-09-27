@@ -18,9 +18,9 @@ public class SnapLogic : MonoBehaviour
             counterParent = gameObject; 
         }
 
-        GenericEvent<EnterCounter>.GetEvent(counterParent.GetInstanceID()).AddListener(OnEnterCounterZone);
+        GenericEvent<EnterCounter>.GetEvent(counterParent.name).AddListener(OnEnterCounterZone);
 
-        GenericEvent<ExitCounter>.GetEvent(counterParent.GetInstanceID()).AddListener(OnExitCounterZone);
+        GenericEvent<ExitCounter>.GetEvent(counterParent.name).AddListener(OnExitCounterZone);
 
         Debug.Log("SnapLogic Awake: zone listeners added.");
     }
@@ -90,7 +90,7 @@ public class SnapLogic : MonoBehaviour
         
         counterObj = heldObject;
 
-        GenericEvent<OnGrabReleased>.GetEvent(gameObject.GetInstanceID()).Invoke();
+        GenericEvent<OnGrabReleased>.GetEvent(gameObject.name).Invoke();
         Rigidbody rb = counterObj.GetComponent<Rigidbody>();
         if (rb != null) {
             rb.isKinematic = true;

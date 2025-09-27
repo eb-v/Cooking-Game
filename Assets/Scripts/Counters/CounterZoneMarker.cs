@@ -27,8 +27,8 @@ public class CounterZoneMarker : MonoBehaviour
             counterParent = transform.parent.gameObject;
         }
 
-        GenericEvent<EnterCounter>.GetEvent(counterParent.GetInstanceID()).AddListener(Show);
-        GenericEvent<ExitCounter>.GetEvent(counterParent.GetInstanceID()).AddListener(Hide);
+        GenericEvent<EnterCounter>.GetEvent(counterParent.name).AddListener(Show);
+        GenericEvent<ExitCounter>.GetEvent(counterParent.name).AddListener(Hide);
 
         Debug.Log("Subscribed to EnterCounter and ExitCounter for ID " + gameObject.GetInstanceID());
 

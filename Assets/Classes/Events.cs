@@ -16,17 +16,16 @@ public class OnLeftGrabInput : UnityEvent<bool> { }
 
 public class OnRightGrabInput : UnityEvent<bool> { }
 
+public class OnGrabReleased : UnityEvent { }
 
 
-
-public class OnHandCollisionEnter : UnityEvent<GameObject> { }
+public class OnHandCollisionEnter : UnityEvent<GameObject, GameObject> { }
 public class OnHandCollisionExit : UnityEvent { }
 
 public class OnLeanForwardInput : UnityEvent { }
-public class OnLeanForwardCancel : UnityEvent { }
 public class OnLeanBackwardInput : UnityEvent { }
+public class OnLeanForwardCancel : UnityEvent { }
 public class OnLeanBackwardCancel : UnityEvent { }
-
 public class OnDetatchJoint : UnityEvent { }
 public class OnReattachJoint : UnityEvent { }
 public class OnSpawnIngredient : UnityEvent<Vector3> { }
@@ -42,4 +41,5 @@ public class EnterCounter : UnityEvent { }
 
 public class ExitCounter : UnityEvent { }
 
-public class OnObjectGrabbed : UnityEvent<GameObject, GameObject> { }
+public class ObjectGrabbed : UnityEvent<GameObject> { }
+public class ObjectReleased : UnityEvent { }

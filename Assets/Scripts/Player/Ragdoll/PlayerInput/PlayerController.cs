@@ -10,7 +10,7 @@ public class PlayerController : MonoBehaviour
         if (context.performed || context.canceled)
         {
             Vector2 moveInput = context.ReadValue<Vector2>();
-           // Debug.Log("Move Input: " + moveInput);
+            // Debug.Log("Move Input: " + moveInput);
 
             GenericEvent<OnMoveInput>.GetEvent(gameObject.name).Invoke(moveInput);
 
@@ -44,7 +44,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-     public void OnRightGrab(InputAction.CallbackContext context)
+    public void OnRightGrab(InputAction.CallbackContext context)
     {
         if (context.started) // pressed down
         {
@@ -56,7 +56,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    
+
 
     public void OnLeanForwards(InputAction.CallbackContext context)
     {
@@ -70,7 +70,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-  public void OnLeanBackwards(InputAction.CallbackContext context)
+    public void OnLeanBackwards(InputAction.CallbackContext context)
     {
         if (context.started) // pressed down
         {
@@ -86,15 +86,14 @@ public class PlayerController : MonoBehaviour
         if (context.started)
         {
 
-            Debug.Log("F Pressed");
+           //Debug.Log("F Pressed");
             GenericEvent<Interact>.GetEvent(gameObject.name).Invoke();
 
         } else if (context.canceled)
         {
-            Debug.Log("F not");
+            //Debug.Log("F not");
             GenericEvent<StopInteract>.GetEvent(gameObject.name).Invoke();
 
-            GenericEvent<OnLeanBackwardCancel>.GetEvent(gameObject.name).Invoke();
         }
     }
 
@@ -113,5 +112,6 @@ public class PlayerController : MonoBehaviour
             //GenericEvent<OnReattachJoint>.GetEvent(bodyChannel).Invoke();
         }
     }
+
 }
 
