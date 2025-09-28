@@ -8,7 +8,7 @@ public class Env_Interaction : MonoBehaviour
     private int layerMask;
     private GameObject lastHit, hitObject;
     [SerializeField] private float glowIntensity = 0.5f;
-    private bool canInteract, holdingObject;
+    public bool canInteract;
     private GameObject heldObject;
     private Dictionary<string, FixedJoint> grabJoints;
 
@@ -54,6 +54,7 @@ public class Env_Interaction : MonoBehaviour
         {
             // assign new hit object to variable
             hitObject = hit.collider.gameObject;
+
             canInteract = true;
 
             if (lastHit != hitObject)
@@ -93,11 +94,13 @@ public class Env_Interaction : MonoBehaviour
         
         if (canInteract && heldObject != null && hitObject != null)
         {
+            if (heldObject.tag != "Interactable") return;
 
             //destroy grab joint that connects the hand to the object
             foreach (KeyValuePair<string, FixedJoint> entry in grabJoints)
             {
                 GameObject grabbedObject = entry.Value.gameObject.GetComponent<FixedJoint>().connectedBody.gameObject;
+                
                 if (grabbedObject == heldObject)
                 {
                     entry.Value.gameObject.GetComponentInChildren<GrabDetection>().isGrabbing = false;
@@ -106,18 +109,32 @@ public class Env_Interaction : MonoBehaviour
                     grabJoints.Remove(entry.Key);
                     break;
                 }
+
             }
 
 
             // place object onto the snap point of the hit object
-            Renderer rend = heldObject.GetComponent<Renderer>();
+            Renderer rend = heldObject.GetComponentInChildren<Renderer>();
 
-            float yOffset = rend.bounds.extents.y;
-            Vector3 surfacePos = hitObject.transform.Find("SnapPoint").position;
-            surfacePos.y += yOffset;
-            heldObject.transform.position = surfacePos;
-            heldObject.transform.rotation = hitObject.transform.rotation;
+            float itemBottom = rend.bounds.min.y;
+
+            float counterTop = hitObject.GetComponent<Renderer>().bounds.max.y;
+
+            //Vector3 itemPos = hitObject.transform.Find("SnapPoint").position;
+
+            Vector3 itemPos = hitObject.transform.position;
+
+            float offset = counterTop - itemBottom;
+
+            itemPos.y += offset;
+
+            heldObject.transform.position = itemPos;
+
+            heldObject.transform.rotation = Quaternion.identity;
+
+            //heldObject.GetComponent<Rigidbody>().linearVelocity = Vector3.zero;
             heldObject.GetComponent<Rigidbody>().isKinematic = true;
+
         }
 
     }

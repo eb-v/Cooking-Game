@@ -43,3 +43,5 @@ public class ExitCounter : UnityEvent { }
 
 public class ObjectGrabbed : UnityEvent<GameObject> { }
 public class ObjectReleased : UnityEvent { }
+
+public class OnPlaceTile : UnityEvent { }
