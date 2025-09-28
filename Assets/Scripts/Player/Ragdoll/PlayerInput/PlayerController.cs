@@ -81,19 +81,16 @@ public class PlayerController : MonoBehaviour
             GenericEvent<OnLeanBackwardCancel>.GetEvent(gameObject.name).Invoke();
         }
     }
+    public bool IsInteractPressed { get; private set; } = false;
 
     public void OnInteract(InputAction.CallbackContext context) {
-        if (context.started)
-        {
-
-           //Debug.Log("F Pressed");
+        if (context.started) {
+            IsInteractPressed = true;
+            Debug.Log("Interact Pressed");
             GenericEvent<Interact>.GetEvent(gameObject.name).Invoke();
-
-        } else if (context.canceled)
-        {
-            //Debug.Log("F not");
+        } else if (context.canceled) {
+            IsInteractPressed = false;
             GenericEvent<StopInteract>.GetEvent(gameObject.name).Invoke();
-
         }
     }
 
