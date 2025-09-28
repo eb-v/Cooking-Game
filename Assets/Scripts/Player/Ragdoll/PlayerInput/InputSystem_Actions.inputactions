@@ -37,7 +37,7 @@
                     "name": "Jump",
                     "type": "Button",
                     "id": "f1ba0d36-48eb-4cd5-b651-1c94a6531f70",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -100,6 +100,15 @@
                     "name": "CounterSnap",
                     "type": "Button",
                     "id": "ad3ab2cd-f948-4a9d-9997-d918cfc7786b",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Pause",
+                    "type": "Button",
+                    "id": "dc995a64-c002-4450-b6e8-716bda6394b0",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -467,6 +476,17 @@
                     "processors": "",
                     "groups": ";Gamepad",
                     "action": "LeanForward",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c1c10f68-7731-4e90-8b06-987616d92505",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse;Gamepad;Touch;Joystick;XR",
+                    "action": "Pause",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
