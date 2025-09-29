@@ -14,22 +14,23 @@ public class Env_Interaction : MonoBehaviour
 
     private void Start()
     {
-        layerMask = LayerMask.GetMask("Interactable");
+        layerMask = LayerMask.GetMask("InteractDetectionCollider");
 
         GenericEvent<ObjectGrabbed>.GetEvent(gameObject.name).AddListener(AssignHeldObj);
         GenericEvent<ObjectReleased>.GetEvent(gameObject.name).AddListener(UnAssignHeldObj);
 
         GenericEvent<Interact>.GetEvent(gameObject.name).AddListener(PlaceObject);
+        GenericEvent<RemovePlacedObject>.GetEvent(gameObject.name).AddListener(RemovePlacedObject);
 
         grabJoints = gameObject.GetComponent<RagdollController>().grabJoints;
     }
 
     private void FixedUpdate()
     {
-        
+
         RayCastDetection();
 
-        
+
     }
 
     private void ResetHighlight(GameObject obj)
@@ -47,13 +48,13 @@ public class Env_Interaction : MonoBehaviour
         // perform raycast in front of player to detect interactable objects
         Ray ray = new Ray(playerCenterofMass.position, playerCenterofMass.forward);
 
-        Debug.DrawRay(ray.origin, ray.direction * interactionRange, Color.red);
+
 
         // if ray cast hits
         if (Physics.Raycast(ray, out RaycastHit hit, interactionRange, layerMask))
         {
             // assign new hit object to variable
-            hitObject = hit.collider.gameObject;
+            hitObject = hit.collider.transform.parent.gameObject;
 
             canInteract = true;
 
@@ -75,6 +76,8 @@ public class Env_Interaction : MonoBehaviour
                 mat.EnableKeyword("_EMISSION");
                 mat.SetColor("_EmissionColor", Color.white * glowIntensity);
             }
+            Debug.DrawRay(ray.origin, ray.direction * interactionRange, Color.green);
+
 
         }
         else
@@ -86,21 +89,22 @@ public class Env_Interaction : MonoBehaviour
                 lastHit = null;
             }
             canInteract = false;
+            Debug.DrawRay(ray.origin, ray.direction * interactionRange, Color.red);
         }
     }
 
     private void PlaceObject()
     {
-        
+
         if (canInteract && heldObject != null && hitObject != null)
         {
-            if (heldObject.tag != "Interactable") return;
+            if (heldObject.tag != "Ingredient") return;
 
             //destroy grab joint that connects the hand to the object
             foreach (KeyValuePair<string, FixedJoint> entry in grabJoints)
             {
                 GameObject grabbedObject = entry.Value.gameObject.GetComponent<FixedJoint>().connectedBody.gameObject;
-                
+
                 if (grabbedObject == heldObject)
                 {
                     entry.Value.gameObject.GetComponentInChildren<GrabDetection>().isGrabbing = false;
@@ -114,30 +118,57 @@ public class Env_Interaction : MonoBehaviour
 
 
             // place object onto the snap point of the hit object
-            Renderer rend = heldObject.GetComponentInChildren<Renderer>();
+            Collider counterCollider = hitObject.GetComponent<Collider>();
 
-            float itemBottom = rend.bounds.min.y;
+            float counterYOffset = counterCollider.bounds.extents.y;
 
-            float counterTop = hitObject.GetComponent<Renderer>().bounds.max.y;
+            Vector3 placePos = counterCollider.bounds.center;
+            placePos.y += counterYOffset;
 
-            //Vector3 itemPos = hitObject.transform.Find("SnapPoint").position;
+            Collider heldObjColider = heldObject.GetComponent<Collider>();
 
-            Vector3 itemPos = hitObject.transform.position;
+            //float heldObjYOffset = heldObjColider.bounds.extents.y;
+            //placePos.y += heldObjYOffset;
 
-            float offset = counterTop - itemBottom;
-
-            itemPos.y += offset;
-
-            heldObject.transform.position = itemPos;
-
+            heldObject.transform.position = placePos;
             heldObject.transform.rotation = Quaternion.identity;
-
-            //heldObject.GetComponent<Rigidbody>().linearVelocity = Vector3.zero;
             heldObject.GetComponent<Rigidbody>().isKinematic = true;
+
+            IPrepStation kitchenStationObj = hitObject.GetComponent<IPrepStation>();
+            kitchenStationObj.currentPlacedObject = heldObject;
+            kitchenStationObj.containsObject = true;
+
+            heldObject = null;
 
         }
 
     }
+
+    // remove the placed object from the counter and apply small force to make it pop off
+    private void RemovePlacedObject()
+    {
+        if (canInteract && hitObject != null && heldObject == null)
+        {
+             IPrepStation kitchenStationObj = hitObject.GetComponent<IPrepStation>();
+            if (!kitchenStationObj.containsObject) return;
+
+            GameObject placedObj = kitchenStationObj.currentPlacedObject;
+            
+
+            // pop object off counter
+            placedObj.GetComponent<Rigidbody>().isKinematic = false;
+            placedObj.GetComponent<Rigidbody>().AddForce(Vector3.up * 6f, ForceMode.Impulse);
+            Vector3 popDirection = (playerCenterofMass.position - hitObject.transform.position).normalized;
+            popDirection.y = 0f;
+
+            placedObj.GetComponent<Rigidbody>().AddForce(popDirection * 6f, ForceMode.Impulse);
+
+            kitchenStationObj.containsObject = false;
+            kitchenStationObj.currentPlacedObject = null;
+        }
+    }
+
+
 
     private void AssignHeldObj(GameObject grabbedObj)
     {

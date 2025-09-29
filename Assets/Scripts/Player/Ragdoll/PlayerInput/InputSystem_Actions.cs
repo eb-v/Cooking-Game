@@ -199,6 +199,15 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""RemoveObjectFromKitchenProp"",
+                    ""type"": ""Button"",
+                    ""id"": ""3640bf22-ef67-49b6-9005-bb2c0c70e3b1"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -575,6 +584,17 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""action"": ""Pause"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e594eeb2-03c2-497a-af83-94a5e7a2cb32"",
+                    ""path"": ""<Keyboard>/g"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""RemoveObjectFromKitchenProp"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -656,6 +676,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         m_Player_Interact = m_Player.FindAction("Interact", throwIfNotFound: true);
         m_Player_CounterSnap = m_Player.FindAction("CounterSnap", throwIfNotFound: true);
         m_Player_Pause = m_Player.FindAction("Pause", throwIfNotFound: true);
+        m_Player_RemoveObjectFromKitchenProp = m_Player.FindAction("RemoveObjectFromKitchenProp", throwIfNotFound: true);
     }
 
     ~@InputSystem_Actions()
@@ -748,6 +769,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Interact;
     private readonly InputAction m_Player_CounterSnap;
     private readonly InputAction m_Player_Pause;
+    private readonly InputAction m_Player_RemoveObjectFromKitchenProp;
     /// <summary>
     /// Provides access to input actions defined in input action map "Player".
     /// </summary>
@@ -807,6 +829,10 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Player/Pause".
         /// </summary>
         public InputAction @Pause => m_Wrapper.m_Player_Pause;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/RemoveObjectFromKitchenProp".
+        /// </summary>
+        public InputAction @RemoveObjectFromKitchenProp => m_Wrapper.m_Player_RemoveObjectFromKitchenProp;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -869,6 +895,9 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @Pause.started += instance.OnPause;
             @Pause.performed += instance.OnPause;
             @Pause.canceled += instance.OnPause;
+            @RemoveObjectFromKitchenProp.started += instance.OnRemoveObjectFromKitchenProp;
+            @RemoveObjectFromKitchenProp.performed += instance.OnRemoveObjectFromKitchenProp;
+            @RemoveObjectFromKitchenProp.canceled += instance.OnRemoveObjectFromKitchenProp;
         }
 
         /// <summary>
@@ -916,6 +945,9 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @Pause.started -= instance.OnPause;
             @Pause.performed -= instance.OnPause;
             @Pause.canceled -= instance.OnPause;
+            @RemoveObjectFromKitchenProp.started -= instance.OnRemoveObjectFromKitchenProp;
+            @RemoveObjectFromKitchenProp.performed -= instance.OnRemoveObjectFromKitchenProp;
+            @RemoveObjectFromKitchenProp.canceled -= instance.OnRemoveObjectFromKitchenProp;
         }
 
         /// <summary>
@@ -1105,5 +1137,12 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnPause(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "RemoveObjectFromKitchenProp" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnRemoveObjectFromKitchenProp(InputAction.CallbackContext context);
     }
 }

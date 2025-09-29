@@ -86,11 +86,18 @@ public class PlayerController : MonoBehaviour
     public void OnInteract(InputAction.CallbackContext context) {
         if (context.started) {
             IsInteractPressed = true;
-            Debug.Log("Interact Pressed");
             GenericEvent<Interact>.GetEvent(gameObject.name).Invoke();
         } else if (context.canceled) {
             IsInteractPressed = false;
             GenericEvent<StopInteract>.GetEvent(gameObject.name).Invoke();
+        }
+    }
+
+    public void OnRemoveObjectFromKitchenProp(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            GenericEvent<RemovePlacedObject>.GetEvent(gameObject.name).Invoke();
         }
     }
 

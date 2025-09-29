@@ -45,3 +45,5 @@ public class ObjectGrabbed : UnityEvent<GameObject> { }
 public class ObjectReleased : UnityEvent { }
 
 public class OnPlaceTile : UnityEvent { }
+
+public class RemovePlacedObject : UnityEvent { }
