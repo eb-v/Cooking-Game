@@ -208,6 +208,15 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""PerformSkillCheck"",
+                    ""type"": ""Button"",
+                    ""id"": ""1122df96-66b1-4a8e-9090-8d91a3cb319b"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -543,6 +552,17 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
+                    ""id"": ""75aee540-d613-4dd1-bd92-56d0931f281e"",
+                    ""path"": ""<Gamepad>/buttonWest"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Gamepad"",
+                    ""action"": ""Interact"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""3a8a218f-6a1a-4d10-bb93-fd0057f00e51"",
                     ""path"": ""<Keyboard>/r"",
                     ""interactions"": """",
@@ -593,6 +613,28 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": "";Keyboard&Mouse"",
                     ""action"": ""RemoveObjectFromKitchenProp"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""726382f8-6485-409b-bab7-5f5203c96e9c"",
+                    ""path"": ""<Keyboard>/t"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""PerformSkillCheck"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ce598bc9-0424-4481-a530-e7dae054e46d"",
+                    ""path"": ""<Gamepad>/buttonNorth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Gamepad"",
+                    ""action"": ""PerformSkillCheck"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -677,6 +719,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         m_Player_CounterSnap = m_Player.FindAction("CounterSnap", throwIfNotFound: true);
         m_Player_Pause = m_Player.FindAction("Pause", throwIfNotFound: true);
         m_Player_RemoveObjectFromKitchenProp = m_Player.FindAction("RemoveObjectFromKitchenProp", throwIfNotFound: true);
+        m_Player_PerformSkillCheck = m_Player.FindAction("PerformSkillCheck", throwIfNotFound: true);
     }
 
     ~@InputSystem_Actions()
@@ -770,6 +813,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_CounterSnap;
     private readonly InputAction m_Player_Pause;
     private readonly InputAction m_Player_RemoveObjectFromKitchenProp;
+    private readonly InputAction m_Player_PerformSkillCheck;
     /// <summary>
     /// Provides access to input actions defined in input action map "Player".
     /// </summary>
@@ -833,6 +877,10 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Player/RemoveObjectFromKitchenProp".
         /// </summary>
         public InputAction @RemoveObjectFromKitchenProp => m_Wrapper.m_Player_RemoveObjectFromKitchenProp;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/PerformSkillCheck".
+        /// </summary>
+        public InputAction @PerformSkillCheck => m_Wrapper.m_Player_PerformSkillCheck;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -898,6 +946,9 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @RemoveObjectFromKitchenProp.started += instance.OnRemoveObjectFromKitchenProp;
             @RemoveObjectFromKitchenProp.performed += instance.OnRemoveObjectFromKitchenProp;
             @RemoveObjectFromKitchenProp.canceled += instance.OnRemoveObjectFromKitchenProp;
+            @PerformSkillCheck.started += instance.OnPerformSkillCheck;
+            @PerformSkillCheck.performed += instance.OnPerformSkillCheck;
+            @PerformSkillCheck.canceled += instance.OnPerformSkillCheck;
         }
 
         /// <summary>
@@ -948,6 +999,9 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @RemoveObjectFromKitchenProp.started -= instance.OnRemoveObjectFromKitchenProp;
             @RemoveObjectFromKitchenProp.performed -= instance.OnRemoveObjectFromKitchenProp;
             @RemoveObjectFromKitchenProp.canceled -= instance.OnRemoveObjectFromKitchenProp;
+            @PerformSkillCheck.started -= instance.OnPerformSkillCheck;
+            @PerformSkillCheck.performed -= instance.OnPerformSkillCheck;
+            @PerformSkillCheck.canceled -= instance.OnPerformSkillCheck;
         }
 
         /// <summary>
@@ -1144,5 +1198,12 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnRemoveObjectFromKitchenProp(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "PerformSkillCheck" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnPerformSkillCheck(InputAction.CallbackContext context);
     }
 }

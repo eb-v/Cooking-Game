@@ -47,3 +47,12 @@ public class ObjectReleased : UnityEvent { }
 public class OnPlaceTile : UnityEvent { }
 
 public class RemovePlacedObject : UnityEvent { }
+
+public class SkillCheckInput : UnityEvent<GameObject> { }
+
+public class SkillCheckCompleted : UnityEvent { }
+
+public class SetUser : UnityEvent { }
+
+public class ObjectRemovedFromKitchenStation : UnityEvent { }
+public class PlayerStoppedLookingAtKitchenStation : UnityEvent { }

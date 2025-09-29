@@ -1,6 +1,7 @@
 using UnityEngine;
 
-public class IIngredient
+public interface IIngredient
 {
+    bool isPrepared { get; set; }
     GameObject preparedVersionPrefab { get; set; }
 }

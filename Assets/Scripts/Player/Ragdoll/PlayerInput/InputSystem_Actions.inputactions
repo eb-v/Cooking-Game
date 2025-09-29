@@ -122,6 +122,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "PerformSkillCheck",
+                    "type": "Button",
+                    "id": "1122df96-66b1-4a8e-9090-8d91a3cb319b",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -457,6 +466,17 @@
                 },
                 {
                     "name": "",
+                    "id": "75aee540-d613-4dd1-bd92-56d0931f281e",
+                    "path": "<Gamepad>/buttonWest",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Gamepad",
+                    "action": "Interact",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "3a8a218f-6a1a-4d10-bb93-fd0057f00e51",
                     "path": "<Keyboard>/r",
                     "interactions": "",
@@ -507,6 +527,28 @@
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
                     "action": "RemoveObjectFromKitchenProp",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "726382f8-6485-409b-bab7-5f5203c96e9c",
+                    "path": "<Keyboard>/t",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "PerformSkillCheck",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ce598bc9-0424-4481-a530-e7dae054e46d",
+                    "path": "<Gamepad>/buttonNorth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Gamepad",
+                    "action": "PerformSkillCheck",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

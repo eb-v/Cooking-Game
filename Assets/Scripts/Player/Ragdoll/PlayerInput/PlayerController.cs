@@ -5,6 +5,14 @@ using UnityEngine.InputSystem;
 public class PlayerController : MonoBehaviour
 {
 
+    private Env_Interaction env_Interaction;
+
+
+    private void Awake()
+    {
+        env_Interaction = GetComponent<Env_Interaction>();
+    }
+
     public void OnMove(InputAction.CallbackContext context)
     {
         if (context.performed || context.canceled)
@@ -90,6 +98,17 @@ public class PlayerController : MonoBehaviour
         } else if (context.canceled) {
             IsInteractPressed = false;
             GenericEvent<StopInteract>.GetEvent(gameObject.name).Invoke();
+        }
+    }
+
+    public void OnPerformSkillCheck(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            if (env_Interaction.canInteract && env_Interaction.lookedAtKitchenProp != null)
+            {
+                GenericEvent<SkillCheckInput>.GetEvent(env_Interaction.lookedAtKitchenProp.name).Invoke(gameObject);
+            }
         }
     }
 

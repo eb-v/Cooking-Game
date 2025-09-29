@@ -6,7 +6,8 @@ public class Env_Interaction : MonoBehaviour
     [SerializeField] private Transform playerCenterofMass;
     [SerializeField] private float interactionRange = 5f;
     private int layerMask;
-    private GameObject lastHit, hitObject;
+    private GameObject lastLookedAtKitchenObject;
+    public GameObject lookedAtKitchenProp;
     [SerializeField] private float glowIntensity = 0.5f;
     public bool canInteract;
     private GameObject heldObject;
@@ -21,6 +22,9 @@ public class Env_Interaction : MonoBehaviour
 
         GenericEvent<Interact>.GetEvent(gameObject.name).AddListener(PlaceObject);
         GenericEvent<RemovePlacedObject>.GetEvent(gameObject.name).AddListener(RemovePlacedObject);
+
+        GenericEvent<SetUser>.GetEvent(gameObject.name).AddListener(SetCurrentUserForKitchenProp);
+
 
         grabJoints = gameObject.GetComponent<RagdollController>().grabJoints;
     }
@@ -48,28 +52,28 @@ public class Env_Interaction : MonoBehaviour
         // perform raycast in front of player to detect interactable objects
         Ray ray = new Ray(playerCenterofMass.position, playerCenterofMass.forward);
 
-
-
         // if ray cast hits
         if (Physics.Raycast(ray, out RaycastHit hit, interactionRange, layerMask))
         {
             // assign new hit object to variable
-            hitObject = hit.collider.transform.parent.gameObject;
+            lookedAtKitchenProp = hit.collider.transform.parent.gameObject;
 
             canInteract = true;
 
-            if (lastHit != hitObject)
+
+
+            if (lastLookedAtKitchenObject != lookedAtKitchenProp)
             {
-                if (lastHit != null)
+                if (lastLookedAtKitchenObject != null)
                 {
-                    ResetHighlight(lastHit);
+                    ResetHighlight(lastLookedAtKitchenObject);
                 }
             }
 
-            lastHit = hitObject;
+            lastLookedAtKitchenObject = lookedAtKitchenProp;
 
             // highlight the currently hit object
-            Renderer rend = hitObject.GetComponent<Renderer>();
+            Renderer rend = lookedAtKitchenProp.GetComponent<Renderer>();
             if (rend != null)
             {
                 Material mat = rend.material;
@@ -82,11 +86,19 @@ public class Env_Interaction : MonoBehaviour
         }
         else
         {
-            hitObject = null;
-            if (lastHit != null)
+            if (lastLookedAtKitchenObject != null && lastLookedAtKitchenObject.GetComponent<IPrepStation>().currentUser == gameObject)
             {
-                ResetHighlight(lastHit);
-                lastHit = null;
+                GenericEvent<PlayerStoppedLookingAtKitchenStation>.GetEvent(lastLookedAtKitchenObject.name).Invoke();
+            }
+
+
+
+
+            lookedAtKitchenProp = null;
+            if (lastLookedAtKitchenObject != null)
+            {
+                ResetHighlight(lastLookedAtKitchenObject);
+                lastLookedAtKitchenObject = null;
             }
             canInteract = false;
             Debug.DrawRay(ray.origin, ray.direction * interactionRange, Color.red);
@@ -95,8 +107,21 @@ public class Env_Interaction : MonoBehaviour
 
     private void PlaceObject()
     {
+        if (lookedAtKitchenProp == null) return;
+        
+        
 
-        if (canInteract && heldObject != null && hitObject != null)
+
+
+        if (lookedAtKitchenProp.GetComponent<IPrepStation>().isBeingUsed) return;
+
+        if (lookedAtKitchenProp.GetComponent<IPrepStation>().containsObject)
+        {
+            Debug.Log("Counter already has an object placed on it.");
+            return;
+        }
+
+        if (canInteract && heldObject != null && lookedAtKitchenProp != null)
         {
             if (heldObject.tag != "Ingredient") return;
 
@@ -118,7 +143,7 @@ public class Env_Interaction : MonoBehaviour
 
 
             // place object onto the snap point of the hit object
-            Collider counterCollider = hitObject.GetComponent<Collider>();
+            Collider counterCollider = lookedAtKitchenProp.GetComponent<Collider>();
 
             float counterYOffset = counterCollider.bounds.extents.y;
 
@@ -134,7 +159,7 @@ public class Env_Interaction : MonoBehaviour
             heldObject.transform.rotation = Quaternion.identity;
             heldObject.GetComponent<Rigidbody>().isKinematic = true;
 
-            IPrepStation kitchenStationObj = hitObject.GetComponent<IPrepStation>();
+            IPrepStation kitchenStationObj = lookedAtKitchenProp.GetComponent<IPrepStation>();
             kitchenStationObj.currentPlacedObject = heldObject;
             kitchenStationObj.containsObject = true;
 
@@ -147,9 +172,10 @@ public class Env_Interaction : MonoBehaviour
     // remove the placed object from the counter and apply small force to make it pop off
     private void RemovePlacedObject()
     {
-        if (canInteract && hitObject != null && heldObject == null)
+
+        if (canInteract && lookedAtKitchenProp != null && heldObject == null)
         {
-             IPrepStation kitchenStationObj = hitObject.GetComponent<IPrepStation>();
+             IPrepStation kitchenStationObj = lookedAtKitchenProp.GetComponent<IPrepStation>();
             if (!kitchenStationObj.containsObject) return;
 
             GameObject placedObj = kitchenStationObj.currentPlacedObject;
@@ -158,13 +184,16 @@ public class Env_Interaction : MonoBehaviour
             // pop object off counter
             placedObj.GetComponent<Rigidbody>().isKinematic = false;
             placedObj.GetComponent<Rigidbody>().AddForce(Vector3.up * 6f, ForceMode.Impulse);
-            Vector3 popDirection = (playerCenterofMass.position - hitObject.transform.position).normalized;
+            Vector3 popDirection = (playerCenterofMass.position - lookedAtKitchenProp.transform.position).normalized;
             popDirection.y = 0f;
 
             placedObj.GetComponent<Rigidbody>().AddForce(popDirection * 6f, ForceMode.Impulse);
 
             kitchenStationObj.containsObject = false;
             kitchenStationObj.currentPlacedObject = null;
+            GenericEvent<ObjectRemovedFromKitchenStation>.GetEvent(lookedAtKitchenProp.name).Invoke();
+
+            
         }
     }
 
@@ -181,5 +210,16 @@ public class Env_Interaction : MonoBehaviour
     private void UnAssignHeldObj()
     {
         heldObject = null;
+    }
+
+    private void SetCurrentUserForKitchenProp()
+    {
+        GameObject user = lookedAtKitchenProp.GetComponent<IPrepStation>().currentUser;
+
+        // is player looking at a kitchen prop that has an object and the kitchen prop is not being used by another player?
+        if (lookedAtKitchenProp != null && user == null && lookedAtKitchenProp.GetComponent<IPrepStation>().containsObject)
+        {
+            lookedAtKitchenProp.GetComponent<IPrepStation>().currentUser = gameObject;
+        }
     }
 }

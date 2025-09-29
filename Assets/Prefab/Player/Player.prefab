@@ -2043,7 +2043,7 @@ MonoBehaviour:
   inAir: 0
   punchingRight: 0
   punchingLeft: 0
-  _angleMultiplier: 70
+  _angleMultiplier: 122.5
 --- !u!114 &2597619492002480546
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2185,6 +2185,42 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 81343b58-1d2b-4e2f-8f77-249d67f78992
     m_ActionName: 'Player/LeanForward[/Keyboard/e,/DualSenseGamepadHID/rightStick/up]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: dc995a64-c002-4450-b6e8-716bda6394b0
+    m_ActionName: 'Player/Pause[/Keyboard/escape]'
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 4301988107989911412}
+        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
+        m_MethodName: OnRemoveObjectFromKitchenProp
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 3640bf22-ef67-49b6-9005-bb2c0c70e3b1
+    m_ActionName: 'Player/RemoveObjectFromKitchenProp[/Keyboard/g]'
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 4301988107989911412}
+        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
+        m_MethodName: OnPerformSkillCheck
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 1122df96-66b1-4a8e-9090-8d91a3cb319b
+    m_ActionName: 'Player/PerformSkillCheck[/Keyboard/t]'
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
@@ -2216,7 +2252,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: '::'
   playerCenterofMass: {fileID: 1978282482761880874}
   interactionRange: 5
+  lookedAtKitchenProp: {fileID: 0}
   glowIntensity: 0.21
+  canInteract: 0
 --- !u!1 &5271651282982184791
 GameObject:
   m_ObjectHideFlags: 0
