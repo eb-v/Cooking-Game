@@ -1,32 +1,34 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
+// This script mainly handles interaction detection via raycasting in front of the player
+// If the player is looking at an interactable object, it highlights the object and invokes an event passing the looked at interactable as a parameter to any listeners
 public class Env_Interaction : MonoBehaviour
 {
     [SerializeField] private Transform playerCenterofMass;
     [SerializeField] private float interactionRange = 5f;
     private int layerMask;
-    private GameObject lastLookedAtKitchenObject;
-    public GameObject lookedAtKitchenProp;
+    private GameObject lastLookedAt;
+    public GameObject currentlyLookingAt;
     [SerializeField] private float glowIntensity = 0.5f;
-    public bool canInteract;
-    private GameObject heldObject;
-    private Dictionary<string, FixedJoint> grabJoints;
+    //private GameObject heldObject;
+    //private Dictionary<string, FixedJoint> grabJoints;
 
     private void Start()
     {
         layerMask = LayerMask.GetMask("InteractDetectionCollider");
 
-        GenericEvent<ObjectGrabbed>.GetEvent(gameObject.name).AddListener(AssignHeldObj);
-        GenericEvent<ObjectReleased>.GetEvent(gameObject.name).AddListener(UnAssignHeldObj);
+        //GenericEvent<ObjectGrabbed>.GetEvent(gameObject.name).AddListener(AssignHeldObj);
+        //GenericEvent<ObjectReleased>.GetEvent(gameObject.name).AddListener(UnAssignHeldObj);
 
-        GenericEvent<Interact>.GetEvent(gameObject.name).AddListener(PlaceObject);
-        GenericEvent<RemovePlacedObject>.GetEvent(gameObject.name).AddListener(RemovePlacedObject);
+        //GenericEvent<Interact>.GetEvent(gameObject.name).AddListener(PlaceObject);
+        //GenericEvent<RemovePlacedObject>.GetEvent(gameObject.name).AddListener(RemovePlacedObject);
 
-        GenericEvent<SetUser>.GetEvent(gameObject.name).AddListener(SetCurrentUserForKitchenProp);
+        //GenericEvent<SetUser>.GetEvent(gameObject.name).AddListener(SetCurrentUserForKitchenProp);
 
 
-        grabJoints = gameObject.GetComponent<RagdollController>().grabJoints;
+        //grabJoints = gameObject.GetComponent<RagdollController>().grabJoints;
     }
 
     private void FixedUpdate()
@@ -56,24 +58,21 @@ public class Env_Interaction : MonoBehaviour
         if (Physics.Raycast(ray, out RaycastHit hit, interactionRange, layerMask))
         {
             // assign new hit object to variable
-            lookedAtKitchenProp = hit.collider.transform.parent.gameObject;
+            currentlyLookingAt = hit.collider.transform.parent.gameObject;
 
-            canInteract = true;
-
-
-
-            if (lastLookedAtKitchenObject != lookedAtKitchenProp)
+            if (lastLookedAt != currentlyLookingAt)
             {
-                if (lastLookedAtKitchenObject != null)
+                GenericEvent<InteractableLookedAtChanged>.GetEvent(gameObject.name).Invoke(currentlyLookingAt);
+                if (lastLookedAt != null)
                 {
-                    ResetHighlight(lastLookedAtKitchenObject);
+                    ResetHighlight(lastLookedAt);
                 }
             }
 
-            lastLookedAtKitchenObject = lookedAtKitchenProp;
+            lastLookedAt = currentlyLookingAt;
 
             // highlight the currently hit object
-            Renderer rend = lookedAtKitchenProp.GetComponent<Renderer>();
+            Renderer rend = currentlyLookingAt.GetComponent<Renderer>();
             if (rend != null)
             {
                 Material mat = rend.material;
@@ -82,144 +81,143 @@ public class Env_Interaction : MonoBehaviour
             }
             Debug.DrawRay(ray.origin, ray.direction * interactionRange, Color.green);
 
-
         }
         else
         {
-            if (lastLookedAtKitchenObject != null && lastLookedAtKitchenObject.GetComponent<IPrepStation>().currentUser == gameObject)
+            //if (lastLookedAt != null && lastLookedAt.GetComponent<IPrepStation>().currentUser == gameObject)
+            //{
+            //    GenericEvent<PlayerStoppedLookingAtKitchenStation>.GetEvent(lastLookedAt.name).Invoke();
+            //}
+
+
+
+
+            currentlyLookingAt = null;
+            if (lastLookedAt != null)
             {
-                GenericEvent<PlayerStoppedLookingAtKitchenStation>.GetEvent(lastLookedAtKitchenObject.name).Invoke();
+                GenericEvent<InteractableLookedAtChanged>.GetEvent(gameObject.name).Invoke(null);
+                ResetHighlight(lastLookedAt);
+                lastLookedAt = null;
             }
-
-
-
-
-            lookedAtKitchenProp = null;
-            if (lastLookedAtKitchenObject != null)
-            {
-                ResetHighlight(lastLookedAtKitchenObject);
-                lastLookedAtKitchenObject = null;
-            }
-            canInteract = false;
             Debug.DrawRay(ray.origin, ray.direction * interactionRange, Color.red);
         }
     }
 
-    private void PlaceObject()
-    {
-        if (lookedAtKitchenProp == null) return;
+    //private void PlaceObject()
+    //{
+    //    if (lookedAtKitchenProp == null) return;
         
         
 
 
 
-        if (lookedAtKitchenProp.GetComponent<IPrepStation>().isBeingUsed) return;
+    //    if (lookedAtKitchenProp.GetComponent<IPrepStation>().isBeingUsed) return;
 
-        if (lookedAtKitchenProp.GetComponent<IPrepStation>().containsObject)
-        {
-            Debug.Log("Counter already has an object placed on it.");
-            return;
-        }
+    //    if (lookedAtKitchenProp.GetComponent<IPrepStation>().containsObject)
+    //    {
+    //        Debug.Log("Counter already has an object placed on it.");
+    //        return;
+    //    }
 
-        if (canInteract && heldObject != null && lookedAtKitchenProp != null)
-        {
-            if (heldObject.tag != "Ingredient") return;
+    //    if (canInteract && heldObject != null && lookedAtKitchenProp != null)
+    //    {
+    //        if (heldObject.tag != "Ingredient") return;
 
-            //destroy grab joint that connects the hand to the object
-            foreach (KeyValuePair<string, FixedJoint> entry in grabJoints)
-            {
-                GameObject grabbedObject = entry.Value.gameObject.GetComponent<FixedJoint>().connectedBody.gameObject;
+    //        //destroy grab joint that connects the hand to the object
+    //        foreach (KeyValuePair<string, FixedJoint> entry in grabJoints)
+    //        {
+    //            GameObject grabbedObject = entry.Value.gameObject.GetComponent<FixedJoint>().connectedBody.gameObject;
 
-                if (grabbedObject == heldObject)
-                {
-                    entry.Value.gameObject.GetComponentInChildren<GrabDetection>().isGrabbing = false;
+    //            if (grabbedObject == heldObject)
+    //            {
+    //                entry.Value.gameObject.GetComponentInChildren<GrabDetection>().isGrabbing = false;
 
-                    Destroy(entry.Value);
-                    grabJoints.Remove(entry.Key);
-                    break;
-                }
+    //                Destroy(entry.Value);
+    //                grabJoints.Remove(entry.Key);
+    //                break;
+    //            }
 
-            }
+    //        }
 
 
-            // place object onto the snap point of the hit object
-            Collider counterCollider = lookedAtKitchenProp.GetComponent<Collider>();
+    //        // place object onto the snap point of the hit object
+    //        Collider counterCollider = lookedAtKitchenProp.GetComponent<Collider>();
 
-            float counterYOffset = counterCollider.bounds.extents.y;
+    //        float counterYOffset = counterCollider.bounds.extents.y;
 
-            Vector3 placePos = counterCollider.bounds.center;
-            placePos.y += counterYOffset;
+    //        Vector3 placePos = counterCollider.bounds.center;
+    //        placePos.y += counterYOffset;
 
-            Collider heldObjColider = heldObject.GetComponent<Collider>();
+    //        Collider heldObjColider = heldObject.GetComponent<Collider>();
 
-            //float heldObjYOffset = heldObjColider.bounds.extents.y;
-            //placePos.y += heldObjYOffset;
+    //        //float heldObjYOffset = heldObjColider.bounds.extents.y;
+    //        //placePos.y += heldObjYOffset;
 
-            heldObject.transform.position = placePos;
-            heldObject.transform.rotation = Quaternion.identity;
-            heldObject.GetComponent<Rigidbody>().isKinematic = true;
+    //        heldObject.transform.position = placePos;
+    //        heldObject.transform.rotation = Quaternion.identity;
+    //        heldObject.GetComponent<Rigidbody>().isKinematic = true;
 
-            IPrepStation kitchenStationObj = lookedAtKitchenProp.GetComponent<IPrepStation>();
-            kitchenStationObj.currentPlacedObject = heldObject;
-            kitchenStationObj.containsObject = true;
+    //        IPrepStation kitchenStationObj = lookedAtKitchenProp.GetComponent<IPrepStation>();
+    //        kitchenStationObj.currentPlacedObject = heldObject;
+    //        kitchenStationObj.containsObject = true;
 
-            heldObject = null;
+    //        heldObject = null;
 
-        }
+    //    }
 
-    }
+    //}
 
-    // remove the placed object from the counter and apply small force to make it pop off
-    private void RemovePlacedObject()
-    {
+    //// remove the placed object from the counter and apply small force to make it pop off
+    //private void RemovePlacedObject()
+    //{
 
-        if (canInteract && lookedAtKitchenProp != null && heldObject == null)
-        {
-             IPrepStation kitchenStationObj = lookedAtKitchenProp.GetComponent<IPrepStation>();
-            if (!kitchenStationObj.containsObject) return;
+    //    if (canInteract && lookedAtKitchenProp != null && heldObject == null)
+    //    {
+    //         IPrepStation kitchenStationObj = lookedAtKitchenProp.GetComponent<IPrepStation>();
+    //        if (!kitchenStationObj.containsObject) return;
 
-            GameObject placedObj = kitchenStationObj.currentPlacedObject;
+    //        GameObject placedObj = kitchenStationObj.currentPlacedObject;
             
 
-            // pop object off counter
-            placedObj.GetComponent<Rigidbody>().isKinematic = false;
-            placedObj.GetComponent<Rigidbody>().AddForce(Vector3.up * 6f, ForceMode.Impulse);
-            Vector3 popDirection = (playerCenterofMass.position - lookedAtKitchenProp.transform.position).normalized;
-            popDirection.y = 0f;
+    //        // pop object off counter
+    //        placedObj.GetComponent<Rigidbody>().isKinematic = false;
+    //        placedObj.GetComponent<Rigidbody>().AddForce(Vector3.up * 6f, ForceMode.Impulse);
+    //        Vector3 popDirection = (playerCenterofMass.position - lookedAtKitchenProp.transform.position).normalized;
+    //        popDirection.y = 0f;
 
-            placedObj.GetComponent<Rigidbody>().AddForce(popDirection * 6f, ForceMode.Impulse);
+    //        placedObj.GetComponent<Rigidbody>().AddForce(popDirection * 6f, ForceMode.Impulse);
 
-            kitchenStationObj.containsObject = false;
-            kitchenStationObj.currentPlacedObject = null;
-            GenericEvent<ObjectRemovedFromKitchenStation>.GetEvent(lookedAtKitchenProp.name).Invoke();
+    //        kitchenStationObj.containsObject = false;
+    //        kitchenStationObj.currentPlacedObject = null;
+    //        GenericEvent<ObjectRemovedFromKitchenStation>.GetEvent(lookedAtKitchenProp.name).Invoke();
 
             
-        }
-    }
+    //    }
+    //}
 
 
 
-    private void AssignHeldObj(GameObject grabbedObj)
-    {
-        if (heldObject != null) return;
+    //private void AssignHeldObj(GameObject grabbedObj)
+    //{
+    //    if (heldObject != null) return;
 
-        heldObject = grabbedObj;
+    //    heldObject = grabbedObj;
 
-    }
+    //}
 
-    private void UnAssignHeldObj()
-    {
-        heldObject = null;
-    }
+    //private void UnAssignHeldObj()
+    //{
+    //    heldObject = null;
+    //}
 
-    private void SetCurrentUserForKitchenProp()
-    {
-        GameObject user = lookedAtKitchenProp.GetComponent<IPrepStation>().currentUser;
+    //private void SetCurrentUserForKitchenProp()
+    //{
+    //    GameObject user = lookedAtKitchenProp.GetComponent<IPrepStation>().currentUser;
 
-        // is player looking at a kitchen prop that has an object and the kitchen prop is not being used by another player?
-        if (lookedAtKitchenProp != null && user == null && lookedAtKitchenProp.GetComponent<IPrepStation>().containsObject)
-        {
-            lookedAtKitchenProp.GetComponent<IPrepStation>().currentUser = gameObject;
-        }
-    }
+    //    // is player looking at a kitchen prop that has an object and the kitchen prop is not being used by another player?
+    //    if (lookedAtKitchenProp != null && user == null && lookedAtKitchenProp.GetComponent<IPrepStation>().containsObject)
+    //    {
+    //        lookedAtKitchenProp.GetComponent<IPrepStation>().currentUser = gameObject;
+    //    }
+    //}
 }

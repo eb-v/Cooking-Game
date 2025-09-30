@@ -131,6 +131,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "PlaceIngredient",
+                    "type": "Button",
+                    "id": "d4a0a9f1-9530-4e83-b186-0b165f6e6746",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -549,6 +558,17 @@
                     "processors": "",
                     "groups": ";Gamepad",
                     "action": "PerformSkillCheck",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b6626dcc-f670-45bd-bec8-06987d6325a2",
+                    "path": "<Keyboard>/v",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "PlaceIngredient",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

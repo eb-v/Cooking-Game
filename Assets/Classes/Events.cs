@@ -42,7 +42,7 @@ public class EnterCounter : UnityEvent { }
 public class ExitCounter : UnityEvent { }
 
 public class ObjectGrabbed : UnityEvent<GameObject> { }
-public class ObjectReleased : UnityEvent { }
+public class ObjectReleased : UnityEvent<GameObject> { }
 
 public class OnPlaceTile : UnityEvent { }
 
@@ -56,3 +56,10 @@ public class SetUser : UnityEvent { }
 
 public class ObjectRemovedFromKitchenStation : UnityEvent { }
 public class PlayerStoppedLookingAtKitchenStation : UnityEvent { }
+
+public class  InteractableLookedAtChanged : UnityEvent<GameObject> { }
+
+public class PlacedIngredient : UnityEvent<GameObject> { }
+
+public class OnPlaceIngredientInput : UnityEvent { }
+

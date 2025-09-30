@@ -124,15 +124,11 @@ public class RagdollController : MonoBehaviour
     private float _leanAngleX = 0f;
 
 
-    public Dictionary<string, FixedJoint> grabJoints;
 
     private static int groundLayer;
     private WaitForSeconds punchDelayWaitTime = new WaitForSeconds(0.3f);
 
-    private void Awake()
-    {
-        grabJoints = new Dictionary<string, FixedJoint>();
-    }
+    
 
     void Start()
     {
@@ -154,6 +150,7 @@ public class RagdollController : MonoBehaviour
         GenericEvent<OnHandCollisionEnter>.GetEvent(gameObject.name).AddListener(PlayerGrab);
 
         //GenericEvent<Interact>.GetEvent(gameObject.name).AddListener(PlayerReleaseGrab);
+        GenericEvent<PlacedIngredient>.GetEvent(gameObject.name).AddListener(PlayerReleaseGrab);
 
     }
 
@@ -810,10 +807,11 @@ public class RagdollController : MonoBehaviour
             return;
         FixedJoint grabJoint = hand.transform.parent.gameObject.AddComponent<FixedJoint>();
         grabJoint.connectedBody = objToGrab.GetComponent<Rigidbody>();
-        grabJoints.Add(hand.name, grabJoint);
 
         hand.GetComponent<GrabDetection>().isGrabbing = true;
         GenericEvent<ObjectGrabbed>.GetEvent(gameObject.name).Invoke(objToGrab);
+        hand.GetComponent<GrabDetection>().grabbedObj = objToGrab;
+
     }
 
     private void PlayerReleaseGrab(GameObject hand)
@@ -821,14 +819,14 @@ public class RagdollController : MonoBehaviour
         if (hand.GetComponent<GrabDetection>().isGrabbing == false)
             return;
 
-        if (grabJoints.TryGetValue(hand.name, out FixedJoint grabJoint))
+        if (hand.transform.parent.gameObject.GetComponent<FixedJoint>() != null)
         {
-            Destroy(grabJoint);
-            grabJoints.Remove(hand.name);
+            Destroy(hand.transform.parent.gameObject.GetComponent<FixedJoint>());
         }
-
         hand.GetComponent<GrabDetection>().isGrabbing = false;
-        GenericEvent<ObjectReleased>.GetEvent(gameObject.name).Invoke();
+        GenericEvent<ObjectReleased>.GetEvent(gameObject.name).Invoke(hand.GetComponent<GrabDetection>().grabbedObj);
+        hand.GetComponent<GrabDetection>().grabbedObj = null;
+
     }
 
     private void DestroyGrabJoint()

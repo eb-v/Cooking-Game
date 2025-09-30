@@ -105,9 +105,9 @@ public class PlayerController : MonoBehaviour
     {
         if (context.started)
         {
-            if (env_Interaction.canInteract && env_Interaction.lookedAtKitchenProp != null)
+            if (env_Interaction.currentlyLookingAt != null)
             {
-                GenericEvent<SkillCheckInput>.GetEvent(env_Interaction.lookedAtKitchenProp.name).Invoke(gameObject);
+                GenericEvent<SkillCheckInput>.GetEvent(env_Interaction.currentlyLookingAt.name).Invoke(gameObject);
             }
         }
     }
@@ -133,6 +133,14 @@ public class PlayerController : MonoBehaviour
         if (context.started)
         {
             //GenericEvent<OnReattachJoint>.GetEvent(bodyChannel).Invoke();
+        }
+    }
+
+    public void OnPlaceIngredient(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            GenericEvent<OnPlaceIngredientInput>.GetEvent(gameObject.name).Invoke();
         }
     }
 

@@ -3,6 +3,7 @@ using UnityEngine;
 public class GrabDetection : MonoBehaviour
 {
     [HideInInspector] public bool isGrabbing = false;
+    public GameObject grabbedObj;
 
     private void OnTriggerEnter(Collider other)
     {

@@ -217,6 +217,15 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""PlaceIngredient"",
+                    ""type"": ""Button"",
+                    ""id"": ""d4a0a9f1-9530-4e83-b186-0b165f6e6746"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -637,6 +646,17 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""action"": ""PerformSkillCheck"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b6626dcc-f670-45bd-bec8-06987d6325a2"",
+                    ""path"": ""<Keyboard>/v"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""PlaceIngredient"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -720,6 +740,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         m_Player_Pause = m_Player.FindAction("Pause", throwIfNotFound: true);
         m_Player_RemoveObjectFromKitchenProp = m_Player.FindAction("RemoveObjectFromKitchenProp", throwIfNotFound: true);
         m_Player_PerformSkillCheck = m_Player.FindAction("PerformSkillCheck", throwIfNotFound: true);
+        m_Player_PlaceIngredient = m_Player.FindAction("PlaceIngredient", throwIfNotFound: true);
     }
 
     ~@InputSystem_Actions()
@@ -814,6 +835,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Pause;
     private readonly InputAction m_Player_RemoveObjectFromKitchenProp;
     private readonly InputAction m_Player_PerformSkillCheck;
+    private readonly InputAction m_Player_PlaceIngredient;
     /// <summary>
     /// Provides access to input actions defined in input action map "Player".
     /// </summary>
@@ -882,6 +904,10 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// </summary>
         public InputAction @PerformSkillCheck => m_Wrapper.m_Player_PerformSkillCheck;
         /// <summary>
+        /// Provides access to the underlying input action "Player/PlaceIngredient".
+        /// </summary>
+        public InputAction @PlaceIngredient => m_Wrapper.m_Player_PlaceIngredient;
+        /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
         public InputActionMap Get() { return m_Wrapper.m_Player; }
@@ -949,6 +975,9 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @PerformSkillCheck.started += instance.OnPerformSkillCheck;
             @PerformSkillCheck.performed += instance.OnPerformSkillCheck;
             @PerformSkillCheck.canceled += instance.OnPerformSkillCheck;
+            @PlaceIngredient.started += instance.OnPlaceIngredient;
+            @PlaceIngredient.performed += instance.OnPlaceIngredient;
+            @PlaceIngredient.canceled += instance.OnPlaceIngredient;
         }
 
         /// <summary>
@@ -1002,6 +1031,9 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @PerformSkillCheck.started -= instance.OnPerformSkillCheck;
             @PerformSkillCheck.performed -= instance.OnPerformSkillCheck;
             @PerformSkillCheck.canceled -= instance.OnPerformSkillCheck;
+            @PlaceIngredient.started -= instance.OnPlaceIngredient;
+            @PlaceIngredient.performed -= instance.OnPlaceIngredient;
+            @PlaceIngredient.canceled -= instance.OnPlaceIngredient;
         }
 
         /// <summary>
@@ -1205,5 +1237,12 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnPerformSkillCheck(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "PlaceIngredient" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnPlaceIngredient(InputAction.CallbackContext context);
     }
 }
