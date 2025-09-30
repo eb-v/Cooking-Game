@@ -51,13 +51,13 @@ public class StoveScript : MonoBehaviour, IPrepStation
     // change ingredient prefab to prepared version
     public void PrepIngredient()
     {
-        Debug.Log(currentPlacedObject.name + " has been cooked on the stove!");
-        currentPlacedObject.GetComponent<IIngredient>().isPrepared = true;
+        IngredientScript ingredientComponent = currentPlacedObject.GetComponent<IngredientScript>();
+        ingredientComponent.PrepareIngredient();
     }
 
     private void AttemptSkillCheck(GameObject player)
     {
-        if (currentPlacedObject != null && currentPlacedObject.GetComponent<IIngredient>().isPrepared)
+        if (currentPlacedObject != null && currentPlacedObject.GetComponent<IngredientScript>().ingredient.IsPrepared())
         {
             Debug.Log("Ingredient is already prepared!");
             return;

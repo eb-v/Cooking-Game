@@ -7,7 +7,17 @@ public class GrabDetection : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-            GenericEvent<OnHandCollisionEnter>.GetEvent(transform.root.name).Invoke(gameObject ,other.gameObject);
+        string layerName = LayerMask.LayerToName(other.gameObject.layer);
+        if (layerName == "Player")
+        {
+            GameObject rootPlayerObj = other.transform.root.gameObject;
+            if (rootPlayerObj == gameObject.transform.root.gameObject) 
+            {
+                return;
+            }
+        }
+
+        GenericEvent<OnHandCollisionEnter>.GetEvent(transform.root.name).Invoke(gameObject ,other.gameObject);
     }
 
     private void OnTriggerExit(Collider other)

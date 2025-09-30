@@ -11,9 +11,6 @@ public class CuttingTableScript : MonoBehaviour, IPrepStation
     public GameObject currentPlacedObject { get; set; }
     public bool containsObject { get; set; }
 
-    public bool ingredientPrepared;
-
-
     private void Start()
     {
         GenericEvent<SkillCheckInput>.GetEvent(gameObject.name).AddListener(AttemptSkillCheck);
@@ -34,9 +31,6 @@ public class CuttingTableScript : MonoBehaviour, IPrepStation
 
     }
 
-
-
-
     void Update()
     {
         isBeingUsed = skillCheckActive;
@@ -51,15 +45,13 @@ public class CuttingTableScript : MonoBehaviour, IPrepStation
     // change ingredient prefab to prepared version
     public void PrepIngredient()
     {
-
-
-
-        currentPlacedObject.GetComponent<IIngredient>().isPrepared = true;
+        IngredientScript ingredientComponent = currentPlacedObject.GetComponent<IngredientScript>();
+        ingredientComponent.PrepareIngredient();
     }
 
     private void AttemptSkillCheck(GameObject player)
     {
-        if (currentPlacedObject != null && currentPlacedObject.GetComponent<IIngredient>().isPrepared)
+        if (currentPlacedObject != null && currentPlacedObject.tag == "Prepared")
         {
             Debug.Log("Ingredient is already prepared!");
             return;

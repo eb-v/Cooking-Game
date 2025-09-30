@@ -113,8 +113,6 @@ public class PlaceIngredientScript : MonoBehaviour
     {
         if (objLookingAt != null)
         {
-            if (!objLookingAt.GetComponent<IPrepStation>().containsObject) return;
-
             IPrepStation kitchenStationObj = objLookingAt.GetComponent<IPrepStation>();
             if (!kitchenStationObj.containsObject) return;
 
