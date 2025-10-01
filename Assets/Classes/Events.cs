@@ -63,3 +63,5 @@ public class PlacedIngredient : UnityEvent<GameObject> { }
 
 public class OnPlaceIngredientInput : UnityEvent { }
 
+public class InteractEvent : UnityEvent<GameObject> { }
+
