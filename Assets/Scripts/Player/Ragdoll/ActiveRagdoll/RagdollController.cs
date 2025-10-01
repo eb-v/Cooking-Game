@@ -9,8 +9,8 @@ public class RagdollController : MonoBehaviour
 {
     [SerializeField] private UDictionary<string, RagdollJoint> RagdollDict = new UDictionary<string, RagdollJoint>();
 
-    [SerializeField] private Rigidbody rightHand;
-    [SerializeField] private Rigidbody leftHand;
+    public Rigidbody rightHand;
+    public Rigidbody leftHand;
 
     [SerializeField] private Transform centerOfMass;
 
@@ -1132,4 +1132,32 @@ public class RagdollController : MonoBehaviour
             Alert_Leg_Left = false;
         }
     }
+
+    public bool IsHoldingSomething()
+    {
+        GrabDetection leftHandGb = leftHand.GetComponent<GrabDetection>();
+        GrabDetection rightHandGb = rightHand.GetComponent<GrabDetection>();
+
+        return leftHandGb.isGrabbing || rightHandGb.isGrabbing;
+    }
+
+    // should only be called if IsHoldingSomething() is true
+    public GameObject GetHeldObject()
+    {
+        GrabDetection leftHandGb = leftHand.GetComponent<GrabDetection>();
+        GrabDetection rightHandGb = rightHand.GetComponent<GrabDetection>();
+
+        if (leftHandGb.isGrabbing)
+        {
+            return leftHandGb.grabbedObj;
+        }
+        
+        if (rightHandGb.isGrabbing)
+        {
+            return rightHandGb.grabbedObj;
+        }
+
+        return null; // should never reach here if used correctly
+    }
+
 }

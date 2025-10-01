@@ -30,6 +30,7 @@ public class CircleSkillCheck : SkillCheckBaseLogic
         if (skillChecksCompleted >= skillChecksRequired)
         {
             IPrepStation prepStation = gameObject.GetComponent<IPrepStation>();
+            prepStation.containsObject = false; // free up the station
             GenericEvent<SkillCheckCompleted>.GetEvent(gameObject.name).Invoke();
             skillChecksCompleted = 0; // reset for next time
         }

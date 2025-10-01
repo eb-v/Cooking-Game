@@ -16,7 +16,6 @@ public class GrabDetection : MonoBehaviour
                 return;
             }
         }
-
         GenericEvent<OnHandCollisionEnter>.GetEvent(transform.root.name).Invoke(gameObject ,other.gameObject);
     }
 

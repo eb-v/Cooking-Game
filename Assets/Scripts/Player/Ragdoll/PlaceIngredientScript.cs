@@ -52,6 +52,7 @@ public class PlaceIngredientScript : MonoBehaviour
             //RemovePlacedObj();
             //PlaceIngredient();
             Debug.Log("Counter already has an object placed on it.");
+            return;
         }
 
         if (objBeingHeld == null)

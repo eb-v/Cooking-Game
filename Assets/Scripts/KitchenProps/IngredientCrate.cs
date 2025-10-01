@@ -17,6 +17,7 @@ public class IngredientCrate : MonoBehaviour
     {
         GameObject ingredient = ObjectPoolManager.SpawnObject(ingredientPrefab, spawnPos, Quaternion.identity);
         Rigidbody rb = ingredient.GetComponent<Rigidbody>();
+        rb.isKinematic = false; 
 
         rb.AddForce(Vector3.up * 8f, ForceMode.Impulse);
     }

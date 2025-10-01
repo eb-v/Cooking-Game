@@ -94,8 +94,9 @@ public class PlayerController : MonoBehaviour
     public void OnInteract(InputAction.CallbackContext context) {
         if (context.started) {
             IsInteractPressed = true;
-            GenericEvent<Interact>.GetEvent(gameObject.name).Invoke();
+            if (env_Interaction.currentlyLookingAt == null) return;
             GenericEvent<Interact>.GetEvent(env_Interaction.currentlyLookingAt?.name).Invoke();
+            GenericEvent<InteractEvent>.GetEvent(env_Interaction.currentlyLookingAt?.name).Invoke(gameObject);
         } else if (context.canceled) {
             IsInteractPressed = false;
             GenericEvent<StopInteract>.GetEvent(gameObject.name).Invoke();
