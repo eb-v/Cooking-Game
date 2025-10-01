@@ -65,3 +65,4 @@ public class OnPlaceIngredientInput : UnityEvent { }
 
 public class InteractEvent : UnityEvent<GameObject> { }
 
+public class DeliveredDishEvent : UnityEvent {}
