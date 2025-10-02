@@ -69,3 +69,5 @@ public class AlternateInteractInput : UnityEvent<GameObject> { }
 
 public class PlayerStoppedLookingAtInteractable : UnityEvent { }
 
+public class DeliveredDishEvent : UnityEvent { }
+
