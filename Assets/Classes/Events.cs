@@ -67,7 +67,7 @@ public class InteractEvent : UnityEvent<GameObject> { }
 
 public class AlternateInteractInput : UnityEvent<GameObject> { }
 
-public class PlayerStoppedLookingAtInteractable : UnityEvent { }
+public class PlayerStoppedLookingAtInteractable : UnityEvent<GameObject> { }
 
 public class DeliveredDishEvent : UnityEvent { }
 

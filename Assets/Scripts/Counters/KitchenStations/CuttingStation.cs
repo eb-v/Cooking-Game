@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public class CuttingStation : BaseStation
@@ -21,7 +22,7 @@ public class CuttingStation : BaseStation
         GenericEvent<AlternateInteractInput>.GetEvent(gameObject.name).AddListener(AlternateInteract);
         GenericEvent<SkillCheckCompleted>.GetEvent(gameObject.name).AddListener(ProduceOutput);
         GenericEvent<SkillCheckCompleted>.GetEvent(gameObject.name).AddListener(StopCutting);
-        GenericEvent<PlayerStoppedLookingAtInteractable>.GetEvent(gameObject.name).AddListener(StopCutting);
+        GenericEvent<PlayerStoppedLookingAtInteractable>.GetEvent(gameObject.name).AddListener(OnPlayerLookAway);
 
         skillCheckLogic.Initialize(gameObject);
     }
@@ -30,7 +31,6 @@ public class CuttingStation : BaseStation
     {
         if (isCutting)
         {
-            Debug.Log("Cutting in progress...");
             skillCheckLogic.RunUpdateLogic();
         }
     }
@@ -121,6 +121,17 @@ public class CuttingStation : BaseStation
     // logic for alternate interact (cutting)
     public void AlternateInteract(GameObject player)
     {
+        if (GetRegisteredPlayer() == null)
+        {
+            RegisterPlayer(player);
+        }
+        else if (GetRegisteredPlayer() != player)
+        {
+            Debug.Log("Another player is already using the CuttingStation");
+            return;
+        }
+
+
         if (HasKitchenObject())
         {
             // if the cutting/skillCheck process has not been started yet, start it
@@ -138,6 +149,8 @@ public class CuttingStation : BaseStation
         {
             Debug.Log("CuttingStation has no object to cut");
         }
+
+
     }
 
 
@@ -198,6 +211,7 @@ public class CuttingStation : BaseStation
             isCutting = false;
             skillCheckUI.SetActive(false);
             skillCheckLogic.ResetValues();
+            ClearPlayer();
         }
     }
 
@@ -218,6 +232,16 @@ public class CuttingStation : BaseStation
         rb.AddForce(Vector3.up * verticalForceMultiplier, ForceMode.Impulse);
     }
 
-   
+    private void OnPlayerLookAway(GameObject player)
+    {
+        if (isCutting)
+        {
+            if (player == GetRegisteredPlayer())
+            {
+                StopCutting();
+                ClearPlayer();
+            }
+        }
+    }
 
 }

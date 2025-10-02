@@ -97,9 +97,9 @@ public class DeliveryStation : BaseStation {
     }
 
     //remove logic???
-    public override void RemovePlacedKitchenObj()
+    public override void RemovePlacedKitchenObj(GameObject player)
     {
-        base.RemovePlacedKitchenObj();
+        base.RemovePlacedKitchenObj(player);
     }
 
 }

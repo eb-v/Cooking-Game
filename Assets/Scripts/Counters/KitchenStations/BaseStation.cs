@@ -3,6 +3,7 @@ using UnityEngine;
 public class BaseStation : MonoBehaviour, IKitchenStation
 {
     private GameObject placedKitchenObj;
+    private GameObject currentPlayer;
 
     
     public virtual void Interact(GameObject player)
@@ -13,6 +14,21 @@ public class BaseStation : MonoBehaviour, IKitchenStation
     public virtual void RemovePlacedKitchenObj(GameObject player)
     {
         ClearStationObject();
+    }
+
+    public virtual void RegisterPlayer(GameObject player)
+    {
+        currentPlayer = player;
+    }
+
+    public virtual void ClearPlayer()
+    {
+        currentPlayer = null;
+    }
+
+    public virtual GameObject GetRegisteredPlayer()
+    {
+        return currentPlayer;
     }
 
     public void ClearStationObject()
@@ -34,6 +50,8 @@ public class BaseStation : MonoBehaviour, IKitchenStation
     {
         return placedKitchenObj;
     }
+
+
 
 }
 

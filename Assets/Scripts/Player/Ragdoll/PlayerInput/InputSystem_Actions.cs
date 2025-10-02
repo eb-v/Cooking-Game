@@ -210,7 +210,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""PerformSkillCheck"",
+                    ""name"": ""AltInteract"",
                     ""type"": ""Button"",
                     ""id"": ""1122df96-66b1-4a8e-9090-8d91a3cb319b"",
                     ""expectedControlType"": """",
@@ -440,34 +440,12 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""daba33a1-ad0c-4742-a909-43ad1cdfbeb6"",
-                    ""path"": ""<Gamepad>/buttonSouth"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Gamepad"",
-                    ""action"": ""Jump"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""603f3daf-40bd-4854-8724-93e8017f59e3"",
                     ""path"": ""<XRController>/secondaryButton"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""XR"",
                     ""action"": ""Jump"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""4f4649ac-64a8-4a73-af11-b3faef356a4d"",
-                    ""path"": ""<Gamepad>/buttonEast"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Gamepad"",
-                    ""action"": ""Crouch"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -632,18 +610,18 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";Keyboard&Mouse"",
-                    ""action"": ""PerformSkillCheck"",
+                    ""action"": ""AltInteract"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
                 {
                     ""name"": """",
-                    ""id"": ""ce598bc9-0424-4481-a530-e7dae054e46d"",
-                    ""path"": ""<Gamepad>/buttonNorth"",
+                    ""id"": ""09badda5-d079-443e-8f48-1c127eeaef29"",
+                    ""path"": ""<Gamepad>/buttonEast"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";Gamepad"",
-                    ""action"": ""PerformSkillCheck"",
+                    ""action"": ""AltInteract"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -739,7 +717,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         m_Player_CounterSnap = m_Player.FindAction("CounterSnap", throwIfNotFound: true);
         m_Player_Pause = m_Player.FindAction("Pause", throwIfNotFound: true);
         m_Player_RemoveObjectFromKitchenProp = m_Player.FindAction("RemoveObjectFromKitchenProp", throwIfNotFound: true);
-        m_Player_PerformSkillCheck = m_Player.FindAction("PerformSkillCheck", throwIfNotFound: true);
+        m_Player_AltInteract = m_Player.FindAction("AltInteract", throwIfNotFound: true);
         m_Player_PlaceIngredient = m_Player.FindAction("PlaceIngredient", throwIfNotFound: true);
     }
 
@@ -834,7 +812,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_CounterSnap;
     private readonly InputAction m_Player_Pause;
     private readonly InputAction m_Player_RemoveObjectFromKitchenProp;
-    private readonly InputAction m_Player_PerformSkillCheck;
+    private readonly InputAction m_Player_AltInteract;
     private readonly InputAction m_Player_PlaceIngredient;
     /// <summary>
     /// Provides access to input actions defined in input action map "Player".
@@ -900,9 +878,9 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// </summary>
         public InputAction @RemoveObjectFromKitchenProp => m_Wrapper.m_Player_RemoveObjectFromKitchenProp;
         /// <summary>
-        /// Provides access to the underlying input action "Player/PerformSkillCheck".
+        /// Provides access to the underlying input action "Player/AltInteract".
         /// </summary>
-        public InputAction @PerformSkillCheck => m_Wrapper.m_Player_PerformSkillCheck;
+        public InputAction @AltInteract => m_Wrapper.m_Player_AltInteract;
         /// <summary>
         /// Provides access to the underlying input action "Player/PlaceIngredient".
         /// </summary>
@@ -972,9 +950,9 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @RemoveObjectFromKitchenProp.started += instance.OnRemoveObjectFromKitchenProp;
             @RemoveObjectFromKitchenProp.performed += instance.OnRemoveObjectFromKitchenProp;
             @RemoveObjectFromKitchenProp.canceled += instance.OnRemoveObjectFromKitchenProp;
-            @PerformSkillCheck.started += instance.OnPerformSkillCheck;
-            @PerformSkillCheck.performed += instance.OnPerformSkillCheck;
-            @PerformSkillCheck.canceled += instance.OnPerformSkillCheck;
+            @AltInteract.started += instance.OnAltInteract;
+            @AltInteract.performed += instance.OnAltInteract;
+            @AltInteract.canceled += instance.OnAltInteract;
             @PlaceIngredient.started += instance.OnPlaceIngredient;
             @PlaceIngredient.performed += instance.OnPlaceIngredient;
             @PlaceIngredient.canceled += instance.OnPlaceIngredient;
@@ -1028,9 +1006,9 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @RemoveObjectFromKitchenProp.started -= instance.OnRemoveObjectFromKitchenProp;
             @RemoveObjectFromKitchenProp.performed -= instance.OnRemoveObjectFromKitchenProp;
             @RemoveObjectFromKitchenProp.canceled -= instance.OnRemoveObjectFromKitchenProp;
-            @PerformSkillCheck.started -= instance.OnPerformSkillCheck;
-            @PerformSkillCheck.performed -= instance.OnPerformSkillCheck;
-            @PerformSkillCheck.canceled -= instance.OnPerformSkillCheck;
+            @AltInteract.started -= instance.OnAltInteract;
+            @AltInteract.performed -= instance.OnAltInteract;
+            @AltInteract.canceled -= instance.OnAltInteract;
             @PlaceIngredient.started -= instance.OnPlaceIngredient;
             @PlaceIngredient.performed -= instance.OnPlaceIngredient;
             @PlaceIngredient.canceled -= instance.OnPlaceIngredient;
@@ -1231,12 +1209,12 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnRemoveObjectFromKitchenProp(InputAction.CallbackContext context);
         /// <summary>
-        /// Method invoked when associated input action "PerformSkillCheck" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// Method invoked when associated input action "AltInteract" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnPerformSkillCheck(InputAction.CallbackContext context);
+        void OnAltInteract(InputAction.CallbackContext context);
         /// <summary>
         /// Method invoked when associated input action "PlaceIngredient" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>

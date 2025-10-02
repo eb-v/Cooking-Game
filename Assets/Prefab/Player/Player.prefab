@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7332406885938799465}
   - component: {fileID: 5808026561336868976}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: R1_Leg.R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -116,7 +116,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3879663602822189442}
   - component: {fileID: 6467866550001696942}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: R1_Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -224,7 +224,7 @@ GameObject:
   - component: {fileID: 8995750942419806416}
   - component: {fileID: 2282754785739809922}
   - component: {fileID: 6329717708889377146}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: DEF_Leg2.R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -402,7 +402,7 @@ GameObject:
   - component: {fileID: 6976366755393257688}
   - component: {fileID: 6814022756067735267}
   - component: {fileID: 4802313824324595702}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: DEF_Head
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -601,7 +601,7 @@ GameObject:
   - component: {fileID: 6294258796898501312}
   - component: {fileID: 1374510789437003310}
   - component: {fileID: 5351409326556106489}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: LeftHand
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -702,6 +702,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GrabDetection
   isGrabbing: 0
+  grabbedObj: {fileID: 0}
 --- !u!1 &3325599399754943354
 GameObject:
   m_ObjectHideFlags: 0
@@ -716,7 +717,7 @@ GameObject:
   - component: {fileID: 4816150348163655695}
   - component: {fileID: 7205534854662815670}
   - component: {fileID: 7296180745809955404}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: DEF_Arm1.L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -937,7 +938,7 @@ GameObject:
   - component: {fileID: 1527320773327395646}
   - component: {fileID: 357754755078840659}
   - component: {fileID: 7028233093112738598}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: DEF_Leg2.L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1112,7 +1113,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7111588714854863627}
   - component: {fileID: 6687942201958230854}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Collider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1165,7 +1166,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7622891817870109694}
   - component: {fileID: 7727761536841777622}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: R1_Leg.L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1271,7 +1272,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5153955427361778029}
   - component: {fileID: 3599883120833561770}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Collider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1330,7 +1331,7 @@ GameObject:
   - component: {fileID: 3786225380039689344}
   - component: {fileID: 6551642535245061118}
   - component: {fileID: 1586779165658986746}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: DEF_Pelvis
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1549,7 +1550,7 @@ GameObject:
   - component: {fileID: 4637565265331925103}
   - component: {fileID: 7797750485679951359}
   - component: {fileID: 4420620644174377729}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: DEF_Foot.R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1729,7 +1730,7 @@ GameObject:
   - component: {fileID: 4849172441943820857}
   - component: {fileID: 7580410537444412121}
   - component: {fileID: 473036175537561612}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: DEF_Leg1.R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1929,7 +1930,7 @@ GameObject:
   - component: {fileID: 2597619492002480546}
   - component: {fileID: 4301988107989911412}
   - component: {fileID: 1753866333965181985}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -2209,7 +2210,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 4301988107989911412}
         m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
-        m_MethodName: OnPerformSkillCheck
+        m_MethodName: OnAlternateInteract
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2221,6 +2222,22 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 1122df96-66b1-4a8e-9090-8d91a3cb319b
     m_ActionName: 'Player/PerformSkillCheck[/Keyboard/t]'
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 4301988107989911412}
+        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
+        m_MethodName: OnPlaceIngredient
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: d4a0a9f1-9530-4e83-b186-0b165f6e6746
+    m_ActionName: 'Player/PlaceIngredient[/Keyboard/v]'
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
@@ -2252,9 +2269,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: '::'
   playerCenterofMass: {fileID: 1978282482761880874}
   interactionRange: 5
-  lookedAtKitchenProp: {fileID: 0}
+  currentlyLookingAt: {fileID: 0}
   glowIntensity: 0.21
-  canInteract: 0
 --- !u!1 &5271651282982184791
 GameObject:
   m_ObjectHideFlags: 0
@@ -2265,7 +2281,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6273485324064603204}
   - component: {fileID: 8686528613586335641}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Collider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2323,7 +2339,7 @@ GameObject:
   - component: {fileID: 4562626221071979807}
   - component: {fileID: 8043230445828406245}
   - component: {fileID: 7223489247235026875}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: RightHand
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2424,6 +2440,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GrabDetection
   isGrabbing: 0
+  grabbedObj: {fileID: 0}
 --- !u!1 &5665856369938375094
 GameObject:
   m_ObjectHideFlags: 0
@@ -2434,7 +2451,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5758359229171633895}
   - component: {fileID: 8100297496869438477}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: R1_Arm.L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2540,7 +2557,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4716685919745444728}
   - component: {fileID: 4819539465490646040}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Collider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2598,7 +2615,7 @@ GameObject:
   - component: {fileID: 8486785988263426957}
   - component: {fileID: 98627145332501401}
   - component: {fileID: 8627826079388047154}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: DEF_Arm2.L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2797,7 +2814,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4575316995296857385}
   - component: {fileID: 4976972587436020433}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Collider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2851,7 +2868,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1978282482761880874}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: COMP
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2886,7 +2903,7 @@ GameObject:
   - component: {fileID: 2804256750630956499}
   - component: {fileID: 4928171297209802268}
   - component: {fileID: 6425383236459775233}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: DEF_Arm2.R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3088,7 +3105,7 @@ GameObject:
   - component: {fileID: 1995180438108741634}
   - component: {fileID: 300114788279023483}
   - component: {fileID: 5399740168167572989}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: DEF_Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3287,7 +3304,7 @@ GameObject:
   - component: {fileID: 4797375364860419206}
   - component: {fileID: 1302992519734627083}
   - component: {fileID: 6057730083311191106}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: DEF_Leg1.L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3484,7 +3501,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4106960903033537135}
   - component: {fileID: 3023573194326708510}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: R1_Head
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3591,7 +3608,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3843442950515226068}
   - component: {fileID: 2780850697921054956}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Collider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3643,7 +3660,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4309184050973506437}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: DEF_Root
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3674,7 +3691,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 166430994761901313}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Armature
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3708,7 +3725,7 @@ GameObject:
   - component: {fileID: 3503024072488298048}
   - component: {fileID: 4517283866997610680}
   - component: {fileID: 600162681627213611}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: DEF_Foot.L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3889,7 +3906,7 @@ GameObject:
   - component: {fileID: 5173438325152488446}
   - component: {fileID: 726142607451980272}
   - component: {fileID: 3987916198295491928}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: DEF_Arm1.R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4108,7 +4125,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2093047497226179547}
   - component: {fileID: 1393065606394563585}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: R1_Arm.R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
