@@ -8,8 +8,9 @@ public class CuttingStation : BaseStation
     [SerializeField] private float horizontalForceMultiplier = 8f;
 
     [Header("Skill Check Logic")]
-    [SerializeField] private SkillCheckBaseLogic skillCheckLogic;
+    [SerializeField] private SkillCheckBaseLogic skillCheckLogicBase;
     [SerializeField] private GameObject skillCheckUI;
+    private SkillCheckBaseLogic skillCheckLogicInstance;
     private bool isCutting = false;
 
 
@@ -23,15 +24,21 @@ public class CuttingStation : BaseStation
         GenericEvent<SkillCheckCompleted>.GetEvent(gameObject.name).AddListener(ProduceOutput);
         GenericEvent<SkillCheckCompleted>.GetEvent(gameObject.name).AddListener(StopCutting);
         GenericEvent<PlayerStoppedLookingAtInteractable>.GetEvent(gameObject.name).AddListener(OnPlayerLookAway);
-
-        skillCheckLogic.Initialize(gameObject);
     }
+
+    private void Start()
+    {
+        skillCheckLogicInstance = Instantiate(skillCheckLogicBase);
+        skillCheckLogicInstance.Initialize(gameObject);
+    }
+
+
 
     private void Update()
     {
         if (isCutting)
         {
-            skillCheckLogic.RunUpdateLogic();
+            skillCheckLogicInstance.RunUpdateLogic();
         }
     }
 
@@ -141,7 +148,7 @@ public class CuttingStation : BaseStation
             }
             else
             {
-                skillCheckLogic.DoAttemptSkillCheckLogic();
+                skillCheckLogicInstance.DoAttemptSkillCheckLogic();
             }
 
         }
@@ -210,7 +217,7 @@ public class CuttingStation : BaseStation
         {
             isCutting = false;
             skillCheckUI.SetActive(false);
-            skillCheckLogic.ResetValues();
+            skillCheckLogicInstance.ResetValues();
             ClearPlayer();
         }
     }

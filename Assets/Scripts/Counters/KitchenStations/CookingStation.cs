@@ -42,7 +42,7 @@ public class CookingStation : BaseStation, IPrepStation {
         GenericEvent<InteractEvent>.GetEvent(gameObject.name).AddListener(Interact);
         GenericEvent<RemovePlacedObject>.GetEvent(gameObject.name).AddListener(RemovePlacedKitchenObj);
         GenericEvent<AlternateInteractInput>.GetEvent(gameObject.name).AddListener(StartCookingProgress);
-        GenericEvent<PlayerStoppedLookingAtInteractable>.GetEvent(gameObject.name).AddListener(StopCooking);
+       // GenericEvent<PlayerStoppedLookingAtInteractable>.GetEvent(gameObject.name).AddListener(StopCooking);
     }
 
     private void Update() {
