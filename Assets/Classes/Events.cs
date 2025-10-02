@@ -46,7 +46,7 @@ public class ObjectReleased : UnityEvent<GameObject> { }
 
 public class OnPlaceTile : UnityEvent { }
 
-public class RemovePlacedObject : UnityEvent { }
+public class RemovePlacedObject : UnityEvent<GameObject> { }
 
 public class SkillCheckInput : UnityEvent<GameObject> { }
 
@@ -64,4 +64,8 @@ public class PlacedIngredient : UnityEvent<GameObject> { }
 public class OnPlaceIngredientInput : UnityEvent { }
 
 public class InteractEvent : UnityEvent<GameObject> { }
+
+public class AlternateInteractInput : UnityEvent<GameObject> { }
+
+public class PlayerStoppedLookingAtInteractable : UnityEvent { }
 

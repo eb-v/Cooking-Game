@@ -12,7 +12,7 @@ public class RagdollController : MonoBehaviour
     public Rigidbody rightHand;
     public Rigidbody leftHand;
 
-    [SerializeField] private Transform centerOfMass;
+    public Transform centerOfMass;
 
     [Header("Movement Properties")] public bool forwardIsCameraDirection = true;
     public float moveSpeed = 10f;

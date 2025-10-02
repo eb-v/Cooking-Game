@@ -2,13 +2,40 @@ using UnityEngine;
 
 public class CuttingStation : BaseStation
 {
+    [Header("Remove Pop Force")]
+    [SerializeField] private float verticalForceMultiplier = 8f;
+    [SerializeField] private float horizontalForceMultiplier = 8f;
+
+    [Header("Skill Check Logic")]
+    [SerializeField] private SkillCheckBaseLogic skillCheckLogic;
+    [SerializeField] private GameObject skillCheckUI;
+    private bool isCutting = false;
+
 
     [SerializeField] private CuttingRecipeSO[] cuttingRecipeSOArray;
 
     private void Awake()
     {
         GenericEvent<InteractEvent>.GetEvent(gameObject.name).AddListener(Interact);
+        GenericEvent<RemovePlacedObject>.GetEvent(gameObject.name).AddListener(RemovePlacedKitchenObj);
+        GenericEvent<AlternateInteractInput>.GetEvent(gameObject.name).AddListener(AlternateInteract);
+        GenericEvent<SkillCheckCompleted>.GetEvent(gameObject.name).AddListener(ProduceOutput);
+        GenericEvent<SkillCheckCompleted>.GetEvent(gameObject.name).AddListener(StopCutting);
+        GenericEvent<PlayerStoppedLookingAtInteractable>.GetEvent(gameObject.name).AddListener(StopCutting);
+
+        skillCheckLogic.Initialize(gameObject);
     }
+
+    private void Update()
+    {
+        if (isCutting)
+        {
+            Debug.Log("Cutting in progress...");
+            skillCheckLogic.RunUpdateLogic();
+        }
+    }
+
+
 
 
     public override void Interact(GameObject player)
@@ -91,9 +118,51 @@ public class CuttingStation : BaseStation
 
     }
 
-    public override void RemovePlacedKitchenObj()
+    // logic for alternate interact (cutting)
+    public void AlternateInteract(GameObject player)
     {
-        base.RemovePlacedKitchenObj();
+        if (HasKitchenObject())
+        {
+            // if the cutting/skillCheck process has not been started yet, start it
+            if (!isCutting)
+            {
+                StartCutting();
+            }
+            else
+            {
+                skillCheckLogic.DoAttemptSkillCheckLogic();
+            }
+
+        }
+        else
+        {
+            Debug.Log("CuttingStation has no object to cut");
+        }
+    }
+
+
+    public override void RemovePlacedKitchenObj(GameObject player)
+    {
+        if (HasKitchenObject())
+        {
+            GameObject kitchenObj = GetKitchenObject();
+            Rigidbody kitchenObjRb = kitchenObj.GetComponent<Rigidbody>();
+            kitchenObjRb.isKinematic = false;
+
+            Vector3 playerPos = player.GetComponent<RagdollController>().centerOfMass.position;
+
+            Vector3 popDirection = (playerPos - transform.position).normalized;
+            popDirection.y = 0f;
+
+            kitchenObjRb.AddForce(Vector3.up * verticalForceMultiplier, ForceMode.Impulse);
+            kitchenObjRb.AddForce(popDirection * horizontalForceMultiplier, ForceMode.Impulse);
+
+            ClearStationObject();
+        }
+        else
+        {
+            Debug.Log("CuttingStation has no object to remove");
+        }
     }
 
     private bool HasRecipeWithInput(GameObject kitchenObject)
@@ -115,5 +184,40 @@ public class CuttingStation : BaseStation
         }
         return null;
     }
+
+    private void StartCutting()
+    {
+        isCutting = true;
+        skillCheckUI.SetActive(true);
+    }
+
+    private void StopCutting()
+    {
+        if (isCutting)
+        {
+            isCutting = false;
+            skillCheckUI.SetActive(false);
+            skillCheckLogic.ResetValues();
+        }
+    }
+
+    private void ProduceOutput()
+    {
+        GameObject kitchenObj = GetKitchenObject();
+        Vector3 position = kitchenObj.transform.position;
+        CuttingRecipeSO cuttingRecipe = GetCuttingRecipeWithInput(kitchenObj);
+
+        Destroy(kitchenObj);
+        ClearStationObject();
+
+
+        GameObject output = ObjectPoolManager.SpawnObject(cuttingRecipe.output, position, Quaternion.identity);
+        Rigidbody rb = output.GetComponent<Rigidbody>();
+
+        rb.isKinematic = false;
+        rb.AddForce(Vector3.up * verticalForceMultiplier, ForceMode.Impulse);
+    }
+
+   
 
 }

@@ -22,4 +22,9 @@ public class SkillCheckBaseLogic : ScriptableObject
     {
         Debug.Log("Base Attempt Skill Check Logic");
     }
+
+    public virtual void ResetValues()
+    {
+
+    }
 }

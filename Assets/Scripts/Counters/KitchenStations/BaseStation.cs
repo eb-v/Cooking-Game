@@ -10,7 +10,7 @@ public class BaseStation : MonoBehaviour, IKitchenStation
         Debug.Log("BaseStation Interact");
     }
 
-    public virtual void RemovePlacedKitchenObj()
+    public virtual void RemovePlacedKitchenObj(GameObject player)
     {
         ClearStationObject();
     }

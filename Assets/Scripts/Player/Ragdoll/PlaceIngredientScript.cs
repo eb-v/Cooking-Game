@@ -20,7 +20,7 @@ public class PlaceIngredientScript : MonoBehaviour
 
         GenericEvent<OnPlaceIngredientInput>.GetEvent(gameObject.name).AddListener(PlaceIngredient);
 
-        GenericEvent<RemovePlacedObject>.GetEvent(gameObject.name).AddListener(RemovePlacedObj);
+        //GenericEvent<RemovePlacedObject>.GetEvent(gameObject.name).AddListener(RemovePlacedObj);
     }
 
     private void AssignObjLookingAt(GameObject obj)

@@ -103,13 +103,13 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void OnPerformSkillCheck(InputAction.CallbackContext context)
+    public void OnAlternateInteract(InputAction.CallbackContext context)
     {
         if (context.started)
         {
             if (env_Interaction.currentlyLookingAt != null)
             {
-                GenericEvent<SkillCheckInput>.GetEvent(env_Interaction.currentlyLookingAt.name).Invoke(gameObject);
+                GenericEvent<AlternateInteractInput>.GetEvent(env_Interaction.currentlyLookingAt.name).Invoke(gameObject);
             }
         }
     }
@@ -118,7 +118,10 @@ public class PlayerController : MonoBehaviour
     {
         if (context.started)
         {
-            GenericEvent<RemovePlacedObject>.GetEvent(gameObject.name).Invoke();
+            if (env_Interaction.currentlyLookingAt != null)
+            {
+                GenericEvent<RemovePlacedObject>.GetEvent(env_Interaction.currentlyLookingAt.name).Invoke(gameObject);
+            }
         }
     }
 

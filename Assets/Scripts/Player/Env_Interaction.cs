@@ -96,6 +96,7 @@ public class Env_Interaction : MonoBehaviour
             if (lastLookedAt != null)
             {
                 GenericEvent<InteractableLookedAtChanged>.GetEvent(gameObject.name).Invoke(null);
+                GenericEvent<PlayerStoppedLookingAtInteractable>.GetEvent(lastLookedAt.name).Invoke();
                 ResetHighlight(lastLookedAt);
                 lastLookedAt = null;
             }
