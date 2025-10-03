@@ -1,6 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro; // If using TextMeshPro
+using TMPro;
 
 public class CookingStation : BaseStation, IPrepStation {
     [Header("Cooking Settings")]
@@ -8,7 +8,7 @@ public class CookingStation : BaseStation, IPrepStation {
     [SerializeField] private GameObject cookingUI;
     private Slider progressSlider;
     private Image fillImage; // Reference to the fill image
-    private TextMeshProUGUI completeText; // Optional: Text that shows "Complete!"
+    private TextMeshProUGUI completeText;
 
     [Header("Progress Bar Colors")]
     [SerializeField] private Color progressColor = Color.green;
@@ -142,14 +142,14 @@ public class CookingStation : BaseStation, IPrepStation {
             rb.isKinematic = false;
             ingredientInPan.transform.SetParent(null);
             ingredientInPan = null;
-            StopCooking(); // This will hide the UI when item is picked up
+            StopCooking(); 
         } else if (panOnStove != null) {
             Rigidbody rb = panOnStove.GetComponent<Rigidbody>();
             rb.isKinematic = false;
             panOnStove.transform.SetParent(null);
             panOnStove = null;
             ingredientInPan = null;
-            StopCooking(); // This will hide the UI when pan is picked up
+            StopCooking();
         } else {
             Debug.Log("CookingStation has nothing to remove");
         }
@@ -195,38 +195,44 @@ public class CookingStation : BaseStation, IPrepStation {
 
     private void FinishCooking() {
         isComplete = true;
-        isCooking = false; // Stop the cooking timer
-        
-        // Set slider to full and change color
+        isCooking = false;
+
         if (progressSlider != null) {
             progressSlider.value = 1f;
             if (fillImage != null) {
                 fillImage.color = completeColor;
             }
         }
-        
-        // Show "Complete!" text
+
         if (completeText != null) {
             completeText.text = "Complete!";
             completeText.gameObject.SetActive(true);
+
+            Invoke(nameof(HideCompleteUI), 3f); // making the ui stop after 3 seconds because i made the patty pop up so it doesnt detect it being detached
         }
-        
-        // Replace the ingredient with cooked version
+
         CookingRecipeSO recipe = GetCookingRecipeWithInput(ingredientInPan);
         if (recipe != null) {
-            Vector3 pos = ingredientInPan.transform.position;
+            Vector3 panTop = panOnStove.transform.position + Vector3.up * 0.3f;
             Destroy(ingredientInPan);
 
-            GameObject cookedObj = ObjectPoolManager.SpawnObject(recipe.output, pos, Quaternion.identity);
-            cookedObj.transform.SetParent(panOnStove.transform);
-            cookedObj.transform.localPosition = Vector3.up * 0.1f;
-            cookedObj.GetComponent<Rigidbody>().isKinematic = true;
+            GameObject cookedObj = ObjectPoolManager.SpawnObject(recipe.output, panTop, Quaternion.identity);
+            cookedObj.transform.SetParent(null);
+
+            Rigidbody rb = cookedObj.GetComponent<Rigidbody>();
+            if (rb != null) rb.isKinematic = false;
 
             ingredientInPan = cookedObj;
         }
 
-        // UI stays visible until user picks up the item
-        Debug.Log("Ingredient cooked!");
+        if (cookingUI != null) cookingUI.SetActive(true);
+
+        Debug.Log("Ingredient cooked");
+    }
+
+    private void HideCompleteUI() {
+        if (completeText != null) completeText.gameObject.SetActive(false);
+        if (cookingUI != null) cookingUI.SetActive(false);
     }
 
     private void PlacePanOnStation(GameObject player, GameObject pan) {
