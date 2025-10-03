@@ -60,14 +60,15 @@ public class Env_Interaction : MonoBehaviour
             // assign new hit object to variable
             currentlyLookingAt = hit.collider.transform.parent.gameObject;
 
-            if (lastLookedAt != currentlyLookingAt)
+            if (lastLookedAt != null)
             {
-                GenericEvent<InteractableLookedAtChanged>.GetEvent(gameObject.name).Invoke(currentlyLookingAt);
-                if (lastLookedAt != null)
+                if (lastLookedAt != currentlyLookingAt)
                 {
+                    GenericEvent<InteractableLookedAtChanged>.GetEvent(lastLookedAt.name).Invoke(gameObject);
                     ResetHighlight(lastLookedAt);
                 }
             }
+
 
             lastLookedAt = currentlyLookingAt;
 
@@ -107,8 +108,8 @@ public class Env_Interaction : MonoBehaviour
     //private void PlaceObject()
     //{
     //    if (lookedAtKitchenProp == null) return;
-        
-        
+
+
 
 
 
@@ -178,7 +179,7 @@ public class Env_Interaction : MonoBehaviour
     //        if (!kitchenStationObj.containsObject) return;
 
     //        GameObject placedObj = kitchenStationObj.currentPlacedObject;
-            
+
 
     //        // pop object off counter
     //        placedObj.GetComponent<Rigidbody>().isKinematic = false;
@@ -192,7 +193,7 @@ public class Env_Interaction : MonoBehaviour
     //        kitchenStationObj.currentPlacedObject = null;
     //        GenericEvent<ObjectRemovedFromKitchenStation>.GetEvent(lookedAtKitchenProp.name).Invoke();
 
-            
+
     //    }
     //}
 

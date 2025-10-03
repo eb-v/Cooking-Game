@@ -5,7 +5,6 @@ public class PlayerPortrait : MonoBehaviour
 {
     public Camera portraitCamera;
     private RenderTexture portraitTexture;
-    public RawImage[] hudSlots;
     public RawImage hudImage;
 
     private void Start()
@@ -15,7 +14,14 @@ public class PlayerPortrait : MonoBehaviour
 
         portraitCamera.targetTexture = portraitTexture;
 
-        
+        if (hudImage != null)
+        {
+            hudImage.texture = portraitTexture;
+        }
+        else
+        {
+            Debug.LogWarning("HUD Image is not assigned in PlayerPortrait script on " + gameObject.name);
+        }
 
     }
 }

@@ -16,6 +16,8 @@ public class PlayerManager : MonoBehaviour
         m_playerCount++;
         playerInput.name = "Player " + m_playerCount;
 
+
+        // logic for player portrait hud assignment
         PlayerPortrait portrait = playerInput.GetComponentInChildren<PlayerPortrait>();   
 
         if (m_playerCount <= hudSlots.Length)

@@ -24,6 +24,7 @@ public class CuttingStation : BaseStation
         GenericEvent<SkillCheckCompleted>.GetEvent(gameObject.name).AddListener(ProduceOutput);
         GenericEvent<SkillCheckCompleted>.GetEvent(gameObject.name).AddListener(StopCutting);
         GenericEvent<PlayerStoppedLookingAtInteractable>.GetEvent(gameObject.name).AddListener(OnPlayerLookAway);
+        GenericEvent<InteractableLookedAtChanged>.GetEvent(gameObject.name).AddListener(OnPlayerLookAway);
     }
 
     private void Start()

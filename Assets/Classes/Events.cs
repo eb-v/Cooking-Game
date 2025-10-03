@@ -71,3 +71,5 @@ public class PlayerStoppedLookingAtInteractable : UnityEvent<GameObject> { }
 
 public class DeliveredDishEvent : UnityEvent { }
 
+public class SkillCheckAttemptFailed : UnityEvent<float> { }
+

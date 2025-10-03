@@ -19,6 +19,9 @@ public class CircleSkillCheck : SkillCheckBaseLogic
     public float startAngle;
     public float endAngle;
 
+
+    [SerializeField] private float punishmentValue = 10f;
+
     public override void Initialize(GameObject gameObject)
     {
         base.Initialize(gameObject);
@@ -86,6 +89,9 @@ public class CircleSkillCheck : SkillCheckBaseLogic
         else
         {
             Debug.Log("Skill Check Failed!");
+            GameObject player = gameObject.GetComponent<BaseStation>().GetRegisteredPlayer();
+            Debug.Log(player.name + " failed a skill check and receives a penalty of " + punishmentValue);
+            GenericEvent<SkillCheckAttemptFailed>.GetEvent(player.name).Invoke(punishmentValue);
         }
 
         ChangeSuccessZonePosition();

@@ -448,6 +448,11 @@ public class RagdollController : MonoBehaviour
     private void SetRagdollState(bool shouldRagdoll, ref JointDrive rootJointDrive, ref JointDrive poseJointDrive,
         bool shouldResetPose)
     {
+        if (shouldRagdoll)
+        {
+            Debug.Log("Ragdoll Activated");
+        }
+
         isRagdoll = shouldRagdoll;
         balanced = !shouldRagdoll;
 
