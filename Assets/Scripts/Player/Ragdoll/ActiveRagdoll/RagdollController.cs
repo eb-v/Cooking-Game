@@ -1165,4 +1165,10 @@ public class RagdollController : MonoBehaviour
         return null; // should never reach here if used correctly
     }
 
+    public Vector3 GetPlayerPosition()
+    {
+        return centerOfMass.position;
+    }
+
+
 }
