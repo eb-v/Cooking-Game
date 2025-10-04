@@ -30,6 +30,9 @@ public class CookingStation : BaseStation, IPrepStation {
     [Header("Recipes")]
     [SerializeField] private CookingRecipeSO[] cookingRecipeSOArray;
 
+    [Header("Fire Effects")]
+    [SerializeField] private FireEffect fireEffect;
+
     public GameObject currentUser { get; set; }
     private bool _isBeingUsed;
     public bool isBeingUsed { get => _isBeingUsed; set => _isBeingUsed = value; }
@@ -37,6 +40,9 @@ public class CookingStation : BaseStation, IPrepStation {
     public bool containsObject { get => panOnStove != null || ingredientInPan != null; set { } }
 
     private void Awake() {
+
+        fireEffect.gameObject.SetActive(true);
+
         if (cookingUI != null) {
             progressSlider = cookingUI.GetComponentInChildren<Slider>();
             if (progressSlider != null) {
@@ -69,12 +75,22 @@ public class CookingStation : BaseStation, IPrepStation {
 
         if (isComplete && !isBurning && ingredientInPan != null) {
             burnTimer += Time.deltaTime;
+
+            float timeLeft = burnDelay - burnTimer;
+
+            if (timeLeft <= 5f && fillImage != null) {
+                float t = Mathf.PingPong(Time.time * 4f, 1f);
+                fillImage.color = Color.Lerp(progressColor, completeColor, t);
+            }
+
             if (burnTimer >= burnDelay) {
+                fireEffect.gameObject.SetActive(true);
                 BurnItem();
             }
         }
     }
-
+    
+//checking interactions
     public override void Interact(GameObject player) {
         RagdollController ragdoll = player.GetComponent<RagdollController>();
         if (!ragdoll.IsHoldingSomething()) {
@@ -123,7 +139,10 @@ public class CookingStation : BaseStation, IPrepStation {
             StopCooking();
         }
     }
+    
 
+        //cooking idea, gets player input to start cooking, starts the progress bar,
+        //allows for the player to take it out when cooked, if not taken out within 10 seconds, the item burns and starts the fire.
     private void StartCooking() {
         if (panOnStove != null && ingredientInPan != null && !isCooking) {
             isCooking = true;
@@ -181,7 +200,7 @@ public class CookingStation : BaseStation, IPrepStation {
             completeText.gameObject.SetActive(true);
         }
 
-        Debug.Log("Cooking finished! Cooked item ready to be taken off.");
+        Debug.Log("Cooking finished");
     }
 
     private void BurnItem() {
@@ -191,12 +210,17 @@ public class CookingStation : BaseStation, IPrepStation {
         isComplete = false;
 
         CookingRecipeSO recipe = GetCookingRecipeWithInput(ingredientInPan);
-
         Vector3 panPos = panOnStove.transform.position + Vector3.up * 0.1f;
 
         Destroy(ingredientInPan);
 
         GameObject burntObj = null;
+
+        // start the fire...
+        if (isBurning && fireEffect != null) {
+            fireEffect.StartFire();
+        }
+
 
         if (recipe != null && recipe.canBurn && recipe.burntOutput != null) {
             burntObj = ObjectPoolManager.SpawnObject(recipe.burntOutput, panPos, Quaternion.identity);
@@ -242,16 +266,20 @@ public class CookingStation : BaseStation, IPrepStation {
         }
 
         cookingUI?.SetActive(false);
-
         ingredientInPan = null;
+
         _isBeingUsed = false;
         isCooking = false;
 
-        Debug.Log("Item lifted above pan (cooked or burnt), ready to grab! Station reset.");
+        if (fireEffect != null) {
+            fireEffect.StopFire();
+        }
+
+        fireEffect.gameObject.SetActive(false);
+
+        Debug.Log("Item set above pan");
     }
-
-
-
+//helpers to place pan and ingredients for the process
     private void PlacePanOnStation(GameObject pan) {
         Collider stationCollider = GetComponent<Collider>();
         Vector3 placePos = stationCollider.bounds.center + Vector3.up * stationCollider.bounds.extents.y;
@@ -265,6 +293,7 @@ public class CookingStation : BaseStation, IPrepStation {
 
         panOnStove = pan;
         SetStationObject(pan);
+
         Debug.Log("Pan placed on CookingStation.");
     }
 
@@ -275,13 +304,13 @@ public class CookingStation : BaseStation, IPrepStation {
         ingredient.GetComponent<Rigidbody>().isKinematic = true;
 
         ingredientInPan = ingredient;
-        Debug.Log("Ingredient placed in pan.");
 
+        Debug.Log("Ingredient placed in pan.");
         StartCooking();
     }
+
     public void PrepIngredient() {
     }
-
 
     private bool HasRecipeWithInput(GameObject obj) => GetCookingRecipeWithInput(obj) != null;
 

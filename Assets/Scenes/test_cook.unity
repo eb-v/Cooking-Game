@@ -1315,6 +1315,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae832e4b683c00847bb3f7900030d897, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
+--- !u!198 &364792402 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 7531185571972932703, guid: 29f4c72f9a1d9d446945740c2819895b, type: 3}
+  m_PrefabInstance: {fileID: 472162146}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &364792404 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7800046302039599656, guid: 29f4c72f9a1d9d446945740c2819895b, type: 3}
+  m_PrefabInstance: {fileID: 472162146}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &371590249
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1496,6 +1506,75 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &472162146
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1845982007}
+    m_Modifications:
+    - target: {fileID: 3895954212722794963, guid: 29f4c72f9a1d9d446945740c2819895b, type: 3}
+      propertyPath: playOnAwake
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5712219488875869251, guid: 29f4c72f9a1d9d446945740c2819895b, type: 3}
+      propertyPath: m_Name
+      value: VFX_Fire
+      objectReference: {fileID: 0}
+    - target: {fileID: 7531185571972932703, guid: 29f4c72f9a1d9d446945740c2819895b, type: 3}
+      propertyPath: playOnAwake
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7531185571972932703, guid: 29f4c72f9a1d9d446945740c2819895b, type: 3}
+      propertyPath: simulationSpeed
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7800046302039599656, guid: 29f4c72f9a1d9d446945740c2819895b, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.24
+      objectReference: {fileID: 0}
+    - target: {fileID: 7800046302039599656, guid: 29f4c72f9a1d9d446945740c2819895b, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.16
+      objectReference: {fileID: 0}
+    - target: {fileID: 7800046302039599656, guid: 29f4c72f9a1d9d446945740c2819895b, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.29
+      objectReference: {fileID: 0}
+    - target: {fileID: 7800046302039599656, guid: 29f4c72f9a1d9d446945740c2819895b, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7800046302039599656, guid: 29f4c72f9a1d9d446945740c2819895b, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7800046302039599656, guid: 29f4c72f9a1d9d446945740c2819895b, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7800046302039599656, guid: 29f4c72f9a1d9d446945740c2819895b, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7800046302039599656, guid: 29f4c72f9a1d9d446945740c2819895b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7800046302039599656, guid: 29f4c72f9a1d9d446945740c2819895b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7800046302039599656, guid: 29f4c72f9a1d9d446945740c2819895b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 29f4c72f9a1d9d446945740c2819895b, type: 3}
 --- !u!4 &494414601 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5415694547330332359, guid: 49abeb7bbc1b6dc40827cfd8b8fb0409, type: 3}
@@ -1522,8 +1601,11 @@ MonoBehaviour:
   cookingUI: {fileID: 920906532}
   progressColor: {r: 0, g: 1, b: 0, a: 1}
   completeColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  burnColor: {r: 1, g: 0, b: 0, a: 1}
+  burnDelay: 10
   cookingRecipeSOArray:
   - {fileID: 11400000, guid: e0ebc16ea8fd8f842864e19f96a10ece, type: 2}
+  fireEffect: {fileID: 1845982006}
 --- !u!4 &600122217 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1876655430723338859, guid: cff6d92cbd53c3940bdb76d6e60fc497, type: 3}
@@ -2809,6 +2891,53 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0c3abc298b59b9647a355475454f52b5, type: 3}
+--- !u!1 &1845982005
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1845982007}
+  - component: {fileID: 1845982006}
+  m_Layer: 0
+  m_Name: fireobjectobject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1845982006
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1845982005}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b5947b63f803aed4f84dff5299fd8f9e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FireEffect
+  fireParticleSystem: {fileID: 364792402}
+  fireAudioSource: {fileID: 0}
+--- !u!4 &1845982007
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1845982005}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -9.82, y: 1.21, z: 1.01}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 364792404}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1898023795
 GameObject:
   m_ObjectHideFlags: 0
@@ -3668,3 +3797,4 @@ SceneRoots:
   - {fileID: 1513449411879881283}
   - {fileID: 1731512915686365929}
   - {fileID: 646540758868806364}
+  - {fileID: 1845982007}
