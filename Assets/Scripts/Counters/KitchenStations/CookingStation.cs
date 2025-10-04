@@ -7,96 +7,89 @@ public class CookingStation : BaseStation, IPrepStation {
     [SerializeField] private float defaultCookingTime = 5f;
     [SerializeField] private GameObject cookingUI;
     private Slider progressSlider;
-    private Image fillImage; // Reference to the fill image
+    private Image fillImage;
     private TextMeshProUGUI completeText;
 
-    [Header("Progress Bar Colors")]
+    [Header("Progress Colors")]
     [SerializeField] private Color progressColor = Color.green;
-    [SerializeField] private Color completeColor = Color.yellow; // Color when finished
+    [SerializeField] private Color completeColor = Color.yellow;
+    [SerializeField] private Color burnColor = Color.red;
 
+    [Header("Cooking Objects")]
     private GameObject panOnStove;
     private GameObject ingredientInPan;
     private bool isCooking = false;
-    private float cookingTimer = 0f;
     private bool isComplete = false;
+    private bool isBurning = false;
+    private float cookingTimer = 0f;
+    private float burnTimer = 0f;
+
+    [Header("Burn Settings")]
+    [SerializeField] private float burnDelay = 10f;
 
     [Header("Recipes")]
     [SerializeField] private CookingRecipeSO[] cookingRecipeSOArray;
 
     public GameObject currentUser { get; set; }
-
     private bool _isBeingUsed;
-    public bool isBeingUsed {
-        get => _isBeingUsed;
-        set => _isBeingUsed = value;
-    }
-
-    public GameObject currentPlacedObject {
-        get => ingredientInPan ?? panOnStove;
-        set { /* optional setter, not used */ }
-    }
-
-    public bool containsObject {
-        get => panOnStove != null || ingredientInPan != null;
-        set { /* optional setter, not used */ }
-    }
+    public bool isBeingUsed { get => _isBeingUsed; set => _isBeingUsed = value; }
+    public GameObject currentPlacedObject { get => ingredientInPan ?? panOnStove; set { } }
+    public bool containsObject { get => panOnStove != null || ingredientInPan != null; set { } }
 
     private void Awake() {
         if (cookingUI != null) {
             progressSlider = cookingUI.GetComponentInChildren<Slider>();
-            
-            // Get the Fill image from the slider
             if (progressSlider != null) {
                 Transform fillTransform = progressSlider.transform.Find("Fill Area/Fill");
-                if (fillTransform != null) {
-                    fillImage = fillTransform.GetComponent<Image>();
-                }
+                if (fillTransform != null) fillImage = fillTransform.GetComponent<Image>();
             }
-            
-            // Optional: Get complete text if you add one
+
             completeText = cookingUI.GetComponentInChildren<TextMeshProUGUI>();
-            if (completeText != null) {
-                completeText.gameObject.SetActive(false);
-            }
-            
+            if (completeText != null) completeText.gameObject.SetActive(false);
+
             cookingUI.SetActive(false);
         }
 
         GenericEvent<InteractEvent>.GetEvent(gameObject.name).AddListener(Interact);
         GenericEvent<RemovePlacedObject>.GetEvent(gameObject.name).AddListener(RemovePlacedKitchenObj);
-        GenericEvent<AlternateInteractInput>.GetEvent(gameObject.name).AddListener(StartCookingProgress);
+        GenericEvent<AlternateInteractInput>.GetEvent(gameObject.name).AddListener(RemovePlacedKitchenObj);
     }
 
     private void Update() {
         if (isCooking && ingredientInPan != null) {
             cookingTimer += Time.deltaTime;
-
             float progress = cookingTimer / GetCookingTime(ingredientInPan);
-            
-            if (progressSlider != null) {
-                progressSlider.value = progress;
-                
-                // Update fill color as it progresses
-                if (fillImage != null) {
-                    fillImage.color = progressColor;
-                }
-            }
+            if (progressSlider != null) progressSlider.value = Mathf.Clamp01(progress);
+            if (fillImage != null) fillImage.color = progressColor;
 
-            if (cookingTimer >= GetCookingTime(ingredientInPan) && !isComplete) {
+            if (cookingTimer >= GetCookingTime(ingredientInPan)) {
                 FinishCooking();
+            }
+        }
+
+        if (isComplete && !isBurning && ingredientInPan != null) {
+            burnTimer += Time.deltaTime;
+            if (burnTimer >= burnDelay) {
+                BurnItem();
             }
         }
     }
 
     public override void Interact(GameObject player) {
         RagdollController ragdoll = player.GetComponent<RagdollController>();
-        if (!ragdoll.IsHoldingSomething()) return;
+        if (!ragdoll.IsHoldingSomething()) {
+            if (isComplete && ingredientInPan != null) {
+                TakeOutCookedItem();
+                return;
+            }
+            return;
+        }
 
         GameObject heldObj = ragdoll.GetHeldObject();
 
         if (panOnStove == null && heldObj.CompareTag("Pan")) {
             DetachFromHands(ragdoll, heldObj);
-            PlacePanOnStation(player, heldObj);
+            PlacePanOnStation(heldObj);
             return;
         }
 
@@ -109,139 +102,166 @@ public class CookingStation : BaseStation, IPrepStation {
         Debug.Log("Cannot place this object here.");
     }
 
-    public void StartCookingProgress(GameObject player) {
-        Debug.Log("AlternateInteractInput received!");
+    public override void RemovePlacedKitchenObj(GameObject player) {
+        if ((isComplete || isBurning) && ingredientInPan != null) {
+            TakeOutCookedItem();
+            return;
+        }
 
+        if (ingredientInPan != null && !isCooking) {
+            Destroy(ingredientInPan);
+            ingredientInPan = null;
+            StopCooking();
+            return;
+        }
+
+        if (panOnStove != null) {
+            Rigidbody rb = panOnStove.GetComponent<Rigidbody>();
+            if (rb != null) rb.isKinematic = false;
+            panOnStove.transform.SetParent(null);
+            panOnStove = null;
+            StopCooking();
+        }
+    }
+
+    private void StartCooking() {
         if (panOnStove != null && ingredientInPan != null && !isCooking) {
-            currentUser = player;
             isCooking = true;
             _isBeingUsed = true;
-            cookingTimer = 0f;
             isComplete = false;
+            isBurning = false;
+            cookingTimer = 0f;
+            burnTimer = 0f;
+
             cookingUI?.SetActive(true);
-            
-            // Reset UI
-            if (progressSlider != null) {
-                progressSlider.value = 0f;
-                if (fillImage != null) {
-                    fillImage.color = progressColor;
-                }
-            }
-            
-            if (completeText != null) {
-                completeText.gameObject.SetActive(false);
-            }
-            
+            if (progressSlider != null) progressSlider.value = 0f;
+            if (fillImage != null) fillImage.color = progressColor;
+            if (completeText != null) completeText.gameObject.SetActive(false);
+
             Debug.Log("Cooking started!");
         }
     }
 
-    public override void RemovePlacedKitchenObj(GameObject player) {
-        if (ingredientInPan != null) {
-            Rigidbody rb = ingredientInPan.GetComponent<Rigidbody>();
-            rb.isKinematic = false;
-            ingredientInPan.transform.SetParent(null);
-            ingredientInPan = null;
-            StopCooking(); 
-        } else if (panOnStove != null) {
-            Rigidbody rb = panOnStove.GetComponent<Rigidbody>();
-            rb.isKinematic = false;
-            panOnStove.transform.SetParent(null);
-            panOnStove = null;
-            ingredientInPan = null;
-            StopCooking();
-        } else {
-            Debug.Log("CookingStation has nothing to remove");
-        }
-    }
-
-    public void PrepIngredient() {
-        if (ingredientInPan == null) return;
-
-        CookingRecipeSO recipe = GetCookingRecipeWithInput(ingredientInPan);
-        if (recipe == null) return;
-
-        Vector3 pos = ingredientInPan.transform.position;
-        Destroy(ingredientInPan);
-
-        GameObject cookedObj = ObjectPoolManager.SpawnObject(recipe.output, pos, Quaternion.identity);
-        cookedObj.transform.SetParent(panOnStove.transform);
-        cookedObj.transform.localPosition = Vector3.up * 0.1f;
-        cookedObj.GetComponent<Rigidbody>().isKinematic = true;
-
-        ingredientInPan = cookedObj;
-        Debug.Log("Ingredient prepared!");
-    }
-
     private void StopCooking() {
-        // Always reset everything, even if not currently cooking
         isCooking = false;
         _isBeingUsed = false;
-        cookingTimer = 0f;
         isComplete = false;
+        isBurning = false;
+        cookingTimer = 0f;
+        burnTimer = 0f;
+
         cookingUI?.SetActive(false);
-        
-        if (progressSlider != null) {
-            progressSlider.value = 0f;
-        }
-        
-        if (completeText != null) {
-            completeText.gameObject.SetActive(false);
-        }
-        
-        currentUser = null;
-        Debug.Log("Cooking stopped and UI hidden.");
+        if (progressSlider != null) progressSlider.value = 0f;
+        if (completeText != null) completeText.gameObject.SetActive(false);
     }
 
     private void FinishCooking() {
-        isComplete = true;
+        if (ingredientInPan == null) return;
+
         isCooking = false;
-
-        if (progressSlider != null) {
-            progressSlider.value = 1f;
-            if (fillImage != null) {
-                fillImage.color = completeColor;
-            }
-        }
-
-        if (completeText != null) {
-            completeText.text = "Complete!";
-            completeText.gameObject.SetActive(true);
-
-            Invoke(nameof(HideCompleteUI), 3f); // making the ui stop after 3 seconds because i made the patty pop up so it doesnt detect it being detached
-        }
+        isComplete = true;
+        burnTimer = 0f;
 
         CookingRecipeSO recipe = GetCookingRecipeWithInput(ingredientInPan);
-        if (recipe != null) {
-            Vector3 panTop = panOnStove.transform.position + Vector3.up * 0.3f;
+        if (recipe != null && recipe.output != null) {
+            Vector3 pos = panOnStove.transform.position + Vector3.up * 0.1f;
             Destroy(ingredientInPan);
 
-            GameObject cookedObj = ObjectPoolManager.SpawnObject(recipe.output, panTop, Quaternion.identity);
-            cookedObj.transform.SetParent(null);
-
-            Rigidbody rb = cookedObj.GetComponent<Rigidbody>();
-            if (rb != null) rb.isKinematic = false;
-
+            GameObject cookedObj = ObjectPoolManager.SpawnObject(recipe.output, pos, Quaternion.identity);
+            cookedObj.transform.SetParent(panOnStove.transform);
+            cookedObj.transform.localPosition = Vector3.up * 0.1f;
+            cookedObj.GetComponent<Rigidbody>().isKinematic = true;
             ingredientInPan = cookedObj;
         }
 
-        if (cookingUI != null) cookingUI.SetActive(true);
+        if (progressSlider != null) progressSlider.value = 1f;
+        if (fillImage != null) fillImage.color = completeColor;
+        if (completeText != null) {
+            completeText.text = "Complete!";
+            completeText.gameObject.SetActive(true);
+        }
 
-        Debug.Log("Ingredient cooked");
+        Debug.Log("Cooking finished! Cooked item ready to be taken off.");
     }
 
-    private void HideCompleteUI() {
-        if (completeText != null) completeText.gameObject.SetActive(false);
-        if (cookingUI != null) cookingUI.SetActive(false);
+    private void BurnItem() {
+        if (ingredientInPan == null || panOnStove == null) return;
+
+        isBurning = true;
+        isComplete = false;
+
+        CookingRecipeSO recipe = GetCookingRecipeWithInput(ingredientInPan);
+
+        Vector3 panPos = panOnStove.transform.position + Vector3.up * 0.1f;
+
+        Destroy(ingredientInPan);
+
+        GameObject burntObj = null;
+
+        if (recipe != null && recipe.canBurn && recipe.burntOutput != null) {
+            burntObj = ObjectPoolManager.SpawnObject(recipe.burntOutput, panPos, Quaternion.identity);
+        } else {
+            burntObj = ObjectPoolManager.SpawnObject(ingredientInPan, panPos, Quaternion.identity);
+            burntObj.name = "Burnt " + ingredientInPan.name;
+            var renderer = burntObj.GetComponentInChildren<Renderer>();
+            if (renderer != null) renderer.material.color = Color.black;
+        }
+
+        burntObj.transform.SetParent(panOnStove.transform);
+        burntObj.transform.localPosition = Vector3.up * 0.1f;
+        burntObj.GetComponent<Rigidbody>().isKinematic = true;
+
+        ingredientInPan = burntObj;
+
+        if (completeText != null) {
+            completeText.text = "Burnt!";
+            completeText.gameObject.SetActive(true);
+        }
+
+        if (fillImage != null) fillImage.color = burnColor;
+
+        Debug.Log("Item has burnt!");
     }
 
-    private void PlacePanOnStation(GameObject player, GameObject pan) {
-        Collider stationCollider = player.GetComponent<Env_Interaction>().currentlyLookingAt.GetComponent<Collider>();
+    private void TakeOutCookedItem() {
+        if (ingredientInPan == null) return;
+
+        isComplete = false;
+        isBurning = false;
+        burnTimer = 0f;
+
+        Vector3 liftPos = panOnStove.transform.position + Vector3.up * 0.3f;
+        ingredientInPan.transform.SetParent(null);
+        ingredientInPan.transform.position = liftPos;
+
+        Rigidbody rb = ingredientInPan.GetComponent<Rigidbody>();
+        if (rb != null) {
+            rb.isKinematic = false;
+            rb.linearVelocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+        }
+
+        cookingUI?.SetActive(false);
+
+        ingredientInPan = null;
+        _isBeingUsed = false;
+        isCooking = false;
+
+        Debug.Log("Item lifted above pan (cooked or burnt), ready to grab! Station reset.");
+    }
+
+
+
+    private void PlacePanOnStation(GameObject pan) {
+        Collider stationCollider = GetComponent<Collider>();
         Vector3 placePos = stationCollider.bounds.center + Vector3.up * stationCollider.bounds.extents.y;
 
+        pan.transform.SetParent(null);
         pan.transform.position = placePos;
         pan.transform.rotation = Quaternion.identity;
-        pan.GetComponent<Rigidbody>().isKinematic = true;
+
+        Rigidbody rb = pan.GetComponent<Rigidbody>();
+        if (rb != null) rb.isKinematic = true;
 
         panOnStove = pan;
         SetStationObject(pan);
@@ -257,17 +277,18 @@ public class CookingStation : BaseStation, IPrepStation {
         ingredientInPan = ingredient;
         Debug.Log("Ingredient placed in pan.");
 
-        StartCookingProgress(currentUser ?? ingredient);
+        StartCooking();
+    }
+    public void PrepIngredient() {
     }
 
-    private bool HasRecipeWithInput(GameObject kitchenObject) {
-        return GetCookingRecipeWithInput(kitchenObject) != null;
-    }
 
-    private CookingRecipeSO GetCookingRecipeWithInput(GameObject kitchenObject) {
-        string objName = kitchenObject.name.Replace("(Clone)", "").Trim();
+    private bool HasRecipeWithInput(GameObject obj) => GetCookingRecipeWithInput(obj) != null;
+
+    private CookingRecipeSO GetCookingRecipeWithInput(GameObject obj) {
+        string nameTrimmed = obj.name.Replace("(Clone)", "").Trim();
         foreach (var recipe in cookingRecipeSOArray) {
-            if (recipe.input.name == objName) return recipe;
+            if (recipe.input.name == nameTrimmed) return recipe;
         }
         return null;
     }
