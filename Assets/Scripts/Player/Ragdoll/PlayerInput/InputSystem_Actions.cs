@@ -226,6 +226,15 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Explode"",
+                    ""type"": ""Button"",
+                    ""id"": ""ad3ef6e8-4c13-492c-b836-601cf55fb24b"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -635,6 +644,17 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""action"": ""PlaceIngredient"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""4e1291d6-c190-4a2e-85bc-82777bcc3ac1"",
+                    ""path"": ""<Keyboard>/x"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Explode"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -719,6 +739,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         m_Player_RemoveObjectFromKitchenProp = m_Player.FindAction("RemoveObjectFromKitchenProp", throwIfNotFound: true);
         m_Player_AltInteract = m_Player.FindAction("AltInteract", throwIfNotFound: true);
         m_Player_PlaceIngredient = m_Player.FindAction("PlaceIngredient", throwIfNotFound: true);
+        m_Player_Explode = m_Player.FindAction("Explode", throwIfNotFound: true);
     }
 
     ~@InputSystem_Actions()
@@ -814,6 +835,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_RemoveObjectFromKitchenProp;
     private readonly InputAction m_Player_AltInteract;
     private readonly InputAction m_Player_PlaceIngredient;
+    private readonly InputAction m_Player_Explode;
     /// <summary>
     /// Provides access to input actions defined in input action map "Player".
     /// </summary>
@@ -886,6 +908,10 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// </summary>
         public InputAction @PlaceIngredient => m_Wrapper.m_Player_PlaceIngredient;
         /// <summary>
+        /// Provides access to the underlying input action "Player/Explode".
+        /// </summary>
+        public InputAction @Explode => m_Wrapper.m_Player_Explode;
+        /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
         public InputActionMap Get() { return m_Wrapper.m_Player; }
@@ -956,6 +982,9 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @PlaceIngredient.started += instance.OnPlaceIngredient;
             @PlaceIngredient.performed += instance.OnPlaceIngredient;
             @PlaceIngredient.canceled += instance.OnPlaceIngredient;
+            @Explode.started += instance.OnExplode;
+            @Explode.performed += instance.OnExplode;
+            @Explode.canceled += instance.OnExplode;
         }
 
         /// <summary>
@@ -1012,6 +1041,9 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @PlaceIngredient.started -= instance.OnPlaceIngredient;
             @PlaceIngredient.performed -= instance.OnPlaceIngredient;
             @PlaceIngredient.canceled -= instance.OnPlaceIngredient;
+            @Explode.started -= instance.OnExplode;
+            @Explode.performed -= instance.OnExplode;
+            @Explode.canceled -= instance.OnExplode;
         }
 
         /// <summary>
@@ -1222,5 +1254,12 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnPlaceIngredient(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Explode" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnExplode(InputAction.CallbackContext context);
     }
 }

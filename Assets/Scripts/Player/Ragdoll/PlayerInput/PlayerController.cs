@@ -150,5 +150,13 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public void OnExplode(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            GenericEvent<OnExplodeInput>.GetEvent(gameObject.name).Invoke();
+        }
+    }
+
 }
 

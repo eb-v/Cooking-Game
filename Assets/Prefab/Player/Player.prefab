@@ -2239,6 +2239,22 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: d4a0a9f1-9530-4e83-b186-0b165f6e6746
     m_ActionName: 'Player/PlaceIngredient[/Keyboard/v]'
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 4301988107989911412}
+        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
+        m_MethodName: OnExplode
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: ad3ef6e8-4c13-492c-b836-601cf55fb24b
+    m_ActionName: 'Player/Explode[/Keyboard/x]'
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
@@ -4251,7 +4267,6 @@ GameObject:
   m_Component:
   - component: {fileID: 8460591181876946574}
   - component: {fileID: 6894625819797982546}
-  - component: {fileID: 5040165011693726457}
   - component: {fileID: 7048777373592807897}
   - component: {fileID: 752137991181082257}
   m_Layer: 10
@@ -4285,7 +4300,7 @@ Camera:
   m_GameObject: {fileID: 8972945883779110397}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 1
+  m_ClearFlags: 4
   m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
@@ -4315,7 +4330,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 3777
+    m_Bits: 1024
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -4327,14 +4342,6 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
---- !u!81 &5040165011693726457
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8972945883779110397}
-  m_Enabled: 1
 --- !u!114 &7048777373592807897
 MonoBehaviour:
   m_ObjectHideFlags: 0

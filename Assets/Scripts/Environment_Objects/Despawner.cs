@@ -1,53 +1,44 @@
+using System.Collections;
 using UnityEngine;
 
 public class Despawner : MonoBehaviour
 {
-    [SerializeField] private float despawnTime = 3f;
-    private float timer;
 
     private void OnEnable()
     {
-        PlayEffects();
-    }
-
-    private void OnDisable()
-    {
-        ClearEffects();
-        timer = 0f;
-    }
-
-
-
-    private void Update()
-    {
-        timer += Time.deltaTime;
-
-        if (timer >= despawnTime)
+        foreach(var ps in GetComponentsInChildren<ParticleSystem>())
         {
-            Despawn();
-        }
-    }
-
-    private void Despawn()
-    {
-        ObjectPoolManager.ReturnObjectToPool(gameObject);
-    }
-
-    private void PlayEffects()
-    {
-        foreach (var ps in GetComponentsInChildren<ParticleSystem>())
-        {
+            ps.time = 0f;
             ps.Play();
         }
+
+
+        float duration = GetLongestParticleDuration();
+        StartCoroutine(DespawnAfterDelay(duration));
     }
 
 
-    private void ClearEffects()
+    private float GetLongestParticleDuration()
     {
+        float max = 0f;
         foreach (var ps in GetComponentsInChildren<ParticleSystem>())
         {
-            ps.Clear();
+            var main = ps.main;
+
+            float time = main.duration + main.startLifetime.constantMax;
+            if (time > max)
+            {
+                max = time;
+            }
         }
+        return max;
     }
+
+    IEnumerator DespawnAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        ObjectPoolManager.ReturnObjectToPool(gameObject);
+    }
+    
 
 }

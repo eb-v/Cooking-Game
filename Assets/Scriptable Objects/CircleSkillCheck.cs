@@ -84,13 +84,10 @@ public class CircleSkillCheck : SkillCheckBaseLogic
         if (IsPointerInSuccessZone())
         {
             skillChecksCompleted++;
-            Debug.Log("Skill Check Successful! Total Completed: " + skillChecksCompleted);
         }
         else
         {
-            Debug.Log("Skill Check Failed!");
             GameObject player = gameObject.GetComponent<BaseStation>().GetRegisteredPlayer();
-            Debug.Log(player.name + " failed a skill check and receives a penalty of " + punishmentValue);
             GenericEvent<SkillCheckAttemptFailed>.GetEvent(player.name).Invoke(punishmentValue);
         }
 

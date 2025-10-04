@@ -73,3 +73,5 @@ public class DeliveredDishEvent : UnityEvent { }
 
 public class SkillCheckAttemptFailed : UnityEvent<float> { }
 
+public class OnExplodeInput : UnityEvent { }
+

@@ -21,6 +21,7 @@ public class MechanicalFailureStatus : MonoBehaviour
     private void Awake()
     {
         GenericEvent<SkillCheckAttemptFailed>.GetEvent(gameObject.name).AddListener(IncreaseInstability);
+        GenericEvent<OnExplodeInput>.GetEvent(gameObject.name).AddListener(Explode);
 
         env_interaction = GetComponent<Env_Interaction>();
         root = gameObject.transform.Find("DEF_Pelvis").gameObject;
@@ -29,11 +30,9 @@ public class MechanicalFailureStatus : MonoBehaviour
     private void IncreaseInstability(float amount)
     {
         mechanicalFailureInstability += amount;
-        Debug.Log("Mechanical Failure Instability Increased: " + mechanicalFailureInstability);
 
         if (CheckForMechanicalFailure())
         {
-            Debug.Log("Mechanical Failure Occurred!");
             Explode();
         }
 
@@ -60,8 +59,8 @@ public class MechanicalFailureStatus : MonoBehaviour
 
 
         // get position of the object the player is looking at
-        Vector3 explosionPos = env_interaction.currentlyLookingAt.transform.position;
-
+        //Vector3 explosionPos = env_interaction.currentlyLookingAt.transform.position;
+        Vector3 explosionPos = ragdollController.GetPlayerPosition();
 
         // apply explosion force in front of player
         rb.AddExplosionForce(explosionForce, explosionPos, explosionRadius, upwardsModifier, ForceMode.Impulse);
@@ -71,7 +70,7 @@ public class MechanicalFailureStatus : MonoBehaviour
         Vector3 playerPos = ragdollController.GetPlayerPosition();
 
 
-        ObjectPoolManager.SpawnObject(explosionEffectPrefab, playerPos, Quaternion.identity);
+        GameObject explosionEffect = ObjectPoolManager.SpawnObject(explosionEffectPrefab, playerPos, Quaternion.identity);
 
         ResetInstability();
 
