@@ -3678,7 +3678,7 @@ AudioListener:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 330585543}
-  m_Enabled: 0
+  m_Enabled: 1
 --- !u!20 &330585545
 Camera:
   m_ObjectHideFlags: 0
@@ -14715,6 +14715,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 7
       objectReference: {fileID: 0}
+    - target: {fileID: 8930842690867944810, guid: 49abeb7bbc1b6dc40827cfd8b8fb0409, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -21888,13 +21892,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 473131bbeaf2a4e67b6e4173f016a746, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SoundManager
-  sfxGroup: {fileID: 0}
-  uiGroup: {fileID: 0}
-  initialPoolSize: 12
-  defaultMinDistance: 1
-  defaultMaxDistance: 12
-  rolloff: 1
-  randomPitch: 0.04
 --- !u!1 &2002756717
 GameObject:
   m_ObjectHideFlags: 0
