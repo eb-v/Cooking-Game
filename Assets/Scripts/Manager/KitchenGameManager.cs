@@ -1,4 +1,4 @@
-using System;                // for EventHandler, EventArgs
+using System;
 using UnityEngine;
 
 public class KitchenGameManager : MonoBehaviour
@@ -6,16 +6,14 @@ public class KitchenGameManager : MonoBehaviour
     public static KitchenGameManager Instance { get; private set; }
 
     public event EventHandler OnStateChanged;
+    public event Action OnGameplayStarted; // when 3s countdown finishes
 
     private enum State { WaitingToStart, CountdownToStart, GamePlaying, GameOver }
     private State state;
 
-    private float waitingToStartDuration = 1f;
-    private float countdownToStartDuration = 3f;
-    private float gamePlayingDuration;
-
-    private float gamePlayingTimerMax = 10f; // test value
-    
+    [SerializeField] private float waitingToStartDuration = 1f;
+    [SerializeField] private float countdownToStartDuration = 3f;
+    [SerializeField] private float gamePlayingDuration = 10f; //level length here
 
     private float waitingToStartTimer;
     private float countdownToStartTimer;
@@ -27,10 +25,9 @@ public class KitchenGameManager : MonoBehaviour
         Instance = this;
 
         state = State.WaitingToStart;
-
-        waitingToStartTimer = waitingToStartDuration;
+        waitingToStartTimer   = waitingToStartDuration;
         countdownToStartTimer = countdownToStartDuration;
-        gamePlayingTimer = gamePlayingDuration;
+        gamePlayingTimer      = gamePlayingDuration;
     }
 
     private void Update()
@@ -38,7 +35,7 @@ public class KitchenGameManager : MonoBehaviour
         switch (state)
         {
             case State.WaitingToStart:
-                waitingToStartTimer -= Time.deltaTime;                 // <-- subtract
+                waitingToStartTimer -= Time.deltaTime;
                 if (waitingToStartTimer <= 0f)
                 {
                     state = State.CountdownToStart;
@@ -52,8 +49,11 @@ public class KitchenGameManager : MonoBehaviour
                 {
                     countdownToStartTimer = 0f;
                     state = State.GamePlaying;
-                    gamePlayingTimer = gamePlayingTimerMax;
+
+                    gamePlayingTimer = gamePlayingDuration;
+
                     OnStateChanged?.Invoke(this, EventArgs.Empty);
+                    OnGameplayStarted?.Invoke(); // start music
                 }
                 break;
 
@@ -74,14 +74,11 @@ public class KitchenGameManager : MonoBehaviour
 
     public bool IsGamePlaying() => state == State.GamePlaying;
     public bool IsCountdownToStartActive() => state == State.CountdownToStart;
+
     public float GetCountdownToStartTimer() => Mathf.Max(0f, countdownToStartTimer);
+    public float GetGamePlayingTimeLeft()   => Mathf.Max(0f, gamePlayingTimer);
+    public float GetGamePlayingDuration()   => gamePlayingDuration;     
 
-    public float GetGamePlayingTimeLeft() => Mathf.Max(0f, gamePlayingTimer);
-    public float GetGamePlayingDuration() => gamePlayingDuration;
-
-    public float GetGamelayingTimerNormalized()
-    {
-        return 1 - (gamePlayingTimer / gamePlayingTimerMax);
-    }
-
+    public float GetGamePlayingNormalized()
+        => gamePlayingDuration <= 0f ? 0f : 1f - (gamePlayingTimer / gamePlayingDuration);
 }
