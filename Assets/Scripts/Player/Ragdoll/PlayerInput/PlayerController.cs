@@ -111,7 +111,6 @@ public class PlayerController : MonoBehaviour
             {
                 GenericEvent<AlternateInteractInput>.GetEvent(env_Interaction.currentlyLookingAt.name).Invoke(gameObject);
             }
-            Debug.Log("Alternate Interact Pressed");
         }
     }
 

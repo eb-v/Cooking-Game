@@ -178,6 +178,7 @@ public class CuttingStation : BaseStation
             kitchenObjRb.AddForce(Vector3.up * verticalForceMultiplier, ForceMode.Impulse);
             kitchenObjRb.AddForce(popDirection * horizontalForceMultiplier, ForceMode.Impulse);
 
+            StopCutting();
             ClearStationObject();
         }
         else

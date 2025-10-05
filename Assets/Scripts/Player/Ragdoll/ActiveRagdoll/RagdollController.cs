@@ -1167,5 +1167,13 @@ public class RagdollController : MonoBehaviour
         return centerOfMass.position;
     }
 
+    public void SetJointSpring(string jointName, float springValue)
+    {
+        JointDrive jointDrive = RagdollDict[jointName].Joint.angularXDrive;
+        jointDrive.positionSpring = springValue;
+        RagdollDict[jointName].Joint.angularXDrive = jointDrive;
+        RagdollDict[jointName].Joint.angularYZDrive = jointDrive;
+    }
+
 
 }

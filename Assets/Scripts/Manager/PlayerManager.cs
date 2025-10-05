@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 public class PlayerManager : MonoBehaviour
 {
-    public RawImage[] hudSlots;
+    //public RawImage[] hudSlots;
     public Transform[] SpawnPoints;
     private int m_playerCount;
 
@@ -18,12 +18,12 @@ public class PlayerManager : MonoBehaviour
 
 
         // logic for player portrait hud assignment
-        PlayerPortrait portrait = playerInput.GetComponentInChildren<PlayerPortrait>();   
+        //PlayerPortrait portrait = playerInput.GetComponentInChildren<PlayerPortrait>();   
 
-        if (m_playerCount <= hudSlots.Length)
-        {
-            portrait.hudImage = hudSlots[m_playerCount - 1];
-        }
+        //if (m_playerCount <= hudSlots.Length)
+        //{
+        //    portrait.hudImage = hudSlots[m_playerCount - 1];
+        //}
 
     }
 }

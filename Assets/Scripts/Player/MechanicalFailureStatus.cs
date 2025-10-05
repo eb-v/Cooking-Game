@@ -3,16 +3,15 @@ using UnityEngine;
 
 public class MechanicalFailureStatus : MonoBehaviour
 {
-    [SerializeField] private float explosionForce;
     [SerializeField] private GameObject explosionEffectPrefab;
     [SerializeField] private RagdollController ragdollController;
     private Env_Interaction env_interaction;
 
 
-    public float explosionRadius = 5f;
     private GameObject root;
     private float value;
-    public float upwardsModifier = 0.5f;
+    public float upwardsExplosiveForce = 500f;
+    public float horizontalExplosionForce = 900f;
 
     // this variable builds up over time when player fails skill checks
     [SerializeField, Tooltip("RunTime value - do not edit!")]
@@ -63,8 +62,15 @@ public class MechanicalFailureStatus : MonoBehaviour
         Vector3 explosionPos = ragdollController.GetPlayerPosition();
 
         // apply explosion force in front of player
-        rb.AddExplosionForce(explosionForce, explosionPos, explosionRadius, upwardsModifier, ForceMode.Impulse);
+        //rb.AddExplosionForce(explosionForce, explosionPos, explosionRadius, upwardsModifier, ForceMode.Impulse);
 
+        // position in front of the player
+        Vector3 backwardsVector = ragdollController.centerOfMass.forward * -1f;
+
+        // horizontal force
+        rb.AddForce(backwardsVector * horizontalExplosionForce, ForceMode.Impulse);
+        // vertical force
+        rb.AddForce(Vector3.up * upwardsExplosiveForce, ForceMode.Impulse);
 
         // spawn explosion effect on Player
         Vector3 playerPos = ragdollController.GetPlayerPosition();
