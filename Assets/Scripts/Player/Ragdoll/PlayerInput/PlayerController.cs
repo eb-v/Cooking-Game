@@ -157,5 +157,14 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+
+    public void OnRemoveLeftArm(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            GenericEvent<OnRemoveJoint>.GetEvent(gameObject.name).Invoke("UpperLeftLeg");
+        }
+    }
+
 }
 

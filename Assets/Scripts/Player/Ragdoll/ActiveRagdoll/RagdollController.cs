@@ -46,19 +46,19 @@ public class RagdollController : MonoBehaviour
     public bool canPunch = true;
     public float punchForce = 15f;
 
-    private const string ROOT = "Root";
-    private const string BODY = "Body";
-    private const string HEAD = "Head";
-    private const string UPPER_RIGHT_ARM = "UpperRightArm";
-    private const string LOWER_RIGHT_ARM = "LowerRightArm";
-    private const string UPPER_LEFT_ARM = "UpperLeftArm";
-    private const string LOWER_LEFT_ARM = "LowerLeftArm";
-    private const string UPPER_RIGHT_LEG = "UpperRightLeg";
-    private const string LOWER_RIGHT_LEG = "LowerRightLeg";
-    private const string UPPER_LEFT_LEG = "UpperLeftLeg";
-    private const string LOWER_LEFT_LEG = "LowerLeftLeg";
-    private const string RIGHT_FOOT = "RightFoot";
-    private const string LEFT_FOOT = "LeftFoot";
+    public const string ROOT = "Root";
+    public const string BODY = "Body";
+    public const string HEAD = "Head";
+    public const string UPPER_RIGHT_ARM = "UpperRightArm";
+    public const string LOWER_RIGHT_ARM = "LowerRightArm";
+    public const string UPPER_LEFT_ARM = "UpperLeftArm";
+    public const string LOWER_LEFT_ARM = "LowerLeftArm";
+    public const string UPPER_RIGHT_LEG = "UpperRightLeg";
+    public const string LOWER_RIGHT_LEG = "LowerRightLeg";
+    public const string UPPER_LEFT_LEG = "UpperLeftLeg";
+    public const string LOWER_LEFT_LEG = "LowerLeftLeg";
+    public const string RIGHT_FOOT = "RightFoot";
+    public const string LEFT_FOOT = "LeftFoot";
 
     //Hidden variables
     private float timer;
@@ -128,7 +128,7 @@ public class RagdollController : MonoBehaviour
     private static int groundLayer;
     private WaitForSeconds punchDelayWaitTime = new WaitForSeconds(0.3f);
 
-    
+
 
     void Start()
     {
@@ -151,6 +151,8 @@ public class RagdollController : MonoBehaviour
 
         //GenericEvent<Interact>.GetEvent(gameObject.name).AddListener(PlayerReleaseGrab);
         GenericEvent<PlacedIngredient>.GetEvent(gameObject.name).AddListener(PlayerReleaseGrab);
+
+        GenericEvent<OnRemoveJoint>.GetEvent(gameObject.name).AddListener(RemoveJoint);
 
     }
 
@@ -182,7 +184,14 @@ public class RagdollController : MonoBehaviour
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private Quaternion GetJointTargetRotation(string jointName)
     {
-        return RagdollDict[jointName].Joint.targetRotation;
+        if (RagdollDict.ContainsKey(jointName))
+        {
+            return RagdollDict[jointName].Joint.targetRotation;
+        }
+        else
+        {
+            return Quaternion.identity;
+        }
     }
 
     private void Update()
@@ -209,7 +218,12 @@ public class RagdollController : MonoBehaviour
             ResetWalkCycle();
         }
 
+
+        LegCheck();
         GroundCheck();
+
+
+
         UpdateCenterOfMass();
     }
 
@@ -271,6 +285,9 @@ public class RagdollController : MonoBehaviour
 
     private void PerformPlayerRotation()
     {
+        if (!RagdollDict.ContainsKey(ROOT))
+            return;
+
         ConfigurableJoint rootJoint = RagdollDict[ROOT].Joint;
 
         // Get movement direction in world space
@@ -298,6 +315,9 @@ public class RagdollController : MonoBehaviour
 
     private void PerformLeanForward()
     {
+        if (!RagdollDict.ContainsKey(BODY))
+            return;
+
         ConfigurableJoint _bodyJoint = RagdollDict[BODY].Joint;
         Vector3 axis = Vector3.right;
         _leanAngleX = Mathf.Clamp(_leanAngleX - _angleMultiplier * Time.deltaTime, -80f, 80f);
@@ -310,6 +330,9 @@ public class RagdollController : MonoBehaviour
 
     private void PerformLeanBackward()
     {
+        if (!RagdollDict.ContainsKey(BODY))
+            return;
+
         ConfigurableJoint _bodyJoint = RagdollDict[BODY].Joint;
         Vector3 axis = Vector3.right;
         _leanAngleX = Mathf.Clamp(_leanAngleX + _angleMultiplier * Time.deltaTime, -80f, 80f);
@@ -324,11 +347,20 @@ public class RagdollController : MonoBehaviour
     {
         if (ResetPose && !jumping)
         {
-            RagdollDict[BODY].Joint.targetRotation = BodyTarget;
-            RagdollDict[UPPER_RIGHT_ARM].Joint.targetRotation = UpperRightArmTarget;
-            RagdollDict[LOWER_RIGHT_ARM].Joint.targetRotation = LowerRightArmTarget;
-            RagdollDict[UPPER_LEFT_ARM].Joint.targetRotation = UpperLeftArmTarget;
-            RagdollDict[LOWER_LEFT_ARM].Joint.targetRotation = LowerLeftArmTarget;
+            if (RagdollDict.ContainsKey(BODY))
+                RagdollDict[BODY].Joint.targetRotation = BodyTarget;
+
+            if (RagdollDict.ContainsKey(UPPER_RIGHT_ARM))
+                RagdollDict[UPPER_RIGHT_ARM].Joint.targetRotation = UpperRightArmTarget;
+
+            if (RagdollDict.ContainsKey(LOWER_RIGHT_ARM))
+                RagdollDict[LOWER_RIGHT_ARM].Joint.targetRotation = LowerRightArmTarget;
+
+            if (RagdollDict.ContainsKey(UPPER_LEFT_ARM))
+                RagdollDict[UPPER_LEFT_ARM].Joint.targetRotation = UpperLeftArmTarget;
+
+            if (RagdollDict.ContainsKey(LOWER_LEFT_ARM))
+                RagdollDict[LOWER_LEFT_ARM].Joint.targetRotation = LowerLeftArmTarget;
 
             //MouseYAxisArms = 0;
             ResetPose = false;
@@ -343,7 +375,7 @@ public class RagdollController : MonoBehaviour
             ResetPose = true;
         }
     }
-    
+
     private bool CanResetPoseAfterLanding()
     {
         return inAir && !isJumping && !jumping;
@@ -379,8 +411,11 @@ public class RagdollController : MonoBehaviour
         {
             isJumping = true;
 
-            Rigidbody rootRigidbody = RagdollDict[ROOT].Rigidbody;
-            rootRigidbody.linearVelocity = rootRigidbody.linearVelocity.ModifyY(rootRigidbody.transform.up.y * jumpForce);
+            if (RagdollDict.ContainsKey(ROOT))
+            {
+                Rigidbody rootRigidbody = RagdollDict[ROOT].Rigidbody;
+                rootRigidbody.linearVelocity = rootRigidbody.linearVelocity.ModifyY(rootRigidbody.transform.up.y * jumpForce);
+            }
         }
 
         if (isJumping)
@@ -396,6 +431,17 @@ public class RagdollController : MonoBehaviour
             }
         }
     }
+
+
+    private void LegCheck()
+    {
+        if (!RagdollDict.ContainsKey(UPPER_LEFT_LEG) || !RagdollDict.ContainsKey(UPPER_RIGHT_LEG))
+        {
+            balanced = false;
+        }
+    }
+
+    
 
     private void GroundCheck()
     {
@@ -441,7 +487,9 @@ public class RagdollController : MonoBehaviour
                !reachLeftAxisUsed &&
                !balanced &&
                RagdollDict[ROOT].Rigidbody.linearVelocity.magnitude < 1f &&
-               autoGetUpWhenPossible;
+               autoGetUpWhenPossible &&
+               RagdollDict.ContainsKey(UPPER_LEFT_LEG) &&
+               RagdollDict.ContainsKey(UPPER_RIGHT_LEG);
     }
 
 
@@ -485,6 +533,8 @@ public class RagdollController : MonoBehaviour
 
     private void SetJointAngularDrives(string jointName, in JointDrive jointDrive)
     {
+        if (!RagdollDict.ContainsKey(jointName))
+            return;
         RagdollDict[jointName].Joint.angularXDrive = jointDrive;
         RagdollDict[jointName].Joint.angularYZDrive = jointDrive;
     }
@@ -509,6 +559,11 @@ public class RagdollController : MonoBehaviour
     private void MoveInCameraDirection()
     {
         // Direction = RagdollDict[ROOT].transform.rotation * new Vector3(MovementAxis.x, 0.0f, MovementAxis.y);
+
+        // Disable movement if player is missing legs
+        if (!RagdollDict.ContainsKey(UPPER_RIGHT_LEG) || !RagdollDict.ContainsKey(UPPER_LEFT_LEG))
+            return;
+
         Direction = new Vector3(MovementAxis.x, 0.0f, MovementAxis.y);
         Direction.y = 0f;
         Rigidbody rootRigidbody = RagdollDict[ROOT].Rigidbody;
@@ -702,46 +757,50 @@ public class RagdollController : MonoBehaviour
 
     private void PlayerReach()
     {
-        ConfigurableJoint leftArmJoint = RagdollDict[UPPER_LEFT_ARM].Joint;
-        ConfigurableJoint rightArmJoint = RagdollDict[UPPER_RIGHT_ARM].Joint;
 
-        if (leftGrab == true)
+        if (RagdollDict.ContainsKey(UPPER_LEFT_ARM))
         {
-            Vector3 newTargetRotEuler = new Vector3(-90f, 0f, 0f);
+            ConfigurableJoint leftArmJoint = RagdollDict[UPPER_LEFT_ARM].Joint;
 
-            Quaternion newTargetRotation = Quaternion.Euler(newTargetRotEuler);
-
-            leftArmJoint.targetRotation = Quaternion.Lerp(
-                leftArmJoint.targetRotation,
-                newTargetRotation, // Adjust the multiplier as needed
-                Time.deltaTime * armReachStiffness);
-
-
-
-            // Enable hand collider 
-            leftHand.GetComponent<Collider>().enabled = true;
-
-
-        }
-        else
-        {
-            Vector3 newTargetRotEuler = new Vector3(0f, 0f, 0f);
-            Quaternion newTargetRotation = Quaternion.Euler(newTargetRotEuler);
-            leftArmJoint.targetRotation = Quaternion.Lerp(
-                leftArmJoint.targetRotation,
-                newTargetRotation, // Adjust the multiplier as needed
-                Time.deltaTime * armReachStiffness);
-
-            // Disable hand collider
-            leftHand.GetComponent<Collider>().enabled = false;
-
-            // the hand is currently grabbing something
-            if (leftHand.GetComponent<GrabDetection>().isGrabbing == true)
+            if (leftGrab == true)
             {
-                PlayerReleaseGrab(leftHand.gameObject);
-            }
+                Vector3 newTargetRotEuler = new Vector3(-90f, 0f, 0f);
 
+                Quaternion newTargetRotation = Quaternion.Euler(newTargetRotEuler);
+
+                leftArmJoint.targetRotation = Quaternion.Lerp(
+                    leftArmJoint.targetRotation,
+                    newTargetRotation, // Adjust the multiplier as needed
+                    Time.deltaTime * armReachStiffness);
+
+
+
+                // Enable hand collider 
+                leftHand.GetComponent<Collider>().enabled = true;
+
+
+            }
+            else
+            {
+                Vector3 newTargetRotEuler = new Vector3(0f, 0f, 0f);
+                Quaternion newTargetRotation = Quaternion.Euler(newTargetRotEuler);
+                leftArmJoint.targetRotation = Quaternion.Lerp(
+                    leftArmJoint.targetRotation,
+                    newTargetRotation, // Adjust the multiplier as needed
+                    Time.deltaTime * armReachStiffness);
+
+                // Disable hand collider
+                leftHand.GetComponent<Collider>().enabled = false;
+
+                // the hand is currently grabbing something
+                if (leftHand.GetComponent<GrabDetection>().isGrabbing == true)
+                {
+                    PlayerReleaseGrab(leftHand.gameObject);
+                }
+
+            }
         }
+       
         //else
         //{
         //    leftArmJoint.targetRotation = Quaternion.Lerp(
@@ -750,50 +809,56 @@ public class RagdollController : MonoBehaviour
         //        , Time.deltaTime * armReachStiffness);
         //}
 
-        if (rightGrab == true)
+        if (RagdollDict.ContainsKey(UPPER_RIGHT_ARM))
         {
-            //float newTargetRotation = -90f;
+            ConfigurableJoint rightArmJoint = RagdollDict[UPPER_RIGHT_ARM].Joint;
 
-            //rightArmJoint.targetRotation = Quaternion.Lerp(
-            //    rightArmJoint.targetRotation,
-            //    rightArmJoint.targetRotation.DisplaceX(newTargetRotation) // Adjust the multiplier as needed
-            //    , Time.deltaTime * armReachStiffness);
-            Vector3 newTargetRotEuler = new Vector3(-90f, 0f, 0f);
-
-            Quaternion newTargetRotation = Quaternion.Euler(newTargetRotEuler);
-
-            rightArmJoint.targetRotation = Quaternion.Lerp(
-                rightArmJoint.targetRotation,
-                newTargetRotation, // Adjust the multiplier as needed
-                Time.deltaTime * armReachStiffness);
-
-
-            // Enable hand collider
-            rightHand.GetComponent<Collider>().enabled = true;
-
-
-        }
-        else
-        {
-            Vector3 newTargetRotEuler = new Vector3(0f, 0f, 0f);
-
-            Quaternion newTargetRotation = Quaternion.Euler(newTargetRotEuler);
-
-            rightArmJoint.targetRotation = Quaternion.Lerp(
-                rightArmJoint.targetRotation,
-                newTargetRotation, // Adjust the multiplier as needed
-                Time.deltaTime * armReachStiffness);
-
-
-            // Disable hand collider
-            rightHand.GetComponent<Collider>().enabled = false;
-
-            if (rightHand.GetComponent<GrabDetection>().isGrabbing == true)
+            if (rightGrab == true)
             {
-                PlayerReleaseGrab(rightHand.gameObject);
-            }
+                //float newTargetRotation = -90f;
 
+                //rightArmJoint.targetRotation = Quaternion.Lerp(
+                //    rightArmJoint.targetRotation,
+                //    rightArmJoint.targetRotation.DisplaceX(newTargetRotation) // Adjust the multiplier as needed
+                //    , Time.deltaTime * armReachStiffness);
+                Vector3 newTargetRotEuler = new Vector3(-90f, 0f, 0f);
+
+                Quaternion newTargetRotation = Quaternion.Euler(newTargetRotEuler);
+
+                rightArmJoint.targetRotation = Quaternion.Lerp(
+                    rightArmJoint.targetRotation,
+                    newTargetRotation, // Adjust the multiplier as needed
+                    Time.deltaTime * armReachStiffness);
+
+
+                // Enable hand collider
+                rightHand.GetComponent<Collider>().enabled = true;
+
+
+            }
+            else
+            {
+                Vector3 newTargetRotEuler = new Vector3(0f, 0f, 0f);
+
+                Quaternion newTargetRotation = Quaternion.Euler(newTargetRotEuler);
+
+                rightArmJoint.targetRotation = Quaternion.Lerp(
+                    rightArmJoint.targetRotation,
+                    newTargetRotation, // Adjust the multiplier as needed
+                    Time.deltaTime * armReachStiffness);
+
+
+                // Disable hand collider
+                rightHand.GetComponent<Collider>().enabled = false;
+
+                if (rightHand.GetComponent<GrabDetection>().isGrabbing == true)
+                {
+                    PlayerReleaseGrab(rightHand.gameObject);
+                }
+
+            }
         }
+            
         //else
         //{
         //    rightArmJoint.targetRotation = Quaternion.Lerp(
@@ -950,6 +1015,9 @@ public class RagdollController : MonoBehaviour
         float upperLegLerpMultiplier,
         float lowerLegLerpMultiplier)
     {
+        if (!RagdollDict.ContainsKey(upperLegLabel) || !RagdollDict.ContainsKey(lowerLegLabel))
+            return;
+
         RagdollDict[upperLegLabel].Joint.targetRotation = Quaternion.Lerp(
             RagdollDict[upperLegLabel].Joint.targetRotation, upperLegTarget,
             upperLegLerpMultiplier * Time.fixedDeltaTime);
@@ -976,6 +1044,10 @@ public class RagdollController : MonoBehaviour
         string lowerJointLabel,
         string upperOppositeJointLabel)
     {
+        if (!RagdollDict.ContainsKey(footLabel) || !RagdollDict.ContainsKey(upperJointLabel) ||
+            !RagdollDict.ContainsKey(lowerJointLabel) || !RagdollDict.ContainsKey(upperOppositeJointLabel))
+            return;
+
         stepTimer += Time.fixedDeltaTime;
         RagdollDict[footLabel].Rigidbody
             .AddForce(-Vector3.up * (FeetMountForce * Time.deltaTime), ForceMode.Impulse);
@@ -1035,6 +1107,9 @@ public class RagdollController : MonoBehaviour
         ref bool forwardAlertLeg,
         ref bool backAlertLeg)
     {
+        if (!RagdollDict.ContainsKey(UPPER_LEFT_LEG) || !RagdollDict.ContainsKey(UPPER_RIGHT_LEG))
+            return;
+
         bool forwardFootIsBehind = RagdollDict[forwardFootLabel].transform.position.z <
                                    RagdollDict[backFootLabel].transform.position.z;
         bool forwardFootIsAhead = RagdollDict[forwardFootLabel].transform.position.z >
@@ -1063,6 +1138,10 @@ public class RagdollController : MonoBehaviour
 
     private void PerformStepPrediction()
     {
+
+        if (!RagdollDict.ContainsKey(UPPER_RIGHT_LEG) || !RagdollDict.ContainsKey(UPPER_LEFT_LEG))
+            return;
+
         if (!WalkForward && !WalkBackward)
         {
             StepRight = false;
@@ -1112,10 +1191,13 @@ public class RagdollController : MonoBehaviour
 
         foreach (var element in RagdollDict)
         {
-            var joint = element.Value;
-            var mass = joint.Rigidbody.mass;
-            massPositionDisplacement += mass * joint.transform.position;
-            totalMass += mass;
+            if (element.Value != null)
+            {
+                var joint = element.Value;
+                var mass = joint.Rigidbody.mass;
+                massPositionDisplacement += mass * joint.transform.position;
+                totalMass += mass;
+            }
         }
 
         CenterOfMassPoint = (massPositionDisplacement / totalMass);
@@ -1167,12 +1249,13 @@ public class RagdollController : MonoBehaviour
         return centerOfMass.position;
     }
 
-    public void SetJointSpring(string jointName, float springValue)
+    public void RemoveJoint(string jointName)
     {
-        JointDrive jointDrive = RagdollDict[jointName].Joint.angularXDrive;
-        jointDrive.positionSpring = springValue;
-        RagdollDict[jointName].Joint.angularXDrive = jointDrive;
-        RagdollDict[jointName].Joint.angularYZDrive = jointDrive;
+        if (RagdollDict.ContainsKey(jointName))
+        {
+            Destroy(RagdollDict[jointName].gameObject.GetComponent<ConfigurableJoint>());
+            RagdollDict.Remove(jointName);
+        }
     }
 
 

@@ -149,6 +149,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "RemoveJoint",
+                    "type": "Button",
+                    "id": "08e26650-7dbc-4b90-88f5-46af28452832",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -567,6 +576,17 @@
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
                     "action": "Explode",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "3a818dfe-7f7b-48dd-98e8-e51a480c4070",
+                    "path": "<Keyboard>/h",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "RemoveJoint",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

@@ -1931,6 +1931,7 @@ GameObject:
   - component: {fileID: 4301988107989911412}
   - component: {fileID: 1753866333965181985}
   - component: {fileID: 675980887619459032}
+  - component: {fileID: 156621683146116255}
   m_Layer: 10
   m_Name: Player
   m_TagString: Player
@@ -2255,6 +2256,22 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: ad3ef6e8-4c13-492c-b836-601cf55fb24b
     m_ActionName: 'Player/Explode[/Keyboard/x]'
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 4301988107989911412}
+        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
+        m_MethodName: OnRemoveLeftArm
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 08e26650-7dbc-4b90-88f5-46af28452832
+    m_ActionName: 'Player/RemoveJoint[/Keyboard/h]'
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
@@ -2305,6 +2322,18 @@ MonoBehaviour:
   upwardsExplosiveForce: 200
   horizontalExplosionForce: 900
   mechanicalFailureInstability: 0
+--- !u!114 &156621683146116255
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5202245037202160621}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a75f8f8120772e04e9195135fbc2be8b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BatteryScript
 --- !u!1 &5271651282982184791
 GameObject:
   m_ObjectHideFlags: 0

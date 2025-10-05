@@ -235,6 +235,15 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""RemoveJoint"",
+                    ""type"": ""Button"",
+                    ""id"": ""08e26650-7dbc-4b90-88f5-46af28452832"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -655,6 +664,17 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""action"": ""Explode"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3a818dfe-7f7b-48dd-98e8-e51a480c4070"",
+                    ""path"": ""<Keyboard>/h"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""RemoveJoint"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -740,6 +760,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         m_Player_AltInteract = m_Player.FindAction("AltInteract", throwIfNotFound: true);
         m_Player_PlaceIngredient = m_Player.FindAction("PlaceIngredient", throwIfNotFound: true);
         m_Player_Explode = m_Player.FindAction("Explode", throwIfNotFound: true);
+        m_Player_RemoveJoint = m_Player.FindAction("RemoveJoint", throwIfNotFound: true);
     }
 
     ~@InputSystem_Actions()
@@ -836,6 +857,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_AltInteract;
     private readonly InputAction m_Player_PlaceIngredient;
     private readonly InputAction m_Player_Explode;
+    private readonly InputAction m_Player_RemoveJoint;
     /// <summary>
     /// Provides access to input actions defined in input action map "Player".
     /// </summary>
@@ -912,6 +934,10 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// </summary>
         public InputAction @Explode => m_Wrapper.m_Player_Explode;
         /// <summary>
+        /// Provides access to the underlying input action "Player/RemoveJoint".
+        /// </summary>
+        public InputAction @RemoveJoint => m_Wrapper.m_Player_RemoveJoint;
+        /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
         public InputActionMap Get() { return m_Wrapper.m_Player; }
@@ -985,6 +1011,9 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @Explode.started += instance.OnExplode;
             @Explode.performed += instance.OnExplode;
             @Explode.canceled += instance.OnExplode;
+            @RemoveJoint.started += instance.OnRemoveJoint;
+            @RemoveJoint.performed += instance.OnRemoveJoint;
+            @RemoveJoint.canceled += instance.OnRemoveJoint;
         }
 
         /// <summary>
@@ -1044,6 +1073,9 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @Explode.started -= instance.OnExplode;
             @Explode.performed -= instance.OnExplode;
             @Explode.canceled -= instance.OnExplode;
+            @RemoveJoint.started -= instance.OnRemoveJoint;
+            @RemoveJoint.performed -= instance.OnRemoveJoint;
+            @RemoveJoint.canceled -= instance.OnRemoveJoint;
         }
 
         /// <summary>
@@ -1261,5 +1293,12 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnExplode(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "RemoveJoint" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnRemoveJoint(InputAction.CallbackContext context);
     }
 }
