@@ -1,27 +1,33 @@
+using System;                // for EventHandler, EventArgs
 using UnityEngine;
-using System; 
 
 public class KitchenGameManager : MonoBehaviour
 {
-
     public static KitchenGameManager Instance { get; private set; }
 
     public event EventHandler OnStateChanged;
-    private enum State
-    {
-        WaitingToStart,
-        CountdownToStart,
-        GamePlaying,
-        GameOver
-    }
 
+    private enum State { WaitingToStart, CountdownToStart, GamePlaying, GameOver }
     private State state;
-    private float WaitingToStartTimer = 1f;
-    private float CountdownToStartTimer = 3f;
-    private float gamePlayingTimer = 10f; //for testing
+
+    [SerializeField] private float waitingToStartDuration = 1f;
+    [SerializeField] private float countdownToStartDuration = 3f;
+    [SerializeField] private float gamePlayingDuration    = 10f; // test value
+
+    private float waitingToStartTimer;
+    private float countdownToStartTimer;
+    private float gamePlayingTimer;
+
     private void Awake()
     {
+        if (Instance != null && Instance != this) { Destroy(gameObject); return; }
+        Instance = this;
+
         state = State.WaitingToStart;
+
+        waitingToStartTimer   = waitingToStartDuration;
+        countdownToStartTimer = countdownToStartDuration;
+        gamePlayingTimer      = gamePlayingDuration;
     }
 
     private void Update()
@@ -29,49 +35,40 @@ public class KitchenGameManager : MonoBehaviour
         switch (state)
         {
             case State.WaitingToStart:
-                WaitingToStartTimer = Time.deltaTime;
-                if (WaitingToStartTimer < 0f)
+                waitingToStartTimer -= Time.deltaTime;                 // <-- subtract
+                if (waitingToStartTimer <= 0f)
                 {
                     state = State.CountdownToStart;
                     OnStateChanged?.Invoke(this, EventArgs.Empty);
                 }
                 break;
+
             case State.CountdownToStart:
-                CountdownToStartTimer -= Time.deltaTime;
-                if (CountdownToStartTimer < 0f)
+                countdownToStartTimer -= Time.deltaTime;
+                if (countdownToStartTimer <= 0f)
                 {
+                    countdownToStartTimer = 0f;
                     state = State.GamePlaying;
                     OnStateChanged?.Invoke(this, EventArgs.Empty);
                 }
                 break;
+
             case State.GamePlaying:
                 gamePlayingTimer -= Time.deltaTime;
-                if (gamePlayingTimer < 0f)
+                if (gamePlayingTimer <= 0f)
                 {
+                    gamePlayingTimer = 0f;
                     state = State.GameOver;
                     OnStateChanged?.Invoke(this, EventArgs.Empty);
                 }
                 break;
+
             case State.GameOver:
                 break;
         }
     }
 
-    public bool IsGamePlaying()
-    {
-        return state == State.GamePlaying; //Add to interaction function for player, ask if the game is in a playing state, if not do nothing, else be able to interact
-
-
-    }
-
-    public bool IsCountdownToStartActive()
-    {
-        return state == State.CountdownToStart;
-    }
-
-    public float GetCountdownToStartTimer()
-    {
-        return CountdownToStartTimer;
-    }
-
+    public bool IsGamePlaying() => state == State.GamePlaying;
+    public bool IsCountdownToStartActive() => state == State.CountdownToStart;
+    public float GetCountdownToStartTimer() => Mathf.Max(0f, countdownToStartTimer);
 }
