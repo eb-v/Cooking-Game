@@ -1,6 +1,8 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
-public class DeliveryStation : BaseStation {
+public class TransformedObject : BaseStation {
     private void Awake()
     {
         GenericEvent<InteractEvent>.GetEvent(gameObject.name).AddListener(Interact);
@@ -11,7 +13,6 @@ public class DeliveryStation : BaseStation {
     {
         RagdollController ragdollController = player.GetComponent<RagdollController>();
 
-        // if player is carrying something
         if (ragdollController.IsHoldingSomething())
         {
             // if station is empty
@@ -89,4 +90,11 @@ public class DeliveryStation : BaseStation {
             Debug.Log("Player not carrying anything");
         }
     }
+
+    //remove logic
+    public override void RemovePlacedKitchenObj(GameObject player)
+    {
+        base.RemovePlacedKitchenObj(player);
+    }
+
 }
