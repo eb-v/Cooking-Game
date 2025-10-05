@@ -441,7 +441,7 @@ public class RagdollController : MonoBehaviour
         }
     }
 
-    
+
 
     private void GroundCheck()
     {
@@ -506,14 +506,14 @@ public class RagdollController : MonoBehaviour
 
         if (!reachRightAxisUsed)
         {
-            SetJointAngularDrives(UPPER_RIGHT_ARM, in poseJointDrive);
-            SetJointAngularDrives(LOWER_RIGHT_ARM, in poseJointDrive);
+          //  SetJointAngularDrives(UPPER_RIGHT_ARM, in poseJointDrive);
+            //SetJointAngularDrives(LOWER_RIGHT_ARM, in poseJointDrive);
         }
 
         if (!reachLeftAxisUsed)
         {
-            SetJointAngularDrives(UPPER_LEFT_ARM, in poseJointDrive);
-            SetJointAngularDrives(LOWER_LEFT_ARM, in poseJointDrive);
+           // SetJointAngularDrives(UPPER_LEFT_ARM, in poseJointDrive);
+           // SetJointAngularDrives(LOWER_LEFT_ARM, in poseJointDrive);
         }
 
         SetJointAngularDrives(UPPER_RIGHT_LEG, in poseJointDrive);
@@ -561,8 +561,8 @@ public class RagdollController : MonoBehaviour
         // Direction = RagdollDict[ROOT].transform.rotation * new Vector3(MovementAxis.x, 0.0f, MovementAxis.y);
 
         // Disable movement if player is missing legs
-        if (!RagdollDict.ContainsKey(UPPER_RIGHT_LEG) || !RagdollDict.ContainsKey(UPPER_LEFT_LEG))
-            return;
+        //if (!RagdollDict.ContainsKey(UPPER_RIGHT_LEG) || !RagdollDict.ContainsKey(UPPER_LEFT_LEG))
+        //    return;
 
         Direction = new Vector3(MovementAxis.x, 0.0f, MovementAxis.y);
         Direction.y = 0f;
