@@ -10,9 +10,12 @@ public class KitchenGameManager : MonoBehaviour
     private enum State { WaitingToStart, CountdownToStart, GamePlaying, GameOver }
     private State state;
 
-    [SerializeField] private float waitingToStartDuration = 1f;
-    [SerializeField] private float countdownToStartDuration = 3f;
-    [SerializeField] private float gamePlayingDuration = 10f; // test value
+    private float waitingToStartDuration = 1f;
+    private float countdownToStartDuration = 3f;
+    private float gamePlayingDuration;
+
+    private float gamePlayingTimerMax = 10f; // test value
+    
 
     private float waitingToStartTimer;
     private float countdownToStartTimer;
@@ -49,6 +52,7 @@ public class KitchenGameManager : MonoBehaviour
                 {
                     countdownToStartTimer = 0f;
                     state = State.GamePlaying;
+                    gamePlayingTimer = gamePlayingTimerMax;
                     OnStateChanged?.Invoke(this, EventArgs.Empty);
                 }
                 break;
@@ -71,8 +75,13 @@ public class KitchenGameManager : MonoBehaviour
     public bool IsGamePlaying() => state == State.GamePlaying;
     public bool IsCountdownToStartActive() => state == State.CountdownToStart;
     public float GetCountdownToStartTimer() => Mathf.Max(0f, countdownToStartTimer);
-    
+
     public float GetGamePlayingTimeLeft() => Mathf.Max(0f, gamePlayingTimer);
     public float GetGamePlayingDuration() => gamePlayingDuration;
+
+    public float GetGamelayingTimerNormalized()
+    {
+        return 1 - (gamePlayingTimer / gamePlayingTimerMax);
+    }
 
 }
