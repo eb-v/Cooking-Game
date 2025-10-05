@@ -89,12 +89,18 @@ public class CookingStation : BaseStation, IPrepStation {
             }
         }
     }
-    
-//checking interactions
+
+    //checking interactions
     public override void Interact(GameObject player) {
+        if (isCooking) {
+            Debug.Log("Cooking in progress — cannot interact now.");
+            return;
+        }
+
         RagdollController ragdoll = player.GetComponent<RagdollController>();
+
         if (!ragdoll.IsHoldingSomething()) {
-            if (isComplete && ingredientInPan != null) {
+            if ((isComplete || isBurning) && ingredientInPan != null) {
                 TakeOutCookedItem();
                 return;
             }
@@ -118,31 +124,40 @@ public class CookingStation : BaseStation, IPrepStation {
         Debug.Log("Cannot place this object here.");
     }
 
+    //can not remove items when the item is raw -> cooked, they can only remove when its cooked -> burnt
     public override void RemovePlacedKitchenObj(GameObject player) {
+        if (isCooking) {
+            Debug.Log("You can’t remove anything while cooking!");
+            return;
+        }
+
         if ((isComplete || isBurning) && ingredientInPan != null) {
             TakeOutCookedItem();
             return;
         }
 
-        if (ingredientInPan != null && !isCooking) {
+        if (ingredientInPan != null && !isCooking && !isComplete && !isBurning) {
             Destroy(ingredientInPan);
             ingredientInPan = null;
             StopCooking();
+            Debug.Log("Raw ingredient removed from pan.");
             return;
         }
 
-        if (panOnStove != null) {
+        if (panOnStove != null && ingredientInPan == null) {
             Rigidbody rb = panOnStove.GetComponent<Rigidbody>();
             if (rb != null) rb.isKinematic = false;
             panOnStove.transform.SetParent(null);
             panOnStove = null;
             StopCooking();
+            Debug.Log("Pan removed from stove.");
         }
     }
-    
 
-        //cooking idea, gets player input to start cooking, starts the progress bar,
-        //allows for the player to take it out when cooked, if not taken out within 10 seconds, the item burns and starts the fire.
+
+
+    //cooking idea, gets player input to start cooking, starts the progress bar,
+    //allows for the player to take it out when cooked, if not taken out within 10 seconds, the item burns and starts the fire.
     private void StartCooking() {
         if (panOnStove != null && ingredientInPan != null && !isCooking) {
             isCooking = true;
