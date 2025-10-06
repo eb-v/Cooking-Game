@@ -7,33 +7,41 @@ public class GameStartCountdownUI : MonoBehaviour
 
     private void Start()
     {
-        KitchenGameManager.Instance.OnStateChanged += KitchenGameManager_OnStateChanged;
+        if (countdownText == null) countdownText = GetComponent<TMP_Text>();
 
-        Hide();
+        // subscribe safely
+        if (KitchenGameManager.Instance != null)
+            KitchenGameManager.Instance.OnStateChanged += KitchenGameManager_OnStateChanged;
+
+        UpdateVisibility();
+    }
+
+    private void OnDestroy()
+    {
+        if (KitchenGameManager.Instance != null)
+            KitchenGameManager.Instance.OnStateChanged -= KitchenGameManager_OnStateChanged;
     }
 
     private void KitchenGameManager_OnStateChanged(object sender, System.EventArgs e)
     {
-        if (KitchenGameManager.Instance.IsCountdownToStartActive())
-        {
-            Show();
-        }
-        else
-        {
-            Hide();
-        }
+        UpdateVisibility();
     }
 
     private void Update()
     {
-        countdownText.text = KitchenGameManager.Instance.GetCountdownToStartTimer().ToString();
+        if (KitchenGameManager.Instance == null) return;
+
+        if (KitchenGameManager.Instance.IsCountdownToStartActive())
+        {
+            float t = KitchenGameManager.Instance.GetCountdownToStartTimer();
+            countdownText.text = Mathf.CeilToInt(t).ToString();   // shows 3..2..1
+        }
     }
-    private void Show()
+
+    private void UpdateVisibility()
     {
-        gameObject.SetActive(true);
-    }
-    private void Hide()
-    {
-        gameObject.SetActive(false);
+        bool show = KitchenGameManager.Instance != null &&
+                    KitchenGameManager.Instance.IsCountdownToStartActive();
+        gameObject.SetActive(show);
     }
 }
