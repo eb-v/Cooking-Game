@@ -5,7 +5,9 @@ public class DeliveryManager: MonoBehaviour {
 
     [SerializeField] private RecipeListSO recipeListSO;
 
+    public List<RecipeSO> WaitingRecipes => waitingRecipeSOList;
     private List<RecipeSO> waitingRecipeSOList;
+
     private float spawnRecipeTimer;
     private float spawnRecipeTimerMax = 4f;
     
@@ -34,12 +36,29 @@ public class DeliveryManager: MonoBehaviour {
         }
     }
 
-    public void DeliverRecipe(PlateKitchenObject plateKitchenObject) {
-        for (int i = 0; i < waitingRecipeSOList.Count, i++) {
-            RecipeSO waitingRecipeSO = waitingRecipeSOList[i];
+    public bool MatchesRecipe(AssembledItemObject assembledItem, RecipeSO recipe){
+        List<GameObject> assembledPrefabs = assembledItem.GetIngredients();
 
-            if(waitingRecipeSO.)
-            
+        foreach (CuttingRecipeSO cuttingRecipe in recipe.CuttingRecipeSOList)
+        {
+            if (!assembledPrefabs.Contains(cuttingRecipe.output))
+            {
+                Debug.Log("missing a cutting ingredient");
+                return false; 
+            }
         }
+
+        foreach (CookingRecipeSO cookingRecipe in recipe.CookingRecipeSOList)
+        {
+            if (!assembledPrefabs.Contains(cookingRecipe.output))
+            {
+                Debug.Log("missing a cooking ingredient");
+                return false; 
+            }
+        }
+
+        Debug.Log("All ingredients match recipe!");
+        return true;
     }
+
 }

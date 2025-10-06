@@ -18,11 +18,9 @@ public class DeliveryStation : BaseStation {
             if (!HasKitchenObject())
             {
                 GameObject heldKitchenObj = ragdollController.GetHeldObject();
-                // if held object assembleditem
+
                 if (heldKitchenObj.CompareTag("AssembledItem"))
                 {
-                    // logic for detaching object from hand
-
                     if (ragdollController.leftHand.GetComponent<GrabDetection>().isGrabbing)
                     {
                         GameObject grabbedObj = ragdollController.leftHand.GetComponent<GrabDetection>().grabbedObj;
@@ -62,8 +60,7 @@ public class DeliveryStation : BaseStation {
                     SetStationObject(heldKitchenObj);
 
                     //destroy after 1 
-                    BaseKitchenObject bko = heldKitchenObj.GetComponent<BaseKitchenObject>();
-                    Destroy(bko.gameObject, 1f);
+                    Destroy(heldKitchenObj, 1f);
                     ClearStationObject(); 
                     //GenericEvent<DeliveredDishEvent>.GetEvent(gameObject.name).Invoke();
 

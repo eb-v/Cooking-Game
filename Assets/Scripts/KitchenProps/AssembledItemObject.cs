@@ -1,16 +1,22 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AssembledItemObject{
-    
-    private List<KitchenObjectSO> kitchenObjectSOList;
+public class AssembledItemObject
+{
+    private List<GameObject> PreparedIngredients;
 
-    private void Awake() {
-        kitchenObjectSOList = new List<KitchenObjectSO>();
+    public AssembledItemObject()
+    {
+        PreparedIngredients = new List<GameObject>();
     }
 
-    public void AddIngredient(KitchenObjectSO kitchenObjectSO) {
-            kitchenObjectSOList.Add(kitchenObjectSO);
+    public void AddIngredient(GameObject PreparedIngredient)
+    {
+        PreparedIngredients.Add(PreparedIngredient);
+    }
+
+    public List<GameObject> GetIngredients()
+    {
+        return PreparedIngredients;
     }
 }
