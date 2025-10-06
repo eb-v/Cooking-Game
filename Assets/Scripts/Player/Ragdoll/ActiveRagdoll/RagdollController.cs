@@ -152,7 +152,9 @@ public class RagdollController : MonoBehaviour
         //GenericEvent<Interact>.GetEvent(gameObject.name).AddListener(PlayerReleaseGrab);
         GenericEvent<PlacedIngredient>.GetEvent(gameObject.name).AddListener(PlayerReleaseGrab);
 
-        GenericEvent<OnRemoveJoint>.GetEvent(gameObject.name).AddListener(RemoveJoint);
+        GenericEvent<OnRemoveJoint>.GetEvent(gameObject.name).AddListener(DisconnectJoint);
+
+        GenericEvent<ReleaseHeldJoint>.GetEvent(gameObject.name).AddListener(PlayerReleaseGrab);
 
     }
 
@@ -431,14 +433,21 @@ public class RagdollController : MonoBehaviour
             }
         }
     }
-
+    
 
     private void LegCheck()
     {
-        if (!RagdollDict.ContainsKey(UPPER_LEFT_LEG) || !RagdollDict.ContainsKey(UPPER_RIGHT_LEG))
-        {
-            balanced = false;
-        }
+        //RagdollJoint leftLegJoint = RagdollDict[UPPER_LEFT_LEG];
+        //RagdollJoint rightLegJoint = RagdollDict[UPPER_RIGHT_LEG];
+
+        //if (!leftLegJoint.isConnected || !rightLegJoint.isConnected)
+        //{
+        //    Debug.Log("leg is disconnected");
+        //    if (balanced)
+        //    {
+        //        balanced = false;
+        //    }
+        //}
     }
 
 
@@ -462,6 +471,14 @@ public class RagdollController : MonoBehaviour
         else if (ShouldSetBalanced())
         {
             balanced = true;
+        }
+
+        if (!RagdollDict[UPPER_LEFT_LEG].isConnected || !RagdollDict[UPPER_RIGHT_LEG].isConnected)
+        {
+            if (balanced)
+            {
+                balanced = false;
+            }
         }
 
         bool needsStateChange = (balanced == isRagdoll);
@@ -488,8 +505,7 @@ public class RagdollController : MonoBehaviour
                !balanced &&
                RagdollDict[ROOT].Rigidbody.linearVelocity.magnitude < 1f &&
                autoGetUpWhenPossible &&
-               RagdollDict.ContainsKey(UPPER_LEFT_LEG) &&
-               RagdollDict.ContainsKey(UPPER_RIGHT_LEG);
+               RagdollDict[UPPER_LEFT_LEG].isConnected && RagdollDict[UPPER_RIGHT_LEG].isConnected;
     }
 
 
@@ -873,7 +889,14 @@ public class RagdollController : MonoBehaviour
         if (hand.GetComponent<GrabDetection>().isGrabbing == true)
             return;
         FixedJoint grabJoint = hand.transform.parent.gameObject.AddComponent<FixedJoint>();
-        grabJoint.connectedBody = objToGrab.GetComponent<Rigidbody>();
+        if (objToGrab.GetComponent<Rigidbody>() == null)
+        {
+            grabJoint.connectedBody = objToGrab.transform.parent.GetComponent<Rigidbody>();
+        }
+        else
+        {
+            grabJoint.connectedBody = objToGrab.GetComponent<Rigidbody>();
+        }
 
         hand.GetComponent<GrabDetection>().isGrabbing = true;
         GenericEvent<ObjectGrabbed>.GetEvent(gameObject.name).Invoke(objToGrab);
@@ -970,6 +993,9 @@ public class RagdollController : MonoBehaviour
 
     private void PerformWalking()
     {
+        if (RagdollDict[UPPER_RIGHT_LEG].isConnected == false ||
+            RagdollDict[UPPER_LEFT_LEG].isConnected == false)
+            return;
         if (inAir)
             return;
 
@@ -1018,16 +1044,39 @@ public class RagdollController : MonoBehaviour
         if (!RagdollDict.ContainsKey(upperLegLabel) || !RagdollDict.ContainsKey(lowerLegLabel))
             return;
 
-        RagdollDict[upperLegLabel].Joint.targetRotation = Quaternion.Lerp(
-            RagdollDict[upperLegLabel].Joint.targetRotation, upperLegTarget,
-            upperLegLerpMultiplier * Time.fixedDeltaTime);
-        RagdollDict[lowerLegLabel].Joint.targetRotation = Quaternion.Lerp(
-            RagdollDict[lowerLegLabel].Joint.targetRotation, lowerLegTarget,
-            lowerLegLerpMultiplier * Time.fixedDeltaTime);
+        ConfigurableJoint upperLegJoint = RagdollDict[upperLegLabel].Joint;
+        ConfigurableJoint lowerLegJoint = RagdollDict[lowerLegLabel].Joint;
+
+        if (IsJointValid(upperLegJoint))
+        {
+            upperLegJoint.targetRotation = Quaternion.Lerp(
+                upperLegJoint.targetRotation, upperLegTarget,
+                upperLegLerpMultiplier * Time.fixedDeltaTime);
+        }
+
+        if (IsJointValid(lowerLegJoint))
+        {
+            lowerLegJoint.targetRotation = Quaternion.Lerp(
+                lowerLegJoint.targetRotation, lowerLegTarget,
+                lowerLegLerpMultiplier * Time.fixedDeltaTime);
+        }
 
         Vector3 feetForce = -Vector3.up * (FeetMountForce * Time.deltaTime);
-        RagdollDict[RIGHT_FOOT].Rigidbody.AddForce(feetForce, ForceMode.Impulse);
-        RagdollDict[LEFT_FOOT].Rigidbody.AddForce(feetForce, ForceMode.Impulse);
+
+        if (IsJointValid(RagdollDict[RIGHT_FOOT].Joint))
+            RagdollDict[RIGHT_FOOT].Rigidbody.AddForce(feetForce, ForceMode.Impulse);
+
+        if (IsJointValid(RagdollDict[LEFT_FOOT].Joint))
+            RagdollDict[LEFT_FOOT].Rigidbody.AddForce(feetForce, ForceMode.Impulse);
+    }
+
+    public void ResetStepValues()
+    {
+        ResetStepLeft();
+        ResetStepRight();
+
+        StepLeft = false;
+        StepRight = false;
     }
 
     private void TakeStepLeft() => TakeStep(ref Step_L_timer, LEFT_FOOT, ref StepLeft, ref StepRight, UPPER_LEFT_LEG,
@@ -1046,6 +1095,9 @@ public class RagdollController : MonoBehaviour
     {
         if (!RagdollDict.ContainsKey(footLabel) || !RagdollDict.ContainsKey(upperJointLabel) ||
             !RagdollDict.ContainsKey(lowerJointLabel) || !RagdollDict.ContainsKey(upperOppositeJointLabel))
+            return;
+
+        if (!RagdollDict.ContainsKey(upperJointLabel) || !RagdollDict.ContainsKey(upperOppositeJointLabel))
             return;
 
         stepTimer += Time.fixedDeltaTime;
@@ -1248,14 +1300,82 @@ public class RagdollController : MonoBehaviour
     {
         return centerOfMass.position;
     }
-
-    public void RemoveJoint(string jointName)
+    // this function "disconnects" a joint by unlocking its xyz motions and setting connected body to null
+    private void DisconnectJoint(string jointName)
     {
-        if (RagdollDict.ContainsKey(jointName))
+        ConfigurableJoint joint = RagdollDict[jointName].Joint;
+
+        JointBackup jointBackupData = new JointBackup
         {
-            Destroy(RagdollDict[jointName].gameObject.GetComponent<ConfigurableJoint>());
-            RagdollDict.Remove(jointName);
+            parent = joint.transform.parent,
+            connectedBody = joint.connectedBody,
+            localPosition = joint.transform.localPosition,
+            localRotation = joint.transform.localRotation,
+            connectedAnchor = joint.connectedAnchor
+        };
+
+        joint.transform.parent = null;
+
+
+        joint.xMotion = ConfigurableJointMotion.Free;
+        joint.yMotion = ConfigurableJointMotion.Free;
+        joint.zMotion = ConfigurableJointMotion.Free;
+
+        joint.connectedBody = null;
+
+        RagdollDict[jointName].isConnected = false;
+
+        GenericEvent<JointRemoved>.GetEvent(gameObject.name).Invoke(joint.gameObject, jointBackupData);
+    }
+
+    //public void ConnectJoint(string jointName, GameObject jointObjToConnect)
+    //{
+    //    if (!RagdollDict.ContainsKey(jointName))
+    //    {
+    //        jointObjToConnect.transform.parent = this.transform;
+
+    //        SetTagRecursively(jointObjToConnect, "Untagged");
+
+    //        jointObjToConnect.AddComponent<ConfigurableJoint>();
+
+    //        RagdollJoint ragdollJoint = jointObjToConnect.GetComponent<RagdollJoint>();
+    //        ragdollJoint.SetConfigurableJoint(jointObjToConnect.GetComponent<ConfigurableJoint>());
+    //        RagdollDict.Add(jointName, ragdollJoint);
+
+    //    }
+    //}
+
+    private void SetTagRecursively(GameObject obj, string newTag)
+    {
+        obj.tag = newTag;
+        foreach (Transform child in obj.transform)
+        {
+            SetTagRecursively(child.gameObject, newTag);
         }
+    }
+
+
+    public void AddJointToMap(RagdollJoint ragdollJoint)
+    {
+        if (!RagdollDict.ContainsKey(ragdollJoint.GetJointName()))
+        {
+            RagdollDict.Add(ragdollJoint.GetJointName(), ragdollJoint);
+        }
+    }
+
+    
+    public void UpdateJointData(string jointName)
+    {
+        //switch (jointName)
+        //{
+        //    case UPPER_LEFT_LEG:
+        //        UpperLeftLegTarget 
+        //}
+    }
+
+    private bool IsJointValid(ConfigurableJoint joint)
+    {
+        return joint != null;
     }
 
 

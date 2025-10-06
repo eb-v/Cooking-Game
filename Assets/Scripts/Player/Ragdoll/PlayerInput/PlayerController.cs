@@ -95,8 +95,17 @@ public class PlayerController : MonoBehaviour
         if (context.started) {
             IsInteractPressed = true;
             if (env_Interaction.currentlyLookingAt == null) return;
-            GenericEvent<Interact>.GetEvent(env_Interaction.currentlyLookingAt?.name).Invoke();
-            GenericEvent<InteractEvent>.GetEvent(env_Interaction.currentlyLookingAt?.name).Invoke(gameObject);
+            if (env_Interaction.currentlyLookingAt.tag != "Player")
+            {
+                GenericEvent<Interact>.GetEvent(env_Interaction.currentlyLookingAt?.name).Invoke();
+                GenericEvent<InteractEvent>.GetEvent(env_Interaction.currentlyLookingAt?.name).Invoke(gameObject);
+            }
+            else
+            {
+                // player is looking at other player
+                // attempt to reconnect joint
+                GenericEvent<InteractEvent>.GetEvent(env_Interaction.currentlyLookingAt.transform.root.name).Invoke(gameObject);
+            }
         } else if (context.canceled) {
             IsInteractPressed = false;
             GenericEvent<StopInteract>.GetEvent(gameObject.name).Invoke();
@@ -156,15 +165,5 @@ public class PlayerController : MonoBehaviour
             GenericEvent<OnExplodeInput>.GetEvent(gameObject.name).Invoke();
         }
     }
-
-
-    public void OnRemoveLeftArm(InputAction.CallbackContext context)
-    {
-        if (context.started)
-        {
-            GenericEvent<OnRemoveJoint>.GetEvent(gameObject.name).Invoke("UpperLeftLeg");
-        }
-    }
-
 }
 

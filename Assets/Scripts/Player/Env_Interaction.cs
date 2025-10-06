@@ -17,7 +17,7 @@ public class Env_Interaction : MonoBehaviour
 
     private void Start()
     {
-        layerMask = LayerMask.GetMask("InteractDetectionCollider");
+        layerMask = (1 << LayerMask.NameToLayer("InteractDetectionCollider")) | (1 << LayerMask.NameToLayer("P2PInteractDetectionCollider"));
 
         //GenericEvent<ObjectGrabbed>.GetEvent(gameObject.name).AddListener(AssignHeldObj);
         //GenericEvent<ObjectReleased>.GetEvent(gameObject.name).AddListener(UnAssignHeldObj);
@@ -58,7 +58,23 @@ public class Env_Interaction : MonoBehaviour
         if (Physics.Raycast(ray, out RaycastHit hit, interactionRange, layerMask))
         {
             // assign new hit object to variable
-            currentlyLookingAt = hit.collider.transform.parent.gameObject;
+            if (hit.collider.gameObject.layer == LayerMask.NameToLayer("InteractDetectionCollider"))
+            {
+                currentlyLookingAt = hit.collider.transform.parent.gameObject;
+                // highlight the currently hit object
+                Renderer rend = currentlyLookingAt.GetComponent<Renderer>();
+                if (rend != null)
+                {
+                    Material mat = rend.material;
+                    mat.EnableKeyword("_EMISSION");
+                    mat.SetColor("_EmissionColor", Color.white * glowIntensity);
+                }
+            }
+            else
+            {
+                // player is looking at another player
+                currentlyLookingAt = hit.collider.transform.root.gameObject;
+            }
 
             if (lastLookedAt != null)
             {
@@ -68,18 +84,12 @@ public class Env_Interaction : MonoBehaviour
                     ResetHighlight(lastLookedAt);
                 }
             }
-
-
             lastLookedAt = currentlyLookingAt;
 
-            // highlight the currently hit object
-            Renderer rend = currentlyLookingAt.GetComponent<Renderer>();
-            if (rend != null)
-            {
-                Material mat = rend.material;
-                mat.EnableKeyword("_EMISSION");
-                mat.SetColor("_EmissionColor", Color.white * glowIntensity);
-            }
+
+            
+            
+
             Debug.DrawRay(ray.origin, ray.direction * interactionRange, Color.green);
 
         }

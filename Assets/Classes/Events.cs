@@ -77,3 +77,10 @@ public class OnExplodeInput : UnityEvent { }
 
 public class OnRemoveJoint : UnityEvent<string> { }
 
+public class OnPlayerJointReconnect : UnityEvent { }
+
+public class JointRemoved : UnityEvent<GameObject, JointBackup> { }
+
+public class ReleaseHeldJoint : UnityEvent<GameObject> { }
+
+public class LimbDamaged : UnityEvent<float> { }

@@ -239,12 +239,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1161646812768926916}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.9999896, y: 0.00017250034, z: -0.002940526, w: -0.0034906336}
-  m_LocalPosition: {x: 0.20936584, y: 0.5622716, z: -0.0040841103}
+  m_LocalRotation: {x: 0.008726558, y: 0.000008707403, z: -0.0000000759901, w: 0.999962}
+  m_LocalPosition: {x: 0.035019916, y: 0.25550425, z: -0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 5415694547330332359}
+  m_Children:
+  - {fileID: 341081001074186409}
+  m_Father: {fileID: 8984591602513843954}
   m_LocalEulerAnglesHint: {x: 1, y: 0.001, z: 0}
 --- !u!54 &8995750942419806416
 Rigidbody:
@@ -389,6 +390,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::RagdollJoint
   _rigidbody: {fileID: 8995750942419806416}
   _joint: {fileID: 2282754785739809922}
+  _jointName: LowerRightLeg
+  isConnected: 1
 --- !u!1 &1538517951851373825
 GameObject:
   m_ObjectHideFlags: 0
@@ -417,12 +420,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1538517951851373825}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.045807935, y: 0.00000039001665, z: -0.000000016382149, w: 0.9989503}
-  m_LocalPosition: {x: 0.0089998245, y: 1.5018082, z: 0.0047426224}
+  m_LocalRotation: {x: -0.049926624, y: 0.000000035710674, z: -0.000000035710226, w: 0.9987529}
+  m_LocalPosition: {x: 0, y: 0.46595544, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 5415694547330332359}
+  m_Father: {fileID: 6921788092694891888}
   m_LocalEulerAnglesHint: {x: 1.3109877, y: -19.062506, z: -3.1464405}
 --- !u!54 &5949636376824478781
 Rigidbody:
@@ -588,6 +591,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::RagdollJoint
   _rigidbody: {fileID: 5949636376824478781}
   _joint: {fileID: 6976366755393257688}
+  _jointName: Head
+  isConnected: 1
 --- !u!1 &1714868547276116824
 GameObject:
   m_ObjectHideFlags: 0
@@ -732,12 +737,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3325599399754943354}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.020808518, y: -0.028698727, z: 0.99923974, w: 0.016231315}
-  m_LocalPosition: {x: -0.34984565, y: 1.2541704, z: 0.0027003288}
+  m_LocalRotation: {x: -0.020875623, y: -0.024578206, z: 0.9993496, w: 0.016145367}
+  m_LocalPosition: {x: -0.3588457, y: 0.2183092, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 5415694547330332359}
+  m_Children:
+  - {fileID: 6555791035581589071}
+  m_Father: {fileID: 6921788092694891888}
   m_LocalEulerAnglesHint: {x: -27.425331, y: 24.432562, z: 178.38449}
 --- !u!54 &1020271333960568699
 Rigidbody:
@@ -926,6 +932,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::RagdollJoint
   _rigidbody: {fileID: 1020271333960568699}
   _joint: {fileID: 7363206101802669848}
+  _jointName: UpperLeftArm
+  isConnected: 1
 --- !u!1 &3681812903124811099
 GameObject:
   m_ObjectHideFlags: 0
@@ -953,12 +961,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3681812903124811099}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.999921, y: 0.00019757551, z: -0.0029308917, w: 0.012216967}
-  m_LocalPosition: {x: -0.1913662, y: 0.5622716, z: -0.004087925}
+  m_LocalRotation: {x: 0.0000000018626451, y: 0.000008800683, z: 1.4551915e-11, w: -1}
+  m_LocalPosition: {x: -0.03501956, y: 0.2555044, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 5415694547330332359}
+  m_Children:
+  - {fileID: 5772711565979351987}
+  m_Father: {fileID: 8953523499046131043}
   m_LocalEulerAnglesHint: {x: 180, y: 179.999, z: -180}
 --- !u!54 &1527320773327395646
 Rigidbody:
@@ -1103,6 +1112,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::RagdollJoint
   _rigidbody: {fileID: 1527320773327395646}
   _joint: {fileID: 357754755078840659}
+  _jointName: LowerLeftLeg
+  isConnected: 1
 --- !u!1 &3769852275133948178
 GameObject:
   m_ObjectHideFlags: 0
@@ -1350,7 +1361,10 @@ Transform:
   m_LocalPosition: {x: 0.0089998245, y: 1.0358686, z: 0.0008997917}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 6921788092694891888}
+  - {fileID: 8984591602513843954}
+  - {fileID: 8953523499046131043}
   m_Father: {fileID: 5415694547330332359}
   m_LocalEulerAnglesHint: {x: -87, y: 0.009, z: -0.009}
 --- !u!54 &8174937037428144026
@@ -1538,6 +1552,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::RagdollJoint
   _rigidbody: {fileID: 8174937037428144026}
   _joint: {fileID: 5114852251281640914}
+  _jointName: Root
+  isConnected: 1
 --- !u!1 &4525923196337324101
 GameObject:
   m_ObjectHideFlags: 0
@@ -1565,14 +1581,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4525923196337324101}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.7650817, y: 0.00044377142, z: 0.0003370375, w: -0.64393306}
-  m_LocalPosition: {x: 0.20922709, y: 0.18204671, z: -0.0014300346}
+  m_LocalRotation: {x: -0.64125705, y: -0.002477247, z: -0.0015828882, w: 0.7673206}
+  m_LocalPosition: {x: 0, y: 0.3802343, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5153955427361778029}
   - {fileID: 3843442950515226068}
-  m_Father: {fileID: 5415694547330332359}
+  m_Father: {fileID: 63527628393588016}
   m_LocalEulerAnglesHint: {x: -66.189995, y: 4.042834, z: -5.45175}
 --- !u!54 &4637565265331925103
 Rigidbody:
@@ -1717,6 +1733,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::RagdollJoint
   _rigidbody: {fileID: 4637565265331925103}
   _joint: {fileID: 7797750485679951359}
+  _jointName: RightFoot
+  isConnected: 1
 --- !u!1 &4624993312111060473
 GameObject:
   m_ObjectHideFlags: 0
@@ -1745,13 +1763,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4624993312111060473}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.999921, y: 0.0001982608, z: -0.0029302016, w: -0.012216965}
-  m_LocalPosition: {x: 0.17446613, y: 0.81771094, z: -0.010531902}
+  m_LocalRotation: {x: -0.03838764, y: 0.0029302775, z: 0.00012125797, w: 0.99925864}
+  m_LocalPosition: {x: 0.16546634, y: 0.2184571, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 63527628393588016}
   - {fileID: 6273485324064603204}
-  m_Father: {fileID: 5415694547330332359}
+  m_Father: {fileID: 7628489686362247320}
   m_LocalEulerAnglesHint: {x: -4.4, y: 0.336, z: 0.001}
 --- !u!54 &9072951064811432581
 Rigidbody:
@@ -1917,6 +1936,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::RagdollJoint
   _rigidbody: {fileID: 9072951064811432581}
   _joint: {fileID: 4849172441943820857}
+  _jointName: UpperRightLeg
+  isConnected: 1
 --- !u!1 &5202245037202160621
 GameObject:
   m_ObjectHideFlags: 0
@@ -1931,7 +1952,7 @@ GameObject:
   - component: {fileID: 4301988107989911412}
   - component: {fileID: 1753866333965181985}
   - component: {fileID: 675980887619459032}
-  - component: {fileID: 156621683146116255}
+  - component: {fileID: -5018122765699445182}
   m_Layer: 10
   m_Name: Player
   m_TagString: Player
@@ -1954,26 +1975,14 @@ Transform:
   m_Children:
   - {fileID: 166430994761901313}
   - {fileID: 4309184050973506437}
-  - {fileID: 5896835652671888548}
-  - {fileID: 6921788092694891888}
   - {fileID: 7628489686362247320}
-  - {fileID: 8984591602513843954}
-  - {fileID: 63527628393588016}
-  - {fileID: 341081001074186409}
-  - {fileID: 8953523499046131043}
-  - {fileID: 5187987057635524873}
-  - {fileID: 5772711565979351987}
-  - {fileID: 168176937498738015}
-  - {fileID: 7217988250563751130}
-  - {fileID: 1288766587522711557}
-  - {fileID: 6555791035581589071}
-  - {fileID: 1978282482761880874}
   - {fileID: 5758359229171633895}
   - {fileID: 2093047497226179547}
   - {fileID: 3879663602822189442}
   - {fileID: 4106960903033537135}
   - {fileID: 7622891817870109694}
   - {fileID: 7332406885938799465}
+  - {fileID: 1978282482761880874}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1295921552413912648
@@ -2322,7 +2331,7 @@ MonoBehaviour:
   upwardsExplosiveForce: 200
   horizontalExplosionForce: 900
   mechanicalFailureInstability: 0
---- !u!114 &156621683146116255
+--- !u!114 &-5018122765699445182
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2331,9 +2340,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 5202245037202160621}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a75f8f8120772e04e9195135fbc2be8b, type: 3}
+  m_Script: {fileID: 11500000, guid: b9bcebea253b45345b7600eeabb682a9, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BatteryScript
+  m_EditorClassIdentifier: Assembly-CSharp::JointReconnection
+  ragdollController: {fileID: 1295921552413912648}
 --- !u!1 &5271651282982184791
 GameObject:
   m_ObjectHideFlags: 0
@@ -2665,6 +2675,59 @@ CapsuleCollider:
   m_Height: 0.3
   m_Direction: 2
   m_Center: {x: 0, y: 0, z: -0.12}
+--- !u!1 &6375802733604988991
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1831223661731399276}
+  - component: {fileID: 6234115538668597618}
+  m_Layer: 6
+  m_Name: P2PCollider
+  m_TagString: Player
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1831223661731399276
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6375802733604988991}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1978282482761880874}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &6234115538668597618
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6375802733604988991}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.3984914, y: 1.7100532, z: 1.3942142}
+  m_Center: {x: 0, y: 0.091861576, z: 0}
 --- !u!1 &6482756739081606831
 GameObject:
   m_ObjectHideFlags: 0
@@ -2693,13 +2756,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6482756739081606831}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.017795853, y: 0.13907988, z: 0.98992956, w: 0.019487362}
-  m_LocalPosition: {x: -0.39350605, y: 1.0335023, z: -0.0116992}
+  m_LocalRotation: {x: 0.16750051, y: 0.00000006827758, z: 0.000000076834105, w: 0.985872}
+  m_LocalPosition: {x: 0.036763415, y: 0.22238809, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3663890734067920731}
-  m_Father: {fileID: 5415694547330332359}
+  m_Father: {fileID: 1288766587522711557}
   m_LocalEulerAnglesHint: {x: 25.817793, y: 0.0000106416, z: 0.000012046678}
 --- !u!54 &1951529475862190996
 Rigidbody:
@@ -2867,6 +2930,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::RagdollJoint
   _rigidbody: {fileID: 1951529475862190996}
   _joint: {fileID: 8486785988263426957}
+  _jointName: LowerLeftArm
+  isConnected: 1
 --- !u!1 &6601762376523705804
 GameObject:
   m_ObjectHideFlags: 0
@@ -2947,11 +3012,12 @@ Transform:
   m_GameObject: {fileID: 6623657171805793455}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8460591181876946574}
+  - {fileID: 1831223661731399276}
   m_Father: {fileID: 5415694547330332359}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6727515523045759459
@@ -2982,13 +3048,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6727515523045759459}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.01779585, y: 0.13907988, z: 0.98992956, w: -0.019487362}
-  m_LocalPosition: {x: 0.4115057, y: 1.0335023, z: -0.0116992}
+  m_LocalRotation: {x: 0.16750051, y: -0.00000006874324, z: -0.00000007823109, w: 0.985872}
+  m_LocalPosition: {x: -0.036763653, y: 0.22238809, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6393102476436790671}
-  m_Father: {fileID: 5415694547330332359}
+  m_Father: {fileID: 168176937498738015}
   m_LocalEulerAnglesHint: {x: 19.752102, y: -0.000006761248, z: -0.000010446848}
 --- !u!54 &8741665260029534837
 Rigidbody:
@@ -3156,6 +3222,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::RagdollJoint
   _rigidbody: {fileID: 8741665260029534837}
   _joint: {fileID: 2804256750630956499}
+  _jointName: LowerRightArm
+  isConnected: 1
 --- !u!1 &7075297062248946938
 GameObject:
   m_ObjectHideFlags: 0
@@ -3184,12 +3252,15 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7075297062248946938}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.0041234195, y: 0.00000035467545, z: 0.000000001474703, w: 0.99999154}
-  m_LocalPosition: {x: 0.0089998245, y: 1.0358686, z: 0.0008997917}
+  m_LocalRotation: {x: 0.99975675, y: -0.00000015621715, z: 0.000004467679, w: 0.0220547}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 5415694547330332359}
+  m_Children:
+  - {fileID: 5896835652671888548}
+  - {fileID: 168176937498738015}
+  - {fileID: 1288766587522711557}
+  m_Father: {fileID: 7628489686362247320}
   m_LocalEulerAnglesHint: {x: 80.8292, y: 94.036545, z: 94.509995}
 --- !u!54 &4450865104118524981
 Rigidbody:
@@ -3355,6 +3426,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::RagdollJoint
   _rigidbody: {fileID: 4450865104118524981}
   _joint: {fileID: 1995180438108741634}
+  _jointName: Body
+  isConnected: 1
 --- !u!1 &7391987624095451719
 GameObject:
   m_ObjectHideFlags: 0
@@ -3383,13 +3456,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7391987624095451719}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.99992114, y: -0.00019768304, z: 0.0029220919, w: -0.012216965}
-  m_LocalPosition: {x: -0.15646648, y: 0.81771106, z: -0.010534763}
+  m_LocalRotation: {x: -0.03838764, y: -0.0029303748, z: -0.00012135512, w: 0.99925864}
+  m_LocalPosition: {x: -0.16546628, y: 0.21845707, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4575316995296857385}
-  m_Father: {fileID: 5415694547330332359}
+  - {fileID: 5187987057635524873}
+  m_Father: {fileID: 7628489686362247320}
   m_LocalEulerAnglesHint: {x: -4.4, y: -0.336, z: -0.001}
 --- !u!54 &788862012851860473
 Rigidbody:
@@ -3555,6 +3629,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::RagdollJoint
   _rigidbody: {fileID: 788862012851860473}
   _joint: {fileID: 4797375364860419206}
+  _jointName: UpperLeftLeg
+  isConnected: 1
 --- !u!1 &7496344392461219715
 GameObject:
   m_ObjectHideFlags: 0
@@ -3804,14 +3880,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7884314721960621680}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.75943327, y: 0.00047854387, z: 0.00037416513, w: 0.65058494}
-  m_LocalPosition: {x: -0.19118881, y: 0.18215114, z: 0.0052013397}
+  m_LocalRotation: {x: -0.64125705, y: 0.002477259, z: 0.0015829045, w: 0.7673205}
+  m_LocalPosition: {x: 0, y: 0.3802339, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4716685919745444728}
   - {fileID: 7111588714854863627}
-  m_Father: {fileID: 5415694547330332359}
+  m_Father: {fileID: 5187987057635524873}
   m_LocalEulerAnglesHint: {x: -72.8592, y: 7.7837043, z: -11.015394}
 --- !u!54 &3503024072488298048
 Rigidbody:
@@ -3956,6 +4032,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::RagdollJoint
   _rigidbody: {fileID: 3503024072488298048}
   _joint: {fileID: 4517283866997610680}
+  _jointName: LeftFoot
+  isConnected: 1
 --- !u!1 &8343537598301779908
 GameObject:
   m_ObjectHideFlags: 0
@@ -3985,12 +4063,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8343537598301779908}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.020808514, y: -0.028698727, z: 0.99923974, w: -0.016231317}
-  m_LocalPosition: {x: 0.36784506, y: 1.2541704, z: 0.0027003288}
+  m_LocalRotation: {x: 0.020874912, y: -0.024578195, z: 0.9993496, w: -0.016145384}
+  m_LocalPosition: {x: 0.35884523, y: 0.2183092, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 5415694547330332359}
+  m_Children:
+  - {fileID: 7217988250563751130}
+  m_Father: {fileID: 6921788092694891888}
   m_LocalEulerAnglesHint: {x: 49.22354, y: 31.219944, z: -161.35895}
 --- !u!54 &4141032205299498148
 Rigidbody:
@@ -4179,6 +4258,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::RagdollJoint
   _rigidbody: {fileID: 4141032205299498148}
   _joint: {fileID: 7622533247360883065}
+  _jointName: UpperRightArm
+  isConnected: 1
 --- !u!1 &8818749703724007100
 GameObject:
   m_ObjectHideFlags: 0
