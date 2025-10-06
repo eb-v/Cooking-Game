@@ -14,8 +14,7 @@ public class TransformedObject : BaseStation {
     {
         GenericEvent<InteractEvent>.GetEvent(gameObject.name).AddListener(Interact);
         GenericEvent<RemovePlacedObject>.GetEvent(gameObject.name).AddListener(RemovePlacedKitchenObj);
-
-        assembledItem = new AssembledItemObject();
+        assembledItem = gameObject.AddComponent<AssembledItemObject>();
     }
 
     public override void Interact(GameObject player)
@@ -86,71 +85,61 @@ public class TransformedObject : BaseStation {
     //finalize assembleditem here
     public override void RemovePlacedKitchenObj(GameObject player)
     {
-        if (assembledItem.GetIngredients().Count > 0)
-        {   
-            Vector3 playerPos = player.GetComponent<RagdollController>().centerOfMass.position;
-            Vector3 popDirection = (playerPos - transform.position).normalized;
-            popDirection.y = 0f;
+        List<GameObject> ingredients = assembledItem.GetIngredients();
+        if (ingredients.Count == 0) return;
 
-            Vector3 spawnPos = transform.position + Vector3.up * 3.0f; 
-            GameObject newAssembledItem = Instantiate(assembledItemPrefab, spawnPos, Quaternion.identity);
+        Vector3 playerPos = player.GetComponent<RagdollController>().centerOfMass.position;
+        Vector3 popDirection = (playerPos - transform.position).normalized;
+        popDirection.y = 0f;
+        Vector3 spawnPos = transform.position + Vector3.up * 3.0f;
 
-            newAssembledItem.tag = "AssembledItem";
+        //spawn new item
+        GameObject newAssembledItem = Instantiate(assembledItemPrefab, spawnPos, Quaternion.identity);
+        newAssembledItem.tag = "AssembledItem";
 
-            Rigidbody rb = newAssembledItem.GetComponent<Rigidbody>();
-            if (rb != null)
+        Rigidbody rb = newAssembledItem.GetComponent<Rigidbody>();
+        if (rb != null)
+        {
+            rb.isKinematic = false;
+            rb.AddForce(Vector3.up * verticalForceMultiplier, ForceMode.Impulse);
+            rb.AddForce(popDirection * horizontalForceMultiplier, ForceMode.Impulse);
+        }
+
+        //new assembledobject added to prefab
+        AssembledItemObject newItemComponent = newAssembledItem.AddComponent<AssembledItemObject>();
+
+        //copy ingredients from ref to new assembleditemobj
+        foreach (GameObject ingredient in ingredients)
+        {
+            if (ingredient != null)
             {
-                rb.isKinematic = false;
-                rb.AddForce(Vector3.up * verticalForceMultiplier, ForceMode.Impulse);
-                rb.AddForce(popDirection * horizontalForceMultiplier, ForceMode.Impulse);
-            }
-
-            AssembledItemObject assembledItemComponent = new AssembledItemObject();
-            foreach (GameObject ingredient in assembledItem.GetIngredients())
-            {
-                assembledItemComponent.AddIngredient(ingredient);
-            }
-
-            AssembledItemContainer container = newAssembledItem.GetComponent<AssembledItemContainer>();
-            if (container == null)
-                container = newAssembledItem.AddComponent<AssembledItemContainer>();
-            container.SetAssembledItemObject(assembledItemComponent);
-
-            foreach (GameObject ingredient in assembledItem.GetIngredients())
-            {
-                if (ingredient != null)
-                    Destroy(ingredient);
-            }
-
-            assembledItem = new AssembledItemObject();
-            ClearStationObject();
-
-            //check assembleditemcontainer
-            if (container != null)
-            {
-                Debug.Log("Ingredients in new AssembledItem:");
-                AssembledItemObject itemObj = container.GetAssembledItemObject();
-                if (itemObj != null)
+                Rigidbody iRB = ingredient.GetComponent<Rigidbody>();
+                if (iRB != null)
                 {
-                    foreach (GameObject ingredient in itemObj.GetIngredients())
-                    {
-                        if (ingredient != null)
-                            Debug.Log(ingredient.name + ", ");
-                    }
+                    iRB.isKinematic = true;
                 }
-                else
-                {
-                    Debug.LogWarning("No AssembledItemObject found in container!");
-                }
+
+                Collider col = ingredient.GetComponent<Collider>();
+                if (col != null)
+                    col.enabled = false;
+
+                ingredient.transform.SetParent(newItemComponent.transform);
+                ingredient.transform.localPosition = Vector3.zero; 
+                ingredient.transform.localRotation = Quaternion.identity;
+
+                newItemComponent.AddIngredient(ingredient);
+                Debug.Log("Added ingredient to new assembled item: " + ingredient.name);
             }
             else
             {
-                Debug.LogWarning("No AssembledItemContainer found on the new assembled item!");
+                Debug.LogWarning("Tried to add a null ingredient!");
             }
-
-
-            Debug.Log("Spawned AssembledItem at: " + spawnPos);
-            Debug.Log("Rigidbody mass: " + rb.mass);
         }
+
+        assembledItem.ClearIngredients();
+        ClearStationObject();
+
+        Debug.Log("Spawned AssembledItem at: " + spawnPos);
     }
+
 }

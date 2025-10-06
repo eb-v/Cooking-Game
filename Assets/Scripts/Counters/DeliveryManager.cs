@@ -12,7 +12,7 @@ public class DeliveryManager: MonoBehaviour {
     private float spawnRecipeTimerMax = 4f;
     
     //change max after testing
-    private int waitingRecipesMax = 10;
+    private int waitingRecipesMax = 4;
 
     private void Awake() {
         waitingRecipeSOList = new List<RecipeSO>();
@@ -36,29 +36,62 @@ public class DeliveryManager: MonoBehaviour {
         }
     }
 
-    public bool MatchesRecipe(AssembledItemObject assembledItem, RecipeSO recipe){
-        List<GameObject> assembledPrefabs = assembledItem.GetIngredients();
+    private bool MatchesRecipe(AssembledItemObject assembledItem, RecipeSO recipe)
+    {
+        List<GameObject> assembledIngredients = assembledItem.GetIngredients();
 
         foreach (CuttingRecipeSO cuttingRecipe in recipe.CuttingRecipeSOList)
         {
-            if (!assembledPrefabs.Contains(cuttingRecipe.output))
+            bool found = assembledIngredients.Exists(go => go != null && go.name.Contains(cuttingRecipe.output.name));
+            if (!found)
             {
-                Debug.Log("missing a cutting ingredient");
-                return false; 
+                Debug.Log("Missing cutting ingredient for recipe " + recipe.recipeName);
+                return false;
             }
         }
 
         foreach (CookingRecipeSO cookingRecipe in recipe.CookingRecipeSOList)
         {
-            if (!assembledPrefabs.Contains(cookingRecipe.output))
+            bool found = assembledIngredients.Exists(go => go != null && go.name.Contains(cookingRecipe.output.name));
+            if (!found)
             {
-                Debug.Log("missing a cooking ingredient");
-                return false; 
+                Debug.Log("Missing cooking ingredient for recipe " + recipe.recipeName);
+                return false;
+            }
+        }
+        return true;
+    }
+
+
+    public bool TryMatchAndDeliver(GameObject assembledGO) 
+    {
+        AssembledItemObject assembledItem = assembledGO.GetComponent<AssembledItemObject>();
+        if (assembledItem == null)
+        {
+            Debug.LogError("Held object has no AssembledItemObject!");
+            return false;
+        }
+
+        foreach (RecipeSO recipe in waitingRecipeSOList) {
+            if (MatchesRecipe(assembledItem, recipe)) {
+                Debug.Log("Delivered: " + recipe.recipeName);
+
+                // destroy gameobject after 1 sec
+                GameObject.Destroy(assembledGO, 1f);
+
+                // update scoring
+                if (PointManager.Instance != null)
+                    PointManager.Instance.AddDeliveredDish();
+                else
+                    Debug.LogError("PointManager.Instance is null!");
+
+                waitingRecipeSOList.Remove(recipe);
+                return true;
             }
         }
 
-        Debug.Log("All ingredients match recipe!");
-        return true;
+        Debug.Log("Assembled item does not match any active order.");
+        return false;
     }
 
 }
