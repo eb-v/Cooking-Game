@@ -46,6 +46,15 @@ public class DeliveryManager: MonoBehaviour {
     {
         List<GameObject> assembledIngredients = assembledItem.GetIngredients();
 
+        int totalRequired = recipe.CuttingRecipeSOList.Count + recipe.CookingRecipeSOList.Count;
+
+        // Check if the number of ingredients matches exactly
+        if (assembledIngredients.Count != totalRequired)
+        {
+            Debug.Log($"Ingredient count mismatch for recipe {recipe.recipeName}: expected {totalRequired}, got {assembledIngredients.Count}");
+            return false;
+        }
+
         foreach (CuttingRecipeSO cuttingRecipe in recipe.CuttingRecipeSOList)
         {
             bool found = assembledIngredients.Exists(go => go != null && go.name.Contains(cuttingRecipe.output.name));
@@ -103,5 +112,17 @@ public class DeliveryManager: MonoBehaviour {
         Debug.Log("Assembled item does not match any active order.");
         return false;
     }
+
+    public RecipeSO GetMatchingRecipeFromAll(AssembledItemObject assembledItem)
+    {
+        foreach (RecipeSO recipe in recipeListSO.recipeSOList) // all possible recipes
+        {
+            if (MatchesRecipe(assembledItem, recipe))
+                return recipe;
+        }
+        return null; // no match
+    }
+
+
 
 }
