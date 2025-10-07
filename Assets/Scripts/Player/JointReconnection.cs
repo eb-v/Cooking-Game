@@ -1,10 +1,12 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System.Collections;
 
 // script to handle players reconnecting joints of other players
 public class JointReconnection : MonoBehaviour
 {
     [SerializeField] private RagdollController ragdollController;
+    [SerializeField] private GameObject pelvis;
     private Dictionary<GameObject, JointBackup> storedJointData;
     private void Awake()
     {
@@ -141,30 +143,44 @@ public class JointReconnection : MonoBehaviour
     private void ConnectJoint(GameObject jointObjToAttach, JointBackup jointBackup)
     {
         SetTagRecursively(jointObjToAttach, "Player");
+        RagdollController rc = gameObject.GetComponent<RagdollController>();
 
         jointObjToAttach.transform.parent = jointBackup.parent;
-        jointObjToAttach.transform.localPosition = jointBackup.localPosition;
-        jointObjToAttach.transform.localRotation = jointBackup.localRotation;
-        
+        //jointObjToAttach.transform.localPosition = jointBackup.localPosition;
+        //jointObjToAttach.transform.localRotation = jointBackup.localRotation;\
+        foreach (RagdollJoint rj in jointObjToAttach.GetComponentsInChildren<RagdollJoint>())
+        {
+            rc.SetJointToOriginalLocalPosRot(rj);
+        }
+
         ConfigurableJoint joint = jointObjToAttach.GetComponent<ConfigurableJoint>();
         joint.connectedBody = jointBackup.connectedBody;
         joint.connectedAnchor = jointBackup.connectedAnchor;
         joint.xMotion = ConfigurableJointMotion.Locked;
         joint.yMotion = ConfigurableJointMotion.Locked;
         joint.zMotion = ConfigurableJointMotion.Locked;
-
-        RagdollController rc = gameObject.GetComponent<RagdollController>();
-
         RagdollJoint ragdollJoint = jointObjToAttach.GetComponent<RagdollJoint>();
-        ragdollJoint.isConnected = true;
+       
 
+        Vector3 pelvisPos = pelvis.transform.position;
+        pelvisPos.y += 1.3f;
+        pelvis.transform.position = pelvisPos;
+
+
+
+        foreach (RagdollJoint rj in jointObjToAttach.GetComponentsInChildren<RagdollJoint>())
+        {
+            rj.isConnected = true;
+            rc.ResetReconnectedLimbDrives(rj.GetJointName());
+        }
 
         // if reconnecting a leg, reset the step values to avoid weirdness
         if (ragdollJoint.GetJointName() == "UpperRightLeg" || ragdollJoint.GetJointName() == "UpperLeftLeg")
         {
+            Debug.Log("Resetting step values after reconnecting leg.");
             rc.ResetStepValues();
         }
-
+        rc.HardResetPose();
         RemoveJointData(jointObjToAttach);
 
     }
@@ -178,5 +194,7 @@ public class JointReconnection : MonoBehaviour
             SetTagRecursively(child.gameObject, newTag);
         }
     }
+
+   
 
 }

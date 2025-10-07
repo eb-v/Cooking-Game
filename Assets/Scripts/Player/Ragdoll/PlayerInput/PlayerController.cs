@@ -95,6 +95,13 @@ public class PlayerController : MonoBehaviour
         if (context.started) {
             IsInteractPressed = true;
             if (env_Interaction.currentlyLookingAt == null) return;
+            RagdollController ragdollController = GetComponent<RagdollController>();
+
+            if (!ragdollController.RagdollDict["UpperLeftArm"].isConnected && !ragdollController.RagdollDict["UpperRightArm"].isConnected)
+            {
+                Debug.Log("Both arms are missing, cannot interact.");
+                return;
+            }
             if (env_Interaction.currentlyLookingAt.tag != "Player")
             {
                 GenericEvent<Interact>.GetEvent(env_Interaction.currentlyLookingAt?.name).Invoke();

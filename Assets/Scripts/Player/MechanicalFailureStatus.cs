@@ -1,3 +1,4 @@
+using NUnit.Framework;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 
@@ -5,6 +6,7 @@ public class MechanicalFailureStatus : MonoBehaviour
 {
     [SerializeField] private GameObject explosionEffectPrefab;
     [SerializeField] private RagdollController ragdollController;
+    [SerializeField] private GameObject[] damageableLimbs;
     private Env_Interaction env_interaction;
 
 
@@ -52,7 +54,6 @@ public class MechanicalFailureStatus : MonoBehaviour
             Debug.LogError("MechanicalFailureStatus: No Rigidbody found on root object!");
             return;
         }
-        RagdollController ragdoll = GetComponent<RagdollController>();
 
         //ragdoll.ActivateRagdoll();
 
@@ -67,6 +68,26 @@ public class MechanicalFailureStatus : MonoBehaviour
         // position in front of the player
         Vector3 backwardsVector = ragdollController.centerOfMass.forward * -1f;
 
+
+        // apply forces to all the main limbs of the player
+        Rigidbody head = ragdollController.RagdollDict["Head"].GetComponent<Rigidbody>();
+        Rigidbody leftArm = ragdollController.RagdollDict["UpperLeftArm"].GetComponent<Rigidbody>();
+        Rigidbody rightArm = ragdollController.RagdollDict["UpperRightArm"].GetComponent<Rigidbody>();
+        Rigidbody leftLeg = ragdollController.RagdollDict["UpperLeftLeg"].GetComponent<Rigidbody>();
+        Rigidbody rightLeg = ragdollController.RagdollDict["UpperRightLeg"].GetComponent<Rigidbody>();
+
+        head.AddForce(backwardsVector * horizontalExplosionForce * 0.5f, ForceMode.Impulse);
+        head.AddForce(Vector3.up * upwardsExplosiveForce * 0.5f, ForceMode.Impulse);
+        leftArm.AddForce(backwardsVector * horizontalExplosionForce * 0.7f, ForceMode.Impulse);
+        leftArm.AddForce(Vector3.up * upwardsExplosiveForce * 0.7f, ForceMode.Impulse);
+        rightArm.AddForce(backwardsVector * horizontalExplosionForce * 0.7f, ForceMode.Impulse);
+        rightArm.AddForce(Vector3.up * upwardsExplosiveForce * 0.7f, ForceMode.Impulse);
+        leftLeg.AddForce(backwardsVector * horizontalExplosionForce * 0.9f, ForceMode.Impulse);
+        leftLeg.AddForce(Vector3.up * upwardsExplosiveForce * 0.9f, ForceMode.Impulse);
+        rightLeg.AddForce(backwardsVector * horizontalExplosionForce * 0.9f, ForceMode.Impulse);
+        rightLeg.AddForce(Vector3.up * upwardsExplosiveForce * 0.9f, ForceMode.Impulse);
+
+
         // horizontal force
         rb.AddForce(backwardsVector * horizontalExplosionForce, ForceMode.Impulse);
         // vertical force
@@ -80,11 +101,25 @@ public class MechanicalFailureStatus : MonoBehaviour
 
         ResetInstability();
 
+        // invoke event to apply damage to limbs
+        ApplyDamageToLimbs();
     }
 
     private void ResetInstability()
     {
         mechanicalFailureInstability = 0f;
     }
+
+    private void ApplyDamageToLimbs()
+    {
+        // Invoke event to apply damage to each limb
+        foreach (GameObject limb in damageableLimbs)
+        {
+            float damageAmount = Random.Range(20f, 50f);
+            GenericEvent<LimbDamaged>.GetEvent(gameObject.name + limb.name).Invoke(damageAmount);
+        }
+    }
+
+   
 
 }

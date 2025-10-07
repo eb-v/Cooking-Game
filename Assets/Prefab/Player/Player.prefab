@@ -405,6 +405,7 @@ GameObject:
   - component: {fileID: 6976366755393257688}
   - component: {fileID: 6814022756067735267}
   - component: {fileID: 4802313824324595702}
+  - component: {fileID: 1239567822500111841}
   m_Layer: 10
   m_Name: DEF_Head
   m_TagString: Untagged
@@ -593,6 +594,20 @@ MonoBehaviour:
   _joint: {fileID: 6976366755393257688}
   _jointName: Head
   isConnected: 1
+--- !u!114 &1239567822500111841
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1538517951851373825}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a21b02940a0c18a48bc3ea1ce789218f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LimbHP
+  maxHP: 100
+  currentHP: 100
 --- !u!1 &1714868547276116824
 GameObject:
   m_ObjectHideFlags: 0
@@ -722,6 +737,7 @@ GameObject:
   - component: {fileID: 4816150348163655695}
   - component: {fileID: 7205534854662815670}
   - component: {fileID: 7296180745809955404}
+  - component: {fileID: 1740239520074046679}
   m_Layer: 10
   m_Name: DEF_Arm1.L
   m_TagString: Untagged
@@ -934,6 +950,20 @@ MonoBehaviour:
   _joint: {fileID: 7363206101802669848}
   _jointName: UpperLeftArm
   isConnected: 1
+--- !u!114 &1740239520074046679
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3325599399754943354}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a21b02940a0c18a48bc3ea1ce789218f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LimbHP
+  maxHP: 50
+  currentHP: 50
 --- !u!1 &3681812903124811099
 GameObject:
   m_ObjectHideFlags: 0
@@ -1365,6 +1395,7 @@ Transform:
   - {fileID: 6921788092694891888}
   - {fileID: 8984591602513843954}
   - {fileID: 8953523499046131043}
+  - {fileID: 1831223661731399276}
   m_Father: {fileID: 5415694547330332359}
   m_LocalEulerAnglesHint: {x: -87, y: 0.009, z: -0.009}
 --- !u!54 &8174937037428144026
@@ -1748,6 +1779,7 @@ GameObject:
   - component: {fileID: 4849172441943820857}
   - component: {fileID: 7580410537444412121}
   - component: {fileID: 473036175537561612}
+  - component: {fileID: 348866468128053570}
   m_Layer: 10
   m_Name: DEF_Leg1.R
   m_TagString: Untagged
@@ -1938,6 +1970,20 @@ MonoBehaviour:
   _joint: {fileID: 4849172441943820857}
   _jointName: UpperRightLeg
   isConnected: 1
+--- !u!114 &348866468128053570
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4624993312111060473}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a21b02940a0c18a48bc3ea1ce789218f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+  maxHP: 75
+  currentHP: 75
 --- !u!1 &5202245037202160621
 GameObject:
   m_ObjectHideFlags: 0
@@ -2249,38 +2295,6 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: d4a0a9f1-9530-4e83-b186-0b165f6e6746
     m_ActionName: 'Player/PlaceIngredient[/Keyboard/v]'
-  - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 4301988107989911412}
-        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
-        m_MethodName: OnExplode
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_ActionId: ad3ef6e8-4c13-492c-b836-601cf55fb24b
-    m_ActionName: 'Player/Explode[/Keyboard/x]'
-  - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 4301988107989911412}
-        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
-        m_MethodName: OnRemoveLeftArm
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_ActionId: 08e26650-7dbc-4b90-88f5-46af28452832
-    m_ActionName: 'Player/RemoveJoint[/Keyboard/h]'
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
@@ -2310,7 +2324,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c248a8a9c1b69b746ac8dc5ef29214cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  playerCenterofMass: {fileID: 1978282482761880874}
+  pelvis: {fileID: 7628489686362247320}
   interactionRange: 5
   currentlyLookingAt: {fileID: 0}
   glowIntensity: 0.21
@@ -2328,8 +2342,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MechanicalFailureStatus
   explosionEffectPrefab: {fileID: 4673360602182921444, guid: 9a9f96f33ba527a45ad39a858752ea13, type: 3}
   ragdollController: {fileID: 1295921552413912648}
-  upwardsExplosiveForce: 200
-  horizontalExplosionForce: 900
+  damageableLimbs:
+  - {fileID: 1538517951851373825}
+  - {fileID: 8343537598301779908}
+  - {fileID: 3325599399754943354}
+  - {fileID: 4624993312111060473}
+  - {fileID: 7391987624095451719}
+  upwardsExplosiveForce: 20
+  horizontalExplosionForce: 100
   mechanicalFailureInstability: 0
 --- !u!114 &-5018122765699445182
 MonoBehaviour:
@@ -2344,6 +2364,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::JointReconnection
   ragdollController: {fileID: 1295921552413912648}
+  pelvis: {fileID: 4517378790285754641}
 --- !u!1 &5271651282982184791
 GameObject:
   m_ObjectHideFlags: 0
@@ -2700,12 +2721,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6375802733604988991}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: 0.9996574, y: -0.00000018098586, z: 0.000004112376, w: 0.02617693}
+  m_LocalPosition: {x: -0.008999234, y: 0, z: -0.053314656}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1978282482761880874}
+  m_Father: {fileID: 7628489686362247320}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &6234115538668597618
 BoxCollider:
@@ -3017,7 +3038,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8460591181876946574}
-  - {fileID: 1831223661731399276}
   m_Father: {fileID: 5415694547330332359}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6727515523045759459
@@ -3441,6 +3461,7 @@ GameObject:
   - component: {fileID: 4797375364860419206}
   - component: {fileID: 1302992519734627083}
   - component: {fileID: 6057730083311191106}
+  - component: {fileID: 9137676021335050823}
   m_Layer: 10
   m_Name: DEF_Leg1.L
   m_TagString: Untagged
@@ -3631,6 +3652,20 @@ MonoBehaviour:
   _joint: {fileID: 4797375364860419206}
   _jointName: UpperLeftLeg
   isConnected: 1
+--- !u!114 &9137676021335050823
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7391987624095451719}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a21b02940a0c18a48bc3ea1ce789218f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LimbHP
+  maxHP: 75
+  currentHP: 75
 --- !u!1 &7496344392461219715
 GameObject:
   m_ObjectHideFlags: 0
@@ -4048,6 +4083,7 @@ GameObject:
   - component: {fileID: 5173438325152488446}
   - component: {fileID: 726142607451980272}
   - component: {fileID: 3987916198295491928}
+  - component: {fileID: 4387991610801536281}
   m_Layer: 10
   m_Name: DEF_Arm1.R
   m_TagString: Untagged
@@ -4260,6 +4296,20 @@ MonoBehaviour:
   _joint: {fileID: 7622533247360883065}
   _jointName: UpperRightArm
   isConnected: 1
+--- !u!114 &4387991610801536281
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8343537598301779908}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a21b02940a0c18a48bc3ea1ce789218f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LimbHP
+  maxHP: 50
+  currentHP: 50
 --- !u!1 &8818749703724007100
 GameObject:
   m_ObjectHideFlags: 0

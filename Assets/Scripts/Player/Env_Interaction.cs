@@ -6,7 +6,7 @@ using UnityEngine;
 // If the player is looking at an interactable object, it highlights the object and invokes an event passing the looked at interactable as a parameter to any listeners
 public class Env_Interaction : MonoBehaviour
 {
-    [SerializeField] private Transform playerCenterofMass;
+    [SerializeField] private Transform pelvis;
     [SerializeField] private float interactionRange = 5f;
     private int layerMask;
     private GameObject lastLookedAt;
@@ -52,7 +52,7 @@ public class Env_Interaction : MonoBehaviour
     private void RayCastDetection()
     {
         // perform raycast in front of player to detect interactable objects
-        Ray ray = new Ray(playerCenterofMass.position, playerCenterofMass.forward);
+        Ray ray = new Ray(pelvis.position, -pelvis.forward);
 
         // if ray cast hits
         if (Physics.Raycast(ray, out RaycastHit hit, interactionRange, layerMask))

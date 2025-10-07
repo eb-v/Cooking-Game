@@ -7,13 +7,10 @@ public class LimbHP : MonoBehaviour
     public float currentHP;
 
 
-    private void Awake()
-    {
-        GenericEvent<LimbDamaged>.GetEvent(gameObject.name).AddListener(ApplyDamage);
-    }
-
     private void Start()
     {
+        string playerName = gameObject.transform.root.name;
+        GenericEvent<LimbDamaged>.GetEvent(playerName + gameObject.name).AddListener(ApplyDamage);
         currentHP = maxHP;
     }
 
