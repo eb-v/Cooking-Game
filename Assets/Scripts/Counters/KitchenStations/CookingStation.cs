@@ -6,8 +6,8 @@ public class CookingStation : BaseStation, IPrepStation {
     [Header("Cooking Settings")]
     [SerializeField] private float defaultCookingTime = 5f;
     [SerializeField] private GameObject cookingUI;
-    private Slider progressSlider;
-    private Image fillImage;
+    //[SerializeField] private Image progressSlider;
+    [SerializeField] private Image fillImage;
     private TextMeshProUGUI completeText;
 
     [Header("Progress Colors")]
@@ -31,7 +31,7 @@ public class CookingStation : BaseStation, IPrepStation {
     [SerializeField] private CookingRecipeSO[] cookingRecipeSOArray;
 
     [Header("Fire Effects")]
-    [SerializeField] private FireEffect fireEffect;
+    //[SerializeField] private FireEffect fireEffect;
 
     public GameObject currentUser { get; set; }
     private bool _isBeingUsed;
@@ -41,14 +41,13 @@ public class CookingStation : BaseStation, IPrepStation {
 
     private void Awake() {
 
-        fireEffect.gameObject.SetActive(true);
+       // fireEffect.gameObject.SetActive(true);
 
         if (cookingUI != null) {
-            progressSlider = cookingUI.GetComponentInChildren<Slider>();
-            if (progressSlider != null) {
-                Transform fillTransform = progressSlider.transform.Find("Fill Area/Fill");
-                if (fillTransform != null) fillImage = fillTransform.GetComponent<Image>();
-            }
+            //if (progressSlider != null) {
+            //    Transform fillTransform = progressSlider.transform.Find("Fill Area/Fill");
+            //    if (fillTransform != null) fillImage = fillTransform.GetComponent<Image>();
+            //}
 
             completeText = cookingUI.GetComponentInChildren<TextMeshProUGUI>();
             if (completeText != null) completeText.gameObject.SetActive(false);
@@ -65,7 +64,7 @@ public class CookingStation : BaseStation, IPrepStation {
         if (isCooking && ingredientInPan != null) {
             cookingTimer += Time.deltaTime;
             float progress = cookingTimer / GetCookingTime(ingredientInPan);
-            if (progressSlider != null) progressSlider.value = Mathf.Clamp01(progress);
+            if (fillImage != null) fillImage.fillAmount = Mathf.Clamp01(progress);
             if (fillImage != null) fillImage.color = progressColor;
 
             if (cookingTimer >= GetCookingTime(ingredientInPan)) {
@@ -84,7 +83,7 @@ public class CookingStation : BaseStation, IPrepStation {
             }
 
             if (burnTimer >= burnDelay) {
-                fireEffect.gameObject.SetActive(true);
+               // fireEffect.gameObject.SetActive(true);
                 BurnItem();
             }
         }
@@ -168,8 +167,7 @@ public class CookingStation : BaseStation, IPrepStation {
             burnTimer = 0f;
 
             cookingUI?.SetActive(true);
-            if (progressSlider != null) progressSlider.value = 0f;
-            if (fillImage != null) fillImage.color = progressColor;
+            if (fillImage != null) fillImage.fillAmount = 0f;
             if (completeText != null) completeText.gameObject.SetActive(false);
 
             Debug.Log("Cooking started!");
@@ -185,7 +183,7 @@ public class CookingStation : BaseStation, IPrepStation {
         burnTimer = 0f;
 
         cookingUI?.SetActive(false);
-        if (progressSlider != null) progressSlider.value = 0f;
+        if (fillImage != null) fillImage.fillAmount = 0f;
         if (completeText != null) completeText.gameObject.SetActive(false);
     }
 
@@ -208,8 +206,7 @@ public class CookingStation : BaseStation, IPrepStation {
             ingredientInPan = cookedObj;
         }
 
-        if (progressSlider != null) progressSlider.value = 1f;
-        if (fillImage != null) fillImage.color = completeColor;
+        if (fillImage != null) fillImage.fillAmount = 1f;
         if (completeText != null) {
             completeText.text = "Complete!";
             completeText.gameObject.SetActive(true);
@@ -232,9 +229,9 @@ public class CookingStation : BaseStation, IPrepStation {
         GameObject burntObj = null;
 
         // start the fire...
-        if (isBurning && fireEffect != null) {
-            fireEffect.StartFire();
-        }
+        //if (isBurning && fireEffect != null) {
+        //    fireEffect.StartFire();
+        //}
 
 
         if (recipe != null && recipe.canBurn && recipe.burntOutput != null) {
@@ -286,11 +283,11 @@ public class CookingStation : BaseStation, IPrepStation {
         _isBeingUsed = false;
         isCooking = false;
 
-        if (fireEffect != null) {
-            fireEffect.StopFire();
-        }
+        //if (fireEffect != null) {
+        //    fireEffect.StopFire();
+        //}
 
-        fireEffect.gameObject.SetActive(false);
+        //fireEffect.gameObject.SetActive(false);
 
         Debug.Log("Item set above pan");
     }
