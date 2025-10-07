@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class TransformedObject : BaseStation {
     [SerializeField] private GameObject assembledItemPrefab;
+    [SerializeField] private DeliveryManager deliveryManager;
+
     [Header("Remove Pop Force")]
     [SerializeField] private float verticalForceMultiplier = 8f;
     [SerializeField] private float horizontalForceMultiplier = 8f;
@@ -83,6 +85,7 @@ public class TransformedObject : BaseStation {
     }
 
     //finalize assembleditem here
+    /*
     public override void RemovePlacedKitchenObj(GameObject player)
     {
         List<GameObject> ingredients = assembledItem.GetIngredients();
@@ -91,7 +94,7 @@ public class TransformedObject : BaseStation {
         Vector3 playerPos = player.GetComponent<RagdollController>().centerOfMass.position;
         Vector3 popDirection = (playerPos - transform.position).normalized;
         popDirection.y = 0f;
-        Vector3 spawnPos = transform.position + Vector3.up * 3.0f;
+        Vector3 spawnPos = transform.position + Vector3.up * 1.0f;
 
         //spawn new item
         GameObject newAssembledItem = Instantiate(assembledItemPrefab, spawnPos, Quaternion.identity);
@@ -140,6 +143,52 @@ public class TransformedObject : BaseStation {
         ClearStationObject();
 
         Debug.Log("Spawned AssembledItem at: " + spawnPos);
+    }*/
+
+    public override void RemovePlacedKitchenObj(GameObject player)
+    {
+        List<GameObject> ingredients = assembledItem.GetIngredients();
+        if (ingredients.Count == 0) return;
+
+        Vector3 spawnPos = transform.position + Vector3.up * 1.0f;
+
+        // Check for matched recipe
+        RecipeSO matchedRecipe = deliveryManager.GetMatchingRecipeFromAll(assembledItem);
+        GameObject finalPrefab = (matchedRecipe != null) ? matchedRecipe.finalProductPrefab : assembledItemPrefab;
+
+        // Spawn the final burger/custom item
+        GameObject newBurger = Instantiate(finalPrefab, spawnPos, Quaternion.identity);
+        newBurger.tag = "AssembledItem";
+
+        //make sure has assembleditemobject
+        AssembledItemObject newItemComponent = newBurger.GetComponent<AssembledItemObject>();
+        if (newItemComponent == null)
+            newItemComponent = newBurger.AddComponent<AssembledItemObject>();
+
+        // Copy ingredient data
+        foreach (GameObject ingredient in ingredients)
+        {
+            if (ingredient != null)
+            {
+                // Add ingredient to new prefab’s data
+                newItemComponent.AddIngredient(ingredient);
+
+                //make og invisible and non-interactable
+                ingredient.SetActive(false); // hides it
+                Rigidbody rb = ingredient.GetComponent<Rigidbody>();
+                if (rb != null) rb.isKinematic = true;
+
+                Collider col = ingredient.GetComponent<Collider>();
+                if (col != null) col.enabled = false;
+            }
+        }
+
+        //clear transformer internal data
+        assembledItem.ClearIngredients();
+        ClearStationObject();
+
+        Debug.Log($"Spawned {(matchedRecipe != null ? "final product" : "custom assembled item")} at {spawnPos}");
     }
+
 
 }
