@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AssembledItemObject
+public class AssembledItemObject : MonoBehaviour
 {
     private List<GameObject> PreparedIngredients;
 
@@ -18,5 +18,9 @@ public class AssembledItemObject
     public List<GameObject> GetIngredients()
     {
         return PreparedIngredients;
+    }
+
+    public void ClearIngredients(){
+        PreparedIngredients.Clear();
     }
 }

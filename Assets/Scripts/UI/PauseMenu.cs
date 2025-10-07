@@ -9,16 +9,28 @@ public class PauseMenu : MonoBehaviour
     void Awake()
     {
         playerInput = GetComponent<PlayerInput>();
-        playerInput.actions["Pause"].performed += OnPause;
+        if (playerInput != null)
+        {
+            playerInput.actions["Pause"].performed += OnPause;
+        }
     }
 
-void OnEnable()
-{
-    if (playerInput != null)
+    void Update()
     {
-        playerInput.actions["Pause"].performed += OnPause;
+        // Check for Escape key press every frame
+        if (Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame)
+        {
+            TogglePause();
+        }
     }
-}
+
+    void OnEnable()
+    {
+        if (playerInput != null)
+        {
+            playerInput.actions["Pause"].performed += OnPause;
+        }
+    }
 
     void OnDisable()
     {
@@ -30,11 +42,16 @@ void OnEnable()
 
     private void OnPause(InputAction.CallbackContext context)
     {
+        TogglePause();
+    }
+
+    private void TogglePause()
+    {
         // Check if the container GameObject still exists
         if (container == null)
         {
             Debug.LogWarning("Pause menu container is missing!");
-            return; // Exit the function to prevent the error
+            return;
         }
 
         if (container.activeSelf)
@@ -61,7 +78,7 @@ void OnEnable()
 
     public void MainMenuButton()
     {
-    Time.timeScale = 1;
-    UnityEngine.SceneManagement.SceneManager.LoadScene("Main Menu Scene");
+        Time.timeScale = 1;
+        UnityEngine.SceneManagement.SceneManager.LoadScene("Main Menu Scene");
     }
 }

@@ -1,12 +1,17 @@
 using UnityEngine;
 
 public class DeliveryStation : BaseStation {
+    [SerializeField] private DeliveryManager deliveryManager; 
+    [Header("Remove Pop Force")]
+    [SerializeField] private float verticalForceMultiplier = 8f;
+    [SerializeField] private float horizontalForceMultiplier = 8f;
+
     private void Awake()
     {
         GenericEvent<InteractEvent>.GetEvent(gameObject.name).AddListener(Interact);
+        GenericEvent<RemovePlacedObject>.GetEvent(gameObject.name).AddListener(RemovePlacedKitchenObj);
     }
 
-    //copied over from CuttingStation.cs with some changes
     public override void Interact(GameObject player)
     {
         RagdollController ragdollController = player.GetComponent<RagdollController>();
@@ -21,55 +26,19 @@ public class DeliveryStation : BaseStation {
 
                 if (heldKitchenObj.CompareTag("AssembledItem"))
                 {
-                    if (ragdollController.leftHand.GetComponent<GrabDetection>().isGrabbing)
+                    ReleaseFromHands(ragdollController, heldKitchenObj);
+                    PlaceOnCounter(player, heldKitchenObj);
+
+                    bool delivered = deliveryManager.TryMatchAndDeliver(heldKitchenObj);
+
+
+                    if (delivered)
                     {
-                        GameObject grabbedObj = ragdollController.leftHand.GetComponent<GrabDetection>().grabbedObj;
-
-                        if (grabbedObj == heldKitchenObj)
-                        {
-                            GameObject leftArm = ragdollController.leftHand.transform.parent.gameObject;
-                            Destroy(leftArm.GetComponent<FixedJoint>());
-                            ragdollController.leftHand.GetComponent<GrabDetection>().isGrabbing = false;
-                            ragdollController.leftHand.GetComponent<GrabDetection>().grabbedObj = null;
-                        }
+                        ClearStationObject(); 
                     }
-
-                    if (ragdollController.rightHand.GetComponent<GrabDetection>().isGrabbing)
-                    {
-                        GameObject grabbedObj = ragdollController.rightHand.GetComponent<GrabDetection>().grabbedObj;
-                        if (grabbedObj == heldKitchenObj)
-                        {
-                            GameObject rightArm = ragdollController.rightHand.transform.parent.gameObject;
-                            Destroy(rightArm.GetComponent<FixedJoint>());
-                            ragdollController.rightHand.GetComponent<GrabDetection>().isGrabbing = false;
-                            ragdollController.rightHand.GetComponent<GrabDetection>().grabbedObj = null;
-                        }
+                    else{
+                        Debug.Log("AssembledItem does not match any orders");
                     }
-
-                    // logic for placing object on counter
-                    Collider stationCollider = player.GetComponent<Env_Interaction>().currentlyLookingAt.GetComponent<Collider>();
-
-                    float stationYOffset = stationCollider.bounds.extents.y;
-                    Vector3 placePos = stationCollider.bounds.center;
-                    placePos.y += stationYOffset;
-
-                    Collider heldObjCollider = heldKitchenObj.GetComponent<Collider>();
-                    heldKitchenObj.transform.position = placePos;
-                    heldKitchenObj.transform.rotation = Quaternion.identity;
-                    heldKitchenObj.GetComponent<Rigidbody>().isKinematic = true;
-                    SetStationObject(heldKitchenObj);
-
-                    //destroy after 1 
-                    Destroy(heldKitchenObj, 1f);
-                    ClearStationObject(); 
-                    //GenericEvent<DeliveredDishEvent>.GetEvent(gameObject.name).Invoke();
-
-                    if (PointManager.Instance != null)
-                        PointManager.Instance.AddDeliveredDish();
-                    else
-                        Debug.LogError("PointManager.Instance is null!");
-
-                    Debug.Log("Assembled Dish Delivered!");
                 }
                 else 
                 {
@@ -86,4 +55,65 @@ public class DeliveryStation : BaseStation {
             Debug.Log("Player not carrying anything");
         }
     }
+
+    private void ReleaseFromHands(RagdollController ragdollController, GameObject heldKitchenObj)
+    {
+        if (ragdollController.leftHand.GetComponent<GrabDetection>().isGrabbing &&
+            ragdollController.leftHand.GetComponent<GrabDetection>().grabbedObj == heldKitchenObj)
+        {
+            GameObject leftArm = ragdollController.leftHand.transform.parent.gameObject;
+            Destroy(leftArm.GetComponent<FixedJoint>());
+            ragdollController.leftHand.GetComponent<GrabDetection>().isGrabbing = false;
+            ragdollController.leftHand.GetComponent<GrabDetection>().grabbedObj = null;
+        }
+
+        if (ragdollController.rightHand.GetComponent<GrabDetection>().isGrabbing &&
+            ragdollController.rightHand.GetComponent<GrabDetection>().grabbedObj == heldKitchenObj)
+        {
+            GameObject rightArm = ragdollController.rightHand.transform.parent.gameObject;
+            Destroy(rightArm.GetComponent<FixedJoint>());
+            ragdollController.rightHand.GetComponent<GrabDetection>().isGrabbing = false;
+            ragdollController.rightHand.GetComponent<GrabDetection>().grabbedObj = null;
+        }
+    }
+
+    private void PlaceOnCounter(GameObject player, GameObject heldKitchenObj)
+    {
+        Collider stationCollider = player.GetComponent<Env_Interaction>().currentlyLookingAt.GetComponent<Collider>();
+
+        float stationYOffset = stationCollider.bounds.extents.y;
+        Vector3 placePos = stationCollider.bounds.center;
+        placePos.y += stationYOffset;
+
+        heldKitchenObj.transform.position = placePos;
+        heldKitchenObj.transform.rotation = Quaternion.identity;
+        heldKitchenObj.GetComponent<Rigidbody>().isKinematic = true;
+
+        SetStationObject(heldKitchenObj);
+    }
+
+    public override void RemovePlacedKitchenObj(GameObject player)
+    {
+        if (HasKitchenObject())
+        {
+            GameObject kitchenObj = GetKitchenObject();
+            Rigidbody kitchenObjRb = kitchenObj.GetComponent<Rigidbody>();
+            kitchenObjRb.isKinematic = false;
+
+            Vector3 playerPos = player.GetComponent<RagdollController>().centerOfMass.position;
+
+            Vector3 popDirection = (playerPos - transform.position).normalized;
+            popDirection.y = 0f;
+
+            kitchenObjRb.AddForce(Vector3.up * verticalForceMultiplier, ForceMode.Impulse);
+            kitchenObjRb.AddForce(popDirection * horizontalForceMultiplier, ForceMode.Impulse);
+
+            ClearStationObject();
+        }
+        else
+        {
+            Debug.Log("DeliveryStation has no object to remove");
+        }
+    }
+
 }
