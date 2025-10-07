@@ -177,7 +177,6 @@ public class JointReconnection : MonoBehaviour
         // if reconnecting a leg, reset the step values to avoid weirdness
         if (ragdollJoint.GetJointName() == "UpperRightLeg" || ragdollJoint.GetJointName() == "UpperLeftLeg")
         {
-            Debug.Log("Resetting step values after reconnecting leg.");
             rc.ResetStepValues();
         }
         rc.HardResetPose();

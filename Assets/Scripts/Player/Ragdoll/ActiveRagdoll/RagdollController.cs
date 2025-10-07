@@ -646,7 +646,17 @@ public class RagdollController : MonoBehaviour
         // Disable movement if player is missing legs
         //if (!RagdollDict.ContainsKey(UPPER_RIGHT_LEG) || !RagdollDict.ContainsKey(UPPER_LEFT_LEG))
         //    return;
-        
+
+        float newMoveSpeed;
+        if (!RagdollDict[UPPER_RIGHT_LEG].isConnected || !RagdollDict[UPPER_LEFT_LEG].isConnected)
+        {
+            newMoveSpeed = 2f;
+        }
+        else
+        {
+            newMoveSpeed = moveSpeed;
+        }
+
 
             Direction = new Vector3(MovementAxis.x, 0.0f, MovementAxis.y);
         Direction.y = 0f;
@@ -655,7 +665,7 @@ public class RagdollController : MonoBehaviour
         if (RagdollDict[HEAD].isConnected)
         {
             rootRigidbody.linearVelocity = Vector3.Lerp(velocity,
-            (Direction * moveSpeed) + new Vector3(0, velocity.y, 0), 0.8f);
+            (Direction * newMoveSpeed) + new Vector3(0, velocity.y, 0), 0.8f);
         }
         else
         {
@@ -1082,7 +1092,6 @@ public class RagdollController : MonoBehaviour
         if (inAir)
             return;
 
-        Debug.Log(WalkForward);
 
         if (WalkForward)
         {
@@ -1320,7 +1329,7 @@ public class RagdollController : MonoBehaviour
 
         foreach (var element in RagdollDict)
         {
-            if (element.Value != null)
+            if (element.Value.isConnected && element.Value != null)
             {
                 var joint = element.Value;
                 var mass = joint.Rigidbody.mass;
@@ -1469,7 +1478,6 @@ public class RagdollController : MonoBehaviour
 
     public void ResetReconnectedLimbDrives(string jointName)
     {
-        Debug.Log("Resetting drives for reconnected joint: " + jointName);
         SetJointAngularDrives(jointName, in PoseOn);
     }
 
