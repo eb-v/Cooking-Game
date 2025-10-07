@@ -112,7 +112,7 @@ public class MechanicalFailureStatus : MonoBehaviour
 
     private void ApplyDamageToLimbs()
     {
-        // Invoke event to apply damage to each limb
+        // Invoke event to apply damage to each limb                                                                                                                                                            
         foreach (GameObject limb in damageableLimbs)
         {
             float damageAmount = Random.Range(20f, 50f);

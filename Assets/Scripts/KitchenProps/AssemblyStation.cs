@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class AssemblyStation : MonoBehaviour
 {
@@ -12,10 +13,12 @@ public class AssemblyStation : MonoBehaviour
 
     [SerializeField] private List<RecipeSO> _availableRecipes;
     [SerializeField] private RecipeSO _selectedRecipe;
+    [SerializeField] private Image _selectedRecipeUIImage;
+    
 
     private int _currentRecipeIndex = 0;
 
-    private readonly HashSet<GameObject> ingredientsInAssemblyArea = new HashSet<GameObject>();
+    public List<GameObject> ingredientsInAssemblyArea;
 
 
 
@@ -28,14 +31,19 @@ public class AssemblyStation : MonoBehaviour
 
     private void Awake()
     {
+        ingredientsInAssemblyArea = new List<GameObject>();
         GenericEvent<IngredientEnteredAssemblyArea>.GetEvent(gameObject.name).AddListener(AddIngredientToSet);
         GenericEvent<IngredientExitedAssemblyArea>.GetEvent(gameObject.name).AddListener(RemoveIngredientFromSet);
-        // GenericEvent<AlternateInteractInput>.GetEvent(gameObject.name).AddListener(ChangeSelectedRecipe);
+        GenericEvent<Interact>.GetEvent(gameObject.name).AddListener(ActivateAssembler);
+        GenericEvent<AlternateInteractInput>.GetEvent(gameObject.name).AddListener(ChangeSelectedRecipe);
     }
 
     private void Start()
     {
-        TurnOn();
+        _selectedRecipe = _availableRecipes[_currentRecipeIndex];
+        _finalProductPrefab = _selectedRecipe.finalProductPrefab;
+        _selectedRecipeUIImage.sprite = _selectedRecipe.finalProductImageUI;
+        //TurnOn();
     }
 
     private void FixedUpdate()
@@ -60,6 +68,18 @@ public class AssemblyStation : MonoBehaviour
         }
     }
 
+    private void ActivateAssembler()
+    {
+        if (!_isOn)
+        {
+            TurnOn();
+        }
+        else
+        {
+            Debug.Log("Assembly Station is already on.");
+        }
+    }
+
 
     private void TurnOn()
     {
@@ -81,18 +101,19 @@ public class AssemblyStation : MonoBehaviour
         boxLidPos.y -= verticalSpeed;
 
         boxlidTransform.position = boxLidPos;
+        Debug.Log(boxLidPos.y);
 
     }
 
     private bool FinishedLowering()
     {
-        if (_boxLid.transform.position.y < _lowerLimitY)
-        {
-            Vector3 boxLidPos = _boxLid.transform.position;
-            boxLidPos.y = _lowerLimitY;
-            _boxLid.transform.position = boxLidPos;
-        }
-
+        //if (_boxLid.transform.position.y < _lowerLimitY)
+        //{
+        //    Vector3 boxLidPos = _boxLid.transform.position;
+        //    boxLidPos.y = _lowerLimitY;
+        //    _boxLid.transform.position = boxLidPos;
+        //}
+        Debug.Log(_boxLid.transform.position.y <= _lowerLimitY);
         return _boxLid.transform.position.y <= _lowerLimitY;
     }
 
@@ -105,6 +126,7 @@ public class AssemblyStation : MonoBehaviour
         }
         else
         {
+            Debug.Log(CheckForRecipeRequirements(_selectedRecipe));
             // check if all required ingredients are present
             if (CheckForRecipeRequirements(_selectedRecipe))
             {
@@ -114,13 +136,9 @@ public class AssemblyStation : MonoBehaviour
                 UseIngredients(_selectedRecipe);
 
                 // spawn the final product at the spawn point
-
+                Debug.Log("Product Assembled!");
+                ObjectPoolManager.SpawnObject(_finalProductPrefab, _productSpawnPoint.position, Quaternion.identity);
             }
-
-
-
-            Debug.Log("Product Assembled!");
-            ObjectPoolManager.SpawnObject(_finalProductPrefab, _productSpawnPoint.position, Quaternion.identity);
 
 
             _assemblyTimer = 0.0f;
@@ -139,12 +157,12 @@ public class AssemblyStation : MonoBehaviour
 
     private bool FinishedRaising()
     {
-        if (_boxLid.transform.position.y > _raiseLimitY)
-        {
-            Vector3 boxLidPos = _boxLid.transform.position;
-            boxLidPos.y = _raiseLimitY;
-            _boxLid.transform.position = boxLidPos;
-        }
+        //if (_boxLid.transform.position.y > _raiseLimitY)
+        //{
+        //    Vector3 boxLidPos = _boxLid.transform.position;
+        //    boxLidPos.y = _raiseLimitY;
+        //    _boxLid.transform.position = boxLidPos;
+        //}
 
         return _boxLid.transform.position.y >= _raiseLimitY;
     }
@@ -199,15 +217,16 @@ public class AssemblyStation : MonoBehaviour
     {
         foreach (GameObject ingredient in ingredientsInAssemblyArea)
         {
-            if (ingredient.GetComponent<Ingredient>().IngredientPrefab == requiredIngredientPrefab)
+            // take out (clone) from the name of the ingredient
+            string ingredientName = ingredient.GetComponent<Ingredient>().IngredientName.Replace("(Clone)", "").Trim();
+            if (ingredientName == requiredIngredientPrefab.name)
             {
                 return true;
             }
         }
-
         return false;
-
     }
+
     // only use after confirming all ingredients are present
     private void UseIngredients(RecipeSO currentRecipe)
     {
@@ -218,7 +237,8 @@ public class AssemblyStation : MonoBehaviour
 
             foreach (GameObject ingredient in ingredientsInAssemblyArea)
             {
-                if (ingredient.GetComponent<Ingredient>().IngredientPrefab == requiredIngredientPrefab)
+                string ingredientName = ingredient.GetComponent<Ingredient>().IngredientName.Replace("(Clone)", "").Trim();
+                if (ingredientName == requiredIngredientPrefab.name)
                 {
                     ingredientsInAssemblyArea.Remove(ingredient);
                     ObjectPoolManager.ReturnObjectToPool(ingredient);
@@ -233,7 +253,8 @@ public class AssemblyStation : MonoBehaviour
 
             foreach (GameObject ingredient in ingredientsInAssemblyArea)
             {
-                if (ingredient.GetComponent<Ingredient>().IngredientPrefab == requiredIngredientPrefab)
+                string ingredientName = ingredient.GetComponent<Ingredient>().IngredientName.Replace("(Clone)", "").Trim();
+                if (ingredientName == requiredIngredientPrefab.name)
                 {
                     ingredientsInAssemblyArea.Remove(ingredient);
                     ObjectPoolManager.ReturnObjectToPool(ingredient);
@@ -260,21 +281,26 @@ public class AssemblyStation : MonoBehaviour
         }
     }
 
-    private void ChangeSelectedRecipe()
+    private void ChangeSelectedRecipe(GameObject player)
     {
-        _currentRecipeIndex++;
-        if (_currentRecipeIndex >= _availableRecipes.Count)
+        if (!_isOn)
         {
-            _currentRecipeIndex = 0;
+            _currentRecipeIndex++;
+            if (_currentRecipeIndex >= _availableRecipes.Count)
+            {
+                _currentRecipeIndex = 0;
+            }
+            _selectedRecipe = _availableRecipes[_currentRecipeIndex];
+            _finalProductPrefab = _selectedRecipe.finalProductPrefab;
+            _selectedRecipeUIImage.sprite = _selectedRecipe.finalProductImageUI;
         }
-        _selectedRecipe = _availableRecipes[_currentRecipeIndex];
-        _finalProductPrefab = _selectedRecipe.finalProductPrefab;
+        else
+        {
+            Debug.Log("Cannot change recipe while assembly station is on.");
+        }
     }
 
-    private void SpawnFinalProduct()
-    {
-        ObjectPoolManager.SpawnObject(_finalProductPrefab, _productSpawnPoint.position, Quaternion.identity);
-    }
+    
 
 
 }
