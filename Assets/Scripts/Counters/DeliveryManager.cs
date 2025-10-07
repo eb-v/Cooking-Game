@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class DeliveryManager: MonoBehaviour {
 
@@ -13,6 +14,7 @@ public class DeliveryManager: MonoBehaviour {
     
     //change max after testing
     private int waitingRecipesMax = 4;
+    public UnityEvent OnRecipeListChanged;
 
     private void Awake() {
         waitingRecipeSOList = new List<RecipeSO>();
@@ -31,6 +33,8 @@ public class DeliveryManager: MonoBehaviour {
                 RecipeSO waitingRecipeSO = recipeListSO.recipeSOList[Random.Range(0, recipeListSO.recipeSOList.Count)];
                 Debug.Log(waitingRecipeSO.recipeName);
                 waitingRecipeSOList.Add(waitingRecipeSO);
+
+                OnRecipeListChanged?.Invoke();
             }
 
         }
@@ -86,6 +90,10 @@ public class DeliveryManager: MonoBehaviour {
                     Debug.LogError("PointManager.Instance is null!");
 
                 waitingRecipeSOList.Remove(recipe);
+
+
+                OnRecipeListChanged?.Invoke();
+
                 return true;
             }
         }
