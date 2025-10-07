@@ -22,6 +22,8 @@ public class DeliveryManager: MonoBehaviour {
 
     private void Start() {
         Random.InitState(System.DateTime.Now.Millisecond);
+
+        spawnRecipeTimer = 0.15f;
     }
 
     private void Update() {
