@@ -84,3 +84,7 @@ public class JointRemoved : UnityEvent<GameObject, JointBackup> { }
 public class ReleaseHeldJoint : UnityEvent<GameObject> { }
 
 public class LimbDamaged : UnityEvent<float> { }
+
+public class IngredientEnteredAssemblyArea : UnityEvent<GameObject> { }
+
+public class IngredientExitedAssemblyArea : UnityEvent<GameObject> { }

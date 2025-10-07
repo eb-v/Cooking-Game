@@ -7,5 +7,5 @@ public class RecipeSO : ScriptableObject {
     public List<CookingRecipeSO> CookingRecipeSOList;
     public List<CuttingRecipeSO> CuttingRecipeSOList;
     public string recipeName;
-
+    public GameObject finalProductPrefab;
 }

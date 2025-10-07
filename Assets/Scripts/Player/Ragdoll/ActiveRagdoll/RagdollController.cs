@@ -650,7 +650,7 @@ public class RagdollController : MonoBehaviour
         float newMoveSpeed;
         if (!RagdollDict[UPPER_RIGHT_LEG].isConnected || !RagdollDict[UPPER_LEFT_LEG].isConnected)
         {
-            newMoveSpeed = 2f;
+            newMoveSpeed = 0f;
         }
         else
         {
