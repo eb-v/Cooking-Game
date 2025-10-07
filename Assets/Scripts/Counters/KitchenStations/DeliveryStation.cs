@@ -23,6 +23,17 @@ public class DeliveryStation : BaseStation {
             if (!HasKitchenObject())
             {
                 GameObject heldKitchenObj = ragdollController.GetHeldObject();
+                Debug.Log("Held object: " + heldKitchenObj.name 
+                + ", tag: " + heldKitchenObj.tag 
+                + ", has AssembledItemObject? " 
+                + (heldKitchenObj.GetComponent<AssembledItemObject>() != null));
+
+                AssembledItemObject assembledObj = heldKitchenObj.GetComponentInParent<AssembledItemObject>();
+                if (assembledObj != null)
+                {
+                    heldKitchenObj = assembledObj.gameObject;
+                    Debug.Log("Found root AssembledItemObject: " + heldKitchenObj.name);
+                }
 
                 if (heldKitchenObj.CompareTag("AssembledItem"))
                 {
