@@ -19,6 +19,12 @@ public class CircleSkillCheck : SkillCheckBaseLogic
     public float startAngle;
     public float endAngle;
 
+    private Image dialImage;
+    [SerializeField] private Color defaultColor = Color.white;
+    [SerializeField] private Color successColor = Color.green;
+    [SerializeField] private float colorChangeDuration = 0.3f;
+
+
 
     [SerializeField] private float punishmentValue = 10f;
 
@@ -35,7 +41,11 @@ public class CircleSkillCheck : SkillCheckBaseLogic
 
         skillChecksCompleted = 0;
 
-        radius = dial.rect.width / 2f; 
+        radius = dial.rect.width / 2f;
+
+        dial = gameObject.transform.Find("SkillCheckCanvas/Dial").GetComponent<RectTransform>();
+        dialImage = dial.GetComponent<Image>();
+        defaultColor = dialImage.color;
 
     }
 
@@ -84,6 +94,7 @@ public class CircleSkillCheck : SkillCheckBaseLogic
         if (IsPointerInSuccessZone())
         {
             skillChecksCompleted++;
+            successZone.gameObject.GetComponent<MonoBehaviour>().StartCoroutine(FlashDial());
         }
         else
         {
@@ -145,6 +156,16 @@ public class CircleSkillCheck : SkillCheckBaseLogic
         successZoneImage.fillOrigin = newFillOrigin;
         float newFillAmount = Random.Range(0.1f, 0.15f); // between 10% and 30%
         successZoneImage.fillAmount = newFillAmount;
+    }
+
+    System.Collections.IEnumerator FlashDial() {
+
+        dialImage.color = successColor;
+
+        yield return new WaitForSeconds(0.15f);
+
+
+        dialImage.color = defaultColor;
     }
 
 }
