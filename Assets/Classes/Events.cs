@@ -88,3 +88,7 @@ public class LimbDamaged : UnityEvent<float> { }
 public class IngredientEnteredAssemblyArea : UnityEvent<GameObject> { }
 
 public class IngredientExitedAssemblyArea : UnityEvent<GameObject> { }
+
+
+public class MoveImageEvent : UnityEvent<bool> { }
+
