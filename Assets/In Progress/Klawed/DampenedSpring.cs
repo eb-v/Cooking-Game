@@ -53,11 +53,15 @@ public class DampenedSpring : MonoBehaviour
     {
         // update scale
         finalSpringValue = Mathf.Abs(springValue) * scaleMultiplier;
+        if (finalSpringValue < 0)
+        {
+            Debug.Log("Spring value was negative");
+        }
         rectTransform.localScale = Vector3.one * finalSpringValue;
 
 
         // update position
-        finalSpringValue = springValue * posMultiplier;
+        finalSpringValue = Mathf.Abs(springValue) * posMultiplier;
         rectTransform.localPosition = new Vector3(finalSpringValue, finalSpringValue, 0f);
     }
 

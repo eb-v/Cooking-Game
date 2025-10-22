@@ -7,11 +7,11 @@ public class UserInput : MonoBehaviour
     {
         if (context.performed)
         {
-            GenericEvent<MoveImageEvent>.GetEvent("me").Invoke(true);
+            GenericEvent<UpdateGoalValueEvent>.GetEvent("me").Invoke(1f);
         }
         else if (context.canceled)
         {
-            GenericEvent<MoveImageEvent>.GetEvent("me").Invoke(false);
+            GenericEvent<UpdateGoalValueEvent>.GetEvent("me").Invoke(0f);
         }
     }
 

@@ -92,3 +92,5 @@ public class IngredientExitedAssemblyArea : UnityEvent<GameObject> { }
 
 public class MoveImageEvent : UnityEvent<bool> { }
 
+public class UpdateGoalValueEvent : UnityEvent<float> { }
+
