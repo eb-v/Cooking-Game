@@ -86,8 +86,16 @@ public class Timer : MonoBehaviour
     // Call this from your Replay button
     public void ReplayButton()
     {
-        Time.timeScale = 1f; // Unfreeze time
-        UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
+        Time.timeScale = 1f;
+        
+        // Reset points before reloading scene
+        if (PointManager.Instance != null)
+        {
+            PointManager.Instance.ResetPoints();
+        }
+        
+        UnityEngine.SceneManagement.SceneManager.LoadScene(
+            UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
     }
 
     // Call this from your Main Menu button

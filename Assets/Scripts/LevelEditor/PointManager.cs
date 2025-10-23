@@ -25,7 +25,7 @@ public class PointManager : MonoBehaviour
             OnDishDelivered = new UnityEvent<int>();
         }
     }
-    
+
     public void AddDeliveredDish(int ingredientCount)
     {
         deliveredCount++;
@@ -33,7 +33,13 @@ public class PointManager : MonoBehaviour
         // Invoke with ingredient count instead of total delivered count
         OnDishDelivered.Invoke(ingredientCount);
     }
-    
+
+    public void ResetPoints()
+    {
+        deliveredCount = 0; // or whatever your point variable is named
+        OnDishDelivered?.Invoke(0); // This will update all UIs listening to it
+    }
+
     public int GetDeliveredCount()
     {
         return deliveredCount;

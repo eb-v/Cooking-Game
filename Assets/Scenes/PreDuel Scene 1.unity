@@ -4216,7 +4216,10 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 8114897664145522301, guid: 65ce09a35bbd32d4e8cb9949927ab8bc, type: 3}
       insertIndex: -1
       addedObject: {fileID: 934813545}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 2453311789610528359, guid: 65ce09a35bbd32d4e8cb9949927ab8bc, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1403134473}
   m_SourcePrefab: {fileID: 100100000, guid: 65ce09a35bbd32d4e8cb9949927ab8bc, type: 3}
 --- !u!1 &402336455
 GameObject:
@@ -7281,6 +7284,7 @@ GameObject:
   m_Component:
   - component: {fileID: 687637697}
   - component: {fileID: 687637698}
+  - component: {fileID: 687637699}
   m_Layer: 5
   m_Name: OrdersUI
   m_TagString: Untagged
@@ -7323,6 +7327,29 @@ MonoBehaviour:
   deliveryManager: {fileID: 1510056060}
   ordersPanel: {fileID: 1222759789}
   orderCardPrefab: {fileID: 9004757965327625410, guid: 32f5741b3727b70499e87237973c12d9, type: 3}
+--- !u!223 &687637699
+Canvas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 687637696}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_RenderMode: 2
+  m_Camera: {fileID: 0}
+  m_PlaneDistance: 100
+  m_PixelPerfect: 0
+  m_ReceivesEvents: 1
+  m_OverrideSorting: 1
+  m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
+  m_VertexColorAlwaysGammaSpace: 0
+  m_AdditionalShaderChannelsFlag: 0
+  m_UpdateRectTransformForStandalone: 0
+  m_SortingLayerID: 0
+  m_SortingOrder: -5
+  m_TargetDisplay: 0
 --- !u!1 &701380008
 GameObject:
   m_ObjectHideFlags: 0
@@ -7470,6 +7497,11 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &756258255 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2453311789610528359, guid: 65ce09a35bbd32d4e8cb9949927ab8bc, type: 3}
+  m_PrefabInstance: {fileID: 388851397}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &757366044
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -15051,6 +15083,29 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 8114897664145522301, guid: 65ce09a35bbd32d4e8cb9949927ab8bc, type: 3}
   m_PrefabInstance: {fileID: 388851397}
   m_PrefabAsset: {fileID: 0}
+--- !u!223 &1403134473
+Canvas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 756258255}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_RenderMode: 2
+  m_Camera: {fileID: 0}
+  m_PlaneDistance: 100
+  m_PixelPerfect: 0
+  m_ReceivesEvents: 1
+  m_OverrideSorting: 1
+  m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
+  m_VertexColorAlwaysGammaSpace: 0
+  m_AdditionalShaderChannelsFlag: 25
+  m_UpdateRectTransformForStandalone: 0
+  m_SortingLayerID: 0
+  m_SortingOrder: 10
+  m_TargetDisplay: 0
 --- !u!1 &1404428741
 GameObject:
   m_ObjectHideFlags: 0
