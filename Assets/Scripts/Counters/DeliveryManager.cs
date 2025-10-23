@@ -79,39 +79,40 @@ public class DeliveryManager: MonoBehaviour {
 
 
     public bool TryMatchAndDeliver(GameObject assembledGO) 
+{
+    AssembledItemObject assembledItem = assembledGO.GetComponent<AssembledItemObject>();
+    if (assembledItem == null)
     {
-        AssembledItemObject assembledItem = assembledGO.GetComponent<AssembledItemObject>();
-        if (assembledItem == null)
-        {
-            Debug.LogError("Held object has no AssembledItemObject!");
-            return false;
-        }
-
-        foreach (RecipeSO recipe in waitingRecipeSOList) {
-            if (MatchesRecipe(assembledItem, recipe)) {
-                Debug.Log("Delivered: " + recipe.recipeName);
-
-                // destroy gameobject after 1 sec
-                GameObject.Destroy(assembledGO, 1f);
-
-                // update scoring
-                if (PointManager.Instance != null)
-                    PointManager.Instance.AddDeliveredDish();
-                else
-                    Debug.LogError("PointManager.Instance is null!");
-
-                waitingRecipeSOList.Remove(recipe);
-
-
-                OnRecipeListChanged?.Invoke();
-
-                return true;
-            }
-        }
-
-        Debug.Log("Assembled item does not match any active order.");
+        Debug.LogError("Held object has no AssembledItemObject!");
         return false;
     }
+
+    foreach (RecipeSO recipe in waitingRecipeSOList) {
+        if (MatchesRecipe(assembledItem, recipe)) {
+            Debug.Log("Delivered: " + recipe.recipeName);
+
+            // destroy gameobject after 1 sec
+            GameObject.Destroy(assembledGO, 1f);
+
+            // update scoring with ingredient count
+            if (PointManager.Instance != null) {
+                int ingredientCount = recipe.CuttingRecipeSOList.Count + recipe.CookingRecipeSOList.Count;
+                PointManager.Instance.AddDeliveredDish(ingredientCount);
+            }
+            else
+                Debug.LogError("PointManager.Instance is null!");
+
+            waitingRecipeSOList.Remove(recipe);
+
+            OnRecipeListChanged?.Invoke();
+
+            return true;
+        }
+    }
+
+    Debug.Log("Assembled item does not match any active order.");
+    return false;
+}
 
     public RecipeSO GetMatchingRecipeFromAll(AssembledItemObject assembledItem)
     {
