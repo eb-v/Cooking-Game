@@ -11,7 +11,7 @@ public class UserInput : MonoBehaviour
         }
         else if (context.canceled)
         {
-            GenericEvent<UpdateGoalValueEvent>.GetEvent("me").Invoke(0f);
+            GenericEvent<UpdateGoalValueEvent>.GetEvent("me").Invoke(0.5f);
         }
     }
 

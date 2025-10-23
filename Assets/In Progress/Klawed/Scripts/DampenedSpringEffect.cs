@@ -1,7 +1,7 @@
 using UnityEngine;
 using static UISprings;
 
-public class DampenedSpringEffect
+public class SpringAPI
 {
     private DampedSpringMotionParams _motionParams;
     private float springPosValue;
@@ -9,21 +9,16 @@ public class DampenedSpringEffect
     
 
 
-    public virtual void RunSpringUpdateLogic(float angularFrequency, float dampingRatio, float multiplier, float goalValue)
+    public float CalculateSpringValue(float angularFrequency, float dampingRatio, float multiplier, float goalValue)
     {
         float deltaTime = Time.deltaTime;
         CalcDampedSpringMotionParams(out _motionParams, deltaTime, angularFrequency, dampingRatio);
         UpdateDampedSpringMotion(ref springPosValue, ref springVelValue, goalValue, in _motionParams);
-        OnSpringValueUpdated(springPosValue, multiplier);
+
+        return springPosValue;
     }
 
 
-    public virtual void OnSpringValueUpdated(float springValue, float multiplier)
-    {
-
-    }
-    
-    
 
 }
 
