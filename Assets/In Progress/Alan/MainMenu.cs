@@ -1,6 +1,8 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using System.Collections;
+
 
 
 public class MainMenu : MonoBehaviour
@@ -8,8 +10,11 @@ public class MainMenu : MonoBehaviour
     [SerializeField] private Button playButton;
     [SerializeField] private Button quitButton;
     [SerializeField] private Button settingButton;
+    [SerializeField] private float loadDelaySeconds = 0.12f; //slight delay for sfx to play
+    private bool _isLoading; 
 
 
+    
 
     //listeners for the buttons on Awake
     private void Awake()
@@ -19,12 +24,19 @@ public class MainMenu : MonoBehaviour
         settingButton.onClick.AddListener(SettingsClick);
     }
 
-    private void PlayClick()
+     private void PlayClick()
     {
-        // SceneManager.LoadScene(1); loads the scene but with a lag
+        if (_isLoading) return;
+        StartCoroutine(LoadAfterDelay());
+    }
 
+    private IEnumerator LoadAfterDelay()
+    {
+        _isLoading = true;
 
-        Loader.Load(Loader.Scene.PreDuelSceneAudio1); //loads the loading screen first then PreDuelSceneAudio1
+        yield return new WaitForSecondsRealtime(loadDelaySeconds);
+
+        Loader.Load(Loader.Scene.PreDuelSceneAudio1);
     }
 
     private void QuitClick()
