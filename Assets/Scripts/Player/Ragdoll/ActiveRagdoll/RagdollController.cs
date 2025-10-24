@@ -259,7 +259,8 @@ public class RagdollController : MonoBehaviour
 
     private void FixedUpdate()
     {
-       // PerformWalking();
+       
+        PerformWalking();
 
         if (IsMovementOn())
         {

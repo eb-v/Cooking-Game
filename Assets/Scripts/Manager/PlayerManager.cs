@@ -17,7 +17,5 @@ public class PlayerManager : MonoBehaviour
         playerInput.name = "Player " + m_playerCount;
         RagdollController ragdollController = playerInput.gameObject.GetComponent<RagdollController>();
 
-        // turn off player movement for pre game lobby
-        ragdollController.TurnMovementOff();
     }
 }
