@@ -1,29 +1,26 @@
 using UnityEngine;
 
-public class ScaleSpringScript : MonoBehaviour
+[RequireComponent(typeof(SpringAPI))]
+public class ScaleSpringScript : MonoBehaviour, ISpringUI
 {
     public float angularFrequency = 10f;
     public float dampingRatio = 0.7f;
     public float multiplier = 1f;
     public float baseScale = 1f;
-    private float goalValue = 0.0f; 
-
 
     void Start()
     {
-        GenericEvent<UpdateGoalValueEvent>.GetEvent("me").AddListener(UpdateGoalValue);
+        GenericEvent<SpringUpdateEvent>.GetEvent(gameObject.name).AddListener(OnSpringValueRecieved);
     }
 
-    // Update is called once per frame
-    void Update()
+
+    public void OnSpringValueRecieved(float springValue)
     {
-
+        float finalSpringValue = Mathf.Abs(springValue);
+        Vector3 newScale = Vector3.one * (baseScale + finalSpringValue * multiplier);
+        transform.localScale = newScale;
     }
 
 
-    private void UpdateGoalValue(float goalValue)
-    {
-        this.goalValue = goalValue;
-    }
 
 }

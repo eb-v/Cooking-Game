@@ -15,15 +15,9 @@ public class PlayerManager : MonoBehaviour
         playerInput.transform.position = SpawnPoints[m_playerCount].position;
         m_playerCount++;
         playerInput.name = "Player " + m_playerCount;
+        RagdollController ragdollController = playerInput.gameObject.GetComponent<RagdollController>();
 
-
-        // logic for player portrait hud assignment
-        //PlayerPortrait portrait = playerInput.GetComponentInChildren<PlayerPortrait>();   
-
-        //if (m_playerCount <= hudSlots.Length)
-        //{
-        //    portrait.hudImage = hudSlots[m_playerCount - 1];
-        //}
-
+        // turn off player movement for pre game lobby
+        ragdollController.TurnMovementOff();
     }
 }

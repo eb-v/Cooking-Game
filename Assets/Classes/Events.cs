@@ -94,3 +94,7 @@ public class MoveImageEvent : UnityEvent<bool> { }
 
 public class UpdateGoalValueEvent : UnityEvent<float> { }
 
+public class SpringUpdateEvent : UnityEvent<float> { }
+
+public class OnButtonPressedEvent : UnityEvent { }
+

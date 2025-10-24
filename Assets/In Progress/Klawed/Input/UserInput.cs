@@ -8,6 +8,7 @@ public class UserInput : MonoBehaviour
         if (context.performed)
         {
             GenericEvent<UpdateGoalValueEvent>.GetEvent("me").Invoke(1f);
+            GenericEvent<OnButtonPressedEvent>.GetEvent("me").Invoke();
         }
         else if (context.canceled)
         {

@@ -89,6 +89,7 @@ public class RagdollController : MonoBehaviour
     private bool rightHandColliding;
     private bool leanForward;
     private bool leanBackward;
+    private bool movementToggle;
 
     [HideInInspector] public bool jumping;
     [HideInInspector] public bool isJumping;
@@ -224,7 +225,10 @@ public class RagdollController : MonoBehaviour
     {
         if (!inAir)
         {
-            PlayerMovement();
+            if (IsMovementOn())
+            {
+                PlayerMovement();
+            }
             //if (canPunch)
             //{
             //    PerformPlayerPunch();
@@ -255,8 +259,12 @@ public class RagdollController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        PerformWalking();
-        PerformPlayerRotation();
+       // PerformWalking();
+
+        if (IsMovementOn())
+        {
+            PerformPlayerRotation();
+        }
         ResetPlayerPose();
         PerformPlayerGetUpJumping();
 
@@ -499,7 +507,7 @@ public class RagdollController : MonoBehaviour
             }
         }
     }
-    
+
 
     private void LegCheck()
     {
@@ -571,7 +579,7 @@ public class RagdollController : MonoBehaviour
                !balanced &&
                RagdollDict[ROOT].Rigidbody.linearVelocity.magnitude < 1f &&
                autoGetUpWhenPossible &&
-               RagdollDict[UPPER_LEFT_LEG].isConnected && 
+               RagdollDict[UPPER_LEFT_LEG].isConnected &&
                RagdollDict[UPPER_RIGHT_LEG].isConnected;
     }
 
@@ -579,7 +587,7 @@ public class RagdollController : MonoBehaviour
     private void SetRagdollState(bool shouldRagdoll, ref JointDrive rootJointDrive, ref JointDrive poseJointDrive,
         bool shouldResetPose)
     {
-        
+
 
         isRagdoll = shouldRagdoll;
         balanced = !shouldRagdoll;
@@ -589,14 +597,14 @@ public class RagdollController : MonoBehaviour
 
         if (!reachRightAxisUsed)
         {
-          //  SetJointAngularDrives(UPPER_RIGHT_ARM, in poseJointDrive);
+            //  SetJointAngularDrives(UPPER_RIGHT_ARM, in poseJointDrive);
             //SetJointAngularDrives(LOWER_RIGHT_ARM, in poseJointDrive);
         }
 
         if (!reachLeftAxisUsed)
         {
-           // SetJointAngularDrives(UPPER_LEFT_ARM, in poseJointDrive);
-           // SetJointAngularDrives(LOWER_LEFT_ARM, in poseJointDrive);
+            // SetJointAngularDrives(UPPER_LEFT_ARM, in poseJointDrive);
+            // SetJointAngularDrives(LOWER_LEFT_ARM, in poseJointDrive);
         }
 
         SetJointAngularDrives(UPPER_RIGHT_LEG, in poseJointDrive);
@@ -624,6 +632,7 @@ public class RagdollController : MonoBehaviour
 
     private void PlayerMovement()
     {
+
         if (forwardIsCameraDirection)
         {
             MoveInCameraDirection();
@@ -632,6 +641,8 @@ public class RagdollController : MonoBehaviour
         {
             MoveInOwnDirection();
         }
+
+
     }
 
     private void SetDirection(Vector2 inputDirection)
@@ -658,7 +669,7 @@ public class RagdollController : MonoBehaviour
         }
 
 
-            Direction = new Vector3(MovementAxis.x, 0.0f, MovementAxis.y);
+        Direction = new Vector3(MovementAxis.x, 0.0f, MovementAxis.y);
         Direction.y = 0f;
         Rigidbody rootRigidbody = RagdollDict[ROOT].Rigidbody;
         var velocity = rootRigidbody.linearVelocity;
@@ -902,7 +913,7 @@ public class RagdollController : MonoBehaviour
 
             }
         }
-        
+
 
         //else
         //{
@@ -961,7 +972,7 @@ public class RagdollController : MonoBehaviour
 
             }
         }
-            
+
         //else
         //{
         //    rightArmJoint.targetRotation = Quaternion.Lerp(
@@ -1135,7 +1146,7 @@ public class RagdollController : MonoBehaviour
         float upperLegLerpMultiplier,
         float lowerLegLerpMultiplier)
     {
-        
+
 
         ConfigurableJoint upperLegJoint = RagdollDict[upperLegLabel].Joint;
         ConfigurableJoint lowerLegJoint = RagdollDict[lowerLegLabel].Joint;
@@ -1301,9 +1312,9 @@ public class RagdollController : MonoBehaviour
             {
                 WalkBackward = false;
             }
-            
+
         }
-        
+
 
         if (centerOfMass.position.z > RagdollDict[RIGHT_FOOT].transform.position.z &&
             centerOfMass.position.z > RagdollDict[LEFT_FOOT].transform.position.z)
@@ -1316,7 +1327,7 @@ public class RagdollController : MonoBehaviour
             {
                 WalkForward = false;
             }
-           
+
         }
     }
 
@@ -1373,7 +1384,7 @@ public class RagdollController : MonoBehaviour
         {
             return leftHandGb.grabbedObj;
         }
-        
+
         if (rightHandGb.isGrabbing)
         {
             return rightHandGb.grabbedObj;
@@ -1461,7 +1472,7 @@ public class RagdollController : MonoBehaviour
         }
     }
 
-    
+
     public void UpdateJointData(string jointName)
     {
         //switch (jointName)
@@ -1480,5 +1491,18 @@ public class RagdollController : MonoBehaviour
     {
         SetJointAngularDrives(jointName, in PoseOn);
     }
+
+    private bool IsMovementOn()
+    {
+        return movementToggle;
+    }
+
+    private void SetMovementStatus(bool status)
+    {
+        movementToggle = status;
+    }
+
+    public void TurnMovementOn() => SetMovementStatus(true);
+    public void TurnMovementOff() => SetMovementStatus(false);
 
 }
