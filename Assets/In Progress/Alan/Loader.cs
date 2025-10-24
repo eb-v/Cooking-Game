@@ -6,7 +6,7 @@ public static class Loader
     public enum Scene
     {
         MainMenu,
-        PreDuelSceneAudio1,
+        Level1Scene,
         Loading
     }
     private static Scene targetScene;
