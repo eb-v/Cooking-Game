@@ -1,11 +1,27 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
+using TMPro;
+using System.Collections.Generic;
 
 public class PauseMenu : MonoBehaviour
 {
     public GameObject container;
+    public GameObject settingsPanel;
+
+    [Header("Settings UI Elements")]
+    public Slider volumeSlider;
+    public TMP_Dropdown resolutionDropdown;
+    public TMP_Dropdown controllerTypeDropdown;
+    public Image controllerImage;
+
+    [Header("Controller Images")]
+    public Sprite ps5ControllerSprite;
+    public Sprite xboxControllerSprite;
+
     private PlayerInput playerInput;
     private bool isPausedByMenu = false;
+    private Resolution[] resolutions;
 
     void Awake()
     {
@@ -14,6 +30,58 @@ public class PauseMenu : MonoBehaviour
         {
             playerInput.actions["Pause"].performed += OnPause;
         }
+
+        // Initialize settings panel as hidden
+        if (settingsPanel != null)
+        {
+            settingsPanel.SetActive(false);
+        }
+
+        // Setup resolution dropdown
+        SetupResolutionDropdown();
+
+        // Setup volume slider
+        if (volumeSlider != null)
+        {
+            volumeSlider.value = AudioListener.volume;
+            volumeSlider.onValueChanged.AddListener(OnVolumeChanged);
+        }
+
+        // Setup controller dropdown
+        if (controllerTypeDropdown != null)
+        {
+            controllerTypeDropdown.onValueChanged.AddListener(OnControllerTypeChanged);
+            // Set initial controller image
+            OnControllerTypeChanged(controllerTypeDropdown.value);
+        }
+    }
+
+    void SetupResolutionDropdown()
+    {
+        if (resolutionDropdown == null) return;
+
+        resolutions = Screen.resolutions;
+        resolutionDropdown.ClearOptions();
+
+        List<string> options = new List<string>();
+        int currentResolutionIndex = 0;
+
+        for (int i = 0; i < resolutions.Length; i++)
+        {
+            string option = resolutions[i].width + " x " + resolutions[i].height + " @ " + resolutions[i].refreshRateRatio.value.ToString("F0") + "Hz";
+            options.Add(option);
+
+            if (resolutions[i].width == Screen.currentResolution.width &&
+                resolutions[i].height == Screen.currentResolution.height)
+            {
+                currentResolutionIndex = i;
+            }
+        }
+
+        resolutionDropdown.AddOptions(options);
+        resolutionDropdown.value = currentResolutionIndex;
+        resolutionDropdown.RefreshShownValue();
+        resolutionDropdown.onValueChanged.AddListener(OnResolutionChanged);
     }
 
     void Update()
@@ -121,5 +189,53 @@ public class PauseMenu : MonoBehaviour
         isPausedByMenu = false;
         GameStartCountdownUI.CountdownIsPaused = false;
         UnityEngine.SceneManagement.SceneManager.LoadScene("Main Menu Scene");
+    }
+
+    public void OpenSettings()
+    {
+        if (settingsPanel != null)
+        {
+            settingsPanel.SetActive(true);
+        }
+    }
+
+    public void CloseSettings()
+    {
+        if (settingsPanel != null)
+        {
+            settingsPanel.SetActive(false);
+        }
+    }
+
+    void OnVolumeChanged(float value)
+    {
+        AudioListener.volume = value;
+    }
+
+    void OnResolutionChanged(int resolutionIndex)
+    {
+        Resolution resolution = resolutions[resolutionIndex];
+        Screen.SetResolution(resolution.width, resolution.height, Screen.fullScreen);
+    }
+
+    void OnControllerTypeChanged(int index)
+    {
+        if (controllerImage == null) return;
+
+        switch (index)
+        {
+            case 0: // PS5
+                if (ps5ControllerSprite != null)
+                {
+                    controllerImage.sprite = ps5ControllerSprite;
+                }
+                break;
+            case 1: // Xbox
+                if (xboxControllerSprite != null)
+                {
+                    controllerImage.sprite = xboxControllerSprite;
+                }
+                break;
+        }
     }
 }
