@@ -89,7 +89,7 @@ public class RagdollController : MonoBehaviour
     private bool rightHandColliding;
     private bool leanForward;
     private bool leanBackward;
-    private bool movementToggle;
+    private bool movementToggle = true;
 
     [HideInInspector] public bool jumping;
     [HideInInspector] public bool isJumping;
