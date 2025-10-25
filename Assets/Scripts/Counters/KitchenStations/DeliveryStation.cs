@@ -37,14 +37,32 @@ public class DeliveryStation : BaseStation {
 
                 if (heldKitchenObj.CompareTag("AssembledItem"))
                 {
+                    // Store reference to track this delivery
+                    GameObject deliveringPlayer = player;
+                    
                     ReleaseFromHands(ragdollController, heldKitchenObj);
                     PlaceOnCounter(player, heldKitchenObj);
 
                     bool delivered = deliveryManager.TryMatchAndDeliver(heldKitchenObj);
 
-
                     if (delivered)
                     {
+                        // Get the ingredient count that DeliveryManager just calculated
+                        // (It was passed to OnDishDelivered event which goes to PointManager)
+                        int ingredientCount = deliveryManager.GetLastDeliveredIngredientCount();
+                        
+                        PlayerStats stats = deliveringPlayer.GetComponent<PlayerStats>();
+                        if (stats != null)
+                        {
+                            int pointsEarned = ingredientCount * 100;
+                            stats.AddPoints(pointsEarned);
+                            Debug.Log($"[DELIVERY SUCCESS] Player {stats.playerNumber} delivered dish with {ingredientCount} ingredients, earned {pointsEarned} points. Total: {stats.pointsGenerated}");
+                        }
+                        else
+                        {
+                            Debug.LogError($"[DELIVERY ERROR] Player {deliveringPlayer.name} has no PlayerStats component!");
+                        }
+                        
                         ClearStationObject(); 
                     }
                     else{
@@ -65,6 +83,38 @@ public class DeliveryStation : BaseStation {
         {
             Debug.Log("Player not carrying anything");
         }
+    }
+
+    // Count ingredients in the dish (recursively searches all children)
+    private int CountIngredients(GameObject dish)
+    {
+        int count = 0;
+        
+        // Recursively count all ingredients in the hierarchy
+        count = CountIngredientsRecursive(dish.transform);
+        
+        Debug.Log($"[COUNT] Found {count} ingredients in {dish.name}");
+        return count > 0 ? count : 1; // Default to 1 if no ingredients found
+    }
+    
+    private int CountIngredientsRecursive(Transform parent)
+    {
+        int count = 0;
+        
+        foreach (Transform child in parent)
+        {
+            // Check if this child is an ingredient
+            if (child.CompareTag("Ingredient"))
+            {
+                count++;
+                Debug.Log($"[COUNT] Found ingredient: {child.name}");
+            }
+            
+            // Recursively check this child's children
+            count += CountIngredientsRecursive(child);
+        }
+        
+        return count;
     }
 
     private void ReleaseFromHands(RagdollController ragdollController, GameObject heldKitchenObj)
@@ -126,5 +176,4 @@ public class DeliveryStation : BaseStation {
             Debug.Log("DeliveryStation has no object to remove");
         }
     }
-
 }
