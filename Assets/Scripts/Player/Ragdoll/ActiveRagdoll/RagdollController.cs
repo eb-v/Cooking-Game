@@ -1003,9 +1003,6 @@ public class RagdollController : MonoBehaviour
         GenericEvent<ObjectGrabbed>.GetEvent(gameObject.name).Invoke(objToGrab);
         hand.GetComponent<GrabDetection>().grabbedObj = objToGrab;
         
-        // Track if we're helping another player
-        CheckIfHelpingTeammate(objToGrab);
-        
         // ADD THIS: Track ingredient handling
         if (objToGrab.CompareTag("Ingredient") || objToGrab.GetComponent<Ingredient>() != null)
         {
@@ -1014,27 +1011,6 @@ public class RagdollController : MonoBehaviour
             {
                 stats.IncrementIngredientsHandled();
             }
-        }
-    }
-
-    private void CheckIfHelpingTeammate(GameObject grabbedObject)
-    {
-        Transform checkTransform = grabbedObject.transform;
-        
-        while (checkTransform != null)
-        {
-            PlayerStats otherPlayerStats = checkTransform.GetComponent<PlayerStats>();
-            
-            if (otherPlayerStats != null && otherPlayerStats != playerStats)
-            {
-                if (playerStats != null)
-                {
-                    playerStats.IncrementTeammatesRevived();
-                }
-                break;
-            }
-            
-            checkTransform = checkTransform.parent;
         }
     }
 

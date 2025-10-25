@@ -7,7 +7,7 @@ using UnityEngine.InputSystem;
 public class EndGameAwards : MonoBehaviour
 {
     [Header("Award Display")]
-    [SerializeField] private GameObject awardDisplayPanel; // This IS your end game canvas
+    [SerializeField] private GameObject awardDisplayPanel;
     [SerializeField] private Transform playerDisplayPosition;
     [SerializeField] private TextMeshProUGUI awardTitleText;
     [SerializeField] private TextMeshProUGUI awardDescriptionText;
@@ -24,6 +24,23 @@ public class EndGameAwards : MonoBehaviour
     
     public void ShowAwards()
     {
+        // DEBUG: Check all players before starting ceremony
+        Debug.Log("=== PRE-CEREMONY DEBUG ===");
+        List<PlayerStats> debugPlayers = PlayerManager.Instance.GetAllPlayers();
+        Debug.Log($"Total players found: {debugPlayers.Count}");
+        foreach (var player in debugPlayers)
+        {
+            if (player != null)
+            {
+                Debug.Log($"Player {player.playerNumber} - Points: {player.pointsGenerated}, Ingredients: {player.ingredientsHandled}, Joints: {player.jointsReconnected}, Explosions: {player.explosionsReceived}");
+            }
+            else
+            {
+                Debug.LogWarning("Found NULL player in list!");
+            }
+        }
+        Debug.Log("=== END PRE-CEREMONY DEBUG ===");
+        
         StartCoroutine(AwardCeremony());
     }
     
@@ -68,15 +85,15 @@ public class EndGameAwards : MonoBehaviour
             
             if (ceremonyCancelled) yield break;
             
-            // Guardian Angel Award (only if someone revived)
+            // Guardian Angel Award (only if someone reconnected joints)
             var guardianWinners = GetGuardianAngelWinners();
             if (guardianWinners.Count > 0)
             {
                 yield return StartCoroutine(ShowAward(
                     "Guardian Angel",
-                    "Most Teammates Revived",
+                    "Most Joints Reconnected",
                     guardianWinners,
-                    (player) => $"Revives: {player.teammatesRevived}"
+                    (player) => $"Joints: {player.jointsReconnected}"
                 ));
             }
             
@@ -85,9 +102,9 @@ public class EndGameAwards : MonoBehaviour
             // Noob Award
             yield return StartCoroutine(ShowAward(
                 "Noob",
-                "Least Points Generated",
+                "Worst Performance (Low Points + High Explosions)",
                 GetNoobWinners(),
-                (player) => $"Points: {player.pointsGenerated}"
+                (player) => $"Points: {player.pointsGenerated} | Explosions: {player.explosionsReceived}"
             ));
             
             if (ceremonyCancelled) yield break;
@@ -114,10 +131,7 @@ public class EndGameAwards : MonoBehaviour
         
         Debug.Log($"Showing award: {title}");
         
-        // Set award text
-        if (awardTitleText != null)
-            awardTitleText.text = title;
-        
+        // Set award description
         if (awardDescriptionText != null)
             awardDescriptionText.text = description;
         
@@ -135,8 +149,18 @@ public class EndGameAwards : MonoBehaviour
                 stats += " | ";
         }
         
+        // Add 's' to title if multiple winners (except for "Hot Hands" which already ends in 's')
+        string displayTitle = title;
+        if (winners.Count > 1 && title != "Hot Hands")
+        {
+            displayTitle += "s";
+        }
+        
         if (playerNamesText != null)
             playerNamesText.text = playerNames;
+        
+        if (awardTitleText != null)
+            awardTitleText.text = displayTitle;
         
         if (statsText != null)
         {
@@ -248,6 +272,13 @@ public class EndGameAwards : MonoBehaviour
                 maxPoints = player.pointsGenerated;
         }
         
+        // Skip award if no one scored any points
+        if (maxPoints == 0)
+        {
+            Debug.Log("No points scored this game - skipping MVP award");
+            return new List<PlayerStats>();
+        }
+        
         List<PlayerStats> winners = new List<PlayerStats>();
         foreach (var player in allPlayers)
         {
@@ -265,16 +296,16 @@ public class EndGameAwards : MonoBehaviour
         
         if (allPlayers.Count == 0) return new List<PlayerStats>();
         
-        int maxRevives = 0;
+        int maxReconnections = 0;
         foreach (var player in allPlayers)
         {
-            if (player != null && player.teammatesRevived > maxRevives)
-                maxRevives = player.teammatesRevived;
+            if (player != null && player.jointsReconnected > maxReconnections)
+                maxReconnections = player.jointsReconnected;
         }
         
-        if (maxRevives == 0)
+        if (maxReconnections == 0)
         {
-            Debug.Log("No revives this game - skipping Guardian Angel award");
+            Debug.Log("No joint reconnections this game - skipping Guardian Angel award");
             return new List<PlayerStats>();
         }
         
@@ -282,17 +313,17 @@ public class EndGameAwards : MonoBehaviour
         Debug.Log("=== Guardian Angel Award ===");
         foreach (var player in allPlayers)
         {
-            Debug.Log($"Player {player.playerNumber}: {player.teammatesRevived} revives");
+            Debug.Log($"Player {player.playerNumber}: {player.jointsReconnected} joints reconnected");
         }
         
         List<PlayerStats> winners = new List<PlayerStats>();
         foreach (var player in allPlayers)
         {
-            if (player != null && player.teammatesRevived == maxRevives)
+            if (player != null && player.jointsReconnected == maxReconnections)
                 winners.Add(player);
         }
         
-        Debug.Log($"Guardian Angel Winner(s): {winners.Count} player(s) with {maxRevives} revives");
+        Debug.Log($"Guardian Angel Winner(s): {winners.Count} player(s) with {maxReconnections} reconnections");
         return winners;
     }
     
@@ -310,24 +341,38 @@ public class EndGameAwards : MonoBehaviour
         Debug.Log("=== Noob Award ===");
         foreach (var player in allPlayers)
         {
-            Debug.Log($"Player {player.playerNumber}: {player.pointsGenerated} points");
+            Debug.Log($"Player {player.playerNumber}: {player.pointsGenerated} points, {player.explosionsReceived} explosions");
         }
         
-        int minPoints = int.MaxValue;
+        // Calculate "noob score" - combination of low points and high explosions
+        // Lower points = worse, more explosions = worse
+        // Formula: points - (explosions * weight)
+        // The LOWEST score wins the noob award
+        float worstScore = float.MaxValue;
+        int explosionWeight = 10; // Each explosion is worth -10 points in the noob score
+        
         foreach (var player in allPlayers)
         {
-            if (player != null && player.pointsGenerated < minPoints)
-                minPoints = player.pointsGenerated;
+            if (player != null)
+            {
+                float noobScore = player.pointsGenerated - (player.explosionsReceived * explosionWeight);
+                if (noobScore < worstScore)
+                    worstScore = noobScore;
+            }
         }
         
         List<PlayerStats> winners = new List<PlayerStats>();
         foreach (var player in allPlayers)
         {
-            if (player != null && player.pointsGenerated == minPoints)
-                winners.Add(player);
+            if (player != null)
+            {
+                float noobScore = player.pointsGenerated - (player.explosionsReceived * explosionWeight);
+                if (Mathf.Approximately(noobScore, worstScore))
+                    winners.Add(player);
+            }
         }
         
-        Debug.Log($"Noob Winner(s): {winners.Count} player(s) with {minPoints} points");
+        Debug.Log($"Noob Winner(s): {winners.Count} player(s) with worst score of {worstScore}");
         return winners;
     }
     
