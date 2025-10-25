@@ -52,7 +52,7 @@ public class EndGameAwards : MonoBehaviour
             yield return StartCoroutine(ShowAward(
                 "Hot Hands",
                 "Most Ingredients Handled",
-                PlayerManager.Instance.GetHotHandsWinners(),
+                GetHotHandsWinners(),
                 (player) => $"Ingredients: {player.ingredientsHandled}"
             ));
             
@@ -62,14 +62,14 @@ public class EndGameAwards : MonoBehaviour
             yield return StartCoroutine(ShowAward(
                 "MVP",
                 "Most Points Generated",
-                PlayerManager.Instance.GetMVPWinners(),
+                GetMVPWinners(),
                 (player) => $"Points: {player.pointsGenerated}"
             ));
             
             if (ceremonyCancelled) yield break;
             
             // Guardian Angel Award (only if someone revived)
-            var guardianWinners = PlayerManager.Instance.GetGuardianAngelWinners();
+            var guardianWinners = GetGuardianAngelWinners();
             if (guardianWinners.Count > 0)
             {
                 yield return StartCoroutine(ShowAward(
@@ -86,7 +86,7 @@ public class EndGameAwards : MonoBehaviour
             yield return StartCoroutine(ShowAward(
                 "Noob",
                 "Least Points Generated",
-                PlayerManager.Instance.GetNoobWinners(),
+                GetNoobWinners(),
                 (player) => $"Points: {player.pointsGenerated}"
             ));
             
@@ -186,6 +186,152 @@ public class EndGameAwards : MonoBehaviour
         
         yield return new WaitForSecondsRealtime(0.5f);
     }
+    
+    // ==================== AWARD WINNER CALCULATION METHODS ====================
+    
+    private List<PlayerStats> GetHotHandsWinners()
+    {
+        List<PlayerStats> allPlayers = PlayerManager.Instance.GetAllPlayers();
+        
+        if (allPlayers.Count == 0)
+        {
+            Debug.LogWarning("No players found for Hot Hands award");
+            return new List<PlayerStats>();
+        }
+        
+        // Debug all player stats
+        Debug.Log("=== Hot Hands Award ===");
+        foreach (var player in allPlayers)
+        {
+            Debug.Log($"Player {player.playerNumber}: {player.ingredientsHandled} ingredients");
+        }
+        
+        int maxIngredients = 0;
+        foreach (var player in allPlayers)
+        {
+            if (player != null && player.ingredientsHandled > maxIngredients)
+                maxIngredients = player.ingredientsHandled;
+        }
+        
+        List<PlayerStats> winners = new List<PlayerStats>();
+        foreach (var player in allPlayers)
+        {
+            if (player != null && player.ingredientsHandled == maxIngredients)
+                winners.Add(player);
+        }
+        
+        Debug.Log($"Hot Hands Winner(s): {winners.Count} player(s) with {maxIngredients} ingredients");
+        return winners;
+    }
+    
+    private List<PlayerStats> GetMVPWinners()
+    {
+        List<PlayerStats> allPlayers = PlayerManager.Instance.GetAllPlayers();
+        
+        if (allPlayers.Count == 0)
+        {
+            Debug.LogWarning("No players found for MVP award");
+            return new List<PlayerStats>();
+        }
+        
+        // Debug all player stats
+        Debug.Log("=== MVP Award ===");
+        foreach (var player in allPlayers)
+        {
+            Debug.Log($"Player {player.playerNumber}: {player.pointsGenerated} points");
+        }
+        
+        int maxPoints = 0;
+        foreach (var player in allPlayers)
+        {
+            if (player != null && player.pointsGenerated > maxPoints)
+                maxPoints = player.pointsGenerated;
+        }
+        
+        List<PlayerStats> winners = new List<PlayerStats>();
+        foreach (var player in allPlayers)
+        {
+            if (player != null && player.pointsGenerated == maxPoints)
+                winners.Add(player);
+        }
+        
+        Debug.Log($"MVP Winner(s): {winners.Count} player(s) with {maxPoints} points");
+        return winners;
+    }
+    
+    private List<PlayerStats> GetGuardianAngelWinners()
+    {
+        List<PlayerStats> allPlayers = PlayerManager.Instance.GetAllPlayers();
+        
+        if (allPlayers.Count == 0) return new List<PlayerStats>();
+        
+        int maxRevives = 0;
+        foreach (var player in allPlayers)
+        {
+            if (player != null && player.teammatesRevived > maxRevives)
+                maxRevives = player.teammatesRevived;
+        }
+        
+        if (maxRevives == 0)
+        {
+            Debug.Log("No revives this game - skipping Guardian Angel award");
+            return new List<PlayerStats>();
+        }
+        
+        // Debug all player stats
+        Debug.Log("=== Guardian Angel Award ===");
+        foreach (var player in allPlayers)
+        {
+            Debug.Log($"Player {player.playerNumber}: {player.teammatesRevived} revives");
+        }
+        
+        List<PlayerStats> winners = new List<PlayerStats>();
+        foreach (var player in allPlayers)
+        {
+            if (player != null && player.teammatesRevived == maxRevives)
+                winners.Add(player);
+        }
+        
+        Debug.Log($"Guardian Angel Winner(s): {winners.Count} player(s) with {maxRevives} revives");
+        return winners;
+    }
+    
+    private List<PlayerStats> GetNoobWinners()
+    {
+        List<PlayerStats> allPlayers = PlayerManager.Instance.GetAllPlayers();
+        
+        if (allPlayers.Count == 0)
+        {
+            Debug.LogWarning("No players found for Noob award");
+            return new List<PlayerStats>();
+        }
+        
+        // Debug all player stats
+        Debug.Log("=== Noob Award ===");
+        foreach (var player in allPlayers)
+        {
+            Debug.Log($"Player {player.playerNumber}: {player.pointsGenerated} points");
+        }
+        
+        int minPoints = int.MaxValue;
+        foreach (var player in allPlayers)
+        {
+            if (player != null && player.pointsGenerated < minPoints)
+                minPoints = player.pointsGenerated;
+        }
+        
+        List<PlayerStats> winners = new List<PlayerStats>();
+        foreach (var player in allPlayers)
+        {
+            if (player != null && player.pointsGenerated == minPoints)
+                winners.Add(player);
+        }
+        
+        Debug.Log($"Noob Winner(s): {winners.Count} player(s) with {minPoints} points");
+        return winners;
+    }
+    
+    // ==================== VISUAL COPY METHODS ====================
     
     private GameObject CreateVisualOnlyCopy(GameObject original, Vector3 position, Quaternion rotation)
     {
