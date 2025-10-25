@@ -128,7 +128,7 @@ public class RagdollController : MonoBehaviour
     private Dictionary<string, Vector3> originalLocalPositions = new Dictionary<string, Vector3>();
     private Dictionary<string, Quaternion> originalLocalRotations = new Dictionary<string, Quaternion>();
 
-
+    private PlayerStats playerStats;
 
 
     private static int groundLayer;
@@ -163,6 +163,7 @@ public class RagdollController : MonoBehaviour
 
         GenericEvent<ReleaseHeldJoint>.GetEvent(gameObject.name).AddListener(PlayerReleaseGrab);
 
+        // playerStats = GetComponent<PlayerStats>();
     }
 
 
@@ -987,6 +988,7 @@ public class RagdollController : MonoBehaviour
     {
         if (hand.GetComponent<GrabDetection>().isGrabbing == true)
             return;
+        
         FixedJoint grabJoint = hand.transform.parent.gameObject.AddComponent<FixedJoint>();
         if (objToGrab.GetComponent<Rigidbody>() == null)
         {
@@ -996,11 +998,44 @@ public class RagdollController : MonoBehaviour
         {
             grabJoint.connectedBody = objToGrab.GetComponent<Rigidbody>();
         }
-
+        
         hand.GetComponent<GrabDetection>().isGrabbing = true;
         GenericEvent<ObjectGrabbed>.GetEvent(gameObject.name).Invoke(objToGrab);
         hand.GetComponent<GrabDetection>().grabbedObj = objToGrab;
+        
+        // Track if we're helping another player
+        CheckIfHelpingTeammate(objToGrab);
+        
+        // ADD THIS: Track ingredient handling
+        if (objToGrab.CompareTag("Ingredient") || objToGrab.GetComponent<Ingredient>() != null)
+        {
+            PlayerStats stats = GetComponent<PlayerStats>();
+            if (stats != null)
+            {
+                stats.IncrementIngredientsHandled();
+            }
+        }
+    }
 
+    private void CheckIfHelpingTeammate(GameObject grabbedObject)
+    {
+        Transform checkTransform = grabbedObject.transform;
+        
+        while (checkTransform != null)
+        {
+            PlayerStats otherPlayerStats = checkTransform.GetComponent<PlayerStats>();
+            
+            if (otherPlayerStats != null && otherPlayerStats != playerStats)
+            {
+                if (playerStats != null)
+                {
+                    playerStats.IncrementTeammatesRevived();
+                }
+                break;
+            }
+            
+            checkTransform = checkTransform.parent;
+        }
     }
 
     private void PlayerReleaseGrab(GameObject hand)
