@@ -5,7 +5,8 @@ public class PlayerStats : MonoBehaviour
     public int playerNumber;
     public int ingredientsHandled = 0;
     public int pointsGenerated = 0;
-    public int teammatesRevived = 0;
+    public int jointsReconnected = 0;  // Changed from teammatesRevived
+    public int explosionsReceived = 0;
     
     // Call this whenever player picks up/handles an ingredient
     public void IncrementIngredientsHandled()
@@ -21,11 +22,18 @@ public class PlayerStats : MonoBehaviour
         Debug.Log($"Player {playerNumber} - Total Points: {pointsGenerated}");
     }
     
-    // Call this when player revives a teammate
-    public void IncrementTeammatesRevived()
+    // Call this when player reconnects a joint to another player
+    public void IncrementJointsReconnected()
     {
-        teammatesRevived++;
-        Debug.Log($"Player {playerNumber} - Teammates Revived: {teammatesRevived}");
+        jointsReconnected++;
+        Debug.Log($"Player {playerNumber} - Joints Reconnected: {jointsReconnected}");
+    }
+    
+    // Call this when player receives an explosion
+    public void IncrementExplosionsReceived()
+    {
+        explosionsReceived++;
+        Debug.Log($"Player {playerNumber} - Explosions Received: {explosionsReceived}");
     }
     
     // Get reference to this player's character/prefab
@@ -37,6 +45,6 @@ public class PlayerStats : MonoBehaviour
     // Get all stats as a formatted string (useful for debugging)
     public string GetStatsString()
     {
-        return $"Player {playerNumber}\nIngredients: {ingredientsHandled}\nPoints: {pointsGenerated}\nRevives: {teammatesRevived}";
+        return $"Player {playerNumber}\nIngredients: {ingredientsHandled}\nPoints: {pointsGenerated}\nJoints Reconnected: {jointsReconnected}\nExplosions: {explosionsReceived}";
     }
 }
