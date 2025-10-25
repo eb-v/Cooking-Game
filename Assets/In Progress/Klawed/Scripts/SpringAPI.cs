@@ -6,11 +6,10 @@ public class SpringAPI : MonoBehaviour
     private DampedSpringMotionParams _motionParams;
     private float springPosValue;
     private float springVelValue;
-    private float goalValue;
+    public float goalValue = 0f;
 
     public float angularFrequency = 10f;
     public float dampingRatio = 0.7f;
-    public float multiplier = 1f;
     public float maxGoal = 1f;
     public float minGoal = 0f;
 
@@ -27,7 +26,7 @@ public class SpringAPI : MonoBehaviour
         OnUpdateSpring(springPosValue);
     }
 
-    public float CalculateSpringValue()
+    private float CalculateSpringValue()
     {
         float deltaTime = Time.deltaTime;
         CalcDampedSpringMotionParams(out _motionParams, deltaTime, angularFrequency, dampingRatio);

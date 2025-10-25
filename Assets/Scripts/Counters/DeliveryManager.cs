@@ -15,6 +15,9 @@ public class DeliveryManager: MonoBehaviour {
     //change max after testing
     private int waitingRecipesMax = 4;
     public UnityEvent OnRecipeListChanged;
+    
+    // ADDED: Track last delivered ingredient count
+    private int lastDeliveredIngredientCount = 0;
 
     private void Awake() {
         waitingRecipeSOList = new List<RecipeSO>();
@@ -79,40 +82,51 @@ public class DeliveryManager: MonoBehaviour {
 
 
     public bool TryMatchAndDeliver(GameObject assembledGO) 
-{
-    AssembledItemObject assembledItem = assembledGO.GetComponent<AssembledItemObject>();
-    if (assembledItem == null)
     {
-        Debug.LogError("Held object has no AssembledItemObject!");
+        AssembledItemObject assembledItem = assembledGO.GetComponent<AssembledItemObject>();
+        if (assembledItem == null)
+        {
+            Debug.LogError("Held object has no AssembledItemObject!");
+            return false;
+        }
+
+        foreach (RecipeSO recipe in waitingRecipeSOList) {
+            if (MatchesRecipe(assembledItem, recipe)) {
+                Debug.Log("Delivered: " + recipe.recipeName);
+
+                // Calculate ingredient count
+                int ingredientCount = recipe.CuttingRecipeSOList.Count + recipe.CookingRecipeSOList.Count;
+                
+                // ADDED: Store the ingredient count so DeliveryStation can access it
+                lastDeliveredIngredientCount = ingredientCount;
+
+                // destroy gameobject after 1 sec
+                GameObject.Destroy(assembledGO, 1f);
+
+                // update scoring with ingredient count
+                if (PointManager.Instance != null) {
+                    PointManager.Instance.AddDeliveredDish(ingredientCount);
+                }
+                else
+                    Debug.LogError("PointManager.Instance is null!");
+
+                waitingRecipeSOList.Remove(recipe);
+
+                OnRecipeListChanged?.Invoke();
+
+                return true;
+            }
+        }
+
+        Debug.Log("Assembled item does not match any active order.");
         return false;
     }
-
-    foreach (RecipeSO recipe in waitingRecipeSOList) {
-        if (MatchesRecipe(assembledItem, recipe)) {
-            Debug.Log("Delivered: " + recipe.recipeName);
-
-            // destroy gameobject after 1 sec
-            GameObject.Destroy(assembledGO, 1f);
-
-            // update scoring with ingredient count
-            if (PointManager.Instance != null) {
-                int ingredientCount = recipe.CuttingRecipeSOList.Count + recipe.CookingRecipeSOList.Count;
-                PointManager.Instance.AddDeliveredDish(ingredientCount);
-            }
-            else
-                Debug.LogError("PointManager.Instance is null!");
-
-            waitingRecipeSOList.Remove(recipe);
-
-            OnRecipeListChanged?.Invoke();
-
-            return true;
-        }
+    
+    // ADDED: Method to get the last delivered ingredient count
+    public int GetLastDeliveredIngredientCount()
+    {
+        return lastDeliveredIngredientCount;
     }
-
-    Debug.Log("Assembled item does not match any active order.");
-    return false;
-}
 
     public RecipeSO GetMatchingRecipeFromAll(AssembledItemObject assembledItem)
     {
@@ -123,7 +137,4 @@ public class DeliveryManager: MonoBehaviour {
         }
         return null; // no match
     }
-
-
-
 }

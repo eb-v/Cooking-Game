@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.InputSystem;
 
 public class OnMoveInput : UnityEvent<Vector2> { }
 public class OnJumpInput : UnityEvent { }
@@ -97,4 +98,10 @@ public class UpdateGoalValueEvent : UnityEvent<float> { }
 public class SpringUpdateEvent : UnityEvent<float> { }
 
 public class OnButtonPressedEvent : UnityEvent { }
+
+public class  OnPlayerJoinedEvent : UnityEvent<PlayerInput> { }
+
+public class OnChangeColorEvent : UnityEvent<GameObject> { }
+
+public class OnChangeHatEvent : UnityEvent<GameObject> { }
 

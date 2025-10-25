@@ -3,8 +3,6 @@ using UnityEngine;
 [RequireComponent(typeof(SpringAPI))]
 public class ScaleSpringScript : MonoBehaviour, ISpringUI
 {
-    public float angularFrequency = 10f;
-    public float dampingRatio = 0.7f;
     public float multiplier = 1f;
     public float baseScale = 1f;
 

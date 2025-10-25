@@ -703,6 +703,7 @@ GameObject:
   - component: {fileID: 1715013345}
   - component: {fileID: 1715013344}
   - component: {fileID: 1715013346}
+  - component: {fileID: 1715013347}
   m_Layer: 5
   m_Name: GreenBoxVisual
   m_TagString: Untagged
@@ -782,6 +783,25 @@ MonoBehaviour:
   angularFrequency: 15
   dampingRatio: 0.41
   multiplier: 2
+  baseScale: 1
+--- !u!114 &1715013347
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1715013341}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 99c2ce2b3939a114c8b87eca0217dcdb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SpringAPI
+  angularFrequency: 17
+  dampingRatio: 0.7
+  multiplier: 1
+  maxGoal: 1
+  minGoal: 0
+  nudgeStrength: 1
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
