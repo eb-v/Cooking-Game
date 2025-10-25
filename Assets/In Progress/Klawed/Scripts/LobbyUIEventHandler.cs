@@ -28,6 +28,7 @@ public class LobbyUIEventHandler : MonoBehaviour
     private InputAction navigateAction;
     private InputAction nextOptionAction;
     private InputAction previousOptionAction;
+    private InputAction readyAction;
 
     [SerializeField] private int _uiIndex = 0;
     [SerializeField] private GameObject _currentSelectedObj;
@@ -48,13 +49,7 @@ public class LobbyUIEventHandler : MonoBehaviour
         _uiIndex = 0;
         SetSelectedUIObj(_uiIndex);
 
-        navigateAction.performed += OnNavigate;
-        nextOptionAction.performed += OnNextOption;
-        previousOptionAction.performed += OnPreviousOption;
-
-        navigateAction.Enable();
-        nextOptionAction.Enable();
-        previousOptionAction.Enable();
+        
     }
 
     public virtual void OnDisable()
@@ -64,10 +59,12 @@ public class LobbyUIEventHandler : MonoBehaviour
         navigateAction.performed -= OnNavigate;
         nextOptionAction.performed -= OnNextOption;
         previousOptionAction.performed -= OnPreviousOption;
+        readyAction.performed -= OnReadyInput;
 
         navigateAction.Disable();
         nextOptionAction.Disable();
         previousOptionAction.Disable();
+        readyAction.Disable();
     }
 
     protected virtual IEnumerator SelectAfterDelay()
@@ -100,6 +97,7 @@ public class LobbyUIEventHandler : MonoBehaviour
         // handle visuals for next option button press
         NextPreviousButton nextPrevButtons = _currentSelectedObj.GetComponent<NextPreviousButton>();
         SpringAPI springAPI = nextPrevButtons.nextButton.GetComponent<SpringAPI>();
+
         springAPI.NudgeSpringVelocity();
 
         // find out what specific option is selected
@@ -141,6 +139,13 @@ public class LobbyUIEventHandler : MonoBehaviour
         }
     }
 
+    protected virtual void OnReadyInput(InputAction.CallbackContext context)
+    {
+        GenericEvent<PlayerReadyEvent>.GetEvent(gameObject.name).Invoke();
+    }
+
+    
+
     private void AssignPlayerInputValues(PlayerInput playerInput)
     {
         _playerInput = playerInput;
@@ -151,6 +156,18 @@ public class LobbyUIEventHandler : MonoBehaviour
         navigateAction = lobbyActionMap.FindAction("Navigate");
         nextOptionAction = lobbyActionMap.FindAction("NextOption");
         previousOptionAction = lobbyActionMap.FindAction("PreviousOption");
+        readyAction = lobbyActionMap.FindAction("ReadyInput");
+
+        navigateAction.performed += OnNavigate;
+        nextOptionAction.performed += OnNextOption;
+        previousOptionAction.performed += OnPreviousOption;
+        readyAction.performed += OnReadyInput;
+
+        navigateAction.Enable();
+        nextOptionAction.Enable();
+        previousOptionAction.Enable();
+        readyAction.Enable();
+
     }
 
    

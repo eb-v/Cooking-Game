@@ -17,7 +17,6 @@ public class SpringAPI : MonoBehaviour
 
     private void Start()
     {
-        GenericEvent<OnButtonPressedEvent>.GetEvent("me").AddListener(NudgeSpringVelocity); 
     }
 
     private void Update()
@@ -55,7 +54,13 @@ public class SpringAPI : MonoBehaviour
         springVelValue += nudgeStrength;
     }
 
-    
+    public void ResetSpring()
+    {
+        springPosValue = 0f;
+        springVelValue = 0f;
+    }
+
+
 }
 
 

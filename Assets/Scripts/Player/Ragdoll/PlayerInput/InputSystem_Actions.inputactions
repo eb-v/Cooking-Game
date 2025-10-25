@@ -1021,6 +1021,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "ReadyInput",
+                    "type": "Button",
+                    "id": "a3aff83d-baeb-4a4a-a346-38fa0e9906fd",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -1230,6 +1239,17 @@
                     "processors": "",
                     "groups": ";Gamepad",
                     "action": "NextOption",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "cdbbf42c-74a3-4783-8980-ce22527afe27",
+                    "path": "<Gamepad>/buttonNorth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Gamepad",
+                    "action": "ReadyInput",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

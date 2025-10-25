@@ -41,18 +41,29 @@ public class PlayerManager : MonoBehaviour
             Debug.LogError("Not enough spawn points for all players!");
             return;
         }
+
         
+
         playerInput.transform.position = SpawnPoints[m_playerCount].position;
         players.Add(playerInput.gameObject);
         m_playerCount++;
         playerInput.name = "Player " + m_playerCount;
-        
+
+        if (currentScene.name == "PregameLobbyScene")
+        {
+            playerInput.SwitchCurrentActionMap("Lobby");
+            lobbyUIManager.EnablePlayerCanvas(m_playerCount);
+        }
+
+
+        GenericEvent<OnPlayerJoinedEvent>.GetEvent(playerInput.gameObject.name).Invoke(playerInput);
+
         // Get or add PlayerStats component
         PlayerStats stats = playerInput.gameObject.GetComponent<PlayerStats>();
         if (stats == null)
         {
             stats = playerInput.gameObject.AddComponent<PlayerStats>();
-            Debug.Log($"Added new PlayerStats component to Player {m_playerCount}");
+           // Debug.Log($"Added new PlayerStats component to Player {m_playerCount}");
         }
         
         // Set player number
@@ -62,16 +73,9 @@ public class PlayerManager : MonoBehaviour
         if (!allPlayers.Contains(stats))
         {
             allPlayers.Add(stats);
-            Debug.Log($"Player {m_playerCount} registered for awards tracking");
+            // Debug.Log($"Player {m_playerCount} registered for awards tracking");
         }
         
-        GenericEvent<OnPlayerJoinedEvent>.GetEvent(playerInput.gameObject.name).Invoke(playerInput);
-        
-        if (currentScene.name == "PregameLobbyScene")
-        {
-            playerInput.SwitchCurrentActionMap("Lobby");
-            lobbyUIManager.EnablePlayerCanvas(m_playerCount);
-        }
     }
     
     // Method needed by EndGameAwards to get all players

@@ -105,3 +105,7 @@ public class OnChangeColorEvent : UnityEvent<GameObject> { }
 
 public class OnChangeHatEvent : UnityEvent<GameObject> { }
 
+public class PlayerReadyEvent : UnityEvent { }
+
+public class PlayerUnReadyEvent : UnityEvent { }
+
