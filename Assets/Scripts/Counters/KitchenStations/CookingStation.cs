@@ -31,7 +31,8 @@ public class CookingStation : BaseStation, IPrepStation {
     [SerializeField] private CookingRecipeSO[] cookingRecipeSOArray;
 
     [Header("Fire Effects")]
-    //[SerializeField] private FireEffect fireEffect;
+    [SerializeField] private FireController fireEffectPrefab;
+    private FireController activeFire;
 
     public GameObject currentUser { get; set; }
     private bool _isBeingUsed;
@@ -221,40 +222,49 @@ public class CookingStation : BaseStation, IPrepStation {
         isBurning = true;
         isComplete = false;
 
-        CookingRecipeSO recipe = GetCookingRecipeWithInput(ingredientInPan);
         Vector3 panPos = panOnStove.transform.position + Vector3.up * 0.1f;
 
-        Destroy(ingredientInPan);
+        // Spawn burnt version first
+        CookingRecipeSO recipe = GetCookingRecipeWithInput(ingredientInPan);
 
-        GameObject burntObj = null;
+        GameObject burntObj;
 
-        // start the fire...
-        //if (isBurning && fireEffect != null) {
-        //    fireEffect.StartFire();
-        //}
-
-
-        if (recipe != null && recipe.canBurn && recipe.burntOutput != null) {
+        if (recipe != null && recipe.canBurn && recipe.burntOutput != null)
             burntObj = ObjectPoolManager.SpawnObject(recipe.burntOutput, panPos, Quaternion.identity);
-        } else {
+        else {
             burntObj = ObjectPoolManager.SpawnObject(ingredientInPan, panPos, Quaternion.identity);
             burntObj.name = "Burnt " + ingredientInPan.name;
             var renderer = burntObj.GetComponentInChildren<Renderer>();
-            if (renderer != null) renderer.material.color = Color.black;
+            if (renderer != null)
+                renderer.material.color = Color.black;
         }
 
+        // Remove original ingredient after spawning burnt version
+        Destroy(ingredientInPan);
         burntObj.transform.SetParent(panOnStove.transform);
         burntObj.transform.localPosition = Vector3.up * 0.1f;
         burntObj.GetComponent<Rigidbody>().isKinematic = true;
-
         ingredientInPan = burntObj;
+
+        // Always instantiate a new fire prefab — don’t reuse old activeFire
+        if (fireEffectPrefab != null) {
+            Debug.Log("Spawning fire effect.");
+            FireController fire = ObjectPoolManager
+                .SpawnObject(fireEffectPrefab.gameObject, panPos, Quaternion.identity)
+                .GetComponent<FireController>();
+
+            fire.ResetFire();
+            fire.StartFire();
+            Debug.Log("Fire effect started.");
+        }
 
         if (completeText != null) {
             completeText.text = "Burnt!";
             completeText.gameObject.SetActive(true);
         }
 
-        if (fillImage != null) fillImage.color = burnColor;
+        if (fillImage != null)
+            fillImage.color = burnColor;
 
         Debug.Log("Item has burnt!");
     }
@@ -283,11 +293,14 @@ public class CookingStation : BaseStation, IPrepStation {
         _isBeingUsed = false;
         isCooking = false;
 
-        //if (fireEffect != null) {
-        //    fireEffect.StopFire();
-        //}
+        if (activeFire != null) {
+            activeFire.StopFire();
 
-        //fireEffect.gameObject.SetActive(false);
+            if (activeFire.gameObject != null)
+                Destroy(activeFire.gameObject, 1f);
+
+            activeFire = null;
+        }
 
         Debug.Log("Item set above pan");
     }
