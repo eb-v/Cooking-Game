@@ -1,14 +1,15 @@
 using UnityEngine;
 
-[RequireComponent(typeof(SpringAPI))]
 public class ScaleSpringScript : MonoBehaviour, ISpringUI
 {
     public float multiplier = 1f;
     public float baseScale = 1f;
+    // this should match the name of the gameObject that has the SpringAPI component
+    [SerializeField] private string _assignedChannel;
 
     void Start()
     {
-        GenericEvent<SpringUpdateEvent>.GetEvent(gameObject.name).AddListener(OnSpringValueRecieved);
+        GenericEvent<SpringUpdateEvent>.GetEvent(_assignedChannel).AddListener(OnSpringValueRecieved);
     }
 
 

@@ -1,7 +1,7 @@
 using UnityEngine;
 using static UISprings;
 
-public class SpringAPI : MonoBehaviour
+public class SpringAPI : MonoBehaviour, IEventChannel
 {
     private DampedSpringMotionParams _motionParams;
     private float springPosValue;
@@ -12,6 +12,8 @@ public class SpringAPI : MonoBehaviour
     public float dampingRatio = 0.7f;
     public float maxGoal = 1f;
     public float minGoal = 0f;
+
+    public string eventChannel => gameObject.name;
 
     public float nudgeStrength = 1f;
 
@@ -40,8 +42,8 @@ public class SpringAPI : MonoBehaviour
         GenericEvent<SpringUpdateEvent>.GetEvent(gameObject.name).Invoke(springPosValue);
     }
 
-
     
+
     public void SetGoalValue(float value)
     {
         // for most cases, this should be clamped between 0 and 1
