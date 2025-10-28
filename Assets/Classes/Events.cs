@@ -109,3 +109,10 @@ public class PlayerReadyEvent : UnityEvent { }
 
 public class PlayerUnReadyEvent : UnityEvent { }
 
+public class CrateLandedEvent : UnityEvent { }
+
+public class IngredientOrderedEvent : UnityEvent<GameObject> { }
+
+public class DPadInteractEvent : UnityEvent<Vector2> { }
+
+public class StartTrainEvent : UnityEvent { }

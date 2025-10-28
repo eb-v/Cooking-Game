@@ -130,6 +130,17 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public void OnDpadInteract(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            if (env_Interaction.currentlyLookingAt == null) return;
+            Vector2 dpadInput = context.ReadValue<Vector2>();
+            if (dpadInput == Vector2.zero) return;
+            GenericEvent<DPadInteractEvent>.GetEvent(env_Interaction.currentlyLookingAt.name).Invoke(dpadInput);
+        }
+    }
+
     public void OnRemoveObjectFromKitchenProp(InputAction.CallbackContext context)
     {
         if (context.started)

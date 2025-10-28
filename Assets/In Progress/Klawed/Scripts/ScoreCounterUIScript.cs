@@ -30,8 +30,8 @@ public class ScoreCounterUIScript : MonoBehaviour
         int digitCount = 0;
         while (score > 0)
         {
-            digitsList.Add(score % 10); // Extract last digit
-            score /= 10;            // Remove last digit
+            digitsList.Add(score % 10);
+            score /= 10;            
             digitCount++;
         }
 

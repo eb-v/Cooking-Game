@@ -140,6 +140,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "DpadInteract",
+                    "type": "PassThrough",
+                    "id": "20e6d81a-4015-46f8-b36d-6e8092dc27f8",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -547,6 +556,17 @@
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
                     "action": "PlaceIngredient",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c776f72e-ec4e-45ce-83fe-3e7f9bd6dad7",
+                    "path": "<Gamepad>/dpad",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Gamepad",
+                    "action": "DpadInteract",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
