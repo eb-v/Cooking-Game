@@ -308,6 +308,8 @@ GameObject:
   - component: {fileID: 656268939}
   - component: {fileID: 656268938}
   - component: {fileID: 656268937}
+  - component: {fileID: 656268941}
+  - component: {fileID: 656268940}
   m_Layer: 5
   m_Name: PlayButton
   m_TagString: Untagged
@@ -428,6 +430,39 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 656268935}
   m_CullTransparentMesh: 1
+--- !u!114 &656268940
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 656268935}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 978d91e3ece14dc49ac503fe5348eea8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PositionSpringScript
+  verticalMultiplier: -150
+  horizontalMultiplier: 0
+  _assignedChannel: PlayButton
+--- !u!114 &656268941
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 656268935}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 99c2ce2b3939a114c8b87eca0217dcdb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SpringAPI
+  goalValue: 0
+  angularFrequency: 10
+  dampingRatio: 0.7
+  maxGoal: 1
+  minGoal: 0
+  nudgeStrength: 1
 --- !u!1 &771243618
 GameObject:
   m_ObjectHideFlags: 0
