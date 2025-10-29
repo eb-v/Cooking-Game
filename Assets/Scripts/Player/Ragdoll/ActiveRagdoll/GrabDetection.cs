@@ -16,6 +16,10 @@ public class GrabDetection : MonoBehaviour
                 return;
             }
         }
+
+        if (layerName == LayerMask.LayerToName(LayerMask.NameToLayer("Buttons")))
+            return;
+
         GenericEvent<OnHandCollisionEnter>.GetEvent(transform.root.name).Invoke(gameObject ,other.gameObject);
     }
 

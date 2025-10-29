@@ -116,3 +116,7 @@ public class IngredientOrderedEvent : UnityEvent<GameObject> { }
 public class DPadInteractEvent : UnityEvent<Vector2> { }
 
 public class StartTrainEvent : UnityEvent { }
+
+public class LeverStateChangedEvent : UnityEvent<int> { }
+
+public class DispenserButtonPressedEvent : UnityEvent { }

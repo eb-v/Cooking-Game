@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class ConveyorBelt : MonoBehaviour
@@ -7,6 +8,7 @@ public class ConveyorBelt : MonoBehaviour
     [SerializeField] private float materialSpeed = 1f;  
     [SerializeField] private Vector3 direction = Vector3.forward; 
     [SerializeField] private List<GameObject> onBelt;    
+    private bool isRunning = true;
 
     private Material material;
 
@@ -23,6 +25,40 @@ public class ConveyorBelt : MonoBehaviour
 
     void FixedUpdate()
     {
+        if (isRunning)
+            RunConveyorBelt();
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (!onBelt.Contains(collision.gameObject))
+            onBelt.Add(collision.gameObject);
+    }
+
+    private void OnCollisionExit(Collision collision)
+    {
+        onBelt.Remove(collision.gameObject);
+    }
+
+    public void ChangeDirection(int inputDirection)
+    {
+        if (inputDirection == 1)
+        {
+            direction.x = Mathf.Abs(direction.x);
+            direction.y = Mathf.Abs(direction.y);
+            direction.z = Mathf.Abs(direction.z);
+        }
+        else if (inputDirection == -1)
+        {
+            direction.x = -Mathf.Abs(direction.x);
+            direction.y = -Mathf.Abs(direction.y);
+            direction.z = -Mathf.Abs(direction.z);
+        }
+        
+    }
+
+    private void RunConveyorBelt()
+    {
         for (int i = onBelt.Count - 1; i >= 0; i--)
         {
             Rigidbody rb = onBelt[i].GetComponent<Rigidbody>();
@@ -38,14 +74,8 @@ public class ConveyorBelt : MonoBehaviour
         }
     }
 
-    private void OnCollisionEnter(Collision collision)
+    public void ChangeRunningStatus()
     {
-        if (!onBelt.Contains(collision.gameObject))
-            onBelt.Add(collision.gameObject);
-    }
-
-    private void OnCollisionExit(Collision collision)
-    {
-        onBelt.Remove(collision.gameObject);
+        isRunning = !isRunning;
     }
 }
