@@ -1,4 +1,4 @@
-using UnityEngine;
+ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
 using UnityEngine.EventSystems;
@@ -8,188 +8,190 @@ using System.Collections;
 public class LobbyUIEventHandler : MonoBehaviour
 {
     [Header("References")]
-    public List<GameObject> uiGameobjects = new List<GameObject>();
-    [SerializeField] protected GameObject _firstSelected;
-    [SerializeField] protected EventSystem _eventSystem;
-    [SerializeField] protected CosmeticChanger _cosmeticChanger;
-
-    [Header("Animations")]
-    [SerializeField] protected float _selectedAnimationScale = 1.2f;
-    [SerializeField] protected float _deselectedAnimationScale = 0.8f;
-    [SerializeField] protected float _multiplier = 1f;
+    public List<GameObject> uiGameobjects = new List<GameObject>();   // put your “ChangeColor / ChangeFace” rows here (for THIS player column only)
+    [SerializeField] private GameObject _firstSelected;                // drag the first row object here
+    [SerializeField] private EventSystem _eventSystem;                 // drag the scene EventSystem
+    [SerializeField] private CosmeticChanger _cosmeticChanger;         // drag the SAME PLAYER’s CosmeticChanger
 
     [Header("Assigned Player Values")]
-    [SerializeField] protected string _assignedPlayerName = "Player 1";
-    public GameObject assignedPlayerObj;
+    [SerializeField] private string _assignedPlayerName = "Player 1";  // unique label this UI listens for
+    public GameObject assignedPlayerObj;                               // set automatically on join
 
-    [Header("Player Input Component")]
-    [SerializeField] private PlayerInput _playerInput;
+    [Header("Input")]
+    [SerializeField] private PlayerInput _playerInput;                 // set on join
+    private InputAction navigateAction, nextOptionAction, previousOptionAction, readyAction;
 
-    private InputAction navigateAction;
-    private InputAction nextOptionAction;
-    private InputAction previousOptionAction;
-    private InputAction readyAction;
-
-    [SerializeField] private int _uiIndex = 0;
+    private int _uiIndex = 0;
     [SerializeField] private GameObject _currentSelectedObj;
     [SerializeField] private GameObject _previousSelectedObj;
 
+    [Header("Lobby Lock")]
+    [SerializeField] private bool _freezeRigidbody = true;
+    [SerializeField] private string[] _componentsToDisableOnPlayer = {
+        "PlayerMovement", "ThirdPersonController", "CharacterControllerDriver"
+    };
 
-    public virtual void Awake()
+    private void Awake()
     {
-        GenericEvent<OnPlayerJoinedEvent>.GetEvent(_assignedPlayerName).AddListener(AssignPlayerInputValues);
-        gameObject.SetActive(false);
+        if (_eventSystem == null) _eventSystem = EventSystem.current;
+        GenericEvent<OnPlayerJoinedEvent>.GetEvent(_assignedPlayerName)
+            .AddListener(AssignPlayerInputValues);
     }
 
-    
-
-    public virtual void OnEnable()
+    private void OnEnable()
     {
+        if (_eventSystem == null) _eventSystem = EventSystem.current;
 
-        _uiIndex = 0;
-        SetSelectedUIObj(_uiIndex);
-
-        
+        if (uiGameobjects.Count > 0)
+        {
+            _uiIndex = Mathf.Clamp(_uiIndex, 0, uiGameobjects.Count - 1);
+            if (_firstSelected == null) _firstSelected = uiGameobjects[0];
+            SetSelectedUIObj(_uiIndex);
+            StartCoroutine(SelectAfterDelay());
+        }
     }
 
-    public virtual void OnDisable()
+    private void OnDisable()
     {
         if (_playerInput == null) return;
-
-        navigateAction.performed -= OnNavigate;
-        nextOptionAction.performed -= OnNextOption;
-        previousOptionAction.performed -= OnPreviousOption;
-        readyAction.performed -= OnReadyInput;
-
-        navigateAction.Disable();
-        nextOptionAction.Disable();
-        previousOptionAction.Disable();
-        readyAction.Disable();
+        if (navigateAction != null)        { navigateAction.performed        -= OnNavigate;        navigateAction.Disable(); }
+        if (nextOptionAction != null)      { nextOptionAction.performed      -= OnNextOption;      nextOptionAction.Disable(); }
+        if (previousOptionAction != null)  { previousOptionAction.performed  -= OnPreviousOption;  previousOptionAction.Disable(); }
+        if (readyAction != null)           { readyAction.performed           -= OnReadyInput;      readyAction.Disable(); }
     }
 
-    protected virtual IEnumerator SelectAfterDelay()
+    private IEnumerator SelectAfterDelay()
     {
-        yield return null;
-        _eventSystem.SetSelectedGameObject(_firstSelected.gameObject);
-    }
-
-
-    protected virtual void OnNavigate(InputAction.CallbackContext context)
-    {
-        if (context.ReadValue<Vector2>().y > 0)
+        yield return null; // wait a frame so ES is ready
+        if (_eventSystem && _firstSelected)
         {
-            _uiIndex--;
-            _uiIndex = Mathf.Clamp(_uiIndex, 0, uiGameobjects.Count - 1);
-            SetSelectedUIObj(_uiIndex);
-        }
-        else if (context.ReadValue<Vector2>().y < 0)
-        {
-            _uiIndex++;
-            _uiIndex = Mathf.Clamp(_uiIndex, 0, uiGameobjects.Count - 1);
-            SetSelectedUIObj(_uiIndex);
+            _eventSystem.firstSelectedGameObject = _firstSelected;
+            _eventSystem.SetSelectedGameObject(_firstSelected);
         }
     }
 
-
-
-    protected virtual void OnNextOption(InputAction.CallbackContext context)
+    private void SetSelectedUIObj(int index)
     {
-        // handle visuals for next option button press
-        NextPreviousButton nextPrevButtons = _currentSelectedObj.GetComponent<NextPreviousButton>();
-        SpringAPI springAPI = nextPrevButtons.nextButton.GetComponent<SpringAPI>();
+        if (uiGameobjects == null || uiGameobjects.Count == 0) return;
 
-        springAPI.NudgeSpringVelocity();
+        index = Mathf.Clamp(index, 0, uiGameobjects.Count - 1);
+        var candidate = uiGameobjects[index];
+        if (candidate == null) return;
 
-        // find out what specific option is selected
-        if (_currentSelectedObj.name.Contains("ChangeColor"))
+        _currentSelectedObj = candidate;
+
+        if (_previousSelectedObj && _previousSelectedObj != _currentSelectedObj)
+            _previousSelectedObj.transform.localScale = Vector3.one;
+        _currentSelectedObj.transform.localScale = Vector3.one * 1.05f;
+
+        _previousSelectedObj = _currentSelectedObj;
+
+        if (_eventSystem) _eventSystem.SetSelectedGameObject(_currentSelectedObj);
+    }
+
+    // ===== Input callbacks =====
+    private void OnNavigate(InputAction.CallbackContext ctx)
+    {
+        if (uiGameobjects == null || uiGameobjects.Count == 0) return;
+        var v = ctx.ReadValue<Vector2>().y;
+        if (v >  0.2f) { _uiIndex = Mathf.Clamp(_uiIndex - 1, 0, uiGameobjects.Count - 1); SetSelectedUIObj(_uiIndex); }
+        if (v < -0.2f) { _uiIndex = Mathf.Clamp(_uiIndex + 1, 0, uiGameobjects.Count - 1); SetSelectedUIObj(_uiIndex); }
+    }
+
+    private void OnNextOption(InputAction.CallbackContext ctx)
+    {
+        if (_currentSelectedObj == null || _cosmeticChanger == null || assignedPlayerObj == null) return;
+
+        var name = _currentSelectedObj.name;
+        if (name.Contains("ChangeColor"))
         {
-            if (_cosmeticChanger == null)
-            {
-                Debug.LogWarning("CosmeticChanger reference is missing!");
-                return;
-            }
             _cosmeticChanger.NextColor();
-            _cosmeticChanger.ChangeRobotColor(assignedPlayerObj);
+            _cosmeticChanger.ApplyColor(assignedPlayerObj);
         }
-        else if (_currentSelectedObj.name.Contains("ChangeFace"))
+        else if (name.Contains("ChangeFace"))
         {
             _cosmeticChanger.NextFace();
-            _cosmeticChanger.ChangeRobotFace(assignedPlayerObj);
+            _cosmeticChanger.ApplyFace(assignedPlayerObj);
         }
-
     }
 
-    protected virtual void OnPreviousOption(InputAction.CallbackContext context)
+    private void OnPreviousOption(InputAction.CallbackContext ctx)
     {
-        // handle visuals for previous option button press
-        NextPreviousButton nextPrevButtons = _currentSelectedObj.GetComponent<NextPreviousButton>();
-        SpringAPI springAPI = nextPrevButtons.previousButton.GetComponent<SpringAPI>();
-        springAPI.NudgeSpringVelocity();
+        if (_currentSelectedObj == null || _cosmeticChanger == null || assignedPlayerObj == null) return;
 
-        // find out what specific option is selected
-        if (_currentSelectedObj.name.Contains("ChangeColor"))
+        var name = _currentSelectedObj.name;
+        if (name.Contains("ChangeColor"))
         {
             _cosmeticChanger.PreviousColor();
-            _cosmeticChanger.ChangeRobotColor(assignedPlayerObj);
+            _cosmeticChanger.ApplyColor(assignedPlayerObj);
         }
-        else if (_currentSelectedObj.name.Contains("ChangeFace"))
+        else if (name.Contains("ChangeFace"))
         {
             _cosmeticChanger.PreviousFace();
-            _cosmeticChanger.ChangeRobotFace(assignedPlayerObj);
+            _cosmeticChanger.ApplyFace(assignedPlayerObj);
         }
     }
 
-    protected virtual void OnReadyInput(InputAction.CallbackContext context)
+    private void LockPlayerForLobby()
+{
+    if (!assignedPlayerObj) return;
+
+    // Freeze Rigidbody
+    var rb = assignedPlayerObj.GetComponent<Rigidbody>();
+    if (rb && _freezeRigidbody)
+    {
+        rb.linearVelocity = Vector3.zero;   // (or rb.velocity if using Built-in)
+        rb.angularVelocity = Vector3.zero;
+        rb.constraints = RigidbodyConstraints.FreezeAll;
+    }
+
+    // Disable movement scripts by name
+    var behaviours = assignedPlayerObj.GetComponents<Behaviour>();
+    foreach (var b in behaviours)
+    {
+        if (!b) continue;
+        for (int i = 0; i < _componentsToDisableOnPlayer.Length; i++)
+            if (b.GetType().Name == _componentsToDisableOnPlayer[i]) b.enabled = false;
+    }
+}
+
+    private void OnReadyInput(InputAction.CallbackContext ctx)
     {
         GenericEvent<PlayerReadyEvent>.GetEvent(gameObject.name).Invoke();
     }
 
-    
-
     private void AssignPlayerInputValues(PlayerInput playerInput)
-    {
-        _playerInput = playerInput;
-        assignedPlayerObj = playerInput.gameObject;
+{
+    _playerInput = playerInput;
+    assignedPlayerObj = playerInput.gameObject;
 
-        var lobbyActionMap = _playerInput.actions.FindActionMap("Lobby");
+    // IMPORTANT: switch to Lobby action map
+    var lobbyMap = _playerInput.actions.FindActionMap("Lobby");
+    if (lobbyMap == null) { Debug.LogError("Lobby action map not found"); return; }
+    _playerInput.SwitchCurrentActionMap("Lobby");
 
-        navigateAction = lobbyActionMap.FindAction("Navigate");
-        nextOptionAction = lobbyActionMap.FindAction("NextOption");
-        previousOptionAction = lobbyActionMap.FindAction("PreviousOption");
-        readyAction = lobbyActionMap.FindAction("ReadyInput");
+    // Bind actions (same as you had) ...
+    navigateAction       = lobbyMap.FindAction("Navigate");
+    nextOptionAction     = lobbyMap.FindAction("NextOption");
+    previousOptionAction = lobbyMap.FindAction("PreviousOption");
+    readyAction          = lobbyMap.FindAction("ReadyInput");
+    if (navigateAction == null || nextOptionAction == null || previousOptionAction == null || readyAction == null) return;
 
-        navigateAction.performed += OnNavigate;
-        nextOptionAction.performed += OnNextOption;
-        previousOptionAction.performed += OnPreviousOption;
-        readyAction.performed += OnReadyInput;
+    navigateAction.performed       += OnNavigate;
+    nextOptionAction.performed     += OnNextOption;
+    previousOptionAction.performed += OnPreviousOption;
+    readyAction.performed          += OnReadyInput;
 
-        navigateAction.Enable();
-        nextOptionAction.Enable();
-        previousOptionAction.Enable();
-        readyAction.Enable();
+    navigateAction.Enable();
+    nextOptionAction.Enable();
+    previousOptionAction.Enable();
+    readyAction.Enable();
 
-    }
+    // ← freeze and disable movement here
+    LockPlayerForLobby();
 
-   
-    public void SetSelectedUIObj(int index)
-    {
-        _currentSelectedObj = uiGameobjects[index];
-
-        if (_currentSelectedObj == _previousSelectedObj) return;
-
-        SpringAPI springAPI = _currentSelectedObj.GetComponent<SpringAPI>();
-
-        // enlarge selected object
-        springAPI.SetGoalValue(1f);
-
-        // shrink previous selected object
-        if (_previousSelectedObj != null)
-        {
-            SpringAPI previousSelectSpringAPI = _previousSelectedObj.GetComponent<SpringAPI>();
-            previousSelectSpringAPI.SetGoalValue(0f);
-        }
-        _previousSelectedObj = _currentSelectedObj;
-    }
-
+    // ensure a valid selection
+    if (uiGameobjects.Count > 0) { _uiIndex = 0; SetSelectedUIObj(_uiIndex); StartCoroutine(SelectAfterDelay()); }
+}
 
 }
