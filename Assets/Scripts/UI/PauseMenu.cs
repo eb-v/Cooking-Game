@@ -188,7 +188,7 @@ public class PauseMenu : MonoBehaviour
         Time.timeScale = 1;
         isPausedByMenu = false;
         GameStartCountdownUI.CountdownIsPaused = false;
-        UnityEngine.SceneManagement.SceneManager.LoadScene("Main Menu Scene");
+        UnityEngine.SceneManagement.SceneManager.LoadScene("MainMenuScene");
     }
 
     public void OpenSettings()

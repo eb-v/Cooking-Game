@@ -13,8 +13,8 @@ public class EndGameAwards : MonoBehaviour
     [SerializeField] private TextMeshProUGUI awardDescriptionText;
     [SerializeField] private TextMeshProUGUI playerNamesText;
     [SerializeField] private TextMeshProUGUI statsText;
-    [SerializeField] private float displayDuration = 4f;
-    
+    [SerializeField] public float displayDuration = 4f;
+
     [Header("Camera")]
     [SerializeField] private Camera awardCamera;
     [SerializeField] private float rotationSpeed = 30f;
@@ -117,12 +117,42 @@ public class EndGameAwards : MonoBehaviour
         
         Debug.Log("Award Ceremony Ended");
     }
-    
-    private IEnumerator ShowAward(string title, string description, List<PlayerStats> winners, System.Func<PlayerStats, string> getStatText)
-    {
-        // Clear previous player models
+
+    private bool hasShownFirstAward = false;
+
+    private IEnumerator ShowAward(string title, string description, List<PlayerStats> winners, System.Func<PlayerStats, string> getStatText) {
+        // If this isn't the first award, spring out the previous one first
+        if (hasShownFirstAward) {
+            var oldSprings = GetComponentsInChildren<SpringAPI>(true);
+            foreach (var spring in oldSprings) {
+                spring.SetGoalValue(0f);
+                spring.NudgeSpringVelocity();
+                yield return new WaitForSecondsRealtime(0f);
+            }
+            yield return new WaitForSecondsRealtime(0f);
+        } else {
+            hasShownFirstAward = true;
+        }
+
         ClearPlayerModels();
-        
+        yield return new WaitForSecondsRealtime(.5f);
+
+        // Reset springs for clean start
+        var springs = GetComponentsInChildren<SpringAPI>(true);
+        foreach (var spring in springs) {
+            spring.ResetSpring();
+            spring.SetGoalValue(0f);
+        }
+
+        // --- Now spring in the new award ---
+        yield return new WaitForSecondsRealtime(0f);
+
+        foreach (var spring in springs) {
+            spring.SetGoalValue(1f);
+            spring.NudgeSpringVelocity();
+            yield return new WaitForSecondsRealtime(0f);
+        }
+
         if (winners == null || winners.Count == 0)
         {
             Debug.Log($"Skipping award: {title} - No winners");

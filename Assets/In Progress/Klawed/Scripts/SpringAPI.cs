@@ -20,19 +20,15 @@ public class SpringAPI : MonoBehaviour, IEventChannel
     private void Start()
     {
     }
-
-    private void Update()
-    {
-        float springPosValue = CalculateSpringValue();
+    private void Update() {
+        float deltaTime = Time.unscaledDeltaTime;
+        springPosValue = CalculateSpringValue(deltaTime);
         OnUpdateSpring(springPosValue);
     }
 
-    private float CalculateSpringValue()
-    {
-        float deltaTime = Time.deltaTime;
+    private float CalculateSpringValue(float deltaTime) {
         CalcDampedSpringMotionParams(out _motionParams, deltaTime, angularFrequency, dampingRatio);
         UpdateDampedSpringMotion(ref springPosValue, ref springVelValue, goalValue, in _motionParams);
-
         return springPosValue;
     }
 
@@ -46,11 +42,9 @@ public class SpringAPI : MonoBehaviour, IEventChannel
 
     public void SetGoalValue(float value)
     {
-        // for most cases, this should be clamped between 0 and 1
         goalValue = Mathf.Clamp(value, minGoal, maxGoal);
     }
 
-    // this is called to create a visual bounce effect if needed for a ui element
     public void NudgeSpringVelocity()
     {
         springVelValue += nudgeStrength;
@@ -62,6 +56,17 @@ public class SpringAPI : MonoBehaviour, IEventChannel
         springVelValue = 0f;
     }
 
+    public void PlaySpring() {
+        ResetSpring();
+
+        SetGoalValue(maxGoal);
+
+        NudgeSpringVelocity();
+    }
+
+    public void HideSpring() {
+        SetGoalValue(minGoal);
+    }
 
 }
 
