@@ -252,5 +252,9 @@ public class ObjectPoolManager : MonoBehaviour
         }
     }
 
+    public static bool IsPooledObject(GameObject obj) {
+        return _cloneToPrefabMap.ContainsKey(obj);
+    }
+
 
 }

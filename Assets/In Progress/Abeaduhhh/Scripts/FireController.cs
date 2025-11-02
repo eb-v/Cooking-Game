@@ -5,7 +5,7 @@ public class FireController : MonoBehaviour {
     public ParticleSystem[] fireParticles;
 
     [Header("Fire Settings")]
-    public float burnDuration = 10f;
+    public float burnDuration = 15f;
     public bool autoDestroy = false;
 
     private bool burning = false;
@@ -34,6 +34,7 @@ public class FireController : MonoBehaviour {
         foreach (var ps in fireParticles) {
             if (ps != null) {
                 ps.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+                Debug.Log($"[FireController] Fire stopped on {name}, time ran out");
             }
         }
 

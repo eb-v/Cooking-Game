@@ -89,9 +89,9 @@ public class Timer : MonoBehaviour {
     }
 
     private int CalculateStars(int score) {
-        if (score >= 900) return 3;
-        if (score >= 600) return 2;
-        if (score >= 300) return 1;
+        if (score >= 0) return 3;
+        //if (score >= 600) return 2;
+        //if (score >= 300) return 1;
 
         return 0;
     }
