@@ -5,8 +5,8 @@ using static UISprings;
 public class NonNormalizedSpringAPI : MonoBehaviour
 {
     private DampedSpringMotionParams _motionParams;
-    private float springPosValue;
-    private float springVelValue;
+    [SerializeField] private float springPosValue;
+    [SerializeField] private float springVelValue;
     public float goalValue = 0f;
 
     public float angularFrequency = 10f;
@@ -54,9 +54,23 @@ public class NonNormalizedSpringAPI : MonoBehaviour
         springVelValue += nudgeStrength;
     }
 
-    public void ResetSpring()
+    public void ResetPosition()
     {
         springPosValue = 0f;
+    }
+
+    public void ResetVelocity()
+    {
         springVelValue = 0f;
+    }
+
+    public float GetPosition()
+    {
+        return springPosValue;
+    }
+
+    public float GetVelocity()
+    {
+        return springVelValue;
     }
 }

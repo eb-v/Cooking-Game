@@ -120,3 +120,7 @@ public class StartTrainEvent : UnityEvent { }
 public class LeverStateChangedEvent : UnityEvent<int> { }
 
 public class DispenserButtonPressedEvent : UnityEvent { }
+
+public class PizzaDoughEnteredOvenEvent : UnityEvent<GameObject> { }
+
+public class PizzaDoughExitedOvenEvent : UnityEvent<GameObject> { }

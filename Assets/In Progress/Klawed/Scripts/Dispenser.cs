@@ -99,11 +99,9 @@ public class Dispenser : MonoBehaviour
             {
                 // does the pizza base already have an ingredient of this type?
                 // check is done through the prefab rather than an instance of the ingredient
-                Debug.Log("Hit PizzaDoughBase: " + pizzaBase.name);
                 if (!pizzaBase.CheckForIngredient(ingredientPrefab))
                 {
                     // pass ingredient to PizzaDoughBase to add and create instance of ingredient
-                    Debug.Log("Dispensing ingredient: " + ingredientPrefab.name);
                     pizzaBase.AddIngredient(ingredientPrefab);
                     dispensedIngredient = true;
                 }
