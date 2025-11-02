@@ -6,6 +6,7 @@ public class SpringAPI : MonoBehaviour, IEventChannel
     private DampedSpringMotionParams _motionParams;
     private float springPosValue;
     private float springVelValue;
+
     public float goalValue = 0f;
 
     public float angularFrequency = 10f;
@@ -15,8 +16,15 @@ public class SpringAPI : MonoBehaviour, IEventChannel
 
     public string eventChannel => gameObject.name;
 
+    public string assignedEventChannel = "DefaultChannel";
+    private string eventChannelName;
+
     public float nudgeStrength = 1f;
 
+    [Header("Event Channel Name Options")]
+    [SerializeField] private bool useGameObjectNameAsEventChannel = true;
+    [SerializeField] private bool useCustomEventChannelName = false;
+    [SerializeField] private bool useGameObjectIDAsEventChannel = false;
     private void Start()
     {
     }
@@ -35,7 +43,28 @@ public class SpringAPI : MonoBehaviour, IEventChannel
 
     private void OnUpdateSpring(float springPosValue)
     {
-        GenericEvent<SpringUpdateEvent>.GetEvent(gameObject.name).Invoke(springPosValue);
+        InvokeEvent();
+    }
+
+    private void InvokeEvent()
+    {
+        switch (true)
+        {
+            case true when useGameObjectNameAsEventChannel:
+                eventChannelName = gameObject.name;
+                break;
+            case true when useCustomEventChannelName:
+                // assignedEventChannel is already set to custom name
+                eventChannelName = assignedEventChannel;
+                break;
+            case true when useGameObjectIDAsEventChannel:
+                eventChannelName = gameObject.GetInstanceID().ToString();
+                break;
+            default:
+                eventChannelName = assignedEventChannel;
+                break;
+        }
+        GenericEvent<SpringUpdateEvent>.GetEvent(eventChannelName).Invoke(springPosValue);
     }
 
     

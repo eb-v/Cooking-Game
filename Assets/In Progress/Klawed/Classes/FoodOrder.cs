@@ -4,12 +4,23 @@ using UnityEngine.UI;
 public class FoodOrder
 {
     public Sprite foodSprite;
-    public string orderName;
+    public GameObject orderItemPrefab;
+    public FoodOrderType orderType;
 
-    public FoodOrder(Sprite sprite, string name)
+    public FoodOrder(Sprite sprite, GameObject orderItemPrefab, FoodOrderType orderType)
     {
         foodSprite = sprite;
-        orderName = name;
+        this.orderItemPrefab = orderItemPrefab;
+        this.orderType = orderType;
     }
 
+}
+
+
+public enum FoodOrderType
+{
+    None,
+    Pizza,
+    Drink,
+    Hamburger
 }

@@ -124,3 +124,9 @@ public class DispenserButtonPressedEvent : UnityEvent { }
 public class PizzaDoughEnteredOvenEvent : UnityEvent<GameObject> { }
 
 public class PizzaDoughExitedOvenEvent : UnityEvent<GameObject> { }
+
+public class NewOrderAddedEvent : UnityEvent<FoodOrder> { }
+
+public class MaxOrderSetEvent : UnityEvent<int> { }
+
+public class OrderCompletedEvent : UnityEvent<FoodOrder> { }

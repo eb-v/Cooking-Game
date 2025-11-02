@@ -22,15 +22,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 93c1ca4baab73a841b14fd35c9241c8c, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.9251878
+      value: -13.123866
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 93c1ca4baab73a841b14fd35c9241c8c, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.0000009536743
+      value: 0.0000000048428817
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 93c1ca4baab73a841b14fd35c9241c8c, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -12.182636
+      value: -18.351233
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 93c1ca4baab73a841b14fd35c9241c8c, type: 3}
       propertyPath: m_LocalRotation.w
@@ -82,6 +82,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 93c1ca4baab73a841b14fd35c9241c8c, type: 3}
       insertIndex: -1
       addedObject: {fileID: 515852749036574825}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 93c1ca4baab73a841b14fd35c9241c8c, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8173359836940088500}
   m_SourcePrefab: {fileID: 100100000, guid: 93c1ca4baab73a841b14fd35c9241c8c, type: 3}
 --- !u!1 &141176116975233605 stripped
 GameObject:
@@ -136,3 +139,16 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &8173359836940088500
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 141176116975233605}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e371a8743ac8faa4a803cbbd6a0f3162, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+  _cookedPizzaPrefab: {fileID: 141176116975233605}
