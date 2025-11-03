@@ -1,130 +1,142 @@
 using UnityEngine;
+using System.Collections;
 
 public class SprinklerController : MonoBehaviour {
     [Header("Button Reference")]
     public SprinklerButton buttonA;
-
-    //[Header("Sprinkler Components")]
-    //[Tooltip("Optional reference to a pre-assigned water effect. If left empty, the system will spawn one from the pool.")]
-    //public ParticleSystem sprinklerEffect;
+    //public SprinklerButton buttonB;
 
     [Header("Pooling Settings")]
-    [Tooltip("Prefab reference for the water effect that should be spawned from the pool.")]
     public GameObject waterEffectPrefab;
-
-    [Tooltip("If true, returns this sprinkler to the pool when deactivated.")]
     public bool autoReturnToPool = false;
 
     [Header("Sprinkler Settings")]
     [Tooltip("How long the sprinkler stays active before turning off automatically.")]
     public float sprinklerDuration = 5f;
 
-    private bool buttonAActive;
-    //private bool buttonBActive;
+    [Tooltip("How long after turning on before it starts putting out fires.")]
+    public float extinguishDelay = 2f;
+
+    [Tooltip("Radius within which fires can be extinguished.")]
+    public float extinguishRadius = 20f;
+
+    [Tooltip("How often (seconds) to check for fires to extinguish while active.")]
+    public float extinguishCheckInterval = 0.75f;
+
     private bool sprinklerActive;
-
-    // internal reference to the spawned particle effect
     private ParticleSystem sprinklerEffect;
+    private GameObject sprinklerEffectInstance;
 
-    private void Start() { // listening for button updates, this is where i will add the 2nd button for the dual interactions
+    private static readonly Collider[] overlapResults = new Collider[64];
+
+    private void Start() {
         if (buttonA != null)
             buttonA.OnButtonStateChanged.AddListener(OnButtonAChanged);
+
+        //if(buttonB != null)
+        //    buttonB.OnButtonStateChanged.AddListener(OnButtonAChanged);
+
+        if (waterEffectPrefab != null) {
+            if (ObjectPoolManager.IsPooledObject(waterEffectPrefab)) {
+                sprinklerEffectInstance = ObjectPoolManager.SpawnObject(waterEffectPrefab, transform.position, transform.rotation);
+            } else {
+                sprinklerEffectInstance = Instantiate(waterEffectPrefab, transform.position, transform.rotation);
+            }
+
+            sprinklerEffect = sprinklerEffectInstance.GetComponent<ParticleSystem>();
+
+            if (sprinklerEffectInstance != null)
+                sprinklerEffectInstance.SetActive(false); // disable initially
+        }
     }
 
     private void OnButtonAChanged(bool pressed) {
-        buttonAActive = pressed;
-        CheckActivation();
-    }
-
-    //private void OnButtonBChanged(bool pressed) {
-    //    buttonBActive = pressed;
-    //    CheckActivation();
-    //}
-
-    private void CheckActivation() {
-        bool shouldActivate = buttonAActive;
-        //bool shouldActivate = buttonAActive && buttonBActive;
-
-        if (shouldActivate && !sprinklerActive)
+        if (pressed)
             StartSprinkler();
-        else if (!shouldActivate && sprinklerActive)
-            StopSprinkler();
     }
+    //private void OnButtonBChanged(bool pressed) {
+    //    if (pressed)
+    //        StartSprinkler();
+    //}
 
     public void StartSprinkler() {
         if (sprinklerActive) return;
         sprinklerActive = true;
 
-        // always spawn from pool when activating
-        if (waterEffectPrefab != null) {
-            GameObject pooledEffect = ObjectPoolManager.SpawnObject(
-                waterEffectPrefab,
-                transform.position,
-                transform.rotation
-            );
-            sprinklerEffect = pooledEffect.GetComponent<ParticleSystem>();
-
-            if (sprinklerEffect == null) {
-                Debug.LogError($"{name}: The waterEffectPrefab is missing a ParticleSystem component!");
-                return;
-            }
-        } else {
-            Debug.LogError($"{name}: No waterEffectPrefab assigned to SprinklerController!");
-            return;
+        if (sprinklerEffectInstance != null) {
+            sprinklerEffectInstance.SetActive(true);
+            if (!sprinklerEffect.isPlaying)
+                sprinklerEffect.Play();
         }
 
-        if (sprinklerEffect != null && !sprinklerEffect.isPlaying)
-            sprinklerEffect.Play();
+        InvokeRepeating(nameof(CheckForFires), extinguishDelay, extinguishCheckInterval);
 
-        // automatically turn off after sprinklerDuration seconds
         if (sprinklerDuration > 0)
             Invoke(nameof(StopSprinkler), sprinklerDuration);
 
-        Debug.Log($"{name}: Sprinkler Activated for {sprinklerDuration} seconds");
+        Debug.Log($"{name}: Sprinkler Activated for {sprinklerDuration} seconds (fires extinguish after {extinguishDelay}s)");
+    }
+
+    private void CheckForFires() {
+        int count = Physics.OverlapSphereNonAlloc(transform.position, extinguishRadius, overlapResults);
+        for (int i = 0; i < count; i++) {
+            FireController fire = overlapResults[i].GetComponentInParent<FireController>();
+            if (fire != null) {
+                fire.StopFireImmediate();
+            }
+        }
     }
 
     public void StopSprinkler() {
         if (!sprinklerActive) return;
         sprinklerActive = false;
 
+        CancelInvoke(nameof(CheckForFires));
+        CancelInvoke(nameof(StopSprinkler));
+
         if (sprinklerEffect != null) {
             sprinklerEffect.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
 
-            // safely return the effect to the pool if it came from one
-            if (ObjectPoolManager.IsPooledObject(sprinklerEffect.gameObject)) {
-                ObjectPoolManager.ReturnObjectToPool(sprinklerEffect.gameObject);
-                Debug.Log($"{name}: Sprinkler Effect Returned to Pool");
+            if (ObjectPoolManager.IsPooledObject(sprinklerEffectInstance)) {
+                StartCoroutine(ReturnEffectNextFrame(sprinklerEffectInstance.GetComponent<ParticleSystem>()));
             } else {
-                Destroy(sprinklerEffect.gameObject);
-                Debug.LogWarning($"{name}: Sprinkler Effect was not pooled — destroyed instead.");
+                sprinklerEffectInstance.SetActive(false);
             }
-
-            sprinklerEffect = null;
-        }
-
-        CancelInvoke(nameof(StopSprinkler));
-
-        if (autoReturnToPool && ObjectPoolManager.IsPooledObject(gameObject)) {
-            ObjectPoolManager.ReturnObjectToPool(gameObject);
-            Debug.Log($"{name}: Sprinkler Returned to Pool");
         }
 
         Debug.Log($"{name}: Sprinkler Deactivated");
     }
 
+    private IEnumerator ReturnEffectNextFrame(ParticleSystem ps) {
+        yield return null; 
+
+        if (ps != null) {
+            if (ObjectPoolManager.IsPooledObject(ps.gameObject)) {
+                ObjectPoolManager.ReturnObjectToPool(ps.gameObject);
+                Debug.Log($"{name}: Sprinkler Effect Returned to Pool");
+            } else {
+                ps.gameObject.SetActive(false);
+                Debug.LogWarning($"{name}: Sprinkler Effect was not pooled — just disabled instead.");
+            }
+        }
+    }
+
     public void ResetSprinkler() {
         sprinklerActive = false;
+        CancelInvoke(nameof(CheckForFires));
+        CancelInvoke(nameof(StopSprinkler));
 
         if (sprinklerEffect != null) {
             sprinklerEffect.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
-            if (ObjectPoolManager.IsPooledObject(sprinklerEffect.gameObject)) {
-                ObjectPoolManager.ReturnObjectToPool(sprinklerEffect.gameObject);
-            } else {
-                Destroy(sprinklerEffect.gameObject);
-            }
-            sprinklerEffect = null;
         }
 
-        CancelInvoke(nameof(StopSprinkler));
+        if (sprinklerEffectInstance != null) {
+            sprinklerEffectInstance.SetActive(false);
+        }
+    }
+
+    private void OnDrawGizmosSelected() {
+        Gizmos.color = new Color(0f, 0.5f, 1f, 0.3f);
+        Gizmos.DrawSphere(transform.position, extinguishRadius);
     }
 }

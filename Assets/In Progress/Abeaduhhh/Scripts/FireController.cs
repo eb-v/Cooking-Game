@@ -5,8 +5,7 @@ public class FireController : MonoBehaviour {
     public ParticleSystem[] fireParticles;
 
     [Header("Fire Settings")]
-    public float burnDuration = 15f;
-    public bool autoDestroy = false;
+    public float burnDuration = 20f;
 
     private bool burning = false;
 
@@ -20,8 +19,9 @@ public class FireController : MonoBehaviour {
         if (burning) return;
         burning = true;
 
-        foreach (var ps in fireParticles)
+        foreach (var ps in fireParticles) {
             if (ps != null) { ps.Clear(); ps.Play(); }
+        }
 
         if (burnDuration > 0)
             Invoke(nameof(StopFire), burnDuration);
@@ -32,16 +32,23 @@ public class FireController : MonoBehaviour {
         burning = false;
 
         foreach (var ps in fireParticles) {
-            if (ps != null) {
-                ps.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
-                Debug.Log($"[FireController] Fire stopped on {name}, time ran out");
-            }
+            if (ps != null) ps.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
         }
 
         CancelInvoke(nameof(StopFire));
 
-        if (autoDestroy)
+        StartCoroutine(ReturnFireNextFrame());
+    }
+
+    private System.Collections.IEnumerator ReturnFireNextFrame() {
+        yield return null;
+        if (ObjectPoolManager.IsPooledObject(gameObject)) {
             ObjectPoolManager.ReturnObjectToPool(gameObject);
+            Debug.Log($"[FireController] Fire returned to pool: {name}");
+        } else {
+            Destroy(gameObject);
+            Debug.LogWarning($"[FireController] Fire was not pooled — destroyed instead: {name}");
+        }
     }
 
     public void StopFireImmediate() {
@@ -52,8 +59,9 @@ public class FireController : MonoBehaviour {
 
     public void ResetFire() {
         burning = false;
-        foreach (var ps in fireParticles)
+        foreach (var ps in fireParticles) {
             if (ps != null) ps.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+        }
         CancelInvoke(nameof(StopFire));
     }
 }
