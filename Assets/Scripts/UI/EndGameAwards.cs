@@ -1,516 +1,302 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
-public class EndGameAwards : MonoBehaviour
-{
+public class EndGameAwards : MonoBehaviour {
     [Header("Award Display")]
     [SerializeField] private GameObject awardDisplayPanel;
-    [SerializeField] private Transform playerDisplayPosition;
+    [SerializeField] private Transform podiumParent; // Parent for platforms and players
     [SerializeField] private TextMeshProUGUI awardTitleText;
     [SerializeField] private TextMeshProUGUI awardDescriptionText;
     [SerializeField] private TextMeshProUGUI playerNamesText;
     [SerializeField] private TextMeshProUGUI statsText;
-    [SerializeField] public float displayDuration = 4f;
+    [SerializeField] private float displayDuration = 4f;
 
     [Header("Camera")]
     [SerializeField] private Camera awardCamera;
     [SerializeField] private float rotationSpeed = 30f;
-    
+
+    [Header("Podium Settings")]
+    [SerializeField] private GameObject podiumPrefab;
+    [SerializeField] private float podiumSpacing = 100f;
+    [SerializeField] private float podiumMaxHeight = 3f;
+    [SerializeField] private float podiumRiseSpeed = 2f;
+
+    [Header("Spring Animations")]
+    [SerializeField] private float springDelayBetweenTexts = 0.2f;
+
     private List<GameObject> currentPlayerModels = new List<GameObject>();
+    private List<GameObject> podiums = new List<GameObject>();
     private bool ceremonyCancelled = false;
-    
-    public void ShowAwards()
-    {
-        // DEBUG: Check all players before starting ceremony
-        Debug.Log("=== PRE-CEREMONY DEBUG ===");
-        List<PlayerStats> debugPlayers = PlayerManager.Instance.GetAllPlayers();
-        Debug.Log($"Total players found: {debugPlayers.Count}");
-        foreach (var player in debugPlayers)
-        {
-            if (player != null)
-            {
-                Debug.Log($"Player {player.playerNumber} - Points: {player.pointsGenerated}, Ingredients: {player.ingredientsHandled}, Joints: {player.jointsReconnected}, Explosions: {player.explosionsReceived}");
-            }
-            else
-            {
-                Debug.LogWarning("Found NULL player in list!");
-            }
+
+    public static EndGameAwards Instance { get; private set; }
+
+    private void Awake() {
+        if (Instance == null) Instance = this;
+        else Destroy(gameObject);
+
+        awardDisplayPanel.SetActive(false);
+    }
+
+    public void ShowAwards() {
+        if (EndGameData.playerCount == 0 || EndGameData.playerObjects == null || EndGameData.playerObjects.Length == 0) {
+            Debug.LogWarning("EndGameData is empty or missing player models. Cannot show awards.");
+            return;
         }
-        Debug.Log("=== END PRE-CEREMONY DEBUG ===");
-        
+
         StartCoroutine(AwardCeremony());
     }
-    
-    public void CancelCeremony()
-    {
+
+    public void CancelCeremony() {
         ceremonyCancelled = true;
         StopAllCoroutines();
         ClearPlayerModels();
+        ClearPodiums();
         awardDisplayPanel.SetActive(false);
     }
-    
-    private IEnumerator AwardCeremony()
-    {
+
+    private IEnumerator AwardCeremony() {
         ceremonyCancelled = false;
-        
-        // Turn on the award display panel (which is also the end game canvas)
         awardDisplayPanel.SetActive(true);
-        
-        Debug.Log("Starting Award Ceremony - Looping Mode");
-    
-        
-        // Loop the ceremony indefinitely until cancelled
-        while (!ceremonyCancelled)
-        {
-            // Hot Hands Award
-            yield return StartCoroutine(ShowAward(
-                "Hot Hands",
-                "Most Ingredients Handled",
-                GetHotHandsWinners(),
-                (player) => $"Ingredients: {player.ingredientsHandled}"
-            ));
-            
-            if (ceremonyCancelled) yield break;
-            
-            // MVP Award
-            yield return StartCoroutine(ShowAward(
-                "MVP",
-                "Most Points Generated",
-                GetMVPWinners(),
-                (player) => $"Points: {player.pointsGenerated}"
-            ));
-            
-            if (ceremonyCancelled) yield break;
-            
-            // Guardian Angel Award (only if someone reconnected joints)
-            var guardianWinners = GetGuardianAngelWinners();
-            if (guardianWinners.Count > 0)
-            {
-                yield return StartCoroutine(ShowAward(
-                    "Guardian Angel",
-                    "Most Joints Reconnected",
-                    guardianWinners,
-                    (player) => $"Joints: {player.jointsReconnected}"
-                ));
-            }
-            
-            if (ceremonyCancelled) yield break;
-            
-            // Noob Award
-            yield return StartCoroutine(ShowAward(
-                "Noob",
-                "Worst Performance (Low Points + High Explosions)",
-                GetNoobWinners(),
-                (player) => $"Points: {player.pointsGenerated} | Explosions: {player.explosionsReceived}"
-            ));
-            
-            if (ceremonyCancelled) yield break;
-            
-            Debug.Log("Award Ceremony Loop Complete - Restarting...");
-            
-            // Small pause before looping again
-            yield return new WaitForSecondsRealtime(1f);
-        }
-        
-        Debug.Log("Award Ceremony Ended");
+
+        // Step 1: Setup podiums and players
+        yield return SetupPodiumsAndPlayers();
+
+        // Step 2: Run awards
+        yield return ShowAward("Hot Hands", "Most Ingredients Handled",
+            GetMaxStatWinners(EndGameData.ingredientsHandled),
+            i => $"Ingredients: {EndGameData.ingredientsHandled[i]}");
+        if (ceremonyCancelled) yield break;
+
+        yield return ShowAward("MVP", "Most Points Generated",
+            GetMaxStatWinners(EndGameData.pointsGenerated),
+            i => $"Points: {EndGameData.pointsGenerated[i]}");
+        if (ceremonyCancelled) yield break;
+
+        var guardianWinners = GetMaxStatWinners(EndGameData.jointsReconnected, requireNonZero: true);
+        if (guardianWinners.Count > 0)
+            yield return ShowAward("Guardian Angel", "Most Joints Reconnected",
+                guardianWinners, i => $"Joints: {EndGameData.jointsReconnected[i]}");
+        if (ceremonyCancelled) yield break;
+
+        yield return ShowAward("Noob", "Worst Performance (Low Points + High Explosions)",
+            GetNoobWinners(),
+            i => $"Points: {EndGameData.pointsGenerated[i]} | Explosions: {EndGameData.explosionsReceived[i]}");
+
+        yield return new WaitForSecondsRealtime(1f);
+        awardDisplayPanel.SetActive(false);
     }
 
-    private bool hasShownFirstAward = false;
-
-    private IEnumerator ShowAward(string title, string description, List<PlayerStats> winners, System.Func<PlayerStats, string> getStatText) {
-        // If this isn't the first award, spring out the previous one first
-        if (hasShownFirstAward) {
-            var oldSprings = GetComponentsInChildren<SpringAPI>(true);
-            foreach (var spring in oldSprings) {
-                spring.SetGoalValue(0f);
-                spring.NudgeSpringVelocity();
-                yield return new WaitForSecondsRealtime(0f);
-            }
-            yield return new WaitForSecondsRealtime(0f);
-        } else {
-            hasShownFirstAward = true;
-        }
-
+    private IEnumerator SetupPodiumsAndPlayers() {
+        ClearPodiums();
         ClearPlayerModels();
-        yield return new WaitForSecondsRealtime(.5f);
 
-        // Reset springs for clean start
-        var springs = GetComponentsInChildren<SpringAPI>(true);
-        foreach (var spring in springs) {
-            spring.ResetSpring();
-            spring.SetGoalValue(0f);
-        }
+        int count = EndGameData.playerCount;
+        float maxPoints = Mathf.Max(1, Mathf.Max(EndGameData.pointsGenerated));
 
-        // --- Now spring in the new award ---
-        yield return new WaitForSecondsRealtime(0f);
+        float startX = -(count - 1) * podiumSpacing * 0.5f; // center the line
 
-        foreach (var spring in springs) {
-            spring.SetGoalValue(1f);
-            spring.NudgeSpringVelocity();
-            yield return new WaitForSecondsRealtime(0f);
-        }
+        for (int i = 0; i < count; i++) {
+            // Spawn podium
+            Vector3 localPos = new Vector3(startX + i * podiumSpacing, 0, 0);
+            GameObject podium = Instantiate(podiumPrefab, podiumParent);
+            podium.transform.localPosition = localPos;
+            podiums.Add(podium);
 
-        if (winners == null || winners.Count == 0)
-        {
-            Debug.Log($"Skipping award: {title} - No winners");
-            yield break;
-        }
-        
-        Debug.Log($"Showing award: {title}");
-        
-        // Set award description
-        if (awardDescriptionText != null)
-            awardDescriptionText.text = description;
-        
-        // Display player names
-        string playerNames = "";
-        string stats = "";
-        for (int i = 0; i < winners.Count; i++)
-        {
-            playerNames += "Player " + winners[i].playerNumber;
-            if (i < winners.Count - 1)
-                playerNames += " & ";
-            
-            stats += getStatText(winners[i]);
-            if (i < winners.Count - 1)
-                stats += " | ";
-        }
-        
-        // Add 's' to title if multiple winners (except for "Hot Hands" which already ends in 's')
-        string displayTitle = title;
-        if (winners.Count > 1 && title != "Hot Hands")
-        {
-            displayTitle += "s";
-        }
-        
-        if (playerNamesText != null)
-            playerNamesText.text = playerNames;
-        
-        if (awardTitleText != null)
-            awardTitleText.text = displayTitle;
-        
-        if (statsText != null)
-        {
-            statsText.text = stats;
-        }
-        
-        // Instantiate visual-only player models
-        float spacing = 3f;
-        float startX = -(winners.Count - 1) * spacing / 2f;
-        
-        for (int i = 0; i < winners.Count; i++)
-        {
-            // Create visual-only copy
-            GameObject playerModel = CreateVisualOnlyCopy(
-                winners[i].gameObject,
-                playerDisplayPosition.position + new Vector3(startX + i * spacing, 0, 0),
-                Quaternion.identity
-            );
-            
-            playerModel.transform.SetParent(playerDisplayPosition);
-            currentPlayerModels.Add(playerModel);
-        }
-        
-        // Rotate camera around players for the duration
-        float elapsed = 0f;
-        Vector3 centerPosition = playerDisplayPosition.position;
-        
-        while (elapsed < displayDuration && !ceremonyCancelled)
-        {
-            elapsed += Time.unscaledDeltaTime;
-            
-            // Rotate camera around the display position
-            if (awardCamera != null)
-            {
-                awardCamera.transform.RotateAround(
-                    centerPosition,
-                    Vector3.up,
-                    rotationSpeed * Time.unscaledDeltaTime
-                );
-                
-                // Keep camera looking at the center
-                awardCamera.transform.LookAt(centerPosition);
+            float normalized = (float)EndGameData.pointsGenerated[i] / maxPoints;
+            float targetHeight = Mathf.Lerp(0.5f, podiumMaxHeight, normalized);
+
+            // Spawn visual player
+            GameObject playerCopy = null;
+            GameObject player = EndGameData.playerObjects[i];
+            if (player != null) {
+                playerCopy = CreateVisualOnlyCopy(player, podium.transform.position, Quaternion.identity);
+                currentPlayerModels.Add(playerCopy);
+                StartCoroutine(RaisePodiumWithPlayer(podium.transform, playerCopy.transform, targetHeight));
+            } else {
+                StartCoroutine(RaisePodiumWithPlayer(podium.transform, null, targetHeight));
             }
-            
+
+            yield return new WaitForSecondsRealtime(0.1f);
+        }
+
+        yield return new WaitForSecondsRealtime(1.5f);
+    }
+
+    private IEnumerator RaisePodiumWithPlayer(Transform podium, Transform player, float targetHeight) {
+        Vector3 originalScale = podium.localScale;
+        float t = 0f;
+        podium.localScale = new Vector3(originalScale.x, 0.1f, originalScale.z);
+
+        float playerHeight = 1f;
+        if (player != null) {
+            Renderer[] renderers = player.GetComponentsInChildren<Renderer>();
+            if (renderers.Length > 0) {
+                Bounds bounds = renderers[0].bounds;
+                foreach (var r in renderers) bounds.Encapsulate(r.bounds);
+                playerHeight = bounds.size.y;
+            }
+        }
+
+        while (t < 1f) {
+            t += Time.unscaledDeltaTime * podiumRiseSpeed;
+            float newYScale = Mathf.Lerp(0.1f, targetHeight, t);
+            podium.localScale = new Vector3(originalScale.x, newYScale, originalScale.z);
+
+            if (player != null) {
+                Vector3 podiumTop = podium.position + Vector3.up * newYScale;
+                player.position = podiumTop + Vector3.up * (playerHeight * 0.5f);
+            }
+
             yield return null;
         }
-        
+    }
+
+    private IEnumerator ShowAward(string title, string description, List<int> winnerIndexes, Func<int, string> getStatText) {
+        if (winnerIndexes == null || winnerIndexes.Count == 0) yield break;
+
+        awardTitleText.text = title + (winnerIndexes.Count > 1 && title != "Hot Hands" ? "s" : "");
+        awardDescriptionText.text = description;
+
+        string playerNames = "", stats = "";
+        for (int i = 0; i < winnerIndexes.Count; i++) {
+            int idx = winnerIndexes[i];
+            playerNames += $"Player {idx + 1}";
+            stats += getStatText(idx);
+            if (i < winnerIndexes.Count - 1) {
+                playerNames += " & ";
+                stats += " | ";
+            }
+        }
+        playerNamesText.text = playerNames;
+        statsText.text = stats;
+
+        SpringAPI[] textSprings = {
+            awardTitleText?.GetComponent<SpringAPI>(),
+            awardDescriptionText?.GetComponent<SpringAPI>(),
+            playerNamesText?.GetComponent<SpringAPI>(),
+            statsText?.GetComponent<SpringAPI>()
+        };
+
+        foreach (var spring in textSprings) {
+            if (spring != null) {
+                spring.SetGoalValue(1f);
+                spring.NudgeSpringVelocity();
+            }
+            yield return new WaitForSecondsRealtime(springDelayBetweenTexts);
+        }
+
+        float elapsed = 0f;
+        Vector3 center = podiumParent.position;
+        while (elapsed < displayDuration && !ceremonyCancelled) {
+            elapsed += Time.unscaledDeltaTime;
+            if (awardCamera != null) {
+                awardCamera.transform.RotateAround(center, Vector3.up, rotationSpeed * Time.unscaledDeltaTime);
+                awardCamera.transform.LookAt(center);
+            }
+            yield return null;
+        }
+
+        foreach (var spring in textSprings) {
+            if (spring != null) {
+                spring.SetGoalValue(0f);
+                spring.NudgeSpringVelocity();
+            }
+            yield return new WaitForSecondsRealtime(springDelayBetweenTexts * 0.5f);
+        }
+
         yield return new WaitForSecondsRealtime(0.5f);
     }
-    
-    // ==================== AWARD WINNER CALCULATION METHODS ====================
-    
-    private List<PlayerStats> GetHotHandsWinners()
-    {
-        List<PlayerStats> allPlayers = PlayerManager.Instance.GetAllPlayers();
-        
-        if (allPlayers.Count == 0)
-        {
-            Debug.LogWarning("No players found for Hot Hands award");
-            return new List<PlayerStats>();
-        }
-        
-        // Debug all player stats
-        Debug.Log("=== Hot Hands Award ===");
-        foreach (var player in allPlayers)
-        {
-            Debug.Log($"Player {player.playerNumber}: {player.ingredientsHandled} ingredients");
-        }
-        
-        int maxIngredients = 0;
-        foreach (var player in allPlayers)
-        {
-            if (player != null && player.ingredientsHandled > maxIngredients)
-                maxIngredients = player.ingredientsHandled;
-        }
-        
-        List<PlayerStats> winners = new List<PlayerStats>();
-        foreach (var player in allPlayers)
-        {
-            if (player != null && player.ingredientsHandled == maxIngredients)
-                winners.Add(player);
-        }
-        
-        Debug.Log($"Hot Hands Winner(s): {winners.Count} player(s) with {maxIngredients} ingredients");
-        return winners;
+
+    private void ClearPodiums() {
+        foreach (var podium in podiums)
+            if (podium != null) Destroy(podium);
+        podiums.Clear();
     }
-    
-    private List<PlayerStats> GetMVPWinners()
-    {
-        List<PlayerStats> allPlayers = PlayerManager.Instance.GetAllPlayers();
-        
-        if (allPlayers.Count == 0)
-        {
-            Debug.LogWarning("No players found for MVP award");
-            return new List<PlayerStats>();
-        }
-        
-        // Debug all player stats
-        Debug.Log("=== MVP Award ===");
-        foreach (var player in allPlayers)
-        {
-            Debug.Log($"Player {player.playerNumber}: {player.pointsGenerated} points");
-        }
-        
-        int maxPoints = 0;
-        foreach (var player in allPlayers)
-        {
-            if (player != null && player.pointsGenerated > maxPoints)
-                maxPoints = player.pointsGenerated;
-        }
-        
-        // Skip award if no one scored any points
-        if (maxPoints == 0)
-        {
-            Debug.Log("No points scored this game - skipping MVP award");
-            return new List<PlayerStats>();
-        }
-        
-        List<PlayerStats> winners = new List<PlayerStats>();
-        foreach (var player in allPlayers)
-        {
-            if (player != null && player.pointsGenerated == maxPoints)
-                winners.Add(player);
-        }
-        
-        Debug.Log($"MVP Winner(s): {winners.Count} player(s) with {maxPoints} points");
-        return winners;
-    }
-    
-    private List<PlayerStats> GetGuardianAngelWinners()
-    {
-        List<PlayerStats> allPlayers = PlayerManager.Instance.GetAllPlayers();
-        
-        if (allPlayers.Count == 0) return new List<PlayerStats>();
-        
-        int maxReconnections = 0;
-        foreach (var player in allPlayers)
-        {
-            if (player != null && player.jointsReconnected > maxReconnections)
-                maxReconnections = player.jointsReconnected;
-        }
-        
-        if (maxReconnections == 0)
-        {
-            Debug.Log("No joint reconnections this game - skipping Guardian Angel award");
-            return new List<PlayerStats>();
-        }
-        
-        // Debug all player stats
-        Debug.Log("=== Guardian Angel Award ===");
-        foreach (var player in allPlayers)
-        {
-            Debug.Log($"Player {player.playerNumber}: {player.jointsReconnected} joints reconnected");
-        }
-        
-        List<PlayerStats> winners = new List<PlayerStats>();
-        foreach (var player in allPlayers)
-        {
-            if (player != null && player.jointsReconnected == maxReconnections)
-                winners.Add(player);
-        }
-        
-        Debug.Log($"Guardian Angel Winner(s): {winners.Count} player(s) with {maxReconnections} reconnections");
-        return winners;
-    }
-    
-    private List<PlayerStats> GetNoobWinners()
-    {
-        List<PlayerStats> allPlayers = PlayerManager.Instance.GetAllPlayers();
-        
-        if (allPlayers.Count == 0)
-        {
-            Debug.LogWarning("No players found for Noob award");
-            return new List<PlayerStats>();
-        }
-        
-        // Debug all player stats
-        Debug.Log("=== Noob Award ===");
-        foreach (var player in allPlayers)
-        {
-            Debug.Log($"Player {player.playerNumber}: {player.pointsGenerated} points, {player.explosionsReceived} explosions");
-        }
-        
-        // Calculate "noob score" - combination of low points and high explosions
-        // Lower points = worse, more explosions = worse
-        // Formula: points - (explosions * weight)
-        // The LOWEST score wins the noob award
-        float worstScore = float.MaxValue;
-        int explosionWeight = 10; // Each explosion is worth -10 points in the noob score
-        
-        foreach (var player in allPlayers)
-        {
-            if (player != null)
-            {
-                float noobScore = player.pointsGenerated - (player.explosionsReceived * explosionWeight);
-                if (noobScore < worstScore)
-                    worstScore = noobScore;
-            }
-        }
-        
-        List<PlayerStats> winners = new List<PlayerStats>();
-        foreach (var player in allPlayers)
-        {
-            if (player != null)
-            {
-                float noobScore = player.pointsGenerated - (player.explosionsReceived * explosionWeight);
-                if (Mathf.Approximately(noobScore, worstScore))
-                    winners.Add(player);
-            }
-        }
-        
-        Debug.Log($"Noob Winner(s): {winners.Count} player(s) with worst score of {worstScore}");
-        return winners;
-    }
-    
-    // ==================== VISUAL COPY METHODS ====================
-    
-    private GameObject CreateVisualOnlyCopy(GameObject original, Vector3 position, Quaternion rotation)
-    {
-        // Create a new empty GameObject
-        GameObject copy = new GameObject($"AwardDisplay_{original.name}");
-        copy.transform.position = position;
-        copy.transform.rotation = rotation;
-        
-        // Copy the transform hierarchy and visual components recursively
-        CopyVisualComponents(original.transform, copy.transform);
-        
-        return copy;
-    }
-    
-    private void CopyVisualComponents(Transform source, Transform destination)
-    {
-        // Copy MeshFilter
-        MeshFilter sourceMeshFilter = source.GetComponent<MeshFilter>();
-        if (sourceMeshFilter != null)
-        {
-            MeshFilter destMeshFilter = destination.gameObject.AddComponent<MeshFilter>();
-            destMeshFilter.sharedMesh = sourceMeshFilter.sharedMesh;
-        }
-        
-        // Copy MeshRenderer
-        MeshRenderer sourceMeshRenderer = source.GetComponent<MeshRenderer>();
-        if (sourceMeshRenderer != null)
-        {
-            MeshRenderer destMeshRenderer = destination.gameObject.AddComponent<MeshRenderer>();
-            destMeshRenderer.sharedMaterials = sourceMeshRenderer.sharedMaterials;
-        }
-        
-        // Copy SkinnedMeshRenderer (for animated characters)
-        SkinnedMeshRenderer sourceSkinnedMesh = source.GetComponent<SkinnedMeshRenderer>();
-        if (sourceSkinnedMesh != null)
-        {
-            SkinnedMeshRenderer destSkinnedMesh = destination.gameObject.AddComponent<SkinnedMeshRenderer>();
-            destSkinnedMesh.sharedMesh = sourceSkinnedMesh.sharedMesh;
-            destSkinnedMesh.sharedMaterials = sourceSkinnedMesh.sharedMaterials;
-            
-            // Copy bone structure if needed
-            if (sourceSkinnedMesh.bones != null && sourceSkinnedMesh.bones.Length > 0)
-            {
-                // Create bone hierarchy
-                Transform[] newBones = new Transform[sourceSkinnedMesh.bones.Length];
-                for (int i = 0; i < sourceSkinnedMesh.bones.Length; i++)
-                {
-                    if (sourceSkinnedMesh.bones[i] != null)
-                    {
-                        GameObject boneObj = new GameObject(sourceSkinnedMesh.bones[i].name);
-                        boneObj.transform.SetParent(destination);
-                        boneObj.transform.localPosition = sourceSkinnedMesh.bones[i].localPosition;
-                        boneObj.transform.localRotation = sourceSkinnedMesh.bones[i].localRotation;
-                        boneObj.transform.localScale = sourceSkinnedMesh.bones[i].localScale;
-                        newBones[i] = boneObj.transform;
-                    }
-                }
-                destSkinnedMesh.bones = newBones;
-                destSkinnedMesh.rootBone = newBones.Length > 0 ? newBones[0] : null;
-            }
-        }
-        
-        // Copy SpriteRenderer (if using 2D sprites)
-        SpriteRenderer sourceSpriteRenderer = source.GetComponent<SpriteRenderer>();
-        if (sourceSpriteRenderer != null)
-        {
-            SpriteRenderer destSpriteRenderer = destination.gameObject.AddComponent<SpriteRenderer>();
-            destSpriteRenderer.sprite = sourceSpriteRenderer.sprite;
-            destSpriteRenderer.material = sourceSpriteRenderer.material;
-            destSpriteRenderer.color = sourceSpriteRenderer.color;
-            destSpriteRenderer.sortingLayerID = sourceSpriteRenderer.sortingLayerID;
-            destSpriteRenderer.sortingOrder = sourceSpriteRenderer.sortingOrder;
-        }
-        
-        // Copy Animator (optional - if you want animations to play)
-        Animator sourceAnimator = source.GetComponent<Animator>();
-        if (sourceAnimator != null)
-        {
-            Animator destAnimator = destination.gameObject.AddComponent<Animator>();
-            destAnimator.runtimeAnimatorController = sourceAnimator.runtimeAnimatorController;
-            destAnimator.avatar = sourceAnimator.avatar;
-            destAnimator.applyRootMotion = false; // Disable root motion for display
-        }
-        
-        // Recursively copy child objects
-        foreach (Transform child in source)
-        {
-            GameObject childCopy = new GameObject(child.name);
-            childCopy.transform.SetParent(destination);
-            childCopy.transform.localPosition = child.localPosition;
-            childCopy.transform.localRotation = child.localRotation;
-            childCopy.transform.localScale = child.localScale;
-            
-            CopyVisualComponents(child, childCopy.transform);
-        }
-    }
-    
-    private void ClearPlayerModels()
-    {
-        foreach (var model in currentPlayerModels)
-        {
-            if (model != null)
-                Destroy(model);
-        }
+
+    private void ClearPlayerModels() {
+        foreach (var m in currentPlayerModels)
+            if (m != null) Destroy(m);
         currentPlayerModels.Clear();
     }
+
+    private GameObject CreateVisualOnlyCopy(GameObject original, Vector3 position, Quaternion rotation) {
+        GameObject copy = new GameObject(original.name + "_Visual");
+        copy.transform.position = position;
+        copy.transform.rotation = rotation;
+        copy.transform.localScale = original.transform.lossyScale;
+
+        // Copy all MeshRenderers
+        foreach (var meshRenderer in original.GetComponentsInChildren<MeshRenderer>(true)) {
+            var mf = meshRenderer.GetComponent<MeshFilter>();
+            if (mf == null || mf.sharedMesh == null) continue;
+
+            GameObject go = new GameObject(meshRenderer.gameObject.name);
+            go.transform.SetParent(copy.transform, false);
+            go.transform.localPosition = meshRenderer.transform.localPosition;
+            go.transform.localRotation = meshRenderer.transform.localRotation;
+            go.transform.localScale = meshRenderer.transform.localScale;
+
+            var newMF = go.AddComponent<MeshFilter>();
+            newMF.sharedMesh = mf.sharedMesh;
+
+            var newMR = go.AddComponent<MeshRenderer>();
+            // Clone materials so they render independently
+            newMR.materials = meshRenderer.sharedMaterials;
+            newMR.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On;
+            newMR.receiveShadows = true;
+        }
+
+        // Copy SkinnedMeshRenderers
+        foreach (var skinned in original.GetComponentsInChildren<SkinnedMeshRenderer>(true)) {
+            if (skinned.sharedMesh == null) continue;
+
+            GameObject go = new GameObject(skinned.gameObject.name);
+            go.transform.SetParent(copy.transform, false);
+            go.transform.localPosition = skinned.transform.localPosition;
+            go.transform.localRotation = skinned.transform.localRotation;
+            go.transform.localScale = skinned.transform.localScale;
+
+            var newSkinned = go.AddComponent<SkinnedMeshRenderer>();
+            newSkinned.sharedMesh = skinned.sharedMesh;
+            newSkinned.materials = skinned.sharedMaterials;
+            newSkinned.bones = skinned.bones;
+            newSkinned.rootBone = skinned.rootBone;
+        }
+
+        return copy;
+    }
+
+    #region Stat Calculations
+    private List<int> GetMaxStatWinners(int[] stats, bool requireNonZero = false) {
+        int max = int.MinValue;
+        for (int i = 0; i < EndGameData.playerCount; i++)
+            if (stats[i] > max) max = stats[i];
+
+        List<int> winners = new List<int>();
+        for (int i = 0; i < EndGameData.playerCount; i++)
+            if (stats[i] == max && (!requireNonZero || max > 0))
+                winners.Add(i);
+
+        return winners;
+    }
+
+    private List<int> GetNoobWinners() {
+        int weight = 10;
+        float worst = float.MaxValue;
+        for (int i = 0; i < EndGameData.playerCount; i++) {
+            float score = EndGameData.pointsGenerated[i] - EndGameData.explosionsReceived[i] * weight;
+            if (score < worst) worst = score;
+        }
+
+        List<int> winners = new List<int>();
+        for (int i = 0; i < EndGameData.playerCount; i++) {
+            float score = EndGameData.pointsGenerated[i] - EndGameData.explosionsReceived[i] * weight;
+            if (Mathf.Approximately(score, worst)) winners.Add(i);
+        }
+        return winners;
+    }
+    #endregion
 }

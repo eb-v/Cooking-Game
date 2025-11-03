@@ -122,26 +122,126 @@ public class Timer : MonoBehaviour {
             yield return new WaitForSecondsRealtime(starPopDelay);
         }
     }
+    private GameObject CreateVisualOnlyCopy(GameObject original, Vector3 position, Quaternion rotation) {
+        GameObject copy = new GameObject(original.name + "_Visual");
+        copy.transform.position = position;
+        copy.transform.rotation = rotation;
+
+        // Copy MeshRenderers
+        foreach (var renderer in original.GetComponentsInChildren<MeshRenderer>(true)) {
+            var go = new GameObject(renderer.gameObject.name);
+            go.transform.SetParent(copy.transform);
+            go.transform.localPosition = renderer.transform.localPosition;
+            go.transform.localRotation = renderer.transform.localRotation;
+
+            var meshFilter = go.AddComponent<MeshFilter>();
+            meshFilter.sharedMesh = renderer.GetComponent<MeshFilter>()?.sharedMesh;
+
+            var meshRenderer = go.AddComponent<MeshRenderer>();
+            meshRenderer.sharedMaterials = renderer.sharedMaterials;
+        }
+
+        // Copy SkinnedMeshRenderers
+        foreach (var skinned in original.GetComponentsInChildren<SkinnedMeshRenderer>(true)) {
+            var go = new GameObject(skinned.gameObject.name);
+            go.transform.SetParent(copy.transform);
+            go.transform.localPosition = skinned.transform.localPosition;
+            go.transform.localRotation = skinned.transform.localRotation;
+
+            var skinnedCopy = go.AddComponent<SkinnedMeshRenderer>();
+            skinnedCopy.sharedMesh = skinned.sharedMesh;
+            skinnedCopy.sharedMaterials = skinned.sharedMaterials;
+        }
+
+        return copy;
+    }
+
+    //private IEnumerator HandleGameOver() {
+    //    int delivered = PointManager.Instance != null ? PointManager.Instance.GetDeliveredCount() : 0;
+    //    int finalScore = delivered * 300;
+    //    int starsEarned = CalculateStars(finalScore);
+
+    //    // --- STEP 1: Show game over canvas ---
+    //    if (gameOverCanvas != null) gameOverCanvas.SetActive(true);
+    //    if (background != null) background.SetActive(true);
+
+    //    // Animate score counting up
+    //    if (scoreAmountText != null) {
+    //        scoreAmountText.gameObject.SetActive(true);
+    //        yield return StartCoroutine(AnimateScoreCount(finalScore, 1.0f));
+    //    }
+
+    //    yield return ShowStars(starsEarned);
+
+    //    yield return new WaitForSecondsRealtime(1.5f);
+
+    //    //  Reverse GameOverCanvas and Stars
+    //    if (gameOverCanvas != null) {
+    //        foreach (Transform child in gameOverCanvas.transform) {
+    //            var springs = child.GetComponentsInChildren<SpringAPI>(true);
+    //            foreach (var spring in springs) {
+    //                spring.SetGoalValue(0f);
+    //                spring.NudgeSpringVelocity();
+    //            }
+    //        }
+    //    }
+
+    //    if (starGroup != null) {
+    //        for (int i = 0; i < starGroup.transform.childCount; i++) {
+    //            var star = starGroup.transform.GetChild(i).gameObject;
+    //            var spring = star.GetComponent<SpringAPI>();
+    //            spring?.SetGoalValue(0f);
+    //            spring?.NudgeSpringVelocity();
+    //        }
+    //    }
+
+    //    yield return new WaitForSecondsRealtime(0.75f);
+
+    //    if (gameOverCanvas != null) gameOverCanvas.SetActive(false);
+    //    if (starGroup != null) starGroup.SetActive(false);
+
+    //    if (endGameCanvas != null) {
+    //        endGameCanvas.SetActive(true);
+
+    //        yield return new WaitForSecondsRealtime(0.3f);
+    //    }
+
+    //    if (endGameAwards != null) {
+    //        Debug.Log("[Timer] Starting end game award ceremony...");
+    //        endGameAwards.ShowAwards();
+
+    //        float duration = endGameAwards.displayDuration > 0 ? endGameAwards.displayDuration * 2f : 4f;
+    //        yield return new WaitForSecondsRealtime(duration);
+    //    }
+
+    //    if (gameOverButtons != null) {
+    //        gameOverButtons.SetActive(true);
+    //        var buttonSprings = gameOverButtons.GetComponentsInChildren<SpringAPI>(true);
+    //        foreach (var spring in buttonSprings) {
+    //            spring.SetGoalValue(1f);
+    //            spring.NudgeSpringVelocity();
+    //            yield return new WaitForSecondsRealtime(0.1f);
+    //        }
+    //    }
+    //}
     private IEnumerator HandleGameOver() {
         int delivered = PointManager.Instance != null ? PointManager.Instance.GetDeliveredCount() : 0;
         int finalScore = delivered * 300;
         int starsEarned = CalculateStars(finalScore);
 
-        // --- STEP 1: Show game over canvas ---
+        // --- STEP 1: UI animations ---
         if (gameOverCanvas != null) gameOverCanvas.SetActive(true);
         if (background != null) background.SetActive(true);
 
-        // Animate score counting up
         if (scoreAmountText != null) {
             scoreAmountText.gameObject.SetActive(true);
             yield return StartCoroutine(AnimateScoreCount(finalScore, 1.0f));
         }
 
         yield return ShowStars(starsEarned);
-
         yield return new WaitForSecondsRealtime(1.5f);
 
-        //  Reverse GameOverCanvas and Stars
+        // Reverse GameOverCanvas and Stars animations
         if (gameOverCanvas != null) {
             foreach (Transform child in gameOverCanvas.transform) {
                 var springs = child.GetComponentsInChildren<SpringAPI>(true);
@@ -155,9 +255,7 @@ public class Timer : MonoBehaviour {
         if (starGroup != null) {
             for (int i = 0; i < starGroup.transform.childCount; i++) {
                 var star = starGroup.transform.GetChild(i).gameObject;
-                var spring = star.GetComponent<SpringAPI>();
-                spring?.SetGoalValue(0f);
-                spring?.NudgeSpringVelocity();
+                star.GetComponent<SpringAPI>()?.SetGoalValue(0f);
             }
         }
 
@@ -166,30 +264,65 @@ public class Timer : MonoBehaviour {
         if (gameOverCanvas != null) gameOverCanvas.SetActive(false);
         if (starGroup != null) starGroup.SetActive(false);
 
-        if (endGameCanvas != null) {
-            endGameCanvas.SetActive(true);
+        // --- STEP 2: Store data for End Game Scene ---
+        if (PlayerManager.Instance != null) {
+            var players = PlayerManager.Instance.GetAllPlayers();
+            if (players != null && players.Count > 0) {
+                Debug.Log($"[Timer] Storing stats for {players.Count} players.");
 
-            yield return new WaitForSecondsRealtime(0.3f);
-        }
+                EndGameData.playerCount = players.Count;
+                EndGameData.playerObjects = new GameObject[players.Count];
+                EndGameData.pointsGenerated = new int[players.Count];
+                EndGameData.ingredientsHandled = new int[players.Count];
+                EndGameData.jointsReconnected = new int[players.Count];
+                EndGameData.explosionsReceived = new int[players.Count];
 
-        if (endGameAwards != null) {
-            Debug.Log("[Timer] Starting end game award ceremony...");
-            endGameAwards.ShowAwards();
+                var playerGameObjects = PlayerManager.Instance.players;
 
-            float duration = endGameAwards.displayDuration > 0 ? endGameAwards.displayDuration * 2f : 4f;
-            yield return new WaitForSecondsRealtime(duration);
-        }
+                for (int i = 0; i < players.Count; i++) {
+                    var stats = players[i];
+                    if (stats == null) {
+                        Debug.LogWarning($"[Timer] Player {i} stats are null!");
+                        continue;
+                    }
 
-        if (gameOverButtons != null) {
-            gameOverButtons.SetActive(true);
-            var buttonSprings = gameOverButtons.GetComponentsInChildren<SpringAPI>(true);
-            foreach (var spring in buttonSprings) {
-                spring.SetGoalValue(1f);
-                spring.NudgeSpringVelocity();
-                yield return new WaitForSecondsRealtime(0.1f);
+                    // Create a visual-only copy (no physics, no input)
+                    if (i < playerGameObjects.Count && playerGameObjects[i] != null) {
+                        GameObject visualCopy = CreateVisualOnlyCopy(
+                            playerGameObjects[i],
+                            Vector3.zero, // You can set a spawn position later
+                            Quaternion.identity
+                        );
+
+                        visualCopy.SetActive(false); // Hide until award scene
+                        DontDestroyOnLoad(visualCopy);
+
+                        EndGameData.playerObjects[i] = visualCopy;
+                    } else {
+                        Debug.LogWarning($"[Timer] Player GameObject at index {i} is missing!");
+                        EndGameData.playerObjects[i] = null;
+                    }
+
+                    // Store stats
+                    EndGameData.pointsGenerated[i] = stats.pointsGenerated;
+                    EndGameData.ingredientsHandled[i] = stats.ingredientsHandled;
+                    EndGameData.jointsReconnected[i] = stats.jointsReconnected;
+                    EndGameData.explosionsReceived[i] = stats.explosionsReceived;
+                }
+            } else {
+                Debug.LogWarning("[Timer] No players found to save for end game.");
             }
+        } else {
+            Debug.LogError("[Timer] PlayerManager.Instance is null! Cannot save end game data.");
         }
+
+        // --- STEP 3: Load End Game Scene ---
+        UnityEngine.SceneManagement.SceneManager.LoadScene("AwardScene 1");
     }
+
+
+
+
     private IEnumerator AnimateScoreCount(int finalScore, float duration) {
         float elapsed = 0f;
         int displayedScore = 0;
