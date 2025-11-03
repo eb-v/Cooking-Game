@@ -910,7 +910,7 @@ public class RagdollController : MonoBehaviour
                 // the hand is currently grabbing something
                 if (leftHand.GetComponent<GrabDetection>().isGrabbing == true)
                 {
-                    PlayerReleaseGrab(leftHand.gameObject);
+                     PlayerReleaseGrab(leftHand.gameObject);
                 }
 
             }
@@ -990,6 +990,7 @@ public class RagdollController : MonoBehaviour
             return;
         
         FixedJoint grabJoint = hand.transform.parent.gameObject.AddComponent<FixedJoint>();
+
         if (objToGrab.GetComponent<Rigidbody>() == null)
         {
             grabJoint.connectedBody = objToGrab.transform.parent.GetComponent<Rigidbody>();
@@ -1000,7 +1001,6 @@ public class RagdollController : MonoBehaviour
         }
         
         hand.GetComponent<GrabDetection>().isGrabbing = true;
-        GenericEvent<ObjectGrabbed>.GetEvent(gameObject.name).Invoke(objToGrab);
         hand.GetComponent<GrabDetection>().grabbedObj = objToGrab;
         
         // ADD THIS: Track ingredient handling
@@ -1024,7 +1024,9 @@ public class RagdollController : MonoBehaviour
             Destroy(hand.transform.parent.gameObject.GetComponent<FixedJoint>());
         }
         hand.GetComponent<GrabDetection>().isGrabbing = false;
-        GenericEvent<ObjectReleased>.GetEvent(gameObject.name).Invoke(hand.GetComponent<GrabDetection>().grabbedObj);
+        //GenericEvent<ObjectReleased>.GetEvent(gameObject.name).Invoke(hand.GetComponent<GrabDetection>().grabbedObj);
+        GenericEvent<ObjectReleased>.GetEvent(hand.name).Invoke();
+
         hand.GetComponent<GrabDetection>().grabbedObj = null;
 
     }

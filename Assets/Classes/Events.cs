@@ -43,7 +43,7 @@ public class EnterCounter : UnityEvent { }
 public class ExitCounter : UnityEvent { }
 
 public class ObjectGrabbed : UnityEvent<GameObject> { }
-public class ObjectReleased : UnityEvent<GameObject> { }
+public class ObjectReleased : UnityEvent { }
 
 public class OnPlaceTile : UnityEvent { }
 
@@ -124,3 +124,9 @@ public class DispenserButtonPressedEvent : UnityEvent { }
 public class PizzaDoughEnteredOvenEvent : UnityEvent<GameObject> { }
 
 public class PizzaDoughExitedOvenEvent : UnityEvent<GameObject> { }
+
+public class NewOrderAddedEvent : UnityEvent<FoodOrder> { }
+
+public class MaxOrderSetEvent : UnityEvent<int> { }
+
+public class OrderCompletedEvent : UnityEvent<FoodOrder> { }
