@@ -8,6 +8,7 @@ public class PauseMenu : MonoBehaviour
 {
     public GameObject container;
     public GameObject settingsPanel;
+    public GameObject pauseMenuContent; // The main pause menu buttons/content
 
     [Header("Settings UI Elements")]
     public Slider volumeSlider;
@@ -135,6 +136,14 @@ public class PauseMenu : MonoBehaviour
             return;
         }
 
+        // If settings panel is open, close it and return to pause menu
+        if (settingsPanel != null && settingsPanel.activeSelf)
+        {
+            CloseSettings();
+            return;
+        }
+
+        // Otherwise toggle the pause menu
         if (container.activeSelf)
         {
             ResumeGame();
@@ -197,6 +206,12 @@ public class PauseMenu : MonoBehaviour
         {
             settingsPanel.SetActive(true);
         }
+
+        // Hide the pause menu content when settings opens
+        if (pauseMenuContent != null)
+        {
+            pauseMenuContent.SetActive(false);
+        }
     }
 
     public void CloseSettings()
@@ -204,6 +219,12 @@ public class PauseMenu : MonoBehaviour
         if (settingsPanel != null)
         {
             settingsPanel.SetActive(false);
+        }
+
+        // Show the pause menu content when settings closes
+        if (pauseMenuContent != null)
+        {
+            pauseMenuContent.SetActive(true);
         }
     }
 

@@ -4838,11 +4838,11 @@ PrefabInstance:
     - target: {fileID: 9131726783819900968, guid: 65ce09a35bbd32d4e8cb9949927ab8bc, type: 3}
       propertyPath: ps5ControllerSprite
       value: 
-      objectReference: {fileID: 21300000, guid: 5b826feac13eb264ba7424d16492cfa5, type: 3}
+      objectReference: {fileID: 21300000, guid: fa4452b0afb3f874a9206428b6347196, type: 3}
     - target: {fileID: 9131726783819900968, guid: 65ce09a35bbd32d4e8cb9949927ab8bc, type: 3}
       propertyPath: xboxControllerSprite
       value: 
-      objectReference: {fileID: 21300000, guid: 1aee6f6df4e102d44bbcf68798fc7b15, type: 3}
+      objectReference: {fileID: 21300000, guid: ce9a2fdedbe960849a4b1cfef954dc2a, type: 3}
     - target: {fileID: 9131726783819900968, guid: 65ce09a35bbd32d4e8cb9949927ab8bc, type: 3}
       propertyPath: controllerTypeDropdown
       value: 
@@ -6953,7 +6953,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &561324403
 RectTransform:
   m_ObjectHideFlags: 0
@@ -10350,7 +10350,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EndGameAwards
   awardDisplayPanel: {fileID: 792423186}
-  playerDisplayPosition: {fileID: 1861299641}
+  podiumParent: {fileID: 0}
   awardTitleText: {fileID: 2146313683}
   awardDescriptionText: {fileID: 1624601957}
   playerNamesText: {fileID: 591641344}
@@ -10358,6 +10358,11 @@ MonoBehaviour:
   displayDuration: 4
   awardCamera: {fileID: 0}
   rotationSpeed: 30
+  podiumPrefab: {fileID: 0}
+  podiumSpacing: 100
+  podiumMaxHeight: 3
+  podiumRiseSpeed: 2
+  springDelayBetweenTexts: 0.2
 --- !u!1001 &808944186
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -18728,7 +18733,7 @@ RectTransform:
   m_Father: {fileID: 1582506484}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -24410,7 +24415,7 @@ RectTransform:
   m_Father: {fileID: 1629973872}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 10, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
