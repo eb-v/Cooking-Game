@@ -38,6 +38,9 @@ public class LobbyUIEventHandler : MonoBehaviour
     public virtual void Awake()
     {
         GenericEvent<OnPlayerJoinedEvent>.GetEvent(_assignedPlayerName).AddListener(AssignPlayerInputValues);
+        GenericEvent<OnNextOptionInput>.GetEvent(_assignedPlayerName).AddListener(OnNextOption);
+        GenericEvent<OnPreviousOptionInput>.GetEvent(_assignedPlayerName).AddListener(OnPreviousOption);
+        GenericEvent<OnNavigateInput>.GetEvent(_assignedPlayerName).AddListener(OnNavigate);
     }
 
     public virtual void Initialize(PlayerInput playerInput)
@@ -51,30 +54,30 @@ public class LobbyUIEventHandler : MonoBehaviour
     {
         _uiIndex = 0;
         SetSelectedUIObj(_uiIndex);
-        navigateAction.performed += OnNavigate;
-        nextOptionAction.performed += OnNextOption;
-        previousOptionAction.performed += OnPreviousOption;
-        readyAction.performed += OnReady;
+    //    navigateAction.performed += OnNavigate;
+    //    nextOptionAction.performed += OnNextOption;
+    //    previousOptionAction.performed += OnPreviousOption;
+    //    readyAction.performed += OnReady;
 
-        navigateAction.Enable();
-        nextOptionAction.Enable();
-        previousOptionAction.Enable();
-        readyAction.Enable();
+    //    navigateAction.Enable();
+    //    nextOptionAction.Enable();
+    //    previousOptionAction.Enable();
+    //    readyAction.Enable();
     }
 
     public virtual void OnDisable()
     {
         if (_playerInput == null) return;
 
-        navigateAction.performed -= OnNavigate;
-        nextOptionAction.performed -= OnNextOption;
-        previousOptionAction.performed -= OnPreviousOption;
-        readyAction.performed -= OnReady;
+        //navigateAction.performed -= OnNavigate;
+        //nextOptionAction.performed -= OnNextOption;
+        //previousOptionAction.performed -= OnPreviousOption;
+        //readyAction.performed -= OnReady;
 
-        navigateAction.Disable();
-        nextOptionAction.Disable();
-        previousOptionAction.Disable();
-        readyAction.Disable();
+        //navigateAction.Disable();
+        //nextOptionAction.Disable();
+        //previousOptionAction.Disable();
+        //readyAction.Disable();
     }
 
     protected virtual IEnumerator SelectAfterDelay()
@@ -84,15 +87,17 @@ public class LobbyUIEventHandler : MonoBehaviour
     }
 
 
-    protected virtual void OnNavigate(InputAction.CallbackContext context)
+    protected virtual void OnNavigate(Vector2 direction)
     {
-        if (context.ReadValue<Vector2>().y > 0)
+        if (gameObject.activeInHierarchy == false) return;
+
+        if (direction.y > 0)
         {
             _uiIndex--;
             _uiIndex = Mathf.Clamp(_uiIndex, 0, uiGameobjects.Count - 1);
             SetSelectedUIObj(_uiIndex);
         }
-        else if (context.ReadValue<Vector2>().y < 0)
+        else if (direction.y < 0)
         {
             _uiIndex++;
             _uiIndex = Mathf.Clamp(_uiIndex, 0, uiGameobjects.Count - 1);
@@ -102,8 +107,10 @@ public class LobbyUIEventHandler : MonoBehaviour
 
 
 
-    protected virtual void OnNextOption(InputAction.CallbackContext context)
+    protected virtual void OnNextOption()
     {
+        if (gameObject.activeInHierarchy == false) return;
+
         // handle visuals for next option button press
         NextPreviousButton nextPrevButtons = _currentSelectedObj.GetComponent<NextPreviousButton>();
         SpringAPI springAPI = nextPrevButtons.nextButton.GetComponent<SpringAPI>();
@@ -128,8 +135,10 @@ public class LobbyUIEventHandler : MonoBehaviour
 
     }
 
-    protected virtual void OnPreviousOption(InputAction.CallbackContext context)
+    protected virtual void OnPreviousOption()
     {
+
+        if (gameObject.activeInHierarchy == false) return;
         // handle visuals for previous option button press
         NextPreviousButton nextPrevButtons = _currentSelectedObj.GetComponent<NextPreviousButton>();
         SpringAPI springAPI = nextPrevButtons.previousButton.GetComponent<SpringAPI>();
@@ -150,6 +159,8 @@ public class LobbyUIEventHandler : MonoBehaviour
 
     protected virtual void OnReady(InputAction.CallbackContext context)
     {
+        if (gameObject.activeInHierarchy == false) return;
+
         if (readyAction == null)
         {
             Debug.LogWarning("Ready action is not assigned.");
