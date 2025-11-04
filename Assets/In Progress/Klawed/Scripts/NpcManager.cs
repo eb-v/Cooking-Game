@@ -7,6 +7,7 @@ public class NpcManager : MonoBehaviour
     [Header("NPC Settings")]
     [SerializeField] private GameObject npcPrefab;
     [SerializeField] private Transform[] linePositions;
+    [SerializeField] private Transform[] tablePositions;
     [SerializeField] private int maxVisibleSpeech = 4;
 
     [Header("Spawn Settings")]
@@ -47,21 +48,21 @@ public class NpcManager : MonoBehaviour
 
         GameObject npcObj = Instantiate(npcPrefab, spawnPoint.position, spawnPoint.rotation);
         NPCController npcController = npcObj.GetComponent<NPCController>();
+        npcController.manager = this;
 
         npcController.targetLine = linePositions[index];
+        npcController.tablePositions = tablePositions[index];
         npcController.currentState = NPCState.WalkingToLine;
 
         npcLine.Add(npcController);
         UpdateSpeechBubbles();
     }
 
-//call when npc leaves, need to change to moving away not destroying
     public void RemoveNpc(NPCController npc)
     {
         if (!npcLine.Contains(npc)) return;
 
         npcLine.Remove(npc);
-        Destroy(npc.gameObject);
 
         // shift others up the line
         for (int i = 0; i < npcLine.Count; i++)
@@ -69,6 +70,8 @@ public class NpcManager : MonoBehaviour
             npcLine[i].targetLine = linePositions[i];
             npcLine[i].npc.MoveTo(linePositions[i].position);
         }
+
+        SpawnNpc();
 
         UpdateSpeechBubbles();
     }
@@ -81,4 +84,10 @@ public class NpcManager : MonoBehaviour
             npcLine[i].npc.SetSpeechBubbleActive(showBubble);
         }
     }
+
+    public Transform GetRandomTable()
+    {
+        return tablePositions[Random.Range(0, tablePositions.Length)];
+    }
+
 }

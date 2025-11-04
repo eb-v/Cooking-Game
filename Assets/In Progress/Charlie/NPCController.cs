@@ -3,21 +3,23 @@ using UnityEngine.AI;
 
 public class NPCController : MonoBehaviour
 {
-    public NPCState currentState;  
+    public NPCState currentState;
     public NPC npc;
+    public NpcManager manager;
+
 
     [HideInInspector] public Transform targetLine;
-    [HideInInspector] public Transform[] tablePositions;
+    [HideInInspector] public Transform tablePositions;
     [HideInInspector] public Transform exitPoint;
+
+    private float waitTimer = 0f;
+    private float waitDuration = 10f; 
 
     void Start()
     {
         if (npc == null) npc = GetComponent<NPC>();
         if (currentState == NPCState.WalkingToLine && targetLine != null)
             npc.MoveTo(targetLine.position);
-
-        npc.agent.updateRotation = true;
-        npc.agent.updatePosition = true;
     }
     
     void Update()
@@ -42,9 +44,25 @@ public class NPCController : MonoBehaviour
     }
     void WaitInLine()
     {
-        
+        waitTimer += Time.deltaTime;
+
+        if (waitTimer >= waitDuration)
+        {
+            waitTimer = 0f;
+            WalkToTable();
+        }
     }
-    void WalkToTable() { }
+    void WalkToTable()
+    {
+        Transform table = manager.GetRandomTable();
+        tablePositions = table;
+
+        currentState = NPCState.WalkingToTable;
+        npc.SetSpeechBubbleActive(false);
+        npc.MoveTo(table.position);
+
+        manager.RemoveNpc(this);
+    }
 
     void WaitAtTable() { }
     
