@@ -15,14 +15,13 @@ public class PlayerManager : MonoBehaviour
     private List<PlayerStats> allPlayers = new List<PlayerStats>();
     [SerializeField] private List<PlayerLobbySpawnInfoSO> lobbySpawnInfoSOs = new List<PlayerLobbySpawnInfoSO>();
     [SerializeField] private string lobbySceneName = "PregameLobbyScene 2";
-    [SerializeField] private List<GameObject> uiObjects = new List<GameObject>();
 
     private void Awake()
     {
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject);
+            //DontDestroyOnLoad(gameObject);
         }
         else
         {
@@ -39,7 +38,7 @@ public class PlayerManager : MonoBehaviour
             Debug.LogWarning($"Player already registered, skipping duplicate: {playerInput.name}");
             return;
         }
-        
+
         //if (m_playerCount >= SpawnPoints.Length)
         //{
         //    Debug.LogError("Not enough spawn points for all players!");
@@ -52,18 +51,13 @@ public class PlayerManager : MonoBehaviour
         
 
         players.Add(playerInput.gameObject);
-        DontDestroyOnLoad(playerInput.gameObject);
+        //DontDestroyOnLoad(playerInput.gameObject);
         m_playerCount++;
         playerInput.name = "Player " + m_playerCount;
-        //GenericEvent<OnPlayerJoinedEvent>.GetEvent(playerInput.gameObject.name).Invoke(playerInput);
+        GenericEvent<OnPlayerJoinedEvent>.GetEvent("PlayerJoined").Invoke(m_playerCount);
 
         if (currentScene.name == lobbySceneName)
         {
-            GameObject uiObj = uiObjects[m_playerCount - 1];
-            LobbyUIEventHandler uiHandler = uiObj.GetComponent<LobbyUIEventHandler>();
-            uiHandler.Initialize(playerInput);
-
-
             playerInput.SwitchCurrentActionMap("Lobby");
             lobbyUIManager.EnablePlayerCanvas(m_playerCount);
             Rigidbody rb = playerInput.GetComponent<RagdollController>().GetPelvis().GetComponent<Rigidbody>();
@@ -74,7 +68,7 @@ public class PlayerManager : MonoBehaviour
             playerInput.transform.SetPositionAndRotation(spawnInfoSO.spawnPos, spawnRot);
         }
 
-
+       
 
         // Get or add PlayerStats component
         PlayerStats stats = playerInput.gameObject.GetComponent<PlayerStats>();

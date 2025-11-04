@@ -30,7 +30,7 @@ public class SlotMachinePanelScript : MonoBehaviour
     private void Start()
     {
         //Time.timeScale = 0f;
-
+        timer.StopTimer();
         StartCoroutine(SlotMachinePosAnimation());
     }
 
@@ -69,9 +69,9 @@ public class SlotMachinePanelScript : MonoBehaviour
         BombManager.SetActive(true);
 
         if (bombDropper != null)
-    {
-        bombDropper.StartDropping();
-    }
+        {
+            bombDropper.StartDropping();
+        }
 }
 
 }

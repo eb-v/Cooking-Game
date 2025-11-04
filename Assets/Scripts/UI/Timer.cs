@@ -35,7 +35,7 @@ public class Timer : MonoBehaviour {
     private bool gameOver = false;
     private bool hasStarted = false;
     private float startDelay = 0f;
-    private bool timerOn = false;
+    private bool timerOn = true;
 
     void Start() {
         timeRemaining = startTime;
@@ -94,6 +94,8 @@ public class Timer : MonoBehaviour {
 
 
     public void StartTimer() => timerOn = true;
+
+    public void StopTimer() => timerOn = false;
     private void DisplayTime(float timeToDisplay) {
         timeToDisplay = Mathf.Max(0, timeToDisplay);
         int minutes = Mathf.FloorToInt(timeToDisplay / 60);

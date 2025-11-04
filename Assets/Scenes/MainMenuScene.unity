@@ -443,8 +443,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 978d91e3ece14dc49ac503fe5348eea8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PositionSpringScript
-  yMultiplier: 170
-  xMultiplier: 0
+  yMultiplier: 132.1
+  xMultiplier: 60
   zMultiplier: 0
   _assignedChannel: PlayButton
   nudgeStrength: 1
@@ -621,7 +621,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PositionSpringScript
   yMultiplier: 170
-  xMultiplier: 0
+  xMultiplier: 60
   zMultiplier: 0
   _assignedChannel: QuitButton
   nudgeStrength: 1
@@ -837,7 +837,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PositionSpringScript
   yMultiplier: 0
-  xMultiplier: -350
+  xMultiplier: -491.5
   zMultiplier: 0
   _assignedChannel: title
   nudgeStrength: 1
@@ -1265,6 +1265,9 @@ MonoBehaviour:
   multiplier: 0.3
   baseScale: 1
   _assignedChannel: Quit_text
+  useAssignedChannel: 1
+  useGameObjectNameAsChannel: 0
+  useGameObjectIDsChannel: 0
 --- !u!114 &1537925108
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1420,10 +1423,9 @@ MonoBehaviour:
   _objectsToHide:
   - {fileID: 656268935}
   - {fileID: 771243618}
-  - {fileID: 0}
   _playScene:
-    _sceneAsset: {fileID: 102900000, guid: 359d8242cdf12ae4e963c35c44b9404e, type: 3}
-    _sceneName: ENDGAMEANIMATION
+    _sceneAsset: {fileID: 102900000, guid: c958087d5b41a66409018cafc2ad6a76, type: 3}
+    _sceneName: PregameLobbyScene 2
   _persistentGamePlay:
     _sceneAsset: {fileID: 102900000, guid: 57d9cfda5b177c84e90f7fd070441c2c, type: 3}
     _sceneName: PersistentGamePlayScene
@@ -1699,6 +1701,9 @@ MonoBehaviour:
   multiplier: 0.3
   baseScale: 1
   _assignedChannel: Play_text
+  useAssignedChannel: 1
+  useGameObjectNameAsChannel: 0
+  useGameObjectIDsChannel: 0
 --- !u!114 &2094553123
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -99,7 +99,7 @@ public class SpringUpdateEvent : UnityEvent<float> { }
 
 public class OnButtonPressedEvent : UnityEvent { }
 
-public class  OnPlayerJoinedEvent : UnityEvent<PlayerInput> { }
+public class  OnPlayerJoinedEvent : UnityEvent<int> { }
 
 public class OnChangeColorEvent : UnityEvent<GameObject> { }
 
@@ -137,3 +137,5 @@ public class OnPreviousOptionInput : UnityEvent { }
 public class OnNavigateInput : UnityEvent<Vector2> { }
 
 public class SlotsFinishedEvent : UnityEvent { }
+
+public class OnSelectInput : UnityEvent { }

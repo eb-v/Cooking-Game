@@ -2,6 +2,7 @@ using NUnit.Framework;
 using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
+using System.Runtime.CompilerServices;
 
 public class CheckIfAllPlayersReady : MonoBehaviour
 {
@@ -10,11 +11,14 @@ public class CheckIfAllPlayersReady : MonoBehaviour
     [SerializeField] private string assignedChannel = "DefaultChannel";
 
     [SerializeField] private List<PlayerReadyScript> playerReadyScripts = new List<PlayerReadyScript>();
+    private PlayerManager playerManager;
 
-    private void Start()
+    private void Awake()
     {
-        //StartCoroutine(forceReadycoroutine());
+        GenericEvent<OnPlayerJoinedEvent>.GetEvent("PlayerJoined").AddListener(OnPlayerJoined);
     }
+
+
 
     public void IncrementReady()
     {
@@ -41,6 +45,11 @@ public class CheckIfAllPlayersReady : MonoBehaviour
         {
             prs.OnPlayerReady();
         }
+    }
+
+    private void OnPlayerJoined(int playerCount)
+    {
+        totalPlayers = playerCount;
     }
 
     private IEnumerator forceReadycoroutine()

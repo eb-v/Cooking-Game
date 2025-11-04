@@ -1,11 +1,11 @@
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class MapSelectionScript : MonoBehaviour
 {
     [SerializeField] private PlayerManager playerManager;
-    [SerializeField] private PlayerInput playerOneInput;
     [SerializeField] private int maxIndex = 1;
     [SerializeField] private int minIndex = -1;
     [SerializeField] private SpringAPI springAPI;
@@ -16,6 +16,7 @@ public class MapSelectionScript : MonoBehaviour
     {
         GenericEvent<OnNextOptionInput>.GetEvent(assignedPlayerName).AddListener(OnNextOption);
         GenericEvent<OnPreviousOptionInput>.GetEvent(assignedPlayerName).AddListener(OnPreviousOption);
+        GenericEvent<OnSelectInput>.GetEvent(assignedPlayerName).AddListener(OnSelect);
     }
 
 
@@ -47,9 +48,6 @@ public class MapSelectionScript : MonoBehaviour
     }
 
     
-
-   
-
     private void OnNextOption()
     {
         if (gameObject.activeInHierarchy == false) return;
@@ -60,6 +58,12 @@ public class MapSelectionScript : MonoBehaviour
     {
         if (gameObject.activeInHierarchy == false) return;
         DecrementIndex();
+    }
+
+    private void OnSelect()
+    {
+        if (gameObject.activeInHierarchy == false) return;
+        SceneManager.LoadScene("Level2Scene 1");
     }
 
 

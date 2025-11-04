@@ -25,9 +25,6 @@ public class LobbyUIEventHandler : MonoBehaviour
     [Header("Player Input Component")]
     [SerializeField] private PlayerInput _playerInput;
 
-    private InputAction navigateAction;
-    private InputAction nextOptionAction;
-    private InputAction previousOptionAction;
     private InputAction readyAction;
 
     [SerializeField] private int _uiIndex = 0;
@@ -37,17 +34,13 @@ public class LobbyUIEventHandler : MonoBehaviour
 
     public virtual void Awake()
     {
-        GenericEvent<OnPlayerJoinedEvent>.GetEvent(_assignedPlayerName).AddListener(AssignPlayerInputValues);
+        //GenericEvent<OnPlayerJoinedEvent>.GetEvent(_assignedPlayerName).AddListener(AssignPlayerInputValues);
         GenericEvent<OnNextOptionInput>.GetEvent(_assignedPlayerName).AddListener(OnNextOption);
         GenericEvent<OnPreviousOptionInput>.GetEvent(_assignedPlayerName).AddListener(OnPreviousOption);
         GenericEvent<OnNavigateInput>.GetEvent(_assignedPlayerName).AddListener(OnNavigate);
         GenericEvent<PlayerReadyInputEvent>.GetEvent(_assignedPlayerName).AddListener(OnReady);
     }
 
-    public virtual void Initialize(PlayerInput playerInput)
-    {
-        AssignPlayerInputValues(playerInput);
-    }
 
 
 
@@ -55,15 +48,16 @@ public class LobbyUIEventHandler : MonoBehaviour
     {
         _uiIndex = 0;
         SetSelectedUIObj(_uiIndex);
-    //    navigateAction.performed += OnNavigate;
-    //    nextOptionAction.performed += OnNextOption;
-    //    previousOptionAction.performed += OnPreviousOption;
-    //    readyAction.performed += OnReady;
+        assignedPlayerObj = GameObject.Find(_assignedPlayerName);
+        //    navigateAction.performed += OnNavigate;
+        //    nextOptionAction.performed += OnNextOption;
+        //    previousOptionAction.performed += OnPreviousOption;
+        //    readyAction.performed += OnReady;
 
-    //    navigateAction.Enable();
-    //    nextOptionAction.Enable();
-    //    previousOptionAction.Enable();
-    //    readyAction.Enable();
+        //    navigateAction.Enable();
+        //    nextOptionAction.Enable();
+        //    previousOptionAction.Enable();
+        //    readyAction.Enable();
     }
 
     public virtual void OnDisable()
@@ -169,25 +163,6 @@ public class LobbyUIEventHandler : MonoBehaviour
         }
     }
 
-    private void AssignPlayerInputValues(PlayerInput playerInput)
-    {
-        _playerInput = playerInput;
-        assignedPlayerObj = playerInput.gameObject;
-
-        var lobbyActionMap = _playerInput.actions.FindActionMap("Lobby");
-
-        navigateAction = lobbyActionMap.FindAction("Navigate");
-        nextOptionAction = lobbyActionMap.FindAction("NextOption");
-        previousOptionAction = lobbyActionMap.FindAction("PreviousOption");
-        readyAction = lobbyActionMap.FindAction("ReadyInput");
-
-        if (readyAction == null)
-        {
-            Debug.LogWarning("Ready action not found in Lobby action map.");
-        }
-
-        //gameObject.SetActive(true);
-    }
 
 
     public void SetSelectedUIObj(int index)

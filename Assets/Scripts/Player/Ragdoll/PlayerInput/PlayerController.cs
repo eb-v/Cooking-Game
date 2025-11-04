@@ -200,6 +200,14 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public void OnSelect(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            GenericEvent<OnSelectInput>.GetEvent(gameObject.name).Invoke();
+        }
+    }
+
     public void OnNavigate(InputAction.CallbackContext context)
     {
         if (context.performed)
