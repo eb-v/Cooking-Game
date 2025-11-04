@@ -20,7 +20,7 @@ public class BombDropper : MonoBehaviour
     public string floorTag = "Floor";
 
     [Header("Start/Stop")]
-    public bool autoStart = true;
+    public bool autoStart = false; 
 
     private Coroutine dropRoutine;
 
@@ -82,6 +82,5 @@ public class BombDropper : MonoBehaviour
                 }
             }
         }
-
     }
 }
