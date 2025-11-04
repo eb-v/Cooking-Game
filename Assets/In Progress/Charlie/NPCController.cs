@@ -12,8 +12,12 @@ public class NPCController : MonoBehaviour
     [HideInInspector] public Transform tablePositions;
     [HideInInspector] public Transform exitPoint;
 
-    private float waitTimer = 0f;
-    private float waitDuration = 10f; 
+    private float waitTimer = 0f;  //remove
+    private float waitDuration = 20f;  //remove
+    private float leaveTimer = 0f;
+    private float leaveDuration = 5f;
+    private Transform assignedTable;
+    private Transform leavePosition;
 
     void Start()
     {
@@ -40,31 +44,58 @@ public class NPCController : MonoBehaviour
         {
             npc.agent.ResetPath();
             currentState = NPCState.WaitingInLine;
+            Debug.Log($"{name} reached line position, switching to WaitingInLine");
         }
     }
-    void WaitInLine()
+    void WaitInLine()   //replace with delivery condition here...
     {
         waitTimer += Time.deltaTime;
 
         if (waitTimer >= waitDuration)
         {
             waitTimer = 0f;
-            WalkToTable();
+            Debug.Log($"{name} done waiting in line, starting WalkToTable");
+            assignedTable = manager.GetNextTable();
+            currentState = NPCState.WalkingToTable;
         }
     }
     void WalkToTable()
     {
-        Transform table = manager.GetRandomTable();
-        tablePositions = table;
-
-        currentState = NPCState.WalkingToTable;
         npc.SetSpeechBubbleActive(false);
-        npc.MoveTo(table.position);
+        npc.MoveTo(assignedTable.position);
 
         manager.RemoveNpc(this);
+
+        if (!npc.agent.pathPending && npc.agent.remainingDistance <= npc.agent.stoppingDistance)
+        {
+            npc.agent.ResetPath();
+            leaveTimer = 0f;
+            currentState = NPCState.WaitingAtTable;
+            Debug.Log($"{name} reached table {assignedTable.name}, starting WaitAtTable");
+        }
     }
 
-    void WaitAtTable() { }
+    void WaitAtTable()
+    {
+        leaveTimer += Time.deltaTime;
+
+        if (leaveTimer >= leaveDuration)
+        {
+            leaveTimer = 0f;
+            Debug.Log($"{name} done waiting at table, starting Leaving");
+            leavePosition = manager.GetLeavePosition();
+            currentState = NPCState.Leaving;
+        }
+    }
     
-    void Leave() { }
+    void Leave()
+    {
+        npc.MoveTo(leavePosition.position);
+        if (!npc.agent.pathPending && npc.agent.remainingDistance <= npc.agent.stoppingDistance)
+        {
+            npc.agent.ResetPath();
+            Debug.Log($"{name} has left, destroying NPC object");
+            Destroy(gameObject);
+        }
+    }
 }

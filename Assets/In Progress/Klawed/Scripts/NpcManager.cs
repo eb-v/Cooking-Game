@@ -8,6 +8,7 @@ public class NpcManager : MonoBehaviour
     [SerializeField] private GameObject npcPrefab;
     [SerializeField] private Transform[] linePositions;
     [SerializeField] private Transform[] tablePositions;
+    [SerializeField] private Transform[] leavePositions;
     [SerializeField] private int maxVisibleSpeech = 4;
 
     [Header("Spawn Settings")]
@@ -16,6 +17,7 @@ public class NpcManager : MonoBehaviour
 
     private List<NPCController> npcLine = new List<NPCController>();
     private float spawnTimer = 0f;
+    private int nextTableIndex = 0;
 
     void Update()
     {
@@ -62,18 +64,17 @@ public class NpcManager : MonoBehaviour
     {
         if (!npcLine.Contains(npc)) return;
 
-        npcLine.Remove(npc);
+        npcLine.Remove(npc); 
 
-        // shift others up the line
         for (int i = 0; i < npcLine.Count; i++)
         {
             npcLine[i].targetLine = linePositions[i];
             npcLine[i].npc.MoveTo(linePositions[i].position);
+            Debug.Log($"{npcLine[i].name} moved up to line position {linePositions[i].position}");
         }
 
-        SpawnNpc();
-
         UpdateSpeechBubbles();
+        SpawnNpc();
     }
 
     private void UpdateSpeechBubbles()
@@ -85,9 +86,22 @@ public class NpcManager : MonoBehaviour
         }
     }
 
-    public Transform GetRandomTable()
+    public Transform GetNextTable()
     {
-        return tablePositions[Random.Range(0, tablePositions.Length)];
+        if (tablePositions.Length == 0) return null;
+
+        Transform table = tablePositions[nextTableIndex];
+        nextTableIndex = (nextTableIndex + 1) % tablePositions.Length;
+
+        Debug.Log($"Next table: {table.name}");
+        return table;
+    }
+
+    public Transform GetLeavePosition()
+    {
+        Transform leavePoint = leavePositions[Random.Range(0, leavePositions.Length)];
+
+        return leavePoint;
     }
 
 }
