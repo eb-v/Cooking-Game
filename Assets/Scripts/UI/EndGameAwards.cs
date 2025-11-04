@@ -3,11 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement; 
 
 public class EndGameAwards : MonoBehaviour {
     [Header("Award Display")]
     [SerializeField] private GameObject awardDisplayPanel;
-    [SerializeField] private Transform podiumParent; // Parent for platforms and players
+    [SerializeField] private Transform podiumParent; 
     [SerializeField] private TextMeshProUGUI awardTitleText;
     [SerializeField] private TextMeshProUGUI awardDescriptionText;
     [SerializeField] private TextMeshProUGUI playerNamesText;
@@ -61,10 +62,8 @@ public class EndGameAwards : MonoBehaviour {
         ceremonyCancelled = false;
         awardDisplayPanel.SetActive(true);
 
-        // Step 1: Setup podiums and players
         yield return SetupPodiumsAndPlayers();
 
-        // Step 2: Run awards
         yield return ShowAward("Hot Hands", "Most Ingredients Handled",
             GetMaxStatWinners(EndGameData.ingredientsHandled),
             i => $"Ingredients: {EndGameData.ingredientsHandled[i]}");
@@ -99,7 +98,6 @@ public class EndGameAwards : MonoBehaviour {
         float startX = -(count - 1) * podiumSpacing * 0.5f; // center the line
 
         for (int i = 0; i < count; i++) {
-            // Spawn podium
             Vector3 localPos = new Vector3(startX + i * podiumSpacing, 0, 0);
             GameObject podium = Instantiate(podiumPrefab, podiumParent);
             podium.transform.localPosition = localPos;
@@ -108,13 +106,13 @@ public class EndGameAwards : MonoBehaviour {
             float normalized = (float)EndGameData.pointsGenerated[i] / maxPoints;
             float targetHeight = Mathf.Lerp(0.5f, podiumMaxHeight, normalized);
 
-            // Spawn visual player
-            GameObject playerCopy = null;
             GameObject player = EndGameData.playerObjects[i];
+            Transform playerTransform = null;
+
             if (player != null) {
-                playerCopy = CreateVisualOnlyCopy(player, podium.transform.position, Quaternion.identity);
-                currentPlayerModels.Add(playerCopy);
-                StartCoroutine(RaisePodiumWithPlayer(podium.transform, playerCopy.transform, targetHeight));
+                playerTransform = player.transform;
+                currentPlayerModels.Add(player); // Add the reference original player
+                StartCoroutine(RaisePodiumWithPlayer(podium.transform, playerTransform, targetHeight));
             } else {
                 StartCoroutine(RaisePodiumWithPlayer(podium.transform, null, targetHeight));
             }
@@ -126,28 +124,42 @@ public class EndGameAwards : MonoBehaviour {
     }
 
     private IEnumerator RaisePodiumWithPlayer(Transform podium, Transform player, float targetHeight) {
-        Vector3 originalScale = podium.localScale;
-        float t = 0f;
-        podium.localScale = new Vector3(originalScale.x, 0.1f, originalScale.z);
+        if (podium == null) yield break;
 
-        float playerHeight = 1f;
+        Vector3 originalScale = podium.localScale;
+
+        podium.localScale = new Vector3(originalScale.x, 0.01f, originalScale.z);
+
+        float playerHeight = 1.5f;
+
         if (player != null) {
-            Renderer[] renderers = player.GetComponentsInChildren<Renderer>();
-            if (renderers.Length > 0) {
-                Bounds bounds = renderers[0].bounds;
-                foreach (var r in renderers) bounds.Encapsulate(r.bounds);
-                playerHeight = bounds.size.y;
+            player.gameObject.SetActive(true); 
+            player.SetParent(podium, false);
+
+            player.localPosition = Vector3.zero;
+            player.localRotation = Quaternion.identity;
+            player.localScale = Vector3.one;
+     
+            Bounds bounds = new Bounds(player.position, Vector3.zero);
+            var renderers = player.GetComponentsInChildren<Renderer>(true);
+            foreach (var r in renderers) {
+                if (r.enabled && r.gameObject.activeInHierarchy) {
+                    bounds.Encapsulate(r.bounds);
+                }
             }
+
+            if (bounds.size.y > 0.1f) playerHeight = bounds.size.y;
         }
 
+        float t = 0f;
         while (t < 1f) {
             t += Time.unscaledDeltaTime * podiumRiseSpeed;
-            float newYScale = Mathf.Lerp(0.1f, targetHeight, t);
+            float newYScale = Mathf.Lerp(0.01f, targetHeight, t);
             podium.localScale = new Vector3(originalScale.x, newYScale, originalScale.z);
 
             if (player != null) {
-                Vector3 podiumTop = podium.position + Vector3.up * newYScale;
-                player.position = podiumTop + Vector3.up * (playerHeight * 0.5f);
+
+                player.localPosition = new Vector3(0, newYScale * 0.5f, 0);
             }
 
             yield return null;
@@ -217,57 +229,18 @@ public class EndGameAwards : MonoBehaviour {
     }
 
     private void ClearPlayerModels() {
-        foreach (var m in currentPlayerModels)
-            if (m != null) Destroy(m);
+        Scene mainScene = SceneManager.GetSceneAt(0);
+
+        foreach (var m in currentPlayerModels) {
+            if (m != null && mainScene.IsValid()) {
+                SceneManager.MoveGameObjectToScene(m, mainScene);
+                m.SetActive(false);
+            }
+        }
         currentPlayerModels.Clear();
     }
 
-    private GameObject CreateVisualOnlyCopy(GameObject original, Vector3 position, Quaternion rotation) {
-        GameObject copy = new GameObject(original.name + "_Visual");
-        copy.transform.position = position;
-        copy.transform.rotation = rotation;
-        copy.transform.localScale = original.transform.lossyScale;
 
-        // Copy all MeshRenderers
-        foreach (var meshRenderer in original.GetComponentsInChildren<MeshRenderer>(true)) {
-            var mf = meshRenderer.GetComponent<MeshFilter>();
-            if (mf == null || mf.sharedMesh == null) continue;
-
-            GameObject go = new GameObject(meshRenderer.gameObject.name);
-            go.transform.SetParent(copy.transform, false);
-            go.transform.localPosition = meshRenderer.transform.localPosition;
-            go.transform.localRotation = meshRenderer.transform.localRotation;
-            go.transform.localScale = meshRenderer.transform.localScale;
-
-            var newMF = go.AddComponent<MeshFilter>();
-            newMF.sharedMesh = mf.sharedMesh;
-
-            var newMR = go.AddComponent<MeshRenderer>();
-            // Clone materials so they render independently
-            newMR.materials = meshRenderer.sharedMaterials;
-            newMR.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On;
-            newMR.receiveShadows = true;
-        }
-
-        // Copy SkinnedMeshRenderers
-        foreach (var skinned in original.GetComponentsInChildren<SkinnedMeshRenderer>(true)) {
-            if (skinned.sharedMesh == null) continue;
-
-            GameObject go = new GameObject(skinned.gameObject.name);
-            go.transform.SetParent(copy.transform, false);
-            go.transform.localPosition = skinned.transform.localPosition;
-            go.transform.localRotation = skinned.transform.localRotation;
-            go.transform.localScale = skinned.transform.localScale;
-
-            var newSkinned = go.AddComponent<SkinnedMeshRenderer>();
-            newSkinned.sharedMesh = skinned.sharedMesh;
-            newSkinned.materials = skinned.sharedMaterials;
-            newSkinned.bones = skinned.bones;
-            newSkinned.rootBone = skinned.rootBone;
-        }
-
-        return copy;
-    }
 
     #region Stat Calculations
     private List<int> GetMaxStatWinners(int[] stats, bool requireNonZero = false) {

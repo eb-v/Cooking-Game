@@ -22,6 +22,7 @@ public class PlayerManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
+            DontDestroyOnLoad(gameObject);
         }
         else
         {
@@ -51,6 +52,7 @@ public class PlayerManager : MonoBehaviour
         
 
         players.Add(playerInput.gameObject);
+        DontDestroyOnLoad(playerInput.gameObject);
         m_playerCount++;
         playerInput.name = "Player " + m_playerCount;
         //GenericEvent<OnPlayerJoinedEvent>.GetEvent(playerInput.gameObject.name).Invoke(playerInput);
