@@ -19,6 +19,11 @@ public class NpcManager : MonoBehaviour
     private float spawnTimer = 0f;
     private int nextTableIndex = 0;
 
+    void Start()
+    {
+        SpawnNpc();
+    }
+
     void Update()
     {
         spawnTimer += Time.deltaTime;
@@ -32,7 +37,7 @@ public class NpcManager : MonoBehaviour
     public void SpawnNpc()
     {
         int index = npcLine.Count;
-        if (index >= linePositions.Length) return;
+        if (index >= linePositions.Length || index >= tablePositions.Length) return;
 
         Transform spawnPoint = spawnPositions[Random.Range(0, spawnPositions.Length)];
         Vector3 spawnPos = spawnPoint.position;
