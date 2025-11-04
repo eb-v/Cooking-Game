@@ -119,59 +119,85 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &1025973404
-GameObject:
+--- !u!1001 &2070249126764102814
+PrefabInstance:
   m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1025973406}
-  - component: {fileID: 1025973405}
-  m_Layer: 0
-  m_Name: PlayerManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1025973405
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1025973404}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6390a0ca351ec594bbcc467d3d83e660, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerManager
-  lobbyUIManager: {fileID: 0}
-  SpawnPoints: []
-  players: []
-  m_playerCount: 0
-  lobbySpawnInfoSOs: []
-  lobbySceneName: PregameLobbyScene 2
-  uiObjects: []
---- !u!4 &1025973406
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1025973404}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -21.27692, y: 0, z: 263.72913}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 647134088276195048, guid: e1f73ea085ee2bd4f8daf893e5647bae, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -60.35554
+      objectReference: {fileID: 0}
+    - target: {fileID: 647134088276195048, guid: e1f73ea085ee2bd4f8daf893e5647bae, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 647134088276195048, guid: e1f73ea085ee2bd4f8daf893e5647bae, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 6.6538
+      objectReference: {fileID: 0}
+    - target: {fileID: 647134088276195048, guid: e1f73ea085ee2bd4f8daf893e5647bae, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 647134088276195048, guid: e1f73ea085ee2bd4f8daf893e5647bae, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 647134088276195048, guid: e1f73ea085ee2bd4f8daf893e5647bae, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 647134088276195048, guid: e1f73ea085ee2bd4f8daf893e5647bae, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 647134088276195048, guid: e1f73ea085ee2bd4f8daf893e5647bae, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 647134088276195048, guid: e1f73ea085ee2bd4f8daf893e5647bae, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 647134088276195048, guid: e1f73ea085ee2bd4f8daf893e5647bae, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2794472038627641361, guid: e1f73ea085ee2bd4f8daf893e5647bae, type: 3}
+      propertyPath: m_Name
+      value: Player Manager
+      objectReference: {fileID: 0}
+    - target: {fileID: 6110603153999485625, guid: e1f73ea085ee2bd4f8daf893e5647bae, type: 3}
+      propertyPath: lobbySpawnInfoSOs.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 6110603153999485625, guid: e1f73ea085ee2bd4f8daf893e5647bae, type: 3}
+      propertyPath: 'lobbySpawnInfoSOs.Array.data[0]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 896030799afbeae42b8feba4d5c00d26, type: 2}
+    - target: {fileID: 6110603153999485625, guid: e1f73ea085ee2bd4f8daf893e5647bae, type: 3}
+      propertyPath: 'lobbySpawnInfoSOs.Array.data[1]'
+      value: 
+      objectReference: {fileID: 11400000, guid: dc36027716c7ad546a4ff6c78ba6bdad, type: 2}
+    - target: {fileID: 6110603153999485625, guid: e1f73ea085ee2bd4f8daf893e5647bae, type: 3}
+      propertyPath: 'lobbySpawnInfoSOs.Array.data[2]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 6e3aeb228dbfd8c4793c5092e6c42364, type: 2}
+    - target: {fileID: 6110603153999485625, guid: e1f73ea085ee2bd4f8daf893e5647bae, type: 3}
+      propertyPath: 'lobbySpawnInfoSOs.Array.data[3]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 0ed58b21d7734e84cb1a6940564143bb, type: 2}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: e1f73ea085ee2bd4f8daf893e5647bae, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
-  - {fileID: 1025973406}
+  - {fileID: 2070249126764102814}

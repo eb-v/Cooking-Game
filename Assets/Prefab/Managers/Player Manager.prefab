@@ -45,14 +45,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6390a0ca351ec594bbcc467d3d83e660, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerManager
-  hudSlots:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  lobbyUIManager: {fileID: 0}
   SpawnPoints:
   - {fileID: 0}
   - {fileID: 0}
+  players: []
+  m_playerCount: 0
+  lobbySpawnInfoSOs:
+  - {fileID: 11400000, guid: 896030799afbeae42b8feba4d5c00d26, type: 2}
+  - {fileID: 11400000, guid: dc36027716c7ad546a4ff6c78ba6bdad, type: 2}
+  - {fileID: 11400000, guid: 6e3aeb228dbfd8c4793c5092e6c42364, type: 2}
+  - {fileID: 11400000, guid: 0ed58b21d7734e84cb1a6940564143bb, type: 2}
+  lobbySceneName: PregameLobbyScene 2
 --- !u!114 &1177768234942213315
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -87,7 +91,7 @@ MonoBehaviour:
       m_SingletonActionBindings: []
       m_Flags: 0
     m_Reference: {fileID: 0}
-  m_PlayerPrefab: {fileID: 5202245037202160621, guid: 49abeb7bbc1b6dc40827cfd8b8fb0409, type: 3}
+  m_PlayerPrefab: {fileID: 5650067990607640953, guid: 6f5ff8f23c90b1940bab1cfa06432aa1, type: 3}
   m_SplitScreen: 0
   m_MaintainAspectRatioInSplitScreen: 0
   m_FixedNumberOfSplitScreens: -1

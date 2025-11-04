@@ -77,7 +77,8 @@ public class BombDropper : MonoBehaviour
                 if (hit.collider.CompareTag(floorTag))
                 {
                     Vector3 spawnPos = new Vector3(x, dropHeight, z);
-                    Instantiate(bombPrefab, spawnPos, Quaternion.identity);
+                    //Instantiate(bombPrefab, spawnPos, Quaternion.identity);
+                    ObjectPoolManager.SpawnObject(bombPrefab, spawnPos, Quaternion.identity);
                     return;
                 }
             }

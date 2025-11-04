@@ -101,7 +101,24 @@ public class Bomb : MonoBehaviour
         }
 
         // 5. Destroy after sound finishes
-        Destroy(gameObject, lifeAfterExplosion);
+        //Destroy(gameObject, lifeAfterExplosion);
+        StartCoroutine(DestroyAfterExplosion());
+
+    }
+
+    private IEnumerator DestroyAfterExplosion()
+    {
+        yield return new WaitForSeconds(lifeAfterExplosion);
+        //Destroy(gameObject);
+        ObjectPoolManager.ReturnObjectToPool(gameObject);
+    }
+
+    void ResetValues()
+    {
+        // reset all changed variables to their defaults before reusing from pool
+        isTriggered = false;
+        hasExploded = false;
+
     }
 
     void OnDrawGizmosSelected()

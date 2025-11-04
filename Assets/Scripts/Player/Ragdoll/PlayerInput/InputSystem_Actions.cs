@@ -1136,6 +1136,15 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Select"",
+                    ""type"": ""Button"",
+                    ""id"": ""7e07ee04-9136-4be7-8843-8b02e21dcec8"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -1292,6 +1301,17 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""action"": ""ReadyInput"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b2fa21de-cc06-421c-8d32-81084e59086e"",
+                    ""path"": ""<Gamepad>/buttonSouth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Gamepad"",
+                    ""action"": ""Select"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -1395,6 +1415,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         m_Lobby_PreviousOption = m_Lobby.FindAction("PreviousOption", throwIfNotFound: true);
         m_Lobby_NextOption = m_Lobby.FindAction("NextOption", throwIfNotFound: true);
         m_Lobby_ReadyInput = m_Lobby.FindAction("ReadyInput", throwIfNotFound: true);
+        m_Lobby_Select = m_Lobby.FindAction("Select", throwIfNotFound: true);
     }
 
     ~@InputSystem_Actions()
@@ -1937,6 +1958,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Lobby_PreviousOption;
     private readonly InputAction m_Lobby_NextOption;
     private readonly InputAction m_Lobby_ReadyInput;
+    private readonly InputAction m_Lobby_Select;
     /// <summary>
     /// Provides access to input actions defined in input action map "Lobby".
     /// </summary>
@@ -1964,6 +1986,10 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Lobby/ReadyInput".
         /// </summary>
         public InputAction @ReadyInput => m_Wrapper.m_Lobby_ReadyInput;
+        /// <summary>
+        /// Provides access to the underlying input action "Lobby/Select".
+        /// </summary>
+        public InputAction @Select => m_Wrapper.m_Lobby_Select;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -2002,6 +2028,9 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @ReadyInput.started += instance.OnReadyInput;
             @ReadyInput.performed += instance.OnReadyInput;
             @ReadyInput.canceled += instance.OnReadyInput;
+            @Select.started += instance.OnSelect;
+            @Select.performed += instance.OnSelect;
+            @Select.canceled += instance.OnSelect;
         }
 
         /// <summary>
@@ -2025,6 +2054,9 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @ReadyInput.started -= instance.OnReadyInput;
             @ReadyInput.performed -= instance.OnReadyInput;
             @ReadyInput.canceled -= instance.OnReadyInput;
+            @Select.started -= instance.OnSelect;
+            @Select.performed -= instance.OnSelect;
+            @Select.canceled -= instance.OnSelect;
         }
 
         /// <summary>
@@ -2356,5 +2388,12 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnReadyInput(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Select" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnSelect(InputAction.CallbackContext context);
     }
 }
