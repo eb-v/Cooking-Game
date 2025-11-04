@@ -59,6 +59,4 @@ public class SlotMachinePanelScript : MonoBehaviour
         musicManager.SetActive(true);
     }
 
-
-
 }

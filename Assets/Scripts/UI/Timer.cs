@@ -35,6 +35,7 @@ public class Timer : MonoBehaviour {
     private bool gameOver = false;
     private bool hasStarted = false;
     private float startDelay = 0f;
+    private bool timerOn = false;
 
     void Start() {
         timeRemaining = startTime;
@@ -58,31 +59,41 @@ public class Timer : MonoBehaviour {
     }
 
     void Update() {
-        if (gameOver || Time.timeScale <= 0) return;
+        if (timerOn)
+        {
+            if (gameOver || Time.timeScale <= 0) return;
 
-        if (!hasStarted) {
-            hasStarted = true;
-            startDelay = 0f;
-        }
+            if (!hasStarted)
+            {
+                hasStarted = true;
+                startDelay = 0f;
+            }
 
-        if (startDelay < 1f) {
-            startDelay += Time.deltaTime;
-            DisplayTime(timeRemaining);
-            return;
-        }
+            if (startDelay < 1f)
+            {
+                startDelay += Time.deltaTime;
+                DisplayTime(timeRemaining);
+                return;
+            }
 
-        if (timeRemaining > 0) {
-            timeRemaining -= Time.deltaTime;
-            DisplayTime(timeRemaining);
-        } else {
-            timeRemaining = 0;
-            timerText.text = "00:00";
-            gameOver = true;
-            Time.timeScale = 0f;
-            StartCoroutine(HandleGameOver());
+            if (timeRemaining > 0)
+            {
+                timeRemaining -= Time.deltaTime;
+                DisplayTime(timeRemaining);
+            }
+            else
+            {
+                timeRemaining = 0;
+                timerText.text = "00:00";
+                gameOver = true;
+                Time.timeScale = 0f;
+                StartCoroutine(HandleGameOver());
+            }
         }
     }
 
+
+    public void StartTimer() => timerOn = true;
     private void DisplayTime(float timeToDisplay) {
         timeToDisplay = Mathf.Max(0, timeToDisplay);
         int minutes = Mathf.FloorToInt(timeToDisplay / 60);
