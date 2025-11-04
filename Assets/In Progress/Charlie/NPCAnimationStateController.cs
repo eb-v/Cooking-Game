@@ -10,14 +10,16 @@ public class NPC : MonoBehaviour
 
     void Start()
     {
-        if (agent == null) agent = GetComponent<NavMeshAgent>();
+        if (animator == null) animator = GetComponentInChildren<Animator>();
+
         if (animator == null) animator = GetComponent<Animator>();
     }
 
     void Update()
     {
-        bool walking = agent.velocity.magnitude > 0.1f;
+        bool walking = agent.pathPending || agent.remainingDistance > agent.stoppingDistance;
         animator.SetBool("isWalking", walking);
+
     }
 
     public void MoveTo(Vector3 destination)

@@ -11,6 +11,7 @@ public class NpcManager : MonoBehaviour
 
     [Header("Spawn Settings")]
     [SerializeField] private float spawnInterval = 5f;
+    [SerializeField] private Transform[] spawnPositions;
 
     private List<NPC> npcLine = new List<NPC>();
     private float spawnTimer = 0f;
