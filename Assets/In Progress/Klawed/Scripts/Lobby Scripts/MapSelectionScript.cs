@@ -1,3 +1,4 @@
+using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -5,77 +6,63 @@ public class MapSelectionScript : MonoBehaviour
 {
     [SerializeField] private PlayerManager playerManager;
     [SerializeField] private PlayerInput playerOneInput;
-    [SerializeField] private InputAction nextOptionAction;
-    [SerializeField] private InputAction previousOptionAction;
     [SerializeField] private int maxIndex = 1;
     [SerializeField] private int minIndex = -1;
     [SerializeField] private SpringAPI springAPI;
     [SerializeField] private int currentIndex = 0;
+    [SerializeField] private string assignedPlayerName = "Player 1";
+
+    private void Awake()
+    {
+        GenericEvent<OnNextOptionInput>.GetEvent(assignedPlayerName).AddListener(OnNextOption);
+        GenericEvent<OnPreviousOptionInput>.GetEvent(assignedPlayerName).AddListener(OnPreviousOption);
+    }
+
 
     private void Start()
     {
-        playerOneInput = playerManager.GetPlayer1().GetComponent<PlayerInput>();
-        if (playerOneInput == null)
-        {
-            Debug.LogError("Player 1 Input not found in MapSelectionScript Start");
-            return;
-        }
+        //playerOneInput = GameObject.Find("Player 1").GetComponent<PlayerInput>();
+        //if (playerOneInput == null)
+        //{
+        //    Debug.LogError("Player 1 Input not found in MapSelectionScript Start");
+        //    return;
+        //}
         Initialize();
     }
 
     private void Initialize()
     {
-        if (playerOneInput == null)
-        {
-            Debug.LogError("Player 1 Input not found in MapSelectionScript");
-        }
-        else
-        {
-            var lobbyActionMap = playerOneInput.actions.FindActionMap("Lobby");
-            nextOptionAction = lobbyActionMap.FindAction("NextOption");
-            previousOptionAction = lobbyActionMap.FindAction("PreviousOption");
+        //if (playerOneInput == null)
+        //{
+        //    Debug.LogError("Player 1 Input not found in MapSelectionScript");
+        //}
+        //else
+        //{
+        //    var lobbyActionMap = playerOneInput.actions.FindActionMap("Lobby");
+        //    nextOptionAction = lobbyActionMap.FindAction("NextOption");
+        //    previousOptionAction = lobbyActionMap.FindAction("PreviousOption");
+        //    navigateAction = lobbyActionMap.FindAction("Navigate");
 
-        }
+        //}
     }
 
-    private void OnEnable()
+    
+
+   
+
+    private void OnNextOption()
     {
-        if (nextOptionAction == null || previousOptionAction == null)
-        {
-            Debug.LogError("Input Actions not found in MapSelectionScript OnEnable");
-            return;
-        }
-        nextOptionAction.performed += OnNextOption;
-        previousOptionAction.performed += OnPreviousOption;
-
-        nextOptionAction?.Enable();
-        previousOptionAction?.Enable();
-
-    }
-
-    private void OnDisable()
-    {
-        if (nextOptionAction == null || previousOptionAction == null)
-        {
-            Debug.LogError("Input Actions not found in MapSelectionScript OnDisable");
-            return;
-        }
-        nextOptionAction.performed -= OnNextOption;
-        previousOptionAction.performed -= OnPreviousOption;
-
-        nextOptionAction?.Disable();
-        previousOptionAction?.Disable();
-    }
-
-    private void OnNextOption(InputAction.CallbackContext context)
-    {
+        if (gameObject.activeInHierarchy == false) return;
         IncrementIndex();
     }
 
-    private void OnPreviousOption(InputAction.CallbackContext context)
+    private void OnPreviousOption()
     {
+        if (gameObject.activeInHierarchy == false) return;
         DecrementIndex();
     }
+
+
 
     private void IncrementIndex()
     {

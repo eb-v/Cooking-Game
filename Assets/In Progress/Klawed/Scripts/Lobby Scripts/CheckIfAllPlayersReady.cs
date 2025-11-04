@@ -13,7 +13,7 @@ public class CheckIfAllPlayersReady : MonoBehaviour
 
     private void Start()
     {
-        StartCoroutine(forceReadycoroutine());
+        //StartCoroutine(forceReadycoroutine());
     }
 
     public void IncrementReady()
