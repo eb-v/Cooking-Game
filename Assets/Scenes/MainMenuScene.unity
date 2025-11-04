@@ -443,9 +443,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 978d91e3ece14dc49ac503fe5348eea8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PositionSpringScript
-  verticalMultiplier: 150
-  horizontalMultiplier: 0
+  yMultiplier: 170
+  xMultiplier: 0
+  zMultiplier: 0
   _assignedChannel: PlayButton
+  nudgeStrength: 1
+  useGameObjectNameAsEventChannel: 1
+  useCustomEventChannelName: 0
+  useGameObjectIDAsEventChannel: 0
 --- !u!114 &656268941
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -463,7 +468,11 @@ MonoBehaviour:
   dampingRatio: 0.7
   maxGoal: 1
   minGoal: 0
+  assignedEventChannel: PlayButton
   nudgeStrength: 1
+  useGameObjectNameAsEventChannel: 1
+  useCustomEventChannelName: 0
+  useGameObjectIDAsEventChannel: 0
 --- !u!1 &771243618
 GameObject:
   m_ObjectHideFlags: 0
@@ -611,9 +620,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 978d91e3ece14dc49ac503fe5348eea8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PositionSpringScript
-  verticalMultiplier: 170
-  horizontalMultiplier: 0
+  yMultiplier: 170
+  xMultiplier: 0
+  zMultiplier: 0
   _assignedChannel: QuitButton
+  nudgeStrength: 1
+  useGameObjectNameAsEventChannel: 1
+  useCustomEventChannelName: 0
+  useGameObjectIDAsEventChannel: 0
 --- !u!114 &771243624
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -631,7 +645,11 @@ MonoBehaviour:
   dampingRatio: 0.7
   maxGoal: 1
   minGoal: 0
+  assignedEventChannel: QuitButton
   nudgeStrength: 1
+  useGameObjectNameAsEventChannel: 1
+  useCustomEventChannelName: 0
+  useGameObjectIDAsEventChannel: 0
 --- !u!1 &812129285
 GameObject:
   m_ObjectHideFlags: 0
@@ -801,7 +819,11 @@ MonoBehaviour:
   dampingRatio: 0.7
   maxGoal: 1
   minGoal: 0
+  assignedEventChannel: title
   nudgeStrength: 1
+  useGameObjectNameAsEventChannel: 1
+  useCustomEventChannelName: 0
+  useGameObjectIDAsEventChannel: 0
 --- !u!114 &1176374332
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -814,9 +836,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 978d91e3ece14dc49ac503fe5348eea8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PositionSpringScript
-  verticalMultiplier: 0
-  horizontalMultiplier: -440
+  yMultiplier: 0
+  xMultiplier: -350
+  zMultiplier: 0
   _assignedChannel: title
+  nudgeStrength: 1
+  useGameObjectNameAsEventChannel: 1
+  useCustomEventChannelName: 0
+  useGameObjectIDAsEventChannel: 0
 --- !u!1 &1266899478
 GameObject:
   m_ObjectHideFlags: 0
@@ -1255,7 +1282,11 @@ MonoBehaviour:
   dampingRatio: 0.7
   maxGoal: 1
   minGoal: 0
+  assignedEventChannel: DefaultChannel
   nudgeStrength: 1
+  useGameObjectNameAsEventChannel: 1
+  useCustomEventChannelName: 0
+  useGameObjectIDAsEventChannel: 0
 --- !u!1 &1685605519
 GameObject:
   m_ObjectHideFlags: 0
@@ -1391,8 +1422,8 @@ MonoBehaviour:
   - {fileID: 771243618}
   - {fileID: 0}
   _playScene:
-    _sceneAsset: {fileID: 102900000, guid: a1c6bb8a3c70b6747b7c3c5b5d537f3b, type: 3}
-    _sceneName: PreDuel Scene 1
+    _sceneAsset: {fileID: 102900000, guid: 359d8242cdf12ae4e963c35c44b9404e, type: 3}
+    _sceneName: ENDGAMEANIMATION
   _persistentGamePlay:
     _sceneAsset: {fileID: 102900000, guid: 57d9cfda5b177c84e90f7fd070441c2c, type: 3}
     _sceneName: PersistentGamePlayScene
@@ -1685,7 +1716,11 @@ MonoBehaviour:
   dampingRatio: 0.7
   maxGoal: 1
   minGoal: 0
+  assignedEventChannel: DefaultChannel
   nudgeStrength: 1
+  useGameObjectNameAsEventChannel: 1
+  useCustomEventChannelName: 0
+  useGameObjectIDAsEventChannel: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

@@ -105,9 +105,7 @@ public class OnChangeColorEvent : UnityEvent<GameObject> { }
 
 public class OnChangeHatEvent : UnityEvent<GameObject> { }
 
-public class PlayerReadyEvent : UnityEvent { }
-
-public class PlayerUnReadyEvent : UnityEvent { }
+public class PlayerReadyInputEvent : UnityEvent { }
 
 public class CrateLandedEvent : UnityEvent { }
 
@@ -130,3 +128,10 @@ public class NewOrderAddedEvent : UnityEvent<FoodOrder> { }
 public class MaxOrderSetEvent : UnityEvent<int> { }
 
 public class OrderCompletedEvent : UnityEvent<FoodOrder> { }
+
+public class OnAllPlayersReadyEvent : UnityEvent { }
+
+public class OnNextOptionInput : UnityEvent { }
+public class OnPreviousOptionInput : UnityEvent { }
+
+public class OnNavigateInput : UnityEvent<Vector2> { }

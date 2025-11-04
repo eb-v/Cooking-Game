@@ -8,6 +8,7 @@ public class PauseMenu : MonoBehaviour
 {
     public GameObject container;
     public GameObject settingsPanel;
+    public GameObject pauseMenuContent; // The main pause menu buttons/content
 
     [Header("Settings UI Elements")]
     public Slider volumeSlider;
@@ -43,7 +44,9 @@ public class PauseMenu : MonoBehaviour
         // Setup volume slider
         if (volumeSlider != null)
         {
-            volumeSlider.value = AudioListener.volume;
+            // Set default volume to 0.5 (50%)
+            AudioListener.volume = 0.5f;
+            volumeSlider.value = 50f;  // Slider goes 0-100, so 50 is middle
             volumeSlider.onValueChanged.AddListener(OnVolumeChanged);
         }
 
@@ -135,6 +138,14 @@ public class PauseMenu : MonoBehaviour
             return;
         }
 
+        // If settings panel is open, close it and return to pause menu
+        if (settingsPanel != null && settingsPanel.activeSelf)
+        {
+            CloseSettings();
+            return;
+        }
+
+        // Otherwise toggle the pause menu
         if (container.activeSelf)
         {
             ResumeGame();
@@ -197,6 +208,12 @@ public class PauseMenu : MonoBehaviour
         {
             settingsPanel.SetActive(true);
         }
+
+        // Hide the pause menu content when settings opens
+        if (pauseMenuContent != null)
+        {
+            pauseMenuContent.SetActive(false);
+        }
     }
 
     public void CloseSettings()
@@ -205,11 +222,18 @@ public class PauseMenu : MonoBehaviour
         {
             settingsPanel.SetActive(false);
         }
+
+        // Show the pause menu content when settings closes
+        if (pauseMenuContent != null)
+        {
+            pauseMenuContent.SetActive(true);
+        }
     }
 
     void OnVolumeChanged(float value)
     {
-        AudioListener.volume = value;
+        // Convert slider value (0-100) to audio volume (0-1)
+        AudioListener.volume = value / 100f;
     }
 
     void OnResolutionChanged(int resolutionIndex)

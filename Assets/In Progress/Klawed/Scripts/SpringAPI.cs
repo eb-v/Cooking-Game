@@ -76,7 +76,7 @@ public class SpringAPI : MonoBehaviour, IEventChannel
 
     public void NudgeSpringVelocity()
     {
-        springVelValue += nudgeStrength;
+        springVelValue = nudgeStrength;
     }
 
     public void ResetSpring()

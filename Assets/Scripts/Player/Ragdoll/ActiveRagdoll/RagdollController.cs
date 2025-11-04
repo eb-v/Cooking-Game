@@ -1519,4 +1519,6 @@ public class RagdollController : MonoBehaviour
     public void TurnMovementOn() => SetMovementStatus(true);
     public void TurnMovementOff() => SetMovementStatus(false);
 
+    public GameObject GetPelvis() => RagdollDict[ROOT].gameObject;
+
 }

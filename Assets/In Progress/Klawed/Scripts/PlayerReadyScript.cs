@@ -2,14 +2,15 @@ using UnityEngine;
 
 public class PlayerReadyScript : MonoBehaviour
 {
-    [SerializeField] private SpringAPI readyImageSpring;
-    [SerializeField] private SpringAPI readyTxtSpring;
+    [SerializeField] private Transform readyUITransform;
     [SerializeField] private string _assignedChannel;
     [SerializeField] private bool _ready;
+    [SerializeField] private float _readyScale = 1.34f;
+    [SerializeField] private CheckIfAllPlayersReady _checkIfAllPlayersReady;
 
-    private void Start()
+    private void Awake()
     {
-        GenericEvent<PlayerReadyEvent>.GetEvent(_assignedChannel).AddListener(ChangeReadyStatus);
+        GenericEvent<PlayerReadyInputEvent>.GetEvent(_assignedChannel).AddListener(ChangeReadyStatus);
     }
 
     private void ChangeReadyStatus()
@@ -25,18 +26,16 @@ public class PlayerReadyScript : MonoBehaviour
         }
     }
 
-    private void OnPlayerReady()
+    public void OnPlayerReady()
     {
-        readyImageSpring.SetGoalValue(1f);
-        readyTxtSpring.SetGoalValue(1f);
+        readyUITransform.localScale = _readyScale * Vector3.one;
+        _checkIfAllPlayersReady.IncrementReady();
     }
 
     private void OnPlayerUnReady()
     {
-        readyImageSpring.SetGoalValue(0f);
-        readyTxtSpring.SetGoalValue(0f);
-        readyImageSpring.ResetSpring();
-        readyTxtSpring.ResetSpring();
+        readyUITransform.localScale = Vector3.zero;
+        _checkIfAllPlayersReady.DecrementReady();
     }
 
 }
