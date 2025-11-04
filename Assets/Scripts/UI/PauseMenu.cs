@@ -44,7 +44,9 @@ public class PauseMenu : MonoBehaviour
         // Setup volume slider
         if (volumeSlider != null)
         {
-            volumeSlider.value = AudioListener.volume;
+            // Set default volume to 0.5 (50%)
+            AudioListener.volume = 0.5f;
+            volumeSlider.value = 50f;  // Slider goes 0-100, so 50 is middle
             volumeSlider.onValueChanged.AddListener(OnVolumeChanged);
         }
 
@@ -230,7 +232,8 @@ public class PauseMenu : MonoBehaviour
 
     void OnVolumeChanged(float value)
     {
-        AudioListener.volume = value;
+        // Convert slider value (0-100) to audio volume (0-1)
+        AudioListener.volume = value / 100f;
     }
 
     void OnResolutionChanged(int resolutionIndex)
