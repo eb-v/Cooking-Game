@@ -135,3 +135,5 @@ public class OnNextOptionInput : UnityEvent { }
 public class OnPreviousOptionInput : UnityEvent { }
 
 public class OnNavigateInput : UnityEvent<Vector2> { }
+
+public class SlotsFinishedEvent : UnityEvent { }

@@ -6,17 +6,17 @@ public class Bomb : MonoBehaviour
     [Header("Explosion Settings")]
     public float explosionRadius = 3f;
     public float explosionForce = 500f;
-    public GameObject explosionVFX;  // optional, can leave empty
+    public GameObject explosionVFX;
     public float lifeAfterExplosion = 1f;
-    public float fuseTime = 2f;      // how long it waits on the ground
+    public float fuseTime = 2f;   
 
     [Header("Ground Settings")]
-    public string groundTag = "Floor";   // tag for your floor tiles
+    public string groundTag = "Floor";
 
     [Header("Audio")]
     public AudioClip explosionSfx;
     [Range(0f, 1f)]
-    public float explosionVolume = 0.3f;  // 0.3 = 30% volume
+    public float explosionVolume = 0.01f;
     private bool isTriggered = false;
     private bool hasExploded = false;
     private AudioSource audioSource;

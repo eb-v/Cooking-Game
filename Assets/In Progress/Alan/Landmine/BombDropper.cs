@@ -66,19 +66,16 @@ public class BombDropper : MonoBehaviour
             return;
         }
 
-        // Try a few random positions until we find a floor tile
         for (int i = 0; i < 10; i++)
         {
             float x = Random.Range(minX, maxX);
             float z = Random.Range(minZ, maxZ);
 
-            // Raycast downward to see what’s under this position
             Vector3 rayOrigin = new Vector3(x, dropHeight + 10f, z);
             if (Physics.Raycast(rayOrigin, Vector3.down, out RaycastHit hit, 100f))
             {
                 if (hit.collider.CompareTag(floorTag))
                 {
-                    // Found a floor tile – spawn bomb above it
                     Vector3 spawnPos = new Vector3(x, dropHeight, z);
                     Instantiate(bombPrefab, spawnPos, Quaternion.identity);
                     return;
@@ -86,7 +83,5 @@ public class BombDropper : MonoBehaviour
             }
         }
 
-        // If no floor was found after several tries, just skip this drop
-        // (prevents infinite loops)
     }
 }

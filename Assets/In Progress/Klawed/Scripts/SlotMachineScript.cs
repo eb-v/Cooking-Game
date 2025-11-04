@@ -12,6 +12,7 @@ public class SlotMachineScript : MonoBehaviour
         public bool shouldSpin;
         public float spinDuration;
         public int finalGoal;
+        public bool isDone;
     }
 
     [SerializeField] private NonNormalizedSpringAPI springSlot1;
@@ -21,6 +22,8 @@ public class SlotMachineScript : MonoBehaviour
     [SerializeField] private float spinDuration1 = 2f;
     [SerializeField] private float spinDuration2 = 3f;
     [SerializeField] private float spinDuration3 = 4f;
+
+    [SerializeField] private bool usePresetGoals = false;
 
     private SlotStruct slot1;
     private SlotStruct slot2;
@@ -84,6 +87,16 @@ public class SlotMachineScript : MonoBehaviour
         NonNormalizedSpringAPI springAPI = slot.springSlot;
         float newGoal = slot.finalGoal;
         springAPI.SetGoalValue(newGoal);
+        slot.isDone = true;
+        CheckIfAllSlotsDone();
+    }
+
+    private void CheckIfAllSlotsDone()
+    {
+        if (slot1.isDone && slot2.isDone && slot3.isDone)
+        {
+            GenericEvent<SlotsFinishedEvent>.GetEvent("SlotMachinePanelScript").Invoke();
+        }
     }
 
     
@@ -117,7 +130,14 @@ public class SlotMachineScript : MonoBehaviour
 
     public void StartSpinningAll()
     {
-        RandomizeSlotGoals();
+        if (usePresetGoals)
+        {
+            UsePresetSlotGoals();
+        }
+        else
+        {
+            RandomizeSlotGoals();
+        }
 
         StartCoroutine(StartSlotCoroutine(slot1));
         StartCoroutine(StartSlotCoroutine(slot2));
@@ -139,6 +159,13 @@ public class SlotMachineScript : MonoBehaviour
         slot1.finalGoal = randomInts[0];
         slot2.finalGoal = randomInts[1];
         slot3.finalGoal = randomInts[2];
+    }
+
+    private void UsePresetSlotGoals()
+    {
+        slot1.finalGoal = 0;
+        slot2.finalGoal = 1;
+        slot3.finalGoal = 2;
     }
     
 
