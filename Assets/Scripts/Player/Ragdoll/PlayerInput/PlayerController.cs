@@ -207,5 +207,13 @@ public class PlayerController : MonoBehaviour
             GenericEvent<OnNavigateInput>.GetEvent(gameObject.name).Invoke(context.ReadValue<Vector2>());
         }
     }
+
+    public void OnReady(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            GenericEvent<PlayerReadyInputEvent>.GetEvent(gameObject.name).Invoke();
+        }
+    }
 }
 

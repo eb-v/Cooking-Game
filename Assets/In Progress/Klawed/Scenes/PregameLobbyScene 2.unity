@@ -2856,7 +2856,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PositionSpringScript
   yMultiplier: 11.11
   xMultiplier: -12.62
-  zMultiplier: -23.24
+  zMultiplier: -17.1
   _assignedChannel: Main Camera
   nudgeStrength: 1
   useGameObjectNameAsEventChannel: 1
@@ -4345,7 +4345,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: c8112f182e9f99a4eb4832d8841c3e2b, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -7528,9 +7528,37 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1177768234942213315, guid: e1f73ea085ee2bd4f8daf893e5647bae, type: 3}
+      propertyPath: m_JoinBehavior
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1177768234942213315, guid: e1f73ea085ee2bd4f8daf893e5647bae, type: 3}
       propertyPath: m_PlayerPrefab
       value: 
       objectReference: {fileID: 5650067990607640953, guid: 6f5ff8f23c90b1940bab1cfa06432aa1, type: 3}
+    - target: {fileID: 1177768234942213315, guid: e1f73ea085ee2bd4f8daf893e5647bae, type: 3}
+      propertyPath: m_JoinAction.m_UseReference
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1177768234942213315, guid: e1f73ea085ee2bd4f8daf893e5647bae, type: 3}
+      propertyPath: m_JoinAction.m_Action.m_Name
+      value: Join
+      objectReference: {fileID: 0}
+    - target: {fileID: 1177768234942213315, guid: e1f73ea085ee2bd4f8daf893e5647bae, type: 3}
+      propertyPath: m_JoinAction.m_Action.m_SingletonActionBindings.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1177768234942213315, guid: e1f73ea085ee2bd4f8daf893e5647bae, type: 3}
+      propertyPath: m_JoinAction.m_Action.m_SingletonActionBindings.Array.data[0].m_Id
+      value: 49291587-5978-430a-9203-ca53758e1377
+      objectReference: {fileID: 0}
+    - target: {fileID: 1177768234942213315, guid: e1f73ea085ee2bd4f8daf893e5647bae, type: 3}
+      propertyPath: m_JoinAction.m_Action.m_SingletonActionBindings.Array.data[0].m_Path
+      value: <Gamepad>/start
+      objectReference: {fileID: 0}
+    - target: {fileID: 1177768234942213315, guid: e1f73ea085ee2bd4f8daf893e5647bae, type: 3}
+      propertyPath: m_JoinAction.m_Action.m_SingletonActionBindings.Array.data[0].m_Action
+      value: Join
+      objectReference: {fileID: 0}
     - target: {fileID: 2794472038627641361, guid: e1f73ea085ee2bd4f8daf893e5647bae, type: 3}
       propertyPath: m_Name
       value: Player Manager
@@ -8207,13 +8235,13 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 639592291}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.94, y: 0.87, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1458629270}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 330, y: -39.69}
@@ -8239,7 +8267,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: f6ed9e9db0023824191e7925fa467432, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -9317,7 +9345,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   readyUITransform: {fileID: 87359356}
-  _assignedChannel: Player 4 UI Object
+  _assignedChannel: Player 4
   _ready: 0
   _readyScale: 1.34
   _checkIfAllPlayersReady: {fileID: 177854260}
@@ -14591,7 +14619,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   readyUITransform: {fileID: 1564508594}
-  _assignedChannel: Player 2 UI Object
+  _assignedChannel: Player 2
   _ready: 0
   _readyScale: 1.34
   _checkIfAllPlayersReady: {fileID: 177854260}
@@ -17968,7 +17996,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: 93a7f2eae288c1e47ba97ec8795b7d87, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -20131,7 +20159,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   readyUITransform: {fileID: 963880481}
-  _assignedChannel: Player 1 UI Object
+  _assignedChannel: Player 1
   _ready: 0
   _readyScale: 1.34
   _checkIfAllPlayersReady: {fileID: 177854260}
@@ -25097,7 +25125,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   readyUITransform: {fileID: 1525172676}
-  _assignedChannel: Player 3 UI Object
+  _assignedChannel: Player 3
   _ready: 0
   _readyScale: 1.34
   _checkIfAllPlayersReady: {fileID: 177854260}

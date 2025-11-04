@@ -41,6 +41,7 @@ public class LobbyUIEventHandler : MonoBehaviour
         GenericEvent<OnNextOptionInput>.GetEvent(_assignedPlayerName).AddListener(OnNextOption);
         GenericEvent<OnPreviousOptionInput>.GetEvent(_assignedPlayerName).AddListener(OnPreviousOption);
         GenericEvent<OnNavigateInput>.GetEvent(_assignedPlayerName).AddListener(OnNavigate);
+        GenericEvent<PlayerReadyInputEvent>.GetEvent(_assignedPlayerName).AddListener(OnReady);
     }
 
     public virtual void Initialize(PlayerInput playerInput)
@@ -157,7 +158,7 @@ public class LobbyUIEventHandler : MonoBehaviour
         }
     }
 
-    protected virtual void OnReady(InputAction.CallbackContext context)
+    protected virtual void OnReady()
     {
         if (gameObject.activeInHierarchy == false) return;
 
@@ -166,8 +167,6 @@ public class LobbyUIEventHandler : MonoBehaviour
             Debug.LogWarning("Ready action is not assigned.");
             return;
         }
-        
-        GenericEvent<PlayerReadyInputEvent>.GetEvent(gameObject.name).Invoke();
     }
 
     private void AssignPlayerInputValues(PlayerInput playerInput)

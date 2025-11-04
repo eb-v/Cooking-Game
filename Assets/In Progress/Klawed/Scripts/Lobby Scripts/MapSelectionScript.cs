@@ -1,3 +1,4 @@
+using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -47,11 +48,6 @@ public class MapSelectionScript : MonoBehaviour
 
     
 
-    private void Update()
-    {
-
-    }
-
    
 
     private void OnNextOption()
@@ -65,6 +61,7 @@ public class MapSelectionScript : MonoBehaviour
         if (gameObject.activeInHierarchy == false) return;
         DecrementIndex();
     }
+
 
 
     private void IncrementIndex()
