@@ -5,6 +5,7 @@ public class SlotMachineAudio : MonoBehaviour
 {
     [Header("Audio Settings")]
     [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip leverAudio;
     [SerializeField] private AudioClip spinAudio;
     [SerializeField] private AudioClip thumpAudio;
     [SerializeField] private AudioClip winAudio;
@@ -22,10 +23,20 @@ public class SlotMachineAudio : MonoBehaviour
     // Call this method when the spin button is clicked
     public void OnSpinButtonClicked()
     {
+        StartCoroutine(PlaySpinSequence());
+    }
+
+    private IEnumerator PlaySpinSequence()
+    {
         // Reset the stopped slots counter
         stoppedSlotsCount = 0;
 
-        // Play spin audio
+        // Play lever audio and spin audio simultaneously
+        if (audioSource != null && leverAudio != null)
+        {
+            audioSource.PlayOneShot(leverAudio);
+        }
+
         if (audioSource != null && spinAudio != null)
         {
             audioSource.PlayOneShot(spinAudio);
@@ -41,6 +52,8 @@ public class SlotMachineAudio : MonoBehaviour
         StartCoroutine(PlayThumpAtSlotStop(spinDuration1));
         StartCoroutine(PlayThumpAtSlotStop(spinDuration2));
         StartCoroutine(PlayThumpAtSlotStop(spinDuration3));
+
+        yield return null;
     }
 
     private IEnumerator PlayThumpAtSlotStop(float duration)
