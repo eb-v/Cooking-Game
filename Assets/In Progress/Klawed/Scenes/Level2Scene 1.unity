@@ -29737,6 +29737,57 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7607546073266638530, guid: 5180d6a0a061ed445bae937d351c689d, type: 3}
   m_PrefabInstance: {fileID: 1311129948}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1311408795
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1311408796}
+  - component: {fileID: 1311408797}
+  m_Layer: 0
+  m_Name: OrderDeliveryManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1311408796
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1311408795}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 2.74417, y: 0.13737, z: -2.22562}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1311408797
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1311408795}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c6b6eac2c4e2e0b4a90f02c2e83f4981, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::OrderDeliveryManagerScript
+  _availableOrdersSO: {fileID: 0}
+  _assignedChannel: 
+  _orderSpawnInterval: 10
+  _maxConcurrentOrders: 5
+  _maxPizzaOrders: 3
+  _maxDrinkOrders: 2
+  canAddOrder: 1
 --- !u!1 &1322070496
 GameObject:
   m_ObjectHideFlags: 0
@@ -53397,3 +53448,4 @@ SceneRoots:
   - {fileID: 84613100}
   - {fileID: 1531622142}
   - {fileID: 984622924}
+  - {fileID: 1311408796}

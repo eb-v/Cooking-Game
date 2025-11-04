@@ -50,6 +50,7 @@ public class OrderDeliveryManagerScript : MonoBehaviour
     {
         if (OrderLimitNotReached() && canAddOrder)
         {
+            /*
             if (PizzaOrderLimitNotReached() && DrinkOrderLimitNotReached())
             {
                 int value = Random.Range(0, 2); // 0 for pizza, 1 for drink
@@ -66,8 +67,17 @@ public class OrderDeliveryManagerScript : MonoBehaviour
                 // TODO: Spawn npc with text bubble showing order
                 // food sprite is newOrder.foodSprite
             }
+            */
+
+            //charlize added >>
+            //skips drink check
+            if (PizzaOrderLimitNotReached())
+            {
+                FoodOrder newOrder = AddPizzaOrder();
+            }
         }
     }
+    
     // this will probably be invoked by an event when player completes an order with an npc
     public void CompleteOrder(FoodOrder foodOrder)
     {
@@ -89,14 +99,6 @@ public class OrderDeliveryManagerScript : MonoBehaviour
         GenericEvent<NewOrderAddedEvent>.GetEvent(_assignedChannel).Invoke(drinkOrder);
         return drinkOrder;
     }
-
-
-
-
-
-
-
-
 
 
     private int GetNumberOfCurrentOrders() => _currentOrders.Count;
