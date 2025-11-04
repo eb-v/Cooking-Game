@@ -52,49 +52,47 @@ public class OrderDeliveryManagerScript : MonoBehaviour
         {
             if (PizzaOrderLimitNotReached() && DrinkOrderLimitNotReached())
             {
-                //int value = Random.Range(0, 2); // 0 for pizza, 1 for drink
-                //bool shouldSpawnPizza = value == 0;
-
-                //FoodOrder pizzaOrder = GetOrderOfType(FoodOrderType.Pizza);
-                //_currentOrders.Add(pizzaOrder);
-                //GenericEvent<NewOrderAddedEvent>.GetEvent(_assignedChannel).Invoke(pizzaOrder);
-
-                //if (shouldSpawnPizza)
-                //{
-                //    FoodOrder pizzaOrder = GetOrderOfType(FoodOrderType.Pizza);
-                //    _currentOrders.Add(pizzaOrder);
-                //    GenericEvent<NewOrderAddedEvent>.GetEvent(_assignedChannel).Invoke(pizzaOrder);
-                //}
-                //else
-                //{
-                //    FoodOrder drinkOrder = GetOrderOfType(FoodOrderType.Drink);
-                //    _currentOrders.Add(drinkOrder);
-                //    GenericEvent<NewOrderAddedEvent>.GetEvent(_assignedChannel).Invoke(drinkOrder);
-                //}
-
-
+                int value = Random.Range(0, 2); // 0 for pizza, 1 for drink
+                bool shouldSpawnPizza = value == 0;
+                FoodOrder newOrder;
+                if (shouldSpawnPizza)
+                {
+                    newOrder = AddPizzaOrder();
+                }
+                else
+                {
+                    newOrder = AddDrinkOrder();
+                }
+                // TODO: Spawn npc with text bubble showing order
+                // food sprite is newOrder.foodSprite
             }
         }
-        
-
     }
-
+    // this will probably be invoked by an event when player completes an order with an npc
     public void CompleteOrder(FoodOrder foodOrder)
     {
-        //int index = _currentOrders.IndexOf(foodOrder);
-        //if (index != -1)
-        //{
-        //    _currentOrders.RemoveAt(index);
-        //    GenericEvent<OrderCompletedEvent>.GetEvent(_assignedChannel).Invoke(foodOrder);
-        //}
-        //else
-        //{
-        //    Debug.Log("Attempted to complete an order that does not exist in current orders.");
-        //}
+        
+    }
+
+    private FoodOrder AddPizzaOrder()
+    {
+        FoodOrder pizzaOrder = GetOrderOfType(FoodOrderType.Pizza);
+        _currentOrders.Add(pizzaOrder);
+        GenericEvent<NewOrderAddedEvent>.GetEvent(_assignedChannel).Invoke(pizzaOrder);
+        return pizzaOrder;
+    }
+
+    private FoodOrder AddDrinkOrder()
+    {
+        FoodOrder drinkOrder = GetOrderOfType(FoodOrderType.Drink);
+        _currentOrders.Add(drinkOrder);
+        GenericEvent<NewOrderAddedEvent>.GetEvent(_assignedChannel).Invoke(drinkOrder);
+        return drinkOrder;
     }
 
 
-   
+
+
 
 
 
