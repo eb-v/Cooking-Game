@@ -40,7 +40,10 @@ public class NPCController : MonoBehaviour
             currentState = NPCState.WaitingInLine;
         }
     }
-    void WaitInLine() {  }
+    void WaitInLine()
+    {
+        
+    }
     void WalkToTable() { }
 
     void WaitAtTable() { }

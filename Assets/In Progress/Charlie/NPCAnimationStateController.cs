@@ -11,8 +11,9 @@ public class NPC : MonoBehaviour
     void Start()
     {
         if (animator == null) animator = GetComponentInChildren<Animator>();
-
         if (animator == null) animator = GetComponent<Animator>();
+
+        agent.updateRotation = false;
     }
 
     void Update()
