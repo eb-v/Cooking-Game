@@ -122,6 +122,8 @@ public class SlotMachineScript : MonoBehaviour
         StartCoroutine(StartSlotCoroutine(slot1));
         StartCoroutine(StartSlotCoroutine(slot2));
         StartCoroutine(StartSlotCoroutine(slot3));
+
+        Debug.Log($"Slot Goals: {slot1.finalGoal}, {slot2.finalGoal}, {slot3.finalGoal}");
     }
 
     private IEnumerator StartSlotCoroutine(SlotStruct slot)
