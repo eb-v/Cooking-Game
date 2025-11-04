@@ -4,13 +4,22 @@ using UnityEngine.InputSystem;
 public class MapSelectionScript : MonoBehaviour
 {
     [SerializeField] private PlayerManager playerManager;
-    private PlayerInput playerOneInput;
-    private InputAction navigateAction;
-    private InputAction selectAction;
+    [SerializeField] private PlayerInput playerOneInput;
+    [SerializeField] private InputAction nextOptionAction;
+    [SerializeField] private InputAction previousOptionAction;
+    [SerializeField] private int maxIndex = 1;
+    [SerializeField] private int minIndex = -1;
+    [SerializeField] private SpringAPI springAPI;
+    [SerializeField] private int currentIndex = 0;
 
-    private void Awake()
+    private void Start()
     {
         playerOneInput = playerManager.GetPlayer1().GetComponent<PlayerInput>();
+        if (playerOneInput == null)
+        {
+            Debug.LogError("Player 1 Input not found in MapSelectionScript Start");
+            return;
+        }
         Initialize();
     }
 
@@ -23,29 +32,70 @@ public class MapSelectionScript : MonoBehaviour
         else
         {
             var lobbyActionMap = playerOneInput.actions.FindActionMap("Lobby");
-            if (lobbyActionMap != null)
-            {
-                navigateAction = lobbyActionMap.FindAction("Navigate");
-                if (navigateAction == null)
-                {
-                    Debug.LogError("Navigate action not found in Lobby action map");
-                }
-                selectAction = lobbyActionMap.FindAction("Select");
-                if (selectAction == null)
-                {
-                    Debug.LogError("Select action not found in Lobby action map");
-                }
-            }
-            else
-            {
-                Debug.LogError("Lobby action map not found in Player 1 Input");
-            }
-              
+            nextOptionAction = lobbyActionMap.FindAction("NextOption");
+            previousOptionAction = lobbyActionMap.FindAction("PreviousOption");
+
         }
     }
 
     private void OnEnable()
     {
-        playerOneInput?.actions
+        if (nextOptionAction == null || previousOptionAction == null)
+        {
+            Debug.LogError("Input Actions not found in MapSelectionScript OnEnable");
+            return;
+        }
+        nextOptionAction.performed += OnNextOption;
+        previousOptionAction.performed += OnPreviousOption;
+
+        nextOptionAction?.Enable();
+        previousOptionAction?.Enable();
+
     }
+
+    private void OnDisable()
+    {
+        if (nextOptionAction == null || previousOptionAction == null)
+        {
+            Debug.LogError("Input Actions not found in MapSelectionScript OnDisable");
+            return;
+        }
+        nextOptionAction.performed -= OnNextOption;
+        previousOptionAction.performed -= OnPreviousOption;
+
+        nextOptionAction?.Disable();
+        previousOptionAction?.Disable();
+    }
+
+    private void OnNextOption(InputAction.CallbackContext context)
+    {
+        IncrementIndex();
+    }
+
+    private void OnPreviousOption(InputAction.CallbackContext context)
+    {
+        DecrementIndex();
+    }
+
+    private void IncrementIndex()
+    {
+        currentIndex++;
+        if (currentIndex > maxIndex)
+        {
+            currentIndex = minIndex;
+        }
+        springAPI.SetGoalValue(currentIndex);
+    }
+
+    private void DecrementIndex()
+    {
+        currentIndex--;
+        if (currentIndex < minIndex)
+        {
+            currentIndex = maxIndex;
+        }
+        springAPI.SetGoalValue(currentIndex);
+    }
+
+
 }

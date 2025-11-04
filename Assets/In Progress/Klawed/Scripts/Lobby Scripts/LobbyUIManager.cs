@@ -5,7 +5,6 @@ public class LobbyUIManager : MonoBehaviour
     [SerializeField] private GameObject[] playerUICanvas;
 
     [SerializeField] private GameObject playerSelectBanner;
-    [SerializeField] private GameObject mapSelectBanner;
     [SerializeField] private GameObject mapSelectionUIObject;
 
     [SerializeField] private string assignedChannel = "DefaultChannel";
@@ -47,15 +46,18 @@ public class LobbyUIManager : MonoBehaviour
         //{
         //    child.gameObject.SetActive(false);
         //}
-        playerUICanvas[index].SetActive(false);
+        if (playerUICanvas[index] != null)
+        {
+            playerUICanvas[index].SetActive(false);
+        }
     }
 
 
     public void DisableAllPlayerCanvas()
     {
-        foreach (GameObject playerUIObj in playerUICanvas)
+        for (int i = 1; i < playerUICanvas.Length; i++)
         {
-            playerUIObj.SetActive(false);
+            DisablePlayerCanvas(i);
         }
     }
 
@@ -64,7 +66,6 @@ public class LobbyUIManager : MonoBehaviour
         DisableAllPlayerCanvas();
 
         playerSelectBanner.SetActive(false);
-        mapSelectBanner.SetActive(true);
         mapSelectionUIObject.SetActive(true);
     }
 
