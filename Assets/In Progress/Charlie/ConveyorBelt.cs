@@ -19,8 +19,8 @@ public class ConveyorBelt : MonoBehaviour
 
     void Update()
     {
-        if (material != null)
-            material.mainTextureOffset += new Vector2(0, 1) * materialSpeed * Time.deltaTime;
+        //if (material != null)
+        //    material.mainTextureOffset += new Vector2(0, 1) * materialSpeed * Time.deltaTime;
     }
 
     void FixedUpdate()

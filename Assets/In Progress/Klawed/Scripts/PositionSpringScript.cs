@@ -2,8 +2,9 @@ using UnityEngine;
 
 public class PositionSpringScript : MonoBehaviour, ISpringUI
 {
-    public float verticalMultiplier; 
-    public float horizontalMultiplier;
+    public float yMultiplier; 
+    public float xMultiplier;
+    public float zMultiplier;
     // this should match the name of the gameObject that has the SpringAPI component
     [SerializeField] private string _assignedChannel;
     private string eventChannelName;
@@ -50,9 +51,9 @@ public class PositionSpringScript : MonoBehaviour, ISpringUI
     public void OnSpringValueRecieved(float springValue)
     {
         transform.localPosition = new Vector3(
-            initialPosition.x + springValue * horizontalMultiplier,
-            initialPosition.y + springValue * verticalMultiplier,
-            initialPosition.z
+            initialPosition.x + springValue * xMultiplier,
+            initialPosition.y + springValue * yMultiplier,
+            initialPosition.z + springValue * zMultiplier
         );
     }
 }
