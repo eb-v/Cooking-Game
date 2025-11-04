@@ -13,7 +13,7 @@ public class NpcManager : MonoBehaviour
     [SerializeField] private float spawnInterval = 5f;
     [SerializeField] private Transform[] spawnPositions;
 
-    private List<NPC> npcLine = new List<NPC>();
+    private List<NPCController> npcLine = new List<NPCController>();
     private float spawnTimer = 0f;
 
     void Update()
@@ -29,41 +29,45 @@ public class NpcManager : MonoBehaviour
     public void SpawnNpc()
     {
         int index = npcLine.Count;
-        if (index >= linePositions.Length) return; 
+        if (index >= linePositions.Length) return;
 
-        Vector3 spawnPos = linePositions[index].position;
+        Transform spawnPoint = spawnPositions[Random.Range(0, spawnPositions.Length)];
+        Vector3 spawnPos = spawnPoint.position;
 
         NavMeshHit hit;
         if (NavMesh.SamplePosition(spawnPos, out hit, 2f, NavMesh.AllAreas))
         {
-            spawnPos = hit.position; 
+            spawnPos = hit.position;
         }
         else
         {
             Debug.LogWarning($"No NavMesh found near spawn position {spawnPos}. NPC not spawned.");
-            return; 
+            return;
         }
 
-        GameObject npcObj = Instantiate(npcPrefab, linePositions[index].position, linePositions[index].rotation);
-        NPC spawnedNpc = npcObj.GetComponent<NPC>(); 
-        npcLine.Add(spawnedNpc);
+        GameObject npcObj = Instantiate(npcPrefab, spawnPoint.position, spawnPoint.rotation);
+        NPCController npcController = npcObj.GetComponent<NPCController>();
 
-        spawnedNpc.MoveTo(spawnPos);
+        npcController.targetLine = linePositions[index];
+        npcController.currentState = NPCState.WalkingToLine;
 
+        npcLine.Add(npcController);
         UpdateSpeechBubbles();
     }
 
 //call when npc leaves, need to change to moving away not destroying
-    public void RemoveNpc(NPC npc)
+    public void RemoveNpc(NPCController npc)
     {
         if (!npcLine.Contains(npc)) return;
 
         npcLine.Remove(npc);
-        Destroy(npc.gameObject); 
+        Destroy(npc.gameObject);
 
+        // shift others up the line
         for (int i = 0; i < npcLine.Count; i++)
         {
-            npcLine[i].MoveTo(linePositions[i].position);
+            npcLine[i].targetLine = linePositions[i];
+            npcLine[i].npc.MoveTo(linePositions[i].position);
         }
 
         UpdateSpeechBubbles();
@@ -74,7 +78,7 @@ public class NpcManager : MonoBehaviour
         for (int i = 0; i < npcLine.Count; i++)
         {
             bool showBubble = i < maxVisibleSpeech;
-            npcLine[i].SetSpeechBubbleActive(showBubble);
+            npcLine[i].npc.SetSpeechBubbleActive(showBubble);
         }
     }
 }

@@ -390,6 +390,7 @@ GameObject:
   - component: {fileID: 431870088887886062}
   - component: {fileID: 7170812900856514564}
   - component: {fileID: 806953584572983670}
+  - component: {fileID: 5434055776899132203}
   - component: {fileID: 220473620690380954}
   - component: {fileID: 2285271266827683906}
   m_Layer: 0
@@ -457,6 +458,23 @@ MonoBehaviour:
   animator: {fileID: 7170812900856514564}
   agent: {fileID: 2285271266827683906}
   npcCanvas: {fileID: 40309093615378342}
+--- !u!114 &5434055776899132203
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1059928257303362132}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc777c791744882448d4e573a9aefacf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NPCController
+  currentState: 0
+  npc: {fileID: 806953584572983670}
+  targetLine: {fileID: 0}
+  tablePositions: []
+  exitPoint: {fileID: 0}
 --- !u!114 &220473620690380954
 MonoBehaviour:
   m_ObjectHideFlags: 0

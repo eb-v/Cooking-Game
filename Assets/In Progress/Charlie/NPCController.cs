@@ -4,8 +4,21 @@ using UnityEngine.AI;
 public class NPCController : MonoBehaviour
 {
     public NPCState currentState;  
-    public NavMeshAgent agent;
-    public Animator animator;
+    public NPC npc;
+
+    [HideInInspector] public Transform targetLine;
+    [HideInInspector] public Transform[] tablePositions;
+    [HideInInspector] public Transform exitPoint;
+
+    void Start()
+    {
+        if (npc == null) npc = GetComponent<NPC>();
+        if (currentState == NPCState.WalkingToLine && targetLine != null)
+            npc.MoveTo(targetLine.position);
+
+        npc.agent.updateRotation = true;
+        npc.agent.updatePosition = true;
+    }
     
     void Update()
     {
@@ -19,7 +32,14 @@ public class NPCController : MonoBehaviour
         }
     }
 
-    void WalkToLine() { }
+    void WalkToLine()
+    {
+        if (!npc.agent.pathPending && npc.agent.remainingDistance <= npc.agent.stoppingDistance)
+        {
+            npc.agent.ResetPath();
+            currentState = NPCState.WaitingInLine;
+        }
+    }
     void WaitInLine() {  }
     void WalkToTable() { }
 
