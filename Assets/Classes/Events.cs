@@ -130,3 +130,8 @@ public class MaxOrderSetEvent : UnityEvent<int> { }
 public class OrderCompletedEvent : UnityEvent<FoodOrder> { }
 
 public class OnAllPlayersReadyEvent : UnityEvent { }
+
+public class OnNextOptionInput : UnityEvent { }
+public class OnPreviousOptionInput : UnityEvent { }
+
+public class OnNavigateInput : UnityEvent<Vector2> { }

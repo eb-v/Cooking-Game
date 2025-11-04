@@ -183,5 +183,29 @@ public class PlayerController : MonoBehaviour
             GenericEvent<OnExplodeInput>.GetEvent(gameObject.name).Invoke();
         }
     }
+
+    public void OnNextOption(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            GenericEvent<OnNextOptionInput>.GetEvent(gameObject.name).Invoke();
+        }
+    }
+
+    public void OnPreviousOption(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            GenericEvent<OnPreviousOptionInput>.GetEvent(gameObject.name).Invoke();
+        }
+    }
+
+    public void OnNavigate(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            GenericEvent<OnNavigateInput>.GetEvent(gameObject.name).Invoke(context.ReadValue<Vector2>());
+        }
+    }
 }
 
