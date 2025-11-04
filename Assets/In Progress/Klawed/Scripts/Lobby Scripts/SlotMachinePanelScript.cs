@@ -10,11 +10,20 @@ public class SlotMachinePanelScript : MonoBehaviour
     [SerializeField] private SlotMachineScript slotMachineScript;
     [SerializeField] private Timer timer;
     [SerializeField] private GameObject musicManager;
+    [SerializeField] private GameObject BombManager;
+    [SerializeField] private BombDropper bombDropper;
+
+
     
     
     private void Awake()
     {
         GenericEvent<SlotsFinishedEvent>.GetEvent("SlotMachinePanelScript").AddListener(OnSlotsFinished);
+
+        if (bombDropper == null && BombManager != null)
+        {
+            bombDropper = BombManager.GetComponent<BombDropper>();
+        }
     }
 
 
@@ -57,6 +66,12 @@ public class SlotMachinePanelScript : MonoBehaviour
         gameObject.SetActive(false);
         timer.StartTimer();
         musicManager.SetActive(true);
+        BombManager.SetActive(true);
+
+        if (bombDropper != null)
+    {
+        bombDropper.StartDropping();
     }
+}
 
 }
