@@ -13,7 +13,7 @@ public class OrderDeliveryManagerScript : MonoBehaviour
     [Header("Order Settings")]
     [SerializeField] private float _orderSpawnInterval = 10f;
     [SerializeField] private int _maxConcurrentOrders = 5;
-    [SerializeField] private int _maxPizzaOrders = 3;
+    [SerializeField] private int _maxPizzaOrders = 5;
     [SerializeField] private int _maxDrinkOrders = 2;
     private float _orderSpawnTimer;
     [SerializeField] private bool canAddOrder = true;
@@ -41,10 +41,20 @@ public class OrderDeliveryManagerScript : MonoBehaviour
     private void Start()
     {
         GenericEvent<MaxOrderSetEvent>.GetEvent(_assignedChannel).Invoke(_maxConcurrentOrders);
+
+        AddOrder();
     }
 
 
-
+    void Update()
+    {
+        _orderSpawnTimer += Time.deltaTime;
+        if (_orderSpawnTimer >= _orderSpawnInterval)
+        {
+            _orderSpawnTimer = 0f;
+            AddOrder();
+        }
+    }
 
     public void AddOrder()
     {
@@ -74,6 +84,7 @@ public class OrderDeliveryManagerScript : MonoBehaviour
             if (PizzaOrderLimitNotReached())
             {
                 FoodOrder newOrder = AddPizzaOrder();
+                Debug.Log("AddOrder called");
             }
         }
     }

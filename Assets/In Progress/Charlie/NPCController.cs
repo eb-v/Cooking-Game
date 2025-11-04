@@ -7,6 +7,10 @@ public class NPCController : MonoBehaviour
     public NPC npc;
     public NpcManager manager;
 
+    [Header("Order Settings")]
+    [SerializeField] private string assignedChannel;
+    private NpcOrderScript npcOrderScript;
+
 
     [HideInInspector] public Transform targetLine;
     [HideInInspector] public Transform tablePositions;
@@ -18,12 +22,37 @@ public class NPCController : MonoBehaviour
     private float leaveDuration = 5f;
     private Transform assignedTable;
     private Transform leavePosition;
+    private bool hasReceivedOrder = false;
 
     void Start()
     {
         if (npc == null) npc = GetComponent<NPC>();
+
+        npcOrderScript = GetComponentInChildren<NpcOrderScript>();
+        if (npcOrderScript == null)
+        {
+            Debug.LogWarning($"{name}: NpcOrderScript not found in children!");
+        }
+
+        GenericEvent<NewOrderAddedEvent>.GetEvent(assignedChannel).AddListener(OnOrderReceived);
+
         if (currentState == NPCState.WalkingToLine && targetLine != null)
             npc.MoveTo(targetLine.position);
+    }
+
+    void OnDestroy()
+    {
+        GenericEvent<NewOrderAddedEvent>.GetEvent(assignedChannel).RemoveListener(OnOrderReceived);
+    }
+
+    private void OnOrderReceived(FoodOrder order)
+    {
+        if (!hasReceivedOrder && npcOrderScript != null)
+        {
+            npcOrderScript.SetFoodOrder(order);
+            hasReceivedOrder = true;
+            Debug.Log($"{name} received order: {order.foodSprite.name}");
+        }
     }
     
     void Update()
@@ -87,7 +116,7 @@ public class NPCController : MonoBehaviour
             currentState = NPCState.Leaving;
         }
     }
-    
+
     void Leave()
     {
         npc.MoveTo(leavePosition.position);
@@ -97,5 +126,10 @@ public class NPCController : MonoBehaviour
             Debug.Log($"{name} has left, destroying NPC object");
             Destroy(gameObject);
         }
+    }
+    
+    public FoodOrder GetCurrentOrder()
+    {
+        return npcOrderScript != null ? npcOrderScript.GetFoodOrder() : null;
     }
 }

@@ -11,19 +11,35 @@ public class NpcManager : MonoBehaviour
     [SerializeField] private Transform[] leavePositions;
     [SerializeField] private int maxVisibleSpeech = 4;
 
+    [Header("Order Settings")]
+    [SerializeField] private string assignedChannel = "OrderDisplay";
+
     [Header("Spawn Settings")]
-    [SerializeField] private float spawnInterval = 5f;
+    [SerializeField] private float spawnInterval = 5f;  //remove
     [SerializeField] private Transform[] spawnPositions;
 
     private List<NPCController> npcLine = new List<NPCController>();
-    private float spawnTimer = 0f;
+    private float spawnTimer = 0f;  //remove
     private int nextTableIndex = 0;
 
     void Start()
     {
+        GenericEvent<NewOrderAddedEvent>.GetEvent(assignedChannel).AddListener(OnNewOrderAdded);
+
+        Debug.Log($"NpcManager listening on channel: {assignedChannel}");
+    }
+
+    void OnDestroy()
+    {
+        GenericEvent<NewOrderAddedEvent>.GetEvent(assignedChannel).RemoveListener(OnNewOrderAdded);
+    }
+
+    private void OnNewOrderAdded(FoodOrder order)
+    {
         SpawnNpc();
     }
 
+/*
     void Update()
     {
         spawnTimer += Time.deltaTime;
@@ -33,6 +49,7 @@ public class NpcManager : MonoBehaviour
             SpawnNpc();
         }
     }
+*/
 
     public void SpawnNpc()
     {
