@@ -13,9 +13,9 @@ public class SlotMachinePanelScript : MonoBehaviour
     [SerializeField] private GameObject BombManager;
     [SerializeField] private BombDropper bombDropper;
 
+    // reference to existing audio script
+    [SerializeField] private SlotMachineAudio slotMachineAudio;
 
-    
-    
     private void Awake()
     {
         GenericEvent<SlotsFinishedEvent>.GetEvent("SlotMachinePanelScript").AddListener(OnSlotsFinished);
@@ -25,7 +25,6 @@ public class SlotMachinePanelScript : MonoBehaviour
             bombDropper = BombManager.GetComponent<BombDropper>();
         }
     }
-
 
     private void Start()
     {
@@ -44,7 +43,16 @@ public class SlotMachinePanelScript : MonoBehaviour
     private IEnumerator StartSpinningSlotMachine()
     {
         yield return new WaitForSecondsRealtime(slotMachineSpinDelay);
-        slotMachineScript.StartSpinningAll();
+
+        // audio + spin happen together
+        if (slotMachineAudio != null)
+        {
+            slotMachineAudio.OnSpinButtonClicked();
+        }
+        else if (slotMachineScript != null)
+        {
+            slotMachineScript.StartSpinningAll();
+        }
     }
 
     private void OnSlotsFinished()
@@ -72,6 +80,5 @@ public class SlotMachinePanelScript : MonoBehaviour
         {
             bombDropper.StartDropping();
         }
-}
-
+    }
 }
