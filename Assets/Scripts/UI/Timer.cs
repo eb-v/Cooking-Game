@@ -28,7 +28,7 @@ public class Timer : MonoBehaviour {
     [SerializeField] EndGameAwards endGameAwards;
 
     [Header("Timing")]
-    [SerializeField] private float awardDelay = 0.5f;
+   // [SerializeField] private float awardDelay = 0.5f;
     [SerializeField] private float starPopDelay = 0.3f;
 
     private float timeRemaining;

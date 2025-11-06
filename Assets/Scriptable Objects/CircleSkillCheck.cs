@@ -22,7 +22,7 @@ public class CircleSkillCheck : SkillCheckBaseLogic
     private Image dialImage;
     [SerializeField] private Color defaultColor = Color.white;
     [SerializeField] private Color successColor = Color.green;
-    [SerializeField] private float colorChangeDuration = 0.3f;
+   // [SerializeField] private float colorChangeDuration = 0.3f;
 
 
 

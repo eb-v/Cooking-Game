@@ -5,7 +5,7 @@ using System.Collections.Generic;
 public class IngredientShipment : MonoBehaviour
 {
     [SerializeField] private List<Transform> spawnPoints;
-    [SerializeField] int amountToSpawn = 4;
+    //[SerializeField] int amountToSpawn = 4;
     [SerializeField] private string _assignedChannel = "DefaultChannel";    
     private List<GameObject> _ingredientsInCrate = new List<GameObject>();
     [SerializeField] private List<GameObject> _crateParts;

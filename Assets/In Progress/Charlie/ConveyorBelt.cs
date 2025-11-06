@@ -5,7 +5,7 @@ using UnityEngine;
 public class ConveyorBelt : MonoBehaviour
 {
     [SerializeField] private float speed = 2f;          
-    [SerializeField] private float materialSpeed = 1f;  
+   // [SerializeField] private float materialSpeed = 1f;  
     [SerializeField] private Vector3 direction = Vector3.forward; 
     [SerializeField] private List<GameObject> onBelt;    
     private bool isRunning = true;

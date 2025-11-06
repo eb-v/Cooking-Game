@@ -1,179 +1,179 @@
 using UnityEngine;
 
-public class DeliveryStation : BaseStation {
-    [SerializeField] private DeliveryManager deliveryManager; 
-    [Header("Remove Pop Force")]
-    [SerializeField] private float verticalForceMultiplier = 8f;
-    [SerializeField] private float horizontalForceMultiplier = 8f;
+//public class DeliveryStation : BaseStation {
+//    //[SerializeField] private DeliveryManager deliveryManager; 
+//    [Header("Remove Pop Force")]
+//    [SerializeField] private float verticalForceMultiplier = 8f;
+//    [SerializeField] private float horizontalForceMultiplier = 8f;
 
-    private void Awake()
-    {
-        GenericEvent<InteractEvent>.GetEvent(gameObject.name).AddListener(Interact);
-        GenericEvent<RemovePlacedObject>.GetEvent(gameObject.name).AddListener(RemovePlacedKitchenObj);
-    }
+//    private void Awake()
+//    {
+//        GenericEvent<InteractEvent>.GetEvent(gameObject.name).AddListener(Interact);
+//        GenericEvent<RemovePlacedObject>.GetEvent(gameObject.name).AddListener(RemovePlacedKitchenObj);
+//    }
 
-    public override void Interact(GameObject player)
-    {
-        RagdollController ragdollController = player.GetComponent<RagdollController>();
+//    public override void Interact(GameObject player)
+//    {
+//        RagdollController ragdollController = player.GetComponent<RagdollController>();
 
-        // if player is carrying something
-        if (ragdollController.IsHoldingSomething())
-        {
-            // if station is empty
-            if (!HasKitchenObject())
-            {
-                GameObject heldKitchenObj = ragdollController.GetHeldObject();
-                Debug.Log("Held object: " + heldKitchenObj.name 
-                + ", tag: " + heldKitchenObj.tag 
-                + ", has AssembledItemObject? " 
-                + (heldKitchenObj.GetComponent<AssembledItemObject>() != null));
+//        // if player is carrying something
+//        if (ragdollController.IsHoldingSomething())
+//        {
+//            // if station is empty
+//            if (!HasKitchenObject())
+//            {
+//                GameObject heldKitchenObj = ragdollController.GetHeldObject();
+//                Debug.Log("Held object: " + heldKitchenObj.name 
+//                + ", tag: " + heldKitchenObj.tag 
+//                + ", has AssembledItemObject? " 
+//                + (heldKitchenObj.GetComponent<AssembledItemObject>() != null));
 
-                AssembledItemObject assembledObj = heldKitchenObj.GetComponentInParent<AssembledItemObject>();
-                if (assembledObj != null)
-                {
-                    heldKitchenObj = assembledObj.gameObject;
-                    Debug.Log("Found root AssembledItemObject: " + heldKitchenObj.name);
-                }
+//                AssembledItemObject assembledObj = heldKitchenObj.GetComponentInParent<AssembledItemObject>();
+//                if (assembledObj != null)
+//                {
+//                    heldKitchenObj = assembledObj.gameObject;
+//                    Debug.Log("Found root AssembledItemObject: " + heldKitchenObj.name);
+//                }
 
-                if (heldKitchenObj.CompareTag("AssembledItem"))
-                {
-                    // Store reference to track this delivery
-                    GameObject deliveringPlayer = player;
+//                if (heldKitchenObj.CompareTag("AssembledItem"))
+//                {
+//                    // Store reference to track this delivery
+//                    GameObject deliveringPlayer = player;
                     
-                    ReleaseFromHands(ragdollController, heldKitchenObj);
-                    PlaceOnCounter(player, heldKitchenObj);
+//                    ReleaseFromHands(ragdollController, heldKitchenObj);
+//                    PlaceOnCounter(player, heldKitchenObj);
 
-                    bool delivered = deliveryManager.TryMatchAndDeliver(heldKitchenObj);
+//                   // bool delivered = deliveryManager.TryMatchAndDeliver(heldKitchenObj);
 
-                    if (delivered)
-                    {
-                        // Get the ingredient count that DeliveryManager just calculated
-                        // (It was passed to OnDishDelivered event which goes to PointManager)
-                        int ingredientCount = deliveryManager.GetLastDeliveredIngredientCount();
+//                    if (delivered)
+//                    {
+//                        // Get the ingredient count that DeliveryManager just calculated
+//                        // (It was passed to OnDishDelivered event which goes to PointManager)
+//                        int ingredientCount = deliveryManager.GetLastDeliveredIngredientCount();
                         
-                        PlayerStats stats = deliveringPlayer.GetComponent<PlayerStats>();
-                        if (stats != null)
-                        {
-                            int pointsEarned = ingredientCount * 100;
-                            stats.AddPoints(pointsEarned);
-                            Debug.Log($"[DELIVERY SUCCESS] Player {stats.playerNumber} delivered dish with {ingredientCount} ingredients, earned {pointsEarned} points. Total: {stats.pointsGenerated}");
-                        }
-                        else
-                        {
-                            Debug.LogError($"[DELIVERY ERROR] Player {deliveringPlayer.name} has no PlayerStats component!");
-                        }
+//                        PlayerStats stats = deliveringPlayer.GetComponent<PlayerStats>();
+//                        if (stats != null)
+//                        {
+//                            int pointsEarned = ingredientCount * 100;
+//                            stats.AddPoints(pointsEarned);
+//                            Debug.Log($"[DELIVERY SUCCESS] Player {stats.playerNumber} delivered dish with {ingredientCount} ingredients, earned {pointsEarned} points. Total: {stats.pointsGenerated}");
+//                        }
+//                        else
+//                        {
+//                            Debug.LogError($"[DELIVERY ERROR] Player {deliveringPlayer.name} has no PlayerStats component!");
+//                        }
                         
-                        ClearStationObject(); 
-                    }
-                    else{
-                        Debug.Log("AssembledItem does not match any orders");
-                    }
-                }
-                else 
-                {
-                    Debug.Log("Item not an assembled dish :(");
-                }
-            }
-            else
-            {
-                Debug.Log("DeliveryStation already has an object placed on it.");
-            }
-        }
-        else
-        {
-            Debug.Log("Player not carrying anything");
-        }
-    }
+//                        ClearStationObject(); 
+//                    }
+//                    else{
+//                        Debug.Log("AssembledItem does not match any orders");
+//                    }
+//                }
+//                else 
+//                {
+//                    Debug.Log("Item not an assembled dish :(");
+//                }
+//            }
+//            else
+//            {
+//                Debug.Log("DeliveryStation already has an object placed on it.");
+//            }
+//        }
+//        else
+//        {
+//            Debug.Log("Player not carrying anything");
+//        }
+//    }
 
-    // Count ingredients in the dish (recursively searches all children)
-    private int CountIngredients(GameObject dish)
-    {
-        int count = 0;
+//    // Count ingredients in the dish (recursively searches all children)
+//    private int CountIngredients(GameObject dish)
+//    {
+//        int count = 0;
         
-        // Recursively count all ingredients in the hierarchy
-        count = CountIngredientsRecursive(dish.transform);
+//        // Recursively count all ingredients in the hierarchy
+//        count = CountIngredientsRecursive(dish.transform);
         
-        Debug.Log($"[COUNT] Found {count} ingredients in {dish.name}");
-        return count > 0 ? count : 1; // Default to 1 if no ingredients found
-    }
+//        Debug.Log($"[COUNT] Found {count} ingredients in {dish.name}");
+//        return count > 0 ? count : 1; // Default to 1 if no ingredients found
+//    }
     
-    private int CountIngredientsRecursive(Transform parent)
-    {
-        int count = 0;
+//    private int CountIngredientsRecursive(Transform parent)
+//    {
+//        int count = 0;
         
-        foreach (Transform child in parent)
-        {
-            // Check if this child is an ingredient
-            if (child.CompareTag("Ingredient"))
-            {
-                count++;
-                Debug.Log($"[COUNT] Found ingredient: {child.name}");
-            }
+//        foreach (Transform child in parent)
+//        {
+//            // Check if this child is an ingredient
+//            if (child.CompareTag("Ingredient"))
+//            {
+//                count++;
+//                Debug.Log($"[COUNT] Found ingredient: {child.name}");
+//            }
             
-            // Recursively check this child's children
-            count += CountIngredientsRecursive(child);
-        }
+//            // Recursively check this child's children
+//            count += CountIngredientsRecursive(child);
+//        }
         
-        return count;
-    }
+//        return count;
+//    }
 
-    private void ReleaseFromHands(RagdollController ragdollController, GameObject heldKitchenObj)
-    {
-        if (ragdollController.leftHand.GetComponent<GrabDetection>().isGrabbing &&
-            ragdollController.leftHand.GetComponent<GrabDetection>().grabbedObj == heldKitchenObj)
-        {
-            GameObject leftArm = ragdollController.leftHand.transform.parent.gameObject;
-            Destroy(leftArm.GetComponent<FixedJoint>());
-            ragdollController.leftHand.GetComponent<GrabDetection>().isGrabbing = false;
-            ragdollController.leftHand.GetComponent<GrabDetection>().grabbedObj = null;
-        }
+//    private void ReleaseFromHands(RagdollController ragdollController, GameObject heldKitchenObj)
+//    {
+//        if (ragdollController.leftHand.GetComponent<GrabDetection>().isGrabbing &&
+//            ragdollController.leftHand.GetComponent<GrabDetection>().grabbedObj == heldKitchenObj)
+//        {
+//            GameObject leftArm = ragdollController.leftHand.transform.parent.gameObject;
+//            Destroy(leftArm.GetComponent<FixedJoint>());
+//            ragdollController.leftHand.GetComponent<GrabDetection>().isGrabbing = false;
+//            ragdollController.leftHand.GetComponent<GrabDetection>().grabbedObj = null;
+//        }
 
-        if (ragdollController.rightHand.GetComponent<GrabDetection>().isGrabbing &&
-            ragdollController.rightHand.GetComponent<GrabDetection>().grabbedObj == heldKitchenObj)
-        {
-            GameObject rightArm = ragdollController.rightHand.transform.parent.gameObject;
-            Destroy(rightArm.GetComponent<FixedJoint>());
-            ragdollController.rightHand.GetComponent<GrabDetection>().isGrabbing = false;
-            ragdollController.rightHand.GetComponent<GrabDetection>().grabbedObj = null;
-        }
-    }
+//        if (ragdollController.rightHand.GetComponent<GrabDetection>().isGrabbing &&
+//            ragdollController.rightHand.GetComponent<GrabDetection>().grabbedObj == heldKitchenObj)
+//        {
+//            GameObject rightArm = ragdollController.rightHand.transform.parent.gameObject;
+//            Destroy(rightArm.GetComponent<FixedJoint>());
+//            ragdollController.rightHand.GetComponent<GrabDetection>().isGrabbing = false;
+//            ragdollController.rightHand.GetComponent<GrabDetection>().grabbedObj = null;
+//        }
+//    }
 
-    private void PlaceOnCounter(GameObject player, GameObject heldKitchenObj)
-    {
-        Collider stationCollider = player.GetComponent<Env_Interaction>().currentlyLookingAt.GetComponent<Collider>();
+//    private void PlaceOnCounter(GameObject player, GameObject heldKitchenObj)
+//    {
+//        Collider stationCollider = player.GetComponent<Env_Interaction>().currentlyLookingAt.GetComponent<Collider>();
 
-        float stationYOffset = stationCollider.bounds.extents.y;
-        Vector3 placePos = stationCollider.bounds.center;
-        placePos.y += stationYOffset;
+//        float stationYOffset = stationCollider.bounds.extents.y;
+//        Vector3 placePos = stationCollider.bounds.center;
+//        placePos.y += stationYOffset;
 
-        heldKitchenObj.transform.position = placePos;
-        heldKitchenObj.transform.rotation = Quaternion.identity;
-        heldKitchenObj.GetComponent<Rigidbody>().isKinematic = true;
+//        heldKitchenObj.transform.position = placePos;
+//        heldKitchenObj.transform.rotation = Quaternion.identity;
+//        heldKitchenObj.GetComponent<Rigidbody>().isKinematic = true;
 
-        SetStationObject(heldKitchenObj);
-    }
+//        SetStationObject(heldKitchenObj);
+//    }
 
-    public override void RemovePlacedKitchenObj(GameObject player)
-    {
-        if (HasKitchenObject())
-        {
-            GameObject kitchenObj = GetKitchenObject();
-            Rigidbody kitchenObjRb = kitchenObj.GetComponent<Rigidbody>();
-            kitchenObjRb.isKinematic = false;
+//    public override void RemovePlacedKitchenObj(GameObject player)
+//    {
+//        if (HasKitchenObject())
+//        {
+//            GameObject kitchenObj = GetKitchenObject();
+//            Rigidbody kitchenObjRb = kitchenObj.GetComponent<Rigidbody>();
+//            kitchenObjRb.isKinematic = false;
 
-            Vector3 playerPos = player.GetComponent<RagdollController>().centerOfMass.position;
+//            Vector3 playerPos = player.GetComponent<RagdollController>().centerOfMass.position;
 
-            Vector3 popDirection = (playerPos - transform.position).normalized;
-            popDirection.y = 0f;
+//            Vector3 popDirection = (playerPos - transform.position).normalized;
+//            popDirection.y = 0f;
 
-            kitchenObjRb.AddForce(Vector3.up * verticalForceMultiplier, ForceMode.Impulse);
-            kitchenObjRb.AddForce(popDirection * horizontalForceMultiplier, ForceMode.Impulse);
+//            kitchenObjRb.AddForce(Vector3.up * verticalForceMultiplier, ForceMode.Impulse);
+//            kitchenObjRb.AddForce(popDirection * horizontalForceMultiplier, ForceMode.Impulse);
 
-            ClearStationObject();
-        }
-        else
-        {
-            Debug.Log("DeliveryStation has no object to remove");
-        }
-    }
-}
+//            ClearStationObject();
+//        }
+//        else
+//        {
+//            Debug.Log("DeliveryStation has no object to remove");
+//        }
+//    }
+//}

@@ -5,7 +5,7 @@ public class Cut_Item : MonoBehaviour, IInteractable {
     [SerializeField] private GameObject finishedItemPrefab;
 
     [Header("Settings")]
-    [SerializeField] private float interactRadius = 2f;
+    //[SerializeField] private float interactRadius = 2f;
 
     private bool itemCut = false;
     private Transform player;
