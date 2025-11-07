@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Events;
 using System.Collections;
 
 public class SprinklerController : MonoBehaviour {
@@ -29,12 +30,24 @@ public class SprinklerController : MonoBehaviour {
 
     private static readonly Collider[] overlapResults = new Collider[64];
 
+    private void Awake() {
+        // Subscribe to the global Start/Stop Sprinkler events
+        GenericEvent<StartSprinklerEvent>.GetEvent("SprinklerController").AddListener(OnStartSprinklerEvent);
+        GenericEvent<StopSprinklerEvent>.GetEvent("SprinklerController").AddListener(OnStopSprinklerEvent);
+    }
+
+    private void OnDestroy() {
+        // Always clean up listeners
+        GenericEvent<StartSprinklerEvent>.GetEvent("SprinklerController").RemoveListener(OnStartSprinklerEvent);
+        GenericEvent<StopSprinklerEvent>.GetEvent("SprinklerController").RemoveListener(OnStopSprinklerEvent);
+    }
+
     private void Start() {
         if (buttonA != null)
             buttonA.OnButtonStateChanged.AddListener(OnButtonAChanged);
 
         //if(buttonB != null)
-        //    buttonB.OnButtonStateChanged.AddListener(OnButtonAChanged);
+        //    buttonB.OnButtonStateChanged.AddListener(OnButtonBChanged);
 
         if (waterEffectPrefab != null) {
             if (ObjectPoolManager.IsPooledObject(waterEffectPrefab)) {
@@ -52,12 +65,16 @@ public class SprinklerController : MonoBehaviour {
 
     private void OnButtonAChanged(bool pressed) {
         if (pressed)
-            StartSprinkler();
+            GenericEvent<StartSprinklerEvent>.GetEvent("SprinklerController").Invoke();
     }
+
     //private void OnButtonBChanged(bool pressed) {
     //    if (pressed)
-    //        StartSprinkler();
+    //        GenericEvent<StartSprinklerEvent>.GetEvent("SprinklerController").Invoke();
     //}
+
+    private void OnStartSprinklerEvent() => StartSprinkler();
+    private void OnStopSprinklerEvent() => StopSprinkler();
 
     public void StartSprinkler() {
         if (sprinklerActive) return;
@@ -72,9 +89,14 @@ public class SprinklerController : MonoBehaviour {
         InvokeRepeating(nameof(CheckForFires), extinguishDelay, extinguishCheckInterval);
 
         if (sprinklerDuration > 0)
-            Invoke(nameof(StopSprinkler), sprinklerDuration);
+            StartCoroutine(AutoStopSprinkler());
 
         Debug.Log($"{name}: Sprinkler Activated for {sprinklerDuration} seconds (fires extinguish after {extinguishDelay}s)");
+    }
+
+    private IEnumerator AutoStopSprinkler() {
+        yield return new WaitForSeconds(sprinklerDuration);
+        GenericEvent<StopSprinklerEvent>.GetEvent("SprinklerController").Invoke();
     }
 
     private void CheckForFires() {
@@ -108,7 +130,7 @@ public class SprinklerController : MonoBehaviour {
     }
 
     private IEnumerator ReturnEffectNextFrame(ParticleSystem ps) {
-        yield return null; 
+        yield return null;
 
         if (ps != null) {
             if (ObjectPoolManager.IsPooledObject(ps.gameObject)) {

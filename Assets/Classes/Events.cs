@@ -139,3 +139,9 @@ public class OnNavigateInput : UnityEvent<Vector2> { }
 public class SlotsFinishedEvent : UnityEvent { }
 
 public class OnSelectInput : UnityEvent { }
+
+public class StartFireEvent : UnityEvent { }
+public class StopFireEvent : UnityEvent { }
+
+public class StartSprinklerEvent : UnityEvent { }
+public class StopSprinklerEvent : UnityEvent { }

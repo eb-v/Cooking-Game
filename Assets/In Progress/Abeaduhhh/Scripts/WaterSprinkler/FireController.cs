@@ -1,18 +1,40 @@
 using UnityEngine;
+using UnityEngine.Events;
+using System.Collections;
 
 public class FireController : MonoBehaviour {
     [Header("Fire Components")]
-    public ParticleSystem[] fireParticles;
+    [SerializeField] private ParticleSystem[] fireParticles;
 
     [Header("Fire Settings")]
-    public float burnDuration = 20f;
+    [SerializeField] private float burnDuration = 20f;
 
     private bool burning = false;
 
-    void Awake() {
+    private void Awake() {
+        // Auto-fill particle systems if not assigned
         if (fireParticles == null || fireParticles.Length == 0)
             fireParticles = GetComponentsInChildren<ParticleSystem>();
+
         ResetFire();
+
+        // Subscribe to global fire events
+        GenericEvent<StartFireEvent>.GetEvent("FireController").AddListener(OnStartFireEvent);
+        GenericEvent<StopFireEvent>.GetEvent("FireController").AddListener(OnStopFireEvent);
+    }
+
+    private void OnDestroy() {
+        // Always unsubscribe to prevent leaks
+        GenericEvent<StartFireEvent>.GetEvent("FireController").RemoveListener(OnStartFireEvent);
+        GenericEvent<StopFireEvent>.GetEvent("FireController").RemoveListener(OnStopFireEvent);
+    }
+
+    private void OnStartFireEvent() {
+        StartFire();
+    }
+
+    private void OnStopFireEvent() {
+        StopFire();
     }
 
     public void StartFire() {
@@ -20,11 +42,19 @@ public class FireController : MonoBehaviour {
         burning = true;
 
         foreach (var ps in fireParticles) {
-            if (ps != null) { ps.Clear(); ps.Play(); }
+            if (ps != null) {
+                ps.Clear();
+                ps.Play();
+            }
         }
 
         if (burnDuration > 0)
-            Invoke(nameof(StopFire), burnDuration);
+            StartCoroutine(AutoStopFire());
+    }
+
+    private IEnumerator AutoStopFire() {
+        yield return new WaitForSeconds(burnDuration);
+        GenericEvent<StopFireEvent>.GetEvent("FireController").Invoke();
     }
 
     public void StopFire() {
@@ -32,16 +62,16 @@ public class FireController : MonoBehaviour {
         burning = false;
 
         foreach (var ps in fireParticles) {
-            if (ps != null) ps.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+            if (ps != null)
+                ps.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
         }
-
-        CancelInvoke(nameof(StopFire));
 
         StartCoroutine(ReturnFireNextFrame());
     }
 
-    private System.Collections.IEnumerator ReturnFireNextFrame() {
+    private IEnumerator ReturnFireNextFrame() {
         yield return null;
+
         if (ObjectPoolManager.IsPooledObject(gameObject)) {
             ObjectPoolManager.ReturnObjectToPool(gameObject);
             Debug.Log($"[FireController] Fire returned to pool: {name}");
@@ -53,15 +83,15 @@ public class FireController : MonoBehaviour {
 
     public void StopFireImmediate() {
         if (!burning) return;
-        CancelInvoke(nameof(StopFire));
         StopFire();
     }
 
     public void ResetFire() {
         burning = false;
+
         foreach (var ps in fireParticles) {
-            if (ps != null) ps.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+            if (ps != null)
+                ps.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
         }
-        CancelInvoke(nameof(StopFire));
     }
 }

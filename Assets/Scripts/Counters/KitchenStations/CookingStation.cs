@@ -42,7 +42,7 @@
 
 //    private void Awake() {
 
-//       // fireEffect.gameObject.SetActive(true);
+//        // fireEffect.gameObject.SetActive(true);
 
 //        if (cookingUI != null) {
 //            //if (progressSlider != null) {
@@ -84,7 +84,7 @@
 //            }
 
 //            if (burnTimer >= burnDelay) {
-//               // fireEffect.gameObject.SetActive(true);
+//                // fireEffect.gameObject.SetActive(true);
 //                BurnItem();
 //            }
 //        }
@@ -304,7 +304,7 @@
 
 //        Debug.Log("Item set above pan");
 //    }
-////helpers to place pan and ingredients for the process
+//    //helpers to place pan and ingredients for the process
 //    private void PlacePanOnStation(GameObject pan) {
 //        Collider stationCollider = GetComponent<Collider>();
 //        Vector3 placePos = stationCollider.bounds.center + Vector3.up * stationCollider.bounds.extents.y;
