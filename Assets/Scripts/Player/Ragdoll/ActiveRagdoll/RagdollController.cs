@@ -12,6 +12,9 @@ public class RagdollController : MonoBehaviour
     public Rigidbody rightHand;
     public Rigidbody leftHand;
 
+    public GrabDetection leftHandGrabDetection;
+    public GrabDetection rightHandGrabDetection;
+
     public Transform centerOfMass;
 
     [Header("Movement Properties")] public bool forwardIsCameraDirection = true;
@@ -1520,5 +1523,10 @@ public class RagdollController : MonoBehaviour
     public void TurnMovementOff() => SetMovementStatus(false);
 
     public GameObject GetPelvis() => RagdollDict[ROOT].gameObject;
+
+    public bool IsHoldingSameItemOnBothHands()
+    {
+        return leftHandGrabDetection.grabbedObj == rightHandGrabDetection.grabbedObj;
+    }
 
 }

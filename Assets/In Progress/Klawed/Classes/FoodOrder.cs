@@ -1,26 +1,19 @@
-using UnityEngine;
-using UnityEngine.UI;
+//using UnityEngine;
+//using UnityEngine.UI;
 
-public class FoodOrder
-{
-    public Sprite foodSprite;
-    public GameObject orderItemPrefab;
-    public FoodOrderType orderType;
+//public class MenuItem
+//{
+//    public Sprite foodSprite;
+//    public GameObject orderItemPrefab;
+//    public MenuItemType orderType;
 
-    public FoodOrder(Sprite sprite, GameObject orderItemPrefab, FoodOrderType orderType)
-    {
-        foodSprite = sprite;
-        this.orderItemPrefab = orderItemPrefab;
-        this.orderType = orderType;
-    }
+//    public MenuItem(Sprite sprite, GameObject orderItemPrefab, MenuItemType orderType)
+//    {
+//        this.foodSprite = sprite;
+//        this.orderItemPrefab = orderItemPrefab;
+//        this.orderType = orderType;
+//    }
 
-}
+//}
 
 
-public enum FoodOrderType
-{
-    None,
-    Pizza,
-    Drink,
-    Hamburger
-}

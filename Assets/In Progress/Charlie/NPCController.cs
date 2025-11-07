@@ -35,6 +35,7 @@ public class NPCController : MonoBehaviour
         }
 
         GenericEvent<NewOrderAddedEvent>.GetEvent(assignedChannel).AddListener(OnOrderReceived);
+        GenericEvent<OnCustomerInteract>.GetEvent(gameObject.GetInstanceID().ToString()).AddListener(OnPlayerInteractedWithMe);
 
         if (currentState == NPCState.WalkingToLine && targetLine != null)
             npc.MoveTo(targetLine.position);
@@ -45,13 +46,13 @@ public class NPCController : MonoBehaviour
         GenericEvent<NewOrderAddedEvent>.GetEvent(assignedChannel).RemoveListener(OnOrderReceived);
     }
 
-    private void OnOrderReceived(FoodOrder order)
+    private void OnOrderReceived(MenuItem order)
     {
         if (!hasReceivedOrder && npcOrderScript != null)
         {
             npcOrderScript.SetFoodOrder(order);
             hasReceivedOrder = true;
-            Debug.Log($"{name} received order: {order.foodSprite.name}");
+            Debug.Log($"{name} received order: {order.GetFoodSprite().name}");
         }
     }
     
@@ -78,15 +79,17 @@ public class NPCController : MonoBehaviour
     }
     void WaitInLine()   //replace with delivery condition here...
     {
-        waitTimer += Time.deltaTime;
+        //waitTimer += Time.deltaTime;
 
-        if (waitTimer >= waitDuration)
-        {
-            waitTimer = 0f;
-            Debug.Log($"{name} done waiting in line, starting WalkToTable");
-            assignedTable = manager.GetNextTable();
-            currentState = NPCState.WalkingToTable;
-        }
+        //if (waitTimer >= waitDuration)
+        //{
+        //    waitTimer = 0f;
+        //    Debug.Log($"{name} done waiting in line, starting WalkToTable");
+        //    assignedTable = manager.GetNextTable();
+        //    currentState = NPCState.WalkingToTable;
+        //}
+
+
     }
     void WalkToTable()
     {
@@ -128,8 +131,58 @@ public class NPCController : MonoBehaviour
         }
     }
     
-    public FoodOrder GetCurrentOrder()
+    public MenuItem GetCurrentOrder()
     {
         return npcOrderScript != null ? npcOrderScript.GetFoodOrder() : null;
+    }
+
+    private void OnPlayerInteractedWithMe(GameObject player)
+    {
+        // is the player holding an object?
+        RagdollController rdController = player.GetComponent<RagdollController>();
+
+        GameObject leftHandGrabbedObj = rdController.leftHandGrabDetection.grabbedObj;
+        GameObject rightHandGrabbedObj = rdController.rightHandGrabDetection.grabbedObj;
+        if (leftHandGrabbedObj == null && rightHandGrabbedObj == null)
+        {
+            Debug.Log($"{name}: Player is not holding any object.");
+            return;
+        }
+
+        if (leftHandGrabbedObj != null)
+        {
+            string leftHandGrabbedObjPrefabName = leftHandGrabbedObj.GetComponent<PrefabContainer>().GetPrefabName();
+            if (leftHandGrabbedObjPrefabName == npcOrderScript.GetFoodOrder().GetOrderItemPrefab().name)
+            {
+                Debug.Log($"{name} received correct order from player!");
+                assignedTable = manager.GetNextTable();
+                currentState = NPCState.WalkingToTable;
+                return;
+            }
+            else
+            {
+                Debug.Log($"{name} received incorrect order from player.");
+                // maybe play a sad sound or animation here
+                return;
+            }
+        }
+
+        if (rightHandGrabbedObj != null)
+        {
+            string rightHandGrabbedObjPrefabName = rightHandGrabbedObj.GetComponent<PrefabContainer>().GetPrefabName();
+            if (rightHandGrabbedObjPrefabName == npcOrderScript.GetFoodOrder().GetOrderItemPrefab().name)
+            {
+                Debug.Log($"{name} received correct order from player!");
+                assignedTable = manager.GetNextTable();
+                currentState = NPCState.WalkingToTable;
+                return;
+            }
+            else
+            {
+                Debug.Log($"{name} received incorrect order from player.");
+                // maybe play a sad sound or animation here
+                return;
+            }
+        }
     }
 }

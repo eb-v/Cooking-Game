@@ -18,6 +18,9 @@ public class NpcManager : MonoBehaviour
    // [SerializeField] private float spawnInterval = 5f;  //remove
     [SerializeField] private Transform[] spawnPositions;
 
+    [Header("References")]
+    [SerializeField] private OrderDeliveryManagerScript orderDeliveryManager;
+
     private List<NPCController> npcLine = new List<NPCController>();
    // private float spawnTimer = 0f;  //remove
     private int nextTableIndex = 0;
@@ -34,7 +37,7 @@ public class NpcManager : MonoBehaviour
         GenericEvent<NewOrderAddedEvent>.GetEvent(assignedChannel).RemoveListener(OnNewOrderAdded);
     }
 
-    private void OnNewOrderAdded(FoodOrder order)
+    private void OnNewOrderAdded(MenuItem order)
     {
         SpawnNpc();
     }
@@ -71,8 +74,11 @@ public class NpcManager : MonoBehaviour
         }
 
         GameObject npcObj = Instantiate(npcPrefab, spawnPoint.position, spawnPoint.rotation);
+        
         NPCController npcController = npcObj.GetComponent<NPCController>();
         npcController.manager = this;
+
+        InitializeNpcOrder(npcObj);
 
         npcController.targetLine = linePositions[index];
         npcController.tablePositions = tablePositions[index];
@@ -80,6 +86,13 @@ public class NpcManager : MonoBehaviour
 
         npcLine.Add(npcController);
         UpdateSpeechBubbles();
+    }
+
+    private void InitializeNpcOrder(GameObject npc)
+    {
+        MenuItem order = orderDeliveryManager.GetRandomOrder();
+        NpcOrderScript npcOrderScript = npc.GetComponent<NpcOrderScript>();
+        npcOrderScript.SetFoodOrder(order);
     }
 
     public void RemoveNpc(NPCController npc)

@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 public class NpcOrderScript : MonoBehaviour
 {
-    private FoodOrder _currentFoodOrder;
+    private MenuItem _currentFoodOrder;
     [SerializeField] private Image foodImage;
 
     private void Start()
@@ -10,13 +10,13 @@ public class NpcOrderScript : MonoBehaviour
 
     }
 
-    public void SetFoodOrder(FoodOrder foodOrder)
+    public void SetFoodOrder(MenuItem foodOrder)
     {
         _currentFoodOrder = foodOrder;
         UpdateFoodImage();
     }
 
-    public FoodOrder GetFoodOrder()
+    public MenuItem GetFoodOrder()
     {
         return _currentFoodOrder;
     }
@@ -29,6 +29,6 @@ public class NpcOrderScript : MonoBehaviour
             return;
         }
 
-        foodImage.sprite = _currentFoodOrder.foodSprite;
+        foodImage.sprite = _currentFoodOrder.GetFoodSprite();
     }
 }

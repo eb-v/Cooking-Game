@@ -92,7 +92,7 @@ public class RagdollBinder : EditorWindow
     private GameObject LeftFootChildren;
     private GameObject LeftFoot;
     
-    [MenuItem("Tools/Active Ragdoll Binder")]
+    [UnityEditor.MenuItem("Tools/Active Ragdoll Binder")]
     static void RagdollBinderWindow()
     {
         if(instance == null)

@@ -28739,13 +28739,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6b6eac2c4e2e0b4a90f02c2e83f4981, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::OrderDeliveryManagerScript
-  _availableOrdersSO: {fileID: 0}
-  _assignedChannel: 
-  _orderSpawnInterval: 10
-  _maxConcurrentOrders: 5
-  _maxPizzaOrders: 3
-  _maxDrinkOrders: 2
-  canAddOrder: 1
+  _availableOrders: {fileID: 11400000, guid: 8b4cffc09a66a4d4cb529b086fd0baf5, type: 2}
 --- !u!1 &1322070496
 GameObject:
   m_ObjectHideFlags: 0
@@ -42556,6 +42550,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: UIOverlayCanvas
       objectReference: {fileID: 0}
+    - target: {fileID: 3099766542291391955, guid: 2aa47a69a95285f41bff08ffe1ae71ee, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3539598626042601670, guid: 2aa47a69a95285f41bff08ffe1ae71ee, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -43054,6 +43052,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6272035227802506061, guid: 3fd2ffcaf55b05949b2dcf137d98aafc, type: 3}
+      propertyPath: orderDeliveryManager
+      value: 
+      objectReference: {fileID: 1311408797}
     - target: {fileID: 6272035227802506061, guid: 3fd2ffcaf55b05949b2dcf137d98aafc, type: 3}
       propertyPath: leavePositions.Array.size
       value: 2

@@ -123,11 +123,11 @@ public class PizzaDoughEnteredOvenEvent : UnityEvent<GameObject> { }
 
 public class PizzaDoughExitedOvenEvent : UnityEvent<GameObject> { }
 
-public class NewOrderAddedEvent : UnityEvent<FoodOrder> { }
+public class NewOrderAddedEvent : UnityEvent<MenuItem> { }
 
 public class MaxOrderSetEvent : UnityEvent<int> { }
 
-public class OrderCompletedEvent : UnityEvent<FoodOrder> { }
+public class OrderCompletedEvent : UnityEvent<MenuItem> { }
 
 public class OnAllPlayersReadyEvent : UnityEvent { }
 
@@ -150,3 +150,5 @@ public class GameTimeUpdatedEvent : UnityEvent<float> { }
 public class GameOverEvent : UnityEvent { }
 public class ShowEndGameUIEvent : UnityEvent { }
 public class HideEndGameUIEvent : UnityEvent { }
+
+public class OnCustomerInteract : UnityEvent<GameObject> { }

@@ -30,7 +30,7 @@ public class OrderDisplayScript : MonoBehaviour
     }
 
 
-    private void OnNewOrderAdded(FoodOrder newOrder)
+    private void OnNewOrderAdded(MenuItem newOrder)
     {
         // Update the UI to display the new order
         UpdateOrderVisuals();
@@ -41,7 +41,7 @@ public class OrderDisplayScript : MonoBehaviour
     }
 
 
-    private void OnOrderCompleted(FoodOrder completedOrder)
+    private void OnOrderCompleted(MenuItem completedOrder)
     {
        
 

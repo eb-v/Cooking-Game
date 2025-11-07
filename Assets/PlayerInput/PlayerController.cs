@@ -104,6 +104,11 @@ public class PlayerController : MonoBehaviour
             }
             if (env_Interaction.currentlyLookingAt.tag != "Player")
             {
+                if (env_Interaction.currentlyLookingAt.tag == "Customer")
+                {
+                    GenericEvent<OnCustomerInteract>.GetEvent(env_Interaction.currentlyLookingAt.GetInstanceID().ToString()).Invoke(gameObject);
+                }
+
                 GenericEvent<Interact>.GetEvent(env_Interaction.currentlyLookingAt?.name).Invoke();
                 GenericEvent<InteractEvent>.GetEvent(env_Interaction.currentlyLookingAt?.name).Invoke(gameObject);
             }
