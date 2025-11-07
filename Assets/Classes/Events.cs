@@ -99,7 +99,7 @@ public class SpringUpdateEvent : UnityEvent<float> { }
 
 public class OnButtonPressedEvent : UnityEvent { }
 
-public class  OnPlayerJoinedEvent : UnityEvent<int> { }
+public class OnPlayerJoinedEvent : UnityEvent<int> { }
 
 public class OnChangeColorEvent : UnityEvent<GameObject> { }
 
@@ -145,3 +145,8 @@ public class StopFireEvent : UnityEvent { }
 
 public class StartSprinklerEvent : UnityEvent { }
 public class StopSprinklerEvent : UnityEvent { }
+
+public class GameTimeUpdatedEvent : UnityEvent<float> { }
+public class GameOverEvent : UnityEvent { }
+public class ShowEndGameUIEvent : UnityEvent { }
+public class HideEndGameUIEvent : UnityEvent { }
