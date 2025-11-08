@@ -154,6 +154,9 @@ public class NPCController : MonoBehaviour
             string leftHandGrabbedObjPrefabName = leftHandGrabbedObj.GetComponent<PrefabContainer>().GetPrefabName();
             if (leftHandGrabbedObjPrefabName == npcOrderScript.GetFoodOrder().GetOrderItemPrefab().name)
             {
+                GenericEvent<NpcReceivedCorrectOrder>.GetEvent("OrderSystem").Invoke(player);
+                GrabSystem.ReleaseObject(player.GetComponent<HandContainer>().LeftHand);
+                ObjectPoolManager.ReturnObjectToPool(leftHandGrabbedObj);
                 Debug.Log($"{name} received correct order from player!");
                 assignedTable = manager.GetNextTable();
                 currentState = NPCState.WalkingToTable;
@@ -173,6 +176,8 @@ public class NPCController : MonoBehaviour
             if (rightHandGrabbedObjPrefabName == npcOrderScript.GetFoodOrder().GetOrderItemPrefab().name)
             {
                 Debug.Log($"{name} received correct order from player!");
+                GrabSystem.ReleaseObject(player.GetComponent<HandContainer>().RightHand);
+                ObjectPoolManager.ReturnObjectToPool(rightHandGrabbedObj);
                 assignedTable = manager.GetNextTable();
                 currentState = NPCState.WalkingToTable;
                 return;

@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class PrefabContainer : MonoBehaviour
 {
-    [SerializeField] private GameObject prefab;
+    [SerializeField] private string prefabName;
 
-    public string GetPrefabName() => prefab.name;
+    public string GetPrefabName() => prefabName;
 }

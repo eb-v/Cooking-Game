@@ -1,9 +1,9 @@
 using UnityEngine;
 
-[RequireComponent(typeof(GrabDetection))]
+[RequireComponent(typeof(GrabScript))]
 public class GrabVisualScript : MonoBehaviour
 {
-    private GrabDetection grabDetection;
+    private GrabScript grabDetection;
     public Transform handTransform;
     public Transform targetTransform;
     public LineRenderer lineRenderer;
@@ -14,7 +14,7 @@ public class GrabVisualScript : MonoBehaviour
 
     private void Awake()
     {
-        grabDetection = GetComponent<GrabDetection>();
+        grabDetection = GetComponent<GrabScript>();
 
        // GenericEvent<OnHandCollisionEnter>.GetEvent(transform.root.name).AddListener(OnObjectGrabbed);
         //GenericEvent<ObjectReleased>.GetEvent(gameObject.name).AddListener(ObjectReleased);

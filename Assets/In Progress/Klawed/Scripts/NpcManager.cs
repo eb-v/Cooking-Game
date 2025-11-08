@@ -19,7 +19,7 @@ public class NpcManager : MonoBehaviour
     [SerializeField] private Transform[] spawnPositions;
 
     [Header("References")]
-    [SerializeField] private OrderDeliveryManagerScript orderDeliveryManager;
+    [SerializeField] private OrderSystem orderDeliveryManager;
 
     private List<NPCController> npcLine = new List<NPCController>();
    // private float spawnTimer = 0f;  //remove

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class GrabDetection : MonoBehaviour
+public class GrabScript : MonoBehaviour
 {
     [HideInInspector] public bool isGrabbing = false;
     public GameObject grabbedObj;
@@ -20,11 +20,6 @@ public class GrabDetection : MonoBehaviour
         if (layerName == LayerMask.LayerToName(LayerMask.NameToLayer("Buttons")))
             return;
 
-        GenericEvent<OnHandCollisionEnter>.GetEvent("GrabSystem").Invoke(gameObject ,other.gameObject);
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-            //GenericEvent<OnHandCollisionExit>.GetEvent(inputChannel).Invoke();
+        GrabSystem.GrabObject(this.gameObject, other.gameObject);
     }
 }

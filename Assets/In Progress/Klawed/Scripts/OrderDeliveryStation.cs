@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class PizzaDeliveryStation : MonoBehaviour
 {
-    [SerializeField] private OrderDeliveryManagerScript _orderDeliveryManager;
+    [SerializeField] private OrderSystem _orderDeliveryManager;
 
     
 

@@ -12,8 +12,8 @@ public class RagdollController : MonoBehaviour
     public Rigidbody rightHand;
     public Rigidbody leftHand;
 
-    public GrabDetection leftHandGrabDetection;
-    public GrabDetection rightHandGrabDetection;
+    public GrabScript leftHandGrabDetection;
+    public GrabScript rightHandGrabDetection;
 
     public Transform centerOfMass;
 
@@ -862,7 +862,11 @@ public class RagdollController : MonoBehaviour
         rightGrab = status;
         if (!status)
         {
-            GenericEvent<RightGrabInputCanceled>.GetEvent("GrabSystem").Invoke(gameObject.GetComponent<HandContainer>().RightHand);
+            GameObject rightHand = gameObject.GetComponent<HandContainer>().RightHand;
+            if (rightHand.GetComponent<GrabScript>().isGrabbing)
+            {
+                GrabSystem.ReleaseObject(rightHand);
+            }
         }
     }
 
@@ -871,7 +875,11 @@ public class RagdollController : MonoBehaviour
         leftGrab = status;
         if (!status)
         {
-            GenericEvent<LeftGrabInputCanceled>.GetEvent("GrabSystem").Invoke(gameObject.GetComponent<HandContainer>().LeftHand);
+            GameObject leftHand = gameObject.GetComponent<HandContainer>().LeftHand;
+            if (leftHand.GetComponent<GrabScript>().isGrabbing)
+            {
+                GrabSystem.ReleaseObject(leftHand);
+            }
         }
     }
 
@@ -1337,8 +1345,8 @@ public class RagdollController : MonoBehaviour
 
     public bool IsHoldingSomething()
     {
-        GrabDetection leftHandGb = leftHand.GetComponent<GrabDetection>();
-        GrabDetection rightHandGb = rightHand.GetComponent<GrabDetection>();
+        GrabScript leftHandGb = leftHand.GetComponent<GrabScript>();
+        GrabScript rightHandGb = rightHand.GetComponent<GrabScript>();
 
         return leftHandGb.isGrabbing || rightHandGb.isGrabbing;
     }
@@ -1346,8 +1354,8 @@ public class RagdollController : MonoBehaviour
     // should only be called if IsHoldingSomething() is true
     public GameObject GetHeldObject()
     {
-        GrabDetection leftHandGb = leftHand.GetComponent<GrabDetection>();
-        GrabDetection rightHandGb = rightHand.GetComponent<GrabDetection>();
+        GrabScript leftHandGb = leftHand.GetComponent<GrabScript>();
+        GrabScript rightHandGb = rightHand.GetComponent<GrabScript>();
 
         if (leftHandGb.isGrabbing)
         {

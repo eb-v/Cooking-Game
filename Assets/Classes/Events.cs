@@ -60,7 +60,6 @@ public class PlayerStoppedLookingAtKitchenStation : UnityEvent { }
 
 public class  InteractableLookedAtChanged : UnityEvent<GameObject> { }
 
-public class PlacedIngredient : UnityEvent<GameObject> { }
 
 public class OnPlaceIngredientInput : UnityEvent { }
 
@@ -153,6 +152,4 @@ public class HideEndGameUIEvent : UnityEvent { }
 
 public class OnCustomerInteract : UnityEvent<GameObject> { }
 
-public class RightGrabInputCanceled : UnityEvent<GameObject> { }
-
-public class LeftGrabInputCanceled : UnityEvent<GameObject> { }
+public class NpcReceivedCorrectOrder : UnityEvent<GameObject> { }

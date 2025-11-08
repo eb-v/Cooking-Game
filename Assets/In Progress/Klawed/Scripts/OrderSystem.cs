@@ -2,7 +2,7 @@ using NUnit.Framework;
 using UnityEngine;
 using System.Collections.Generic;
 
-public class OrderDeliveryManagerScript : MonoBehaviour
+public class OrderSystem : MonoBehaviour
 {
     [SerializeField] private AvailableOrdersSO _availableOrders;
 

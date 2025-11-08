@@ -1,12 +1,16 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class objectSpawner : MonoBehaviour
 {
-    [SerializeField] private GameObject objectToSpawn;
+    [SerializeField] private List<GameObject> objectsToSpawn;
 
 
     public void SpawnObject()
     {
-        ObjectPoolManager.SpawnObject(objectToSpawn, transform.position, Quaternion.identity);
+        foreach (GameObject obj in objectsToSpawn)
+        {
+            ObjectPoolManager.SpawnObject(obj, transform.position, Quaternion.identity);
+        }
     }
 }
