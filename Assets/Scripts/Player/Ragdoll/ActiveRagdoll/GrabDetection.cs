@@ -20,7 +20,7 @@ public class GrabDetection : MonoBehaviour
         if (layerName == LayerMask.LayerToName(LayerMask.NameToLayer("Buttons")))
             return;
 
-        GenericEvent<OnHandCollisionEnter>.GetEvent(transform.root.name).Invoke(gameObject ,other.gameObject);
+        GenericEvent<OnHandCollisionEnter>.GetEvent("GrabSystem").Invoke(gameObject ,other.gameObject);
     }
 
     private void OnTriggerExit(Collider other)

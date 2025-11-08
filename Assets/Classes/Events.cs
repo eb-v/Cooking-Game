@@ -152,3 +152,7 @@ public class ShowEndGameUIEvent : UnityEvent { }
 public class HideEndGameUIEvent : UnityEvent { }
 
 public class OnCustomerInteract : UnityEvent<GameObject> { }
+
+public class RightGrabInputCanceled : UnityEvent<GameObject> { }
+
+public class LeftGrabInputCanceled : UnityEvent<GameObject> { }

@@ -33,7 +33,7 @@ public class JointReconnection : MonoBehaviour
                 if (CheckForJointObjMatch(rootGrabbedObj))
                 {
                     // if other player is holding a missing joint, disconnect it from their hand
-                    GenericEvent<ReleaseHeldJoint>.GetEvent(otherPlayer.name).Invoke(leftHandGD.gameObject);
+                    GenericEvent<ReleaseHeldJoint>.GetEvent("GrabSystem").Invoke(leftHandGD.gameObject);
 
                     // reconnect the joint to this player
                     ConnectJoint(rootGrabbedObj, storedJointData[rootGrabbedObj], otherPlayer);
@@ -51,7 +51,7 @@ public class JointReconnection : MonoBehaviour
                 if (CheckForJointObjMatch(rootGrabbedObj))
                 {
                     // if other player is holding a missing joint, disconnect it from their hand
-                    GenericEvent<ReleaseHeldJoint>.GetEvent(otherPlayer.name).Invoke(rightHandGD.gameObject);
+                    GenericEvent<ReleaseHeldJoint>.GetEvent("GrabSystem").Invoke(rightHandGD.gameObject);
 
                     // reconnect the joint to this player
                     ConnectJoint(rootGrabbedObj, storedJointData[rootGrabbedObj], otherPlayer);

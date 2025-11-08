@@ -157,14 +157,9 @@ public class RagdollController : MonoBehaviour
         GenericEvent<OnLeanBackwardInput>.GetEvent(gameObject.name).AddListener(() => { _leanBackward = true; });
         GenericEvent<OnLeanBackwardCancel>.GetEvent(gameObject.name).AddListener(() => { _leanBackward = false; });
 
-        GenericEvent<OnHandCollisionEnter>.GetEvent(gameObject.name).AddListener(PlayerGrab);
-
         //GenericEvent<Interact>.GetEvent(gameObject.name).AddListener(PlayerReleaseGrab);
-        GenericEvent<PlacedIngredient>.GetEvent(gameObject.name).AddListener(PlayerReleaseGrab);
 
         GenericEvent<OnRemoveJoint>.GetEvent(gameObject.name).AddListener(DisconnectJoint);
-
-        GenericEvent<ReleaseHeldJoint>.GetEvent(gameObject.name).AddListener(PlayerReleaseGrab);
 
         // playerStats = GetComponent<PlayerStats>();
     }
@@ -865,17 +860,25 @@ public class RagdollController : MonoBehaviour
     private void SetRightGrab(bool status)
     {
         rightGrab = status;
+        if (!status)
+        {
+            GenericEvent<RightGrabInputCanceled>.GetEvent("GrabSystem").Invoke(gameObject.GetComponent<HandContainer>().RightHand);
+        }
     }
 
     private void SetLeftGrab(bool status)
     {
         leftGrab = status;
+        if (!status)
+        {
+            GenericEvent<LeftGrabInputCanceled>.GetEvent("GrabSystem").Invoke(gameObject.GetComponent<HandContainer>().LeftHand);
+        }
     }
 
-
+    // handle player arm rotation when reaching
     private void PlayerReach()
     {
-
+        // set arm rotation to 90 degrees when reaching
         if (RagdollDict[UPPER_LEFT_ARM].isConnected)
         {
             ConfigurableJoint leftArmJoint = RagdollDict[UPPER_LEFT_ARM].Joint;
@@ -898,6 +901,7 @@ public class RagdollController : MonoBehaviour
 
 
             }
+            // set arm rotation back to 0 degrees when not reaching 
             else
             {
                 Vector3 newTargetRotEuler = new Vector3(0f, 0f, 0f);
@@ -910,11 +914,7 @@ public class RagdollController : MonoBehaviour
                 // Disable hand collider
                 leftHand.GetComponent<Collider>().enabled = false;
 
-                // the hand is currently grabbing something
-                if (leftHand.GetComponent<GrabDetection>().isGrabbing == true)
-                {
-                     PlayerReleaseGrab(leftHand.gameObject);
-                }
+                
 
             }
         }
@@ -970,10 +970,7 @@ public class RagdollController : MonoBehaviour
                 // Disable hand collider
                 rightHand.GetComponent<Collider>().enabled = false;
 
-                if (rightHand.GetComponent<GrabDetection>().isGrabbing == true)
-                {
-                    PlayerReleaseGrab(rightHand.gameObject);
-                }
+                
 
             }
         }
@@ -987,52 +984,7 @@ public class RagdollController : MonoBehaviour
         //}
     }
 
-    private void PlayerGrab(GameObject hand, GameObject objToGrab)
-    {
-        if (hand.GetComponent<GrabDetection>().isGrabbing == true)
-            return;
-        
-        FixedJoint grabJoint = hand.transform.parent.gameObject.AddComponent<FixedJoint>();
-
-        if (objToGrab.GetComponent<Rigidbody>() == null)
-        {
-            grabJoint.connectedBody = objToGrab.transform.parent.GetComponent<Rigidbody>();
-        }
-        else
-        {
-            grabJoint.connectedBody = objToGrab.GetComponent<Rigidbody>();
-        }
-        
-        hand.GetComponent<GrabDetection>().isGrabbing = true;
-        hand.GetComponent<GrabDetection>().grabbedObj = objToGrab;
-        
-        // ADD THIS: Track ingredient handling
-        if (objToGrab.CompareTag("Ingredient") || objToGrab.GetComponent<Ingredient>() != null)
-        {
-            PlayerStats stats = GetComponent<PlayerStats>();
-            if (stats != null)
-            {
-                stats.IncrementIngredientsHandled();
-            }
-        }
-    }
-
-    private void PlayerReleaseGrab(GameObject hand)
-    {
-        if (hand.GetComponent<GrabDetection>().isGrabbing == false)
-            return;
-
-        if (hand.transform.parent.gameObject.GetComponent<FixedJoint>() != null)
-        {
-            Destroy(hand.transform.parent.gameObject.GetComponent<FixedJoint>());
-        }
-        hand.GetComponent<GrabDetection>().isGrabbing = false;
-        //GenericEvent<ObjectReleased>.GetEvent(gameObject.name).Invoke(hand.GetComponent<GrabDetection>().grabbedObj);
-        GenericEvent<ObjectReleased>.GetEvent(hand.name).Invoke();
-
-        hand.GetComponent<GrabDetection>().grabbedObj = null;
-
-    }
+    
 
     private void SetDisconnectedJointDrives()
     {
