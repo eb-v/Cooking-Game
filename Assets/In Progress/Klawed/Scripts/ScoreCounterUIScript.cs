@@ -8,22 +8,9 @@ using UnityEngine;
 public class ScoreCounterUIScript : MonoBehaviour
 {
     [SerializeField] private List<NonNormalizedSpringAPI> springAPI;
-    [SerializeField] private int score;
-    [SerializeField] private int[] digits = new int[4];
+    private int[] digits = new int[4];
 
-    public void RandomizeScore()
-    {
-        int randomScore = Random.Range(0, 8000);
-        SetScore(randomScore);
-    }
-
-    private void SetScore(int score)
-    {
-        this.score = score;
-        UpdateDisplay(score);
-    }
-
-    private void UpdateDisplay(int score)
+    public void UpdateDisplay(int score)
     {
         List<int> digitsList = new List<int>();
 

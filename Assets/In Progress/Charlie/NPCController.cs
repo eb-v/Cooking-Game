@@ -16,8 +16,6 @@ public class NPCController : MonoBehaviour
     [HideInInspector] public Transform tablePositions;
     [HideInInspector] public Transform exitPoint;
 
-    private float waitTimer = 0f;  //remove
-    private float waitDuration = 20f;  //remove
     private float leaveTimer = 0f;
     private float leaveDuration = 5f;
     private Transform assignedTable;
@@ -154,7 +152,7 @@ public class NPCController : MonoBehaviour
             string leftHandGrabbedObjPrefabName = leftHandGrabbedObj.GetComponent<PrefabContainer>().GetPrefabName();
             if (leftHandGrabbedObjPrefabName == npcOrderScript.GetFoodOrder().GetOrderItemPrefab().name)
             {
-                GenericEvent<NpcReceivedCorrectOrder>.GetEvent("OrderSystem").Invoke(player);
+                GenericEvent<ScoreChangedEvent>.GetEvent("ScoreChangedEvent").Invoke(545);
                 GrabSystem.ReleaseObject(player.GetComponent<HandContainer>().LeftHand);
                 ObjectPoolManager.ReturnObjectToPool(leftHandGrabbedObj);
                 Debug.Log($"{name} received correct order from player!");
@@ -176,6 +174,7 @@ public class NPCController : MonoBehaviour
             if (rightHandGrabbedObjPrefabName == npcOrderScript.GetFoodOrder().GetOrderItemPrefab().name)
             {
                 Debug.Log($"{name} received correct order from player!");
+                GenericEvent<ScoreChangedEvent>.GetEvent("ScoreChangedEvent").Invoke(545);
                 GrabSystem.ReleaseObject(player.GetComponent<HandContainer>().RightHand);
                 ObjectPoolManager.ReturnObjectToPool(rightHandGrabbedObj);
                 assignedTable = manager.GetNextTable();
