@@ -155,3 +155,5 @@ public class OnCustomerInteract : UnityEvent<GameObject> { }
 public class NpcReceivedCorrectOrder : UnityEvent<GameObject> { }
 
 public class ScoreChangedEvent : UnityEvent<int> { }
+
+public class UpdateScoreDisplayEvent : UnityEvent<int> { }

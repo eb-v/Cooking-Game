@@ -10,7 +10,12 @@ public class ScoreCounterUIScript : MonoBehaviour
     [SerializeField] private List<NonNormalizedSpringAPI> springAPI;
     private int[] digits = new int[4];
 
-    public void UpdateDisplay(int score)
+    private void Awake()
+    {
+        GenericEvent<UpdateScoreDisplayEvent>.GetEvent("UpdateScoreDisplayEvent").AddListener(UpdateDisplay);
+    }
+
+    private void UpdateDisplay(int score)
     {
         List<int> digitsList = new List<int>();
 
