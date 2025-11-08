@@ -8,13 +8,13 @@ public class DispenserRefill : MonoBehaviour
     [Header("Refill Settings")]
     [SerializeField] private int refillAmount = 5;
 
-    private IngredientType requiredType;
+    //private IngredientType requiredType;
 
     private void Awake()
     {
         if (targetDispenser != null)
         {
-            requiredType = targetDispenser.GetIngredientType();
+            //requiredType = targetDispenser.GetIngredientType();
         }
         else
         {
@@ -25,26 +25,26 @@ public class DispenserRefill : MonoBehaviour
     // Ingredient object is dropped / thrown into the box trigger
     private void OnTriggerEnter(Collider other)
     {
-        if (targetDispenser == null) return;
+        //if (targetDispenser == null) return;
 
-        // Look for IngredientTag on the object or its parent
-        IngredientTag ingredient = other.GetComponent<IngredientTag>() 
-                                   ?? other.GetComponentInParent<IngredientTag>();
+        //// Look for IngredientTag on the object or its parent
+        //IngredientTag ingredient = other.GetComponent<IngredientTag>() 
+        //                           ?? other.GetComponentInParent<IngredientTag>();
 
-        if (ingredient == null) return; // not an ingredient at all
+        //if (ingredient == null) return; // not an ingredient at all
 
-        if (ingredient.type != requiredType)
-        {
-            Debug.Log($"{name}: Wrong ingredient ({ingredient.type}) for {requiredType} dispenser.");
-            return;
-        }
+        //if (ingredient.type != requiredType)
+        //{
+        //    Debug.Log($"{name}: Wrong ingredient ({ingredient.type}) for {requiredType} dispenser.");
+        //    return;
+        //}
 
-        // Correct ingredient -> refill
-        targetDispenser.Refill(refillAmount);
-        Debug.Log($"{name}: Refilled {targetDispenser.name} with {ingredient.type} ({refillAmount} uses).");
+        //// Correct ingredient -> refill
+        //targetDispenser.Refill(refillAmount);
+        //Debug.Log($"{name}: Refilled {targetDispenser.name} with {ingredient.type} ({refillAmount} uses).");
 
-        // Consume the ingredient object
-        Destroy(ingredient.gameObject);
+        //// Consume the ingredient object
+        //Destroy(ingredient.gameObject);
     }
 
     private void OnDrawGizmosSelected()

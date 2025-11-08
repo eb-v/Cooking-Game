@@ -39,13 +39,14 @@ public class ObjectPoolManager : MonoBehaviour
     private void SetupEmpties()
     {
         _emptyHolder = new GameObject("Object Pools");
+        _emptyHolder.transform.SetParent(this.transform);
 
         _gameObjectsEmpty = new GameObject("GameObject");
         _gameObjectsEmpty.transform.SetParent(_emptyHolder.transform);
 
         if (_addToDontDestroyOnLoad)
         {
-            DontDestroyOnLoad(_gameObjectsEmpty.transform.root);
+            DontDestroyOnLoad(gameObject.transform);
         }
     }
 

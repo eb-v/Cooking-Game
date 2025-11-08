@@ -28,7 +28,7 @@ public class Dispenser : MonoBehaviour
 
     [Header("Ingredient")]
     [SerializeField] private GameObject ingredientPrefab;
-    [SerializeField] private IngredientType dispenserIngredientType; // what this dispenser is for
+    [SerializeField] private string dispenserIngredientType; // what this dispenser is for
 
     [Header("Supply Settings")]
     [SerializeField] private int maxUses = 10;
@@ -48,14 +48,13 @@ public class Dispenser : MonoBehaviour
         currentUses = Mathf.Clamp(startingUses, 0, maxUses);
         isEmpty = currentUses <= 0;
 
-        // auto-detect ingredient type from prefab if possible
         if (ingredientPrefab != null)
         {
-            IngredientTag tag = ingredientPrefab.GetComponent<IngredientTag>();
-            if (tag != null)
-            {
-                dispenserIngredientType = tag.type;
-            }
+            //string ingredientName = ingredientPrefab.GetComponent<IngredientTag>().GetIngredientName();
+            //if (ingredientName != null)
+            //{
+            //    dispenserIngredientType = tag.type;
+            //}
         }
     }
 
@@ -185,8 +184,8 @@ public class Dispenser : MonoBehaviour
     }
 
     // for the supply box to know what type this dispenser expects
-    public IngredientType GetIngredientType()
-    {
-        return dispenserIngredientType;
-    }
+    //public IngredientType GetIngredientType()
+    //{
+    //    return dispenserIngredientType;
+    //}
 }
