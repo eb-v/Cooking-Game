@@ -8,19 +8,24 @@ public class Bomb : MonoBehaviour
     public float explosionForce = 500f;
     public GameObject explosionVFX;
     public float lifeAfterExplosion = 1f;
-    public float fuseTime = 2f;   
 
     [Header("Ground Settings")]
     public string groundTag = "Floor";
+
+    [Header("Player Layer")]
+    public string playerLayerName = "Player"; 
 
     [Header("Audio")]
     public AudioClip explosionSfx;
     [Range(0f, 1f)]
     public float explosionVolume = 0.01f;
-    private bool isTriggered = false;
+
     private bool hasExploded = false;
+    private bool hasLanded = false;
+
     private AudioSource audioSource;
     private Rigidbody rb;
+    private int playerLayer;
 
     void Awake()
     {
@@ -31,37 +36,43 @@ public class Bomb : MonoBehaviour
         {
             audioSource = gameObject.AddComponent<AudioSource>();
         }
-
         audioSource.playOnAwake = false;
+
+        // cache the player layer index
+        playerLayer = LayerMask.NameToLayer(playerLayerName);
+    }
+
+    private void OnEnable()
+    {
+        ResetValues();
     }
 
     void OnCollisionEnter(Collision collision)
     {
-        if (isTriggered || hasExploded) return;
+        if (hasExploded) return;
 
-        // Only start fuse if we hit the floor tiles
-        if (collision.collider.CompareTag(groundTag))
+        Collider other = collision.collider;
+
+        // land on floor
+        if (other.CompareTag(groundTag) && !hasLanded)
         {
-            StartCoroutine(FuseRoutine());
-        }
-    }
+            hasLanded = true;
 
-    private IEnumerator FuseRoutine()
-    {
-        isTriggered = true;
+            if (rb != null)
+            {
+                rb.linearVelocity = Vector3.zero;
+                rb.angularVelocity = Vector3.zero;
+                rb.isKinematic = true; 
+            }
 
-        // Stop moving and stay on the tile
-        if (rb != null)
-        {
-            rb.linearVelocity = Vector3.zero;
-            rb.angularVelocity = Vector3.zero;
-            rb.isKinematic = true;  // no more physics movement
+            return;
         }
 
-        // Wait a few seconds before exploding
-        yield return new WaitForSeconds(fuseTime);
-
-        Explode();
+        // any bodypart on the Player layer touches bomb
+        if (other.gameObject.layer == playerLayer)
+        {
+            Explode();
+        }
     }
 
     private void Explode()
@@ -69,21 +80,19 @@ public class Bomb : MonoBehaviour
         if (hasExploded) return;
         hasExploded = true;
 
-        // 1. Spawn VFX (optional)
+        // 1. Spawn VFX
         if (explosionVFX != null)
         {
             Instantiate(explosionVFX, transform.position, Quaternion.identity);
         }
 
-        // 2. Play SFX
+        // play sound
         if (explosionSfx != null)
         {
             audioSource.PlayOneShot(explosionSfx, explosionVolume);
         }
 
-        
-
-        // 3. Apply explosion force
+        // explosion force
         Collider[] hitColliders = Physics.OverlapSphere(transform.position, explosionRadius);
         foreach (Collider hit in hitColliders)
         {
@@ -94,31 +103,38 @@ public class Bomb : MonoBehaviour
             }
         }
 
-        // 4. Hide the mesh after explosion
+        // hide mesh after explosion
         foreach (var rend in GetComponentsInChildren<Renderer>())
         {
             rend.enabled = false;
         }
 
-        // 5. Destroy after sound finishes
-        //Destroy(gameObject, lifeAfterExplosion);
+        // return to pool
         StartCoroutine(DestroyAfterExplosion());
-
     }
 
     private IEnumerator DestroyAfterExplosion()
     {
         yield return new WaitForSeconds(lifeAfterExplosion);
-        //Destroy(gameObject);
-        ObjectPoolManager.ReturnObjectToPool(gameObject);
+        Destroy(gameObject);
     }
 
     void ResetValues()
     {
-        // reset all changed variables to their defaults before reusing from pool
-        isTriggered = false;
         hasExploded = false;
+        hasLanded = false;
 
+        if (rb != null)
+        {
+            rb.isKinematic = false;
+            rb.linearVelocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+        }
+
+        foreach (var rend in GetComponentsInChildren<Renderer>())
+        {
+            rend.enabled = true;
+        }
     }
 
     void OnDrawGizmosSelected()
