@@ -58,14 +58,14 @@ public class GrabSystem : ScriptableObject
         hand.GetComponent<GrabScript>().grabbedObj = objToGrab;
 
         // ADD THIS: Track ingredient handling
-        if (objToGrab.CompareTag("Ingredient") || objToGrab.GetComponent<Ingredient>() != null)
-        {
-            ////PlayerStats stats = GetComponent<PlayerStats>();
-            //if (stats != null)
-            //{
-            //    stats.IncrementIngredientsHandled();
-            //}
-        }
+        //if (objToGrab.CompareTag("Ingredient") || objToGrab.GetComponent<Ingredient>() != null)
+        //{
+        //    ////PlayerStats stats = GetComponent<PlayerStats>();
+        //    //if (stats != null)
+        //    //{
+        //    //    stats.IncrementIngredientsHandled();
+        //    //}
+        //}
     }
     // detach object from hand
     public static void ReleaseObject(GameObject hand)

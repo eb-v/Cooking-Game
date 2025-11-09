@@ -24,8 +24,7 @@ public class PizzaOvenScript : MonoBehaviour
     public BaseStateSO _idleStateInstance;
     public BaseStateSO _cookingStateInstance;
 
-    public string currentStateName;
-    public bool isClosed = true;
+    private bool isClosed = true;
 
     private void Awake()
     {
@@ -61,16 +60,6 @@ public class PizzaOvenScript : MonoBehaviour
     private void Update()
     {
         _stateMachine.RunCurrentStateLogic();
-
-        if (_stateMachine.GetCurrentState() == _idleStateInstance)
-        {
-             currentStateName = "Idle State";
-        }
-        else if (_stateMachine.GetCurrentState() == _cookingStateInstance)
-        {
-             currentStateName = "Cooking State";
-        }
-
     }
 
 
@@ -95,10 +84,6 @@ public class PizzaOvenScript : MonoBehaviour
     {
         return isClosed;
     }
-
-    public bool PizzaInside() => pizzaInOven != null;
-
-    
 
     public void OpenDoor()
     {

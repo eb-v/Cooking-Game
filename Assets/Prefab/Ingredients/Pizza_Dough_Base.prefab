@@ -1,36 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &597289824846325854
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 4160229756723618699}
-  m_Layer: 0
-  m_Name: TomatoSauceContainer
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &4160229756723618699
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 597289824846325854}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0.000000021855694, y: 0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.04888888, y: 0.1539473, z: -0.022963077}
-  m_LocalScale: {x: 0.7407408, y: 0.4385965, z: 0.7407408}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 2044040733381457204}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1370295772327882303
 GameObject:
   m_ObjectHideFlags: 0
@@ -45,6 +14,7 @@ GameObject:
   - component: {fileID: 6031558641272709400}
   - component: {fileID: 6424282089746073391}
   - component: {fileID: 3533933398139409244}
+  - component: {fileID: 8759463669544829522}
   m_Layer: 11
   m_Name: Pizza_Dough_Base
   m_TagString: Untagged
@@ -65,9 +35,7 @@ Transform:
   m_LocalScale: {x: 1.35, y: 2.28, z: 1.35}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 4160229756723618699}
-  - {fileID: 5804958123525440024}
-  - {fileID: 8085121039142041482}
+  - {fileID: 6848977973624126521}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &3076507522126648181
@@ -186,13 +154,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf7e5cec80805f9469475577668a1c35, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PizzaDoughBase
-  currentPlacedIngredientPrefabs: []
-  ingredientContainers:
-  - {fileID: 4160229756723618699}
-  - {fileID: 5804958123525440024}
-  - {fileID: 8085121039142041482}
+  currentPlacedIngredients: []
+  ingredientContainer: {fileID: 6848977973624126521}
   ingredientObjectInstances: []
---- !u!1 &2851095288976984134
+--- !u!114 &8759463669544829522
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1370295772327882303}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1ac151529a61e55498a677d55072f190, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::IngredientScript
+  ingredient: {fileID: 11400000, guid: b3c50d998d6dc4748ae62e3b1c60d8cd, type: 2}
+--- !u!1 &2981636818672268592
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -200,56 +178,25 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 8085121039142041482}
-  m_Layer: 0
-  m_Name: PepperoniContainer
+  - component: {fileID: 6848977973624126521}
+  m_Layer: 11
+  m_Name: Container
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &8085121039142041482
+--- !u!4 &6848977973624126521
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2851095288976984134}
+  m_GameObject: {fileID: 2981636818672268592}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.000000021855694, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.066666074, y: 0.060964886, z: 0.01333307}
-  m_LocalScale: {x: 0.7407408, y: 0.4385965, z: 0.7407408}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 2044040733381457204}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &5606968958552393692
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 5804958123525440024}
-  m_Layer: 0
-  m_Name: GratedCheeseContainer
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &5804958123525440024
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5606968958552393692}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0.000000021855694, y: 0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.091851555, y: 0.085964955, z: -0.06073988}
-  m_LocalScale: {x: 0.7407408, y: 0.4385965, z: 0.7407408}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.003, y: 0.05, z: -0}
+  m_LocalScale: {x: 0.962963, y: 0.51754385, z: 1.0518519}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2044040733381457204}

@@ -6,11 +6,9 @@ using System.Collections.Generic;
 public class PizzaOvenBakingSO : BaseStateSO
 {
     PizzaOvenScript pizzaOvenScript;
-    private List<PizzaDoughBase> pizzaList;
     [SerializeField] private GameObject cookedPizzaPrefab;
     [SerializeField] private float bakingTime = 5f;
     private float currentTimer = 0f;
-    private List<PizzaDoughBase> pizzasToRemove = new List<PizzaDoughBase>();
 
     public override void Initialize(GameObject gameObject, StateMachine _stateMachine)
     {
@@ -71,9 +69,11 @@ public class PizzaOvenBakingSO : BaseStateSO
         pizzaDough.ClearIngredientInstanceList();
         Vector3 pizzaDoughPos = pizzaDough.transform.position;
         ObjectPoolManager.ReturnObjectToPool(pizzaDough.gameObject);
-        pizzaOvenScript.RemovePizza(pizzaDough.gameObject);
+        pizzaOvenScript.pizzaInOven = null;
 
     }
+
+    
 
 
 }

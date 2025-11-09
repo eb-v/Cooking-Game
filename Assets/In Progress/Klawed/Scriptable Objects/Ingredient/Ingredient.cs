@@ -14,7 +14,7 @@ public class Ingredient : ScriptableObject
     private void OnValidate()
     {
         if (string.IsNullOrEmpty(ingredientID))
-            ingredientID = System.Guid.NewGuid().ToString();
+            ingredientID = prefab.GetInstanceID().ToString();
 
         if (string.IsNullOrEmpty(ingredientName) && prefab != null)
             ingredientName = prefab.name;

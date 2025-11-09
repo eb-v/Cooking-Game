@@ -27,8 +27,9 @@ public class Dispenser : MonoBehaviour
     private float dispenseTimer = 0f;
 
     [Header("Ingredient")]
-    [SerializeField] private GameObject ingredientPrefab;
-    [SerializeField] private string dispenserIngredientType; // what this dispenser is for
+    [SerializeField] private Ingredient ingredient;
+    private GameObject ingredientPrefab;
+    
 
     [Header("Supply Settings")]
     [SerializeField] private int maxUses = 10;
@@ -48,13 +49,13 @@ public class Dispenser : MonoBehaviour
         currentUses = Mathf.Clamp(startingUses, 0, maxUses);
         isEmpty = currentUses <= 0;
 
-        if (ingredientPrefab != null)
+        if (ingredient != null)
         {
-            //string ingredientName = ingredientPrefab.GetComponent<IngredientTag>().GetIngredientName();
-            //if (ingredientName != null)
-            //{
-            //    dispenserIngredientType = tag.type;
-            //}
+            ingredientPrefab = ingredient.Prefab;
+        }
+        else
+        {
+            Debug.LogError($"{name}: No ingredient assigned to Dispenser.");
         }
     }
 
@@ -126,9 +127,9 @@ public class Dispenser : MonoBehaviour
             if (pizzaBase != null)
             {
                 // only try to dispense if we still have supply
-                if (!isEmpty && !pizzaBase.CheckForIngredient(ingredientPrefab))
+                if (!isEmpty && !pizzaBase.CheckForIngredient(ingredient))
                 {
-                    pizzaBase.AddIngredient(ingredientPrefab);
+                    pizzaBase.AddIngredient(ingredient);
                     dispensedIngredient = true;
 
                     // use one charge

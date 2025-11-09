@@ -2,12 +2,7 @@ using UnityEngine;
 
 public class IngredientScript : MonoBehaviour
 {
-    [SerializeField] private string ingredientID;  // Assigned when spawned
+    [SerializeField] private Ingredient ingredient;
 
-    public string IngredientID => ingredientID;
-
-    public void Initialize(Ingredient ingredient)
-    {
-        ingredientID = ingredient.IngredientID;
-    }
+    public Ingredient Ingredient => ingredient;
 }
