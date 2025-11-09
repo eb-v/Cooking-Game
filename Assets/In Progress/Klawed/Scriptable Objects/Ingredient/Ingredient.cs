@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "New Ingredient", menuName = "Ingredient")]
+[CreateAssetMenu(fileName = "New Ingredient", menuName = "Objects/Ingredient")]
 public class Ingredient : ScriptableObject
 {
     [SerializeField] private string ingredientID; // Unique ID
