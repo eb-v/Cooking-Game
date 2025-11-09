@@ -1,35 +1,37 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
-using UnityEngine.SceneManagement; 
+using UnityEngine.SceneManagement;
 
 public class EndGameAwards : MonoBehaviour {
     [Header("Award Display")]
     [SerializeField] private GameObject awardDisplayPanel;
-    [SerializeField] private Transform podiumParent; 
+    //[SerializeField] private Transform podiumParent;
     [SerializeField] private TextMeshProUGUI awardTitleText;
     [SerializeField] private TextMeshProUGUI awardDescriptionText;
     [SerializeField] private TextMeshProUGUI playerNamesText;
     [SerializeField] private TextMeshProUGUI statsText;
     [SerializeField] private float displayDuration = 4f;
+    [SerializeField] private GameOverButtonsController buttonsController;
 
     [Header("Camera")]
     [SerializeField] private Camera awardCamera;
     [SerializeField] private float rotationSpeed = 30f;
 
-    [Header("Podium Settings")]
-    [SerializeField] private GameObject podiumPrefab;
-    [SerializeField] private float podiumSpacing = 100f;
-    [SerializeField] private float podiumMaxHeight = 3f;
-    [SerializeField] private float podiumRiseSpeed = 2f;
+    //[Header("Podium Settings")]
+    //[SerializeField] private GameObject podiumPrefab;
+    //[SerializeField] private float podiumSpacing = 100f;
+    //[SerializeField] private float podiumMaxHeight = 3f;
+    //[SerializeField] private float podiumRiseSpeed = 2f;
 
     [Header("Spring Animations")]
-    [SerializeField] private float springDelayBetweenTexts = 0.2f;
+    [SerializeField] private float springDelayBetweenTexts = 0f;
 
-    private List<GameObject> currentPlayerModels = new List<GameObject>();
-    private List<GameObject> podiums = new List<GameObject>();
+
+    private List<PlayerStats> players = new List<PlayerStats>();
+    //private List<GameObject> podiums = new List<GameObject>();
     private bool ceremonyCancelled = false;
 
     public static EndGameAwards Instance { get; private set; }
@@ -41,20 +43,35 @@ public class EndGameAwards : MonoBehaviour {
         awardDisplayPanel.SetActive(false);
     }
 
-    public void ShowAwards() {
-        if (EndGameData.playerCount == 0 || EndGameData.playerObjects == null || EndGameData.playerObjects.Length == 0) {
-            Debug.LogWarning("EndGameData is empty or missing player models. Cannot show awards.");
-            return;
+    public Coroutine ShowAwards(MonoBehaviour caller) {
+
+        if (EndGameData.playerCount == 0) {
+            Debug.LogWarning("No players found. Cannot show awards.");
+            return null;
         }
 
-        StartCoroutine(AwardCeremony());
+        // Build a temporary list of PlayerStats using the static data
+        players = new List<PlayerStats>();
+        for (int i = 0; i < EndGameData.playerCount; i++) {
+            PlayerStats p = EndGameData.playerObjects[i].GetComponent<PlayerStats>();
+            players.Add(p);
+        }
+        for (int i = 0; i < EndGameData.playerCount; i++) {
+            PlayerStats temp = new PlayerStats();
+            temp.playerNumber = i + 1;
+            temp.ingredientsHandled = EndGameData.ingredientsHandled[i];
+            temp.pointsGenerated = EndGameData.pointsGenerated[i];
+            temp.jointsReconnected = EndGameData.jointsReconnected[i];
+            temp.explosionsReceived = EndGameData.explosionsReceived[i];
+            players.Add(temp);
+        }
+
+        return caller.StartCoroutine(AwardCeremony());
     }
 
     public void CancelCeremony() {
         ceremonyCancelled = true;
         StopAllCoroutines();
-        ClearPlayerModels();
-        ClearPodiums();
         awardDisplayPanel.SetActive(false);
     }
 
@@ -62,214 +79,140 @@ public class EndGameAwards : MonoBehaviour {
         ceremonyCancelled = false;
         awardDisplayPanel.SetActive(true);
 
-        yield return SetupPodiumsAndPlayers();
+        //yield return SetupPodiumsAndPlayers();
 
+        // Awards
         yield return ShowAward("Hot Hands", "Most Ingredients Handled",
-            GetMaxStatWinners(EndGameData.ingredientsHandled),
-            i => $"Ingredients: {EndGameData.ingredientsHandled[i]}");
+            GetMaxStatWinners(p => p.ingredientsHandled),
+            p => $"Ingredients: {p.ingredientsHandled}");
         if (ceremonyCancelled) yield break;
 
         yield return ShowAward("MVP", "Most Points Generated",
-            GetMaxStatWinners(EndGameData.pointsGenerated),
-            i => $"Points: {EndGameData.pointsGenerated[i]}");
+            GetMaxStatWinners(p => p.pointsGenerated),
+            p => $"Points: {p.pointsGenerated}");
         if (ceremonyCancelled) yield break;
 
-        var guardianWinners = GetMaxStatWinners(EndGameData.jointsReconnected, requireNonZero: true);
+        var guardianWinners = GetMaxStatWinners(p => p.jointsReconnected, requireNonZero: true);
         if (guardianWinners.Count > 0)
             yield return ShowAward("Guardian Angel", "Most Joints Reconnected",
-                guardianWinners, i => $"Joints: {EndGameData.jointsReconnected[i]}");
+                guardianWinners, p => $"Joints: {p.jointsReconnected}");
+
+        buttonsController?.ShowButtons();
+
         if (ceremonyCancelled) yield break;
 
         yield return ShowAward("Noob", "Worst Performance (Low Points + High Explosions)",
             GetNoobWinners(),
-            i => $"Points: {EndGameData.pointsGenerated[i]} | Explosions: {EndGameData.explosionsReceived[i]}");
+            p => $"Points: {p.pointsGenerated} | Explosions: {p.explosionsReceived}");
 
         yield return new WaitForSecondsRealtime(1f);
         awardDisplayPanel.SetActive(false);
     }
 
-    private IEnumerator SetupPodiumsAndPlayers() {
-        ClearPodiums();
-        ClearPlayerModels();
+    //private IEnumerator SetupPodiumsAndPlayers() {
+    //    ClearPodiums();
 
-        int count = EndGameData.playerCount;
-        float maxPoints = Mathf.Max(1, Mathf.Max(EndGameData.pointsGenerated));
+    //    int count = players.Count;
+    //    float maxPoints = Mathf.Max(1, players.Max(p => p.pointsGenerated));
 
-        float startX = -(count - 1) * podiumSpacing * 0.5f; // center the line
+    //    float startX = -(count - 1) * podiumSpacing * 0.5f;
 
-        for (int i = 0; i < count; i++) {
-            Vector3 localPos = new Vector3(startX + i * podiumSpacing, 0, 0);
-            GameObject podium = Instantiate(podiumPrefab, podiumParent);
-            podium.transform.localPosition = localPos;
-            podiums.Add(podium);
+    //    for (int i = 0; i < count; i++) {
+    //        var p = players[i];
+    //        Vector3 localPos = new Vector3(startX + i * podiumSpacing, 0, 0);
 
-            float normalized = (float)EndGameData.pointsGenerated[i] / maxPoints;
-            float targetHeight = Mathf.Lerp(0.5f, podiumMaxHeight, normalized);
+    //        GameObject podium = Instantiate(podiumPrefab, podiumParent);
+    //        podium.transform.localPosition = localPos;
+    //        podiums.Add(podium);
 
-            GameObject player = EndGameData.playerObjects[i];
-            Transform playerTransform = null;
+    //        float normalized = (float)p.pointsGenerated / maxPoints;
+    //        float targetHeight = Mathf.Lerp(0.5f, podiumMaxHeight, normalized);
 
-            if (player != null) {
-                playerTransform = player.transform;
-                currentPlayerModels.Add(player); // Add the reference original player
-                StartCoroutine(RaisePodiumWithPlayer(podium.transform, playerTransform, targetHeight));
-            } else {
-                StartCoroutine(RaisePodiumWithPlayer(podium.transform, null, targetHeight));
-            }
+    //        GameObject playerObj = p.GetPlayerPrefab();
+    //        StartCoroutine(RaisePodiumWithPlayer(podium.transform, playerObj.transform, targetHeight));
 
-            yield return new WaitForSecondsRealtime(0.1f);
-        }
+    //        yield return new WaitForSecondsRealtime(0.1f);
+    //    }
 
-        yield return new WaitForSecondsRealtime(1.5f);
-    }
+    //    yield return new WaitForSecondsRealtime(1.5f);
+    //}
 
-    private IEnumerator RaisePodiumWithPlayer(Transform podium, Transform player, float targetHeight) {
-        if (podium == null) yield break;
+    //private IEnumerator RaisePodiumWithPlayer(Transform podium, Transform player, float targetHeight) {
+    //    if (podium == null) yield break;
 
-        Vector3 originalScale = podium.localScale;
+    //    Vector3 originalScale = podium.localScale;
+    //    podium.localScale = new Vector3(originalScale.x, 0.01f, originalScale.z);
 
-        podium.localScale = new Vector3(originalScale.x, 0.01f, originalScale.z);
+    //    player.SetParent(podium, false);
+    //    player.localPosition = Vector3.zero;
+    //    player.localRotation = Quaternion.identity;
+    //    player.localScale = Vector3.one;
 
-        float playerHeight = 1.5f;
+    //    float t = 0f;
+    //    while (t < 1f) {
+    //        t += Time.unscaledDeltaTime * podiumRiseSpeed;
+    //        float newYScale = Mathf.Lerp(0.01f, targetHeight, t);
+    //        podium.localScale = new Vector3(originalScale.x, newYScale, originalScale.z);
+    //        player.localPosition = new Vector3(0, newYScale * 0.5f, 0);
+    //        yield return null;
+    //    }
+    //}
 
-        if (player != null) {
-            player.gameObject.SetActive(true); 
-            player.SetParent(podium, false);
+    private IEnumerator ShowAward(
+      string title,
+      string description,
+      List<PlayerStats> winners,
+      System.Func<PlayerStats, string> getStatText) {
+        if (winners == null || winners.Count == 0) yield break;
 
-            player.localPosition = Vector3.zero;
-            player.localRotation = Quaternion.identity;
-            player.localScale = Vector3.one;
-     
-            Bounds bounds = new Bounds(player.position, Vector3.zero);
-            var renderers = player.GetComponentsInChildren<Renderer>(true);
-            foreach (var r in renderers) {
-                if (r.enabled && r.gameObject.activeInHierarchy) {
-                    bounds.Encapsulate(r.bounds);
-                }
-            }
-
-            if (bounds.size.y > 0.1f) playerHeight = bounds.size.y;
-        }
-
-        float t = 0f;
-        while (t < 1f) {
-            t += Time.unscaledDeltaTime * podiumRiseSpeed;
-            float newYScale = Mathf.Lerp(0.01f, targetHeight, t);
-            podium.localScale = new Vector3(originalScale.x, newYScale, originalScale.z);
-
-            if (player != null) {
-
-                player.localPosition = new Vector3(0, newYScale * 0.5f, 0);
-            }
-
-            yield return null;
-        }
-    }
-
-    private IEnumerator ShowAward(string title, string description, List<int> winnerIndexes, Func<int, string> getStatText) {
-        if (winnerIndexes == null || winnerIndexes.Count == 0) yield break;
-
-        awardTitleText.text = title + (winnerIndexes.Count > 1 && title != "Hot Hands" ? "s" : "");
+        awardTitleText.text = title + (winners.Count > 1 && title != "Hot Hands" ? "s" : "");
         awardDescriptionText.text = description;
+        playerNamesText.text = string.Join(" & ", winners.Select(p => $"Player {p.playerNumber}"));
+        statsText.text = string.Join(" | ", winners.Select(getStatText));
 
-        string playerNames = "", stats = "";
-        for (int i = 0; i < winnerIndexes.Count; i++) {
-            int idx = winnerIndexes[i];
-            playerNames += $"Player {idx + 1}";
-            stats += getStatText(idx);
-            if (i < winnerIndexes.Count - 1) {
-                playerNames += " & ";
-                stats += " | ";
-            }
-        }
-        playerNamesText.text = playerNames;
-        statsText.text = stats;
+        SpringAPI[] springs =
+        {
+        awardTitleText?.GetComponent<SpringAPI>(),
+        awardDescriptionText?.GetComponent<SpringAPI>(),
+        playerNamesText?.GetComponent<SpringAPI>(),
+        statsText?.GetComponent<SpringAPI>()
+    };
 
-        SpringAPI[] textSprings = {
-            awardTitleText?.GetComponent<SpringAPI>(),
-            awardDescriptionText?.GetComponent<SpringAPI>(),
-            playerNamesText?.GetComponent<SpringAPI>(),
-            statsText?.GetComponent<SpringAPI>()
-        };
+        foreach (var spring in springs) {
+            if (spring != null)
+                spring.PlaySpring();
 
-        foreach (var spring in textSprings) {
-            if (spring != null) {
-                spring.SetGoalValue(1f);
-                spring.NudgeSpringVelocity();
-            }
             yield return new WaitForSecondsRealtime(springDelayBetweenTexts);
         }
 
         float elapsed = 0f;
-        Vector3 center = podiumParent.position;
         while (elapsed < displayDuration && !ceremonyCancelled) {
             elapsed += Time.unscaledDeltaTime;
-            if (awardCamera != null) {
-                awardCamera.transform.RotateAround(center, Vector3.up, rotationSpeed * Time.unscaledDeltaTime);
-                awardCamera.transform.LookAt(center);
-            }
             yield return null;
         }
 
-        foreach (var spring in textSprings) {
+        foreach (var spring in springs) {
             if (spring != null) {
-                spring.SetGoalValue(0f);
+                spring.HideSpring();
                 spring.NudgeSpringVelocity();
             }
-            yield return new WaitForSecondsRealtime(springDelayBetweenTexts * 0.5f);
+
+            yield return new WaitForSecondsRealtime(springDelayBetweenTexts * 0f);
         }
 
         yield return new WaitForSecondsRealtime(0.5f);
     }
-
-    private void ClearPodiums() {
-        foreach (var podium in podiums)
-            if (podium != null) Destroy(podium);
-        podiums.Clear();
-    }
-
-    private void ClearPlayerModels() {
-        Scene mainScene = SceneManager.GetSceneAt(0);
-
-        foreach (var m in currentPlayerModels) {
-            if (m != null && mainScene.IsValid()) {
-                SceneManager.MoveGameObjectToScene(m, mainScene);
-                m.SetActive(false);
-            }
-        }
-        currentPlayerModels.Clear();
-    }
-
-
-
     #region Stat Calculations
-    private List<int> GetMaxStatWinners(int[] stats, bool requireNonZero = false) {
-        int max = int.MinValue;
-        for (int i = 0; i < EndGameData.playerCount; i++)
-            if (stats[i] > max) max = stats[i];
-
-        List<int> winners = new List<int>();
-        for (int i = 0; i < EndGameData.playerCount; i++)
-            if (stats[i] == max && (!requireNonZero || max > 0))
-                winners.Add(i);
-
-        return winners;
+    private List<PlayerStats> GetMaxStatWinners(System.Func<PlayerStats, int> selector, bool requireNonZero = false) {
+        int max = players.Max(selector);
+        if (requireNonZero && max <= 0) return new List<PlayerStats>();
+        return players.Where(p => selector(p) == max).ToList();
     }
 
-    private List<int> GetNoobWinners() {
+    private List<PlayerStats> GetNoobWinners() {
         int weight = 10;
-        float worst = float.MaxValue;
-        for (int i = 0; i < EndGameData.playerCount; i++) {
-            float score = EndGameData.pointsGenerated[i] - EndGameData.explosionsReceived[i] * weight;
-            if (score < worst) worst = score;
-        }
-
-        List<int> winners = new List<int>();
-        for (int i = 0; i < EndGameData.playerCount; i++) {
-            float score = EndGameData.pointsGenerated[i] - EndGameData.explosionsReceived[i] * weight;
-            if (Mathf.Approximately(score, worst)) winners.Add(i);
-        }
-        return winners;
+        float worst = players.Min(p => p.pointsGenerated - p.explosionsReceived * weight);
+        return players.Where(p => Mathf.Approximately(p.pointsGenerated - p.explosionsReceived * weight, worst)).ToList();
     }
     #endregion
 }

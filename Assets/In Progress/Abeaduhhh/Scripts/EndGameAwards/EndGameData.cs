@@ -13,9 +13,10 @@ public static class EndGameData {
     public static int[] jointsReconnected;
     public static int[] explosionsReceived;
 
-    public static void PopulateFromPlayers(List<PlayerStats> players) {
-        playerCount = players.Count; // Use static playerCount
-        playerObjects = new GameObject[playerCount];
+    public static void PopulateFromPlayers(List<PlayerStats> players, bool skipObjects = false) {
+        playerCount = players.Count;
+
+        if (!skipObjects) playerObjects = new GameObject[playerCount];
 
         ingredientsHandled = new int[playerCount];
         pointsGenerated = new int[playerCount];
@@ -23,15 +24,13 @@ public static class EndGameData {
         explosionsReceived = new int[playerCount];
 
         for (int i = 0; i < playerCount; i++) {
-            // Store the actual player GameObject
-            playerObjects[i] = players[i].gameObject;
-
-            // Copy their stats
+            if (!skipObjects) playerObjects[i] = players[i].gameObject; // only if real players exist
             ingredientsHandled[i] = players[i].ingredientsHandled;
             pointsGenerated[i] = players[i].pointsGenerated;
             jointsReconnected[i] = players[i].jointsReconnected;
             explosionsReceived[i] = players[i].explosionsReceived;
         }
     }
+
 
 }
