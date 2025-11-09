@@ -66,7 +66,7 @@ public class BombDropper : MonoBehaviour
             return;
         }
 
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < 30; i++)
         {
             float x = Random.Range(minX, maxX);
             float z = Random.Range(minZ, maxZ);
@@ -77,8 +77,7 @@ public class BombDropper : MonoBehaviour
                 if (hit.collider.CompareTag(floorTag))
                 {
                     Vector3 spawnPos = new Vector3(x, dropHeight, z);
-                    //Instantiate(bombPrefab, spawnPos, Quaternion.identity);
-                    ObjectPoolManager.SpawnObject(bombPrefab, spawnPos, Quaternion.identity);
+                    Instantiate(bombPrefab, spawnPos, Quaternion.identity);
                     return;
                 }
             }
