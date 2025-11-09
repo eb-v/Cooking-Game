@@ -35,7 +35,7 @@ public class PizzaOvenBakingSO : BaseStateSO
     {
         currentTimer = 0f;
     }
-
+    
     private void RunBakingLogic()
     {
         // timer logic to delay the creation of the cooked pizzas
