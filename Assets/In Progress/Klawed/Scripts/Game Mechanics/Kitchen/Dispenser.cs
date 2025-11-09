@@ -29,7 +29,7 @@ public class Dispenser : MonoBehaviour
     [Header("Ingredient")]
     [SerializeField] private Ingredient ingredient;
     private GameObject ingredientPrefab;
-    
+    public Ingredient Ingredient => ingredient; 
 
     [Header("Supply Settings")]
     [SerializeField] private int maxUses = 10;
