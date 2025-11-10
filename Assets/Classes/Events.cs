@@ -165,3 +165,5 @@ public class DroneCompletedPath : UnityEvent<GameObject> { }
 public class DroneDeliveryCalled : UnityEvent<Ingredient> { }
 
 public class InitiateDespawnTimerEvent : UnityEvent { }
+
+public class OnGameStartEvent : UnityEvent { }

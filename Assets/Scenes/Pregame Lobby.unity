@@ -9464,6 +9464,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2089020784}
+  - {fileID: 1641505104}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &774432327
@@ -11483,9 +11484,29 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1177768234942213315, guid: e1f73ea085ee2bd4f8daf893e5647bae, type: 3}
-      propertyPath: m_PlayerPrefab
-      value: 
-      objectReference: {fileID: 4777336152046692441, guid: 49abeb7bbc1b6dc40827cfd8b8fb0409, type: 3}
+      propertyPath: m_JoinBehavior
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1177768234942213315, guid: e1f73ea085ee2bd4f8daf893e5647bae, type: 3}
+      propertyPath: m_JoinAction.m_Action.m_Name
+      value: Join
+      objectReference: {fileID: 0}
+    - target: {fileID: 1177768234942213315, guid: e1f73ea085ee2bd4f8daf893e5647bae, type: 3}
+      propertyPath: m_JoinAction.m_Action.m_SingletonActionBindings.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1177768234942213315, guid: e1f73ea085ee2bd4f8daf893e5647bae, type: 3}
+      propertyPath: m_JoinAction.m_Action.m_SingletonActionBindings.Array.data[0].m_Id
+      value: fe4a542a-1b31-42d2-aec1-f9946a53f494
+      objectReference: {fileID: 0}
+    - target: {fileID: 1177768234942213315, guid: e1f73ea085ee2bd4f8daf893e5647bae, type: 3}
+      propertyPath: m_JoinAction.m_Action.m_SingletonActionBindings.Array.data[0].m_Path
+      value: <Gamepad>/start
+      objectReference: {fileID: 0}
+    - target: {fileID: 1177768234942213315, guid: e1f73ea085ee2bd4f8daf893e5647bae, type: 3}
+      propertyPath: m_JoinAction.m_Action.m_SingletonActionBindings.Array.data[0].m_Action
+      value: Join
+      objectReference: {fileID: 0}
     - target: {fileID: 2794472038627641361, guid: e1f73ea085ee2bd4f8daf893e5647bae, type: 3}
       propertyPath: m_Name
       value: Player Manager
@@ -20010,6 +20031,52 @@ MonoBehaviour:
   _ready: 0
   _readyScale: 1.34
   _checkIfAllPlayersReady: {fileID: 177854260}
+--- !u!1 &1641505103
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1641505104}
+  - component: {fileID: 1641505105}
+  m_Layer: 0
+  m_Name: PlayerInitializationManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1641505104
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1641505103}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 748710319}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1641505105
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1641505103}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fb544fe60e575584c8addc8ebdb392e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::InitializePlayers
+  playerSpawnPoints: []
+  playerManager: {fileID: 2089020785}
 --- !u!1 &1647767146
 GameObject:
   m_ObjectHideFlags: 0
@@ -25979,6 +26046,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 647134088276195048, guid: e1f73ea085ee2bd4f8daf893e5647bae, type: 3}
   m_PrefabInstance: {fileID: 919090120}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &2089020785 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6110603153999485625, guid: e1f73ea085ee2bd4f8daf893e5647bae, type: 3}
+  m_PrefabInstance: {fileID: 919090120}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6390a0ca351ec594bbcc467d3d83e660, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerManager
 --- !u!1 &2095047821
 GameObject:
   m_ObjectHideFlags: 0

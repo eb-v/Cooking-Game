@@ -18,35 +18,6 @@ public class MapSelectionScript : MonoBehaviour
         GenericEvent<OnPreviousOptionInput>.GetEvent(assignedPlayerName).AddListener(OnPreviousOption);
         GenericEvent<OnSelectInput>.GetEvent(assignedPlayerName).AddListener(OnSelect);
     }
-
-
-    private void Start()
-    {
-        //playerOneInput = GameObject.Find("Player 1").GetComponent<PlayerInput>();
-        //if (playerOneInput == null)
-        //{
-        //    Debug.LogError("Player 1 Input not found in MapSelectionScript Start");
-        //    return;
-        //}
-        Initialize();
-    }
-
-    private void Initialize()
-    {
-        //if (playerOneInput == null)
-        //{
-        //    Debug.LogError("Player 1 Input not found in MapSelectionScript");
-        //}
-        //else
-        //{
-        //    var lobbyActionMap = playerOneInput.actions.FindActionMap("Lobby");
-        //    nextOptionAction = lobbyActionMap.FindAction("NextOption");
-        //    previousOptionAction = lobbyActionMap.FindAction("PreviousOption");
-        //    navigateAction = lobbyActionMap.FindAction("Navigate");
-
-        //}
-    }
-
     
     private void OnNextOption()
     {
@@ -63,7 +34,7 @@ public class MapSelectionScript : MonoBehaviour
     private void OnSelect()
     {
         if (gameObject.activeInHierarchy == false) return;
-        SceneManager.LoadScene("Level2Scene 1");
+        SceneManager.LoadScene("Level 2");
     }
 
 

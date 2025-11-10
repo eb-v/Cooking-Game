@@ -14,7 +14,10 @@ public class PlayerManager : MonoBehaviour
     [SerializeField] private int m_playerCount = 0;
     private List<PlayerStats> allPlayers = new List<PlayerStats>();
     [SerializeField] private List<PlayerLobbySpawnInfoSO> lobbySpawnInfoSOs = new List<PlayerLobbySpawnInfoSO>();
-    [SerializeField] private string lobbySceneName = "PregameLobbyScene 2";
+    [SerializeField] private string lobbySceneName = "Pregame Lobby";
+
+    private Dictionary<PlayerInput, InputDevice> playerInputDeviceMappings = new Dictionary<PlayerInput, InputDevice>();
+    public Dictionary<PlayerInput, InputDevice> PlayerInputDeviceMappings => playerInputDeviceMappings;
 
     private void Awake()
     {
@@ -28,6 +31,7 @@ public class PlayerManager : MonoBehaviour
             Destroy(gameObject);
         }
     }
+
     
     public void OnPlayerJoined(PlayerInput playerInput)
     {
@@ -51,6 +55,8 @@ public class PlayerManager : MonoBehaviour
         
 
         players.Add(playerInput.gameObject);
+        playerInputDeviceMappings[playerInput] = playerInput.devices[0];
+        Debug.Log($"Player joined: {playerInput.name} with device {playerInput.devices[0].displayName}");
         //DontDestroyOnLoad(playerInput.gameObject);
         m_playerCount++;
         playerInput.name = "Player " + m_playerCount;
@@ -66,12 +72,14 @@ public class PlayerManager : MonoBehaviour
             PlayerLobbySpawnInfoSO spawnInfoSO = lobbySpawnInfoSOs[m_playerCount - 1];
             Quaternion spawnRot = Quaternion.Euler(spawnInfoSO.spawnRot);
             playerInput.transform.SetPositionAndRotation(spawnInfoSO.spawnPos, spawnRot);
+            playerInput.transform.parent = gameObject.transform;
         }
+        
 
-       
 
-        // Get or add PlayerStats component
-        PlayerStats stats = playerInput.gameObject.GetComponent<PlayerStats>();
+
+            // Get or add PlayerStats component
+            PlayerStats stats = playerInput.gameObject.GetComponent<PlayerStats>();
         if (stats == null)
         {
             stats = playerInput.gameObject.AddComponent<PlayerStats>();

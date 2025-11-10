@@ -56,7 +56,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: dc36027716c7ad546a4ff6c78ba6bdad, type: 2}
   - {fileID: 11400000, guid: 6e3aeb228dbfd8c4793c5092e6c42364, type: 2}
   - {fileID: 11400000, guid: 0ed58b21d7734e84cb1a6940564143bb, type: 2}
-  lobbySceneName: PregameLobbyScene 2
+  lobbySceneName: Pregame Lobby
 --- !u!114 &1177768234942213315
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -72,7 +72,7 @@ MonoBehaviour:
   m_NotificationBehavior: 0
   m_MaxPlayerCount: 4
   m_AllowJoining: 1
-  m_JoinBehavior: 0
+  m_JoinBehavior: 1
   m_PlayerJoinedEvent:
     m_PersistentCalls:
       m_Calls: []
@@ -82,16 +82,24 @@ MonoBehaviour:
   m_JoinAction:
     m_UseReference: 0
     m_Action:
-      m_Name: 
+      m_Name: Join
       m_Type: 0
       m_ExpectedControlType: 
       m_Id: 99fade39-5558-4803-89d1-731fcfc483d3
       m_Processors: 
       m_Interactions: 
-      m_SingletonActionBindings: []
+      m_SingletonActionBindings:
+      - m_Name: 
+        m_Id: fe4a542a-1b31-42d2-aec1-f9946a53f494
+        m_Path: <Gamepad>/start
+        m_Interactions: 
+        m_Processors: 
+        m_Groups: 
+        m_Action: Join
+        m_Flags: 0
       m_Flags: 0
     m_Reference: {fileID: 0}
-  m_PlayerPrefab: {fileID: 5650067990607640953, guid: 6f5ff8f23c90b1940bab1cfa06432aa1, type: 3}
+  m_PlayerPrefab: {fileID: 4777336152046692441, guid: 49abeb7bbc1b6dc40827cfd8b8fb0409, type: 3}
   m_SplitScreen: 0
   m_MaintainAspectRatioInSplitScreen: 0
   m_FixedNumberOfSplitScreens: -1

@@ -379,6 +379,14 @@ PrefabInstance:
       value: rails (7)
       objectReference: {fileID: 0}
     - target: {fileID: 1270321313152020058, guid: 8ffcf527829b62a43ade49b5f24a7c9e, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 1270321313152020058, guid: 8ffcf527829b62a43ade49b5f24a7c9e, type: 3}
+      propertyPath: m_TagString
+      value: Ground
+      objectReference: {fileID: 0}
+    - target: {fileID: 1270321313152020058, guid: 8ffcf527829b62a43ade49b5f24a7c9e, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2147483647
       objectReference: {fileID: 0}
@@ -509,6 +517,10 @@ PrefabInstance:
       value: YellowSubwayTile (21)
       objectReference: {fileID: 0}
     - target: {fileID: 5211457588009210324, guid: 3137e76da79355b4fb36f434be672750, type: 3}
+      propertyPath: m_TagString
+      value: Ground
+      objectReference: {fileID: 0}
+    - target: {fileID: 5211457588009210324, guid: 3137e76da79355b4fb36f434be672750, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2147483647
       objectReference: {fileID: 0}
@@ -598,7 +610,7 @@ Transform:
   m_GameObject: {fileID: 145691238}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -5.67, y: 14.56, z: 6.32}
+  m_LocalPosition: {x: -0.3, y: 18.32, z: 22.4}
   m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -691,6 +703,81 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1873004223}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &173355121
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 173355122}
+  m_Layer: 0
+  m_Name: spawnpoint (3)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &173355122
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 173355121}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -8.22, y: 1.16501, z: 6.97}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1228225362}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &198521437
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 198521438}
+  - component: {fileID: 198521439}
+  m_Layer: 0
+  m_Name: PlayerInitializer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &198521438
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 198521437}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2074986398}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &198521439
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 198521437}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f3f87fb6fe46ac4698a3ecfe58c7be5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
 --- !u!4 &204372881 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8628395807554901958, guid: 381339e7f2e10994291a397b48978d61, type: 3}
@@ -755,6 +842,10 @@ PrefabInstance:
     - target: {fileID: 5211457588009210324, guid: 3137e76da79355b4fb36f434be672750, type: 3}
       propertyPath: m_Name
       value: YellowSubwayTile (17)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5211457588009210324, guid: 3137e76da79355b4fb36f434be672750, type: 3}
+      propertyPath: m_TagString
+      value: Ground
       objectReference: {fileID: 0}
     - target: {fileID: 5211457588009210324, guid: 3137e76da79355b4fb36f434be672750, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -937,6 +1028,10 @@ PrefabInstance:
       value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 6078990745760949115, guid: 7e3759da865ae0448a8685cd45baa888, type: 3}
+      propertyPath: m_TagString
+      value: Ground
+      objectReference: {fileID: 0}
+    - target: {fileID: 6078990745760949115, guid: 7e3759da865ae0448a8685cd45baa888, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2147483647
       objectReference: {fileID: 0}
@@ -1079,11 +1174,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 381339e7f2e10994291a397b48978d61, type: 3}
---- !u!1 &257453218 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 694779199704929400, guid: 83fbabf4b13f3e24183ece3475d3920a, type: 3}
-  m_PrefabInstance: {fileID: 2002899273}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &259718613
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1145,6 +1235,10 @@ PrefabInstance:
       value: YellowSubwayTile (10)
       objectReference: {fileID: 0}
     - target: {fileID: 5211457588009210324, guid: 3137e76da79355b4fb36f434be672750, type: 3}
+      propertyPath: m_TagString
+      value: Ground
+      objectReference: {fileID: 0}
+    - target: {fileID: 5211457588009210324, guid: 3137e76da79355b4fb36f434be672750, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2147483647
       objectReference: {fileID: 0}
@@ -1169,6 +1263,14 @@ PrefabInstance:
     - target: {fileID: 1270321313152020058, guid: 8ffcf527829b62a43ade49b5f24a7c9e, type: 3}
       propertyPath: m_Name
       value: rails (9)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1270321313152020058, guid: 8ffcf527829b62a43ade49b5f24a7c9e, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 1270321313152020058, guid: 8ffcf527829b62a43ade49b5f24a7c9e, type: 3}
+      propertyPath: m_TagString
+      value: Ground
       objectReference: {fileID: 0}
     - target: {fileID: 1270321313152020058, guid: 8ffcf527829b62a43ade49b5f24a7c9e, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -1293,6 +1395,10 @@ PrefabInstance:
       value: 1x1Tile
       objectReference: {fileID: 0}
     - target: {fileID: 8022759111684526995, guid: b095bcee1b6f3a44c887b8ca4357d9cc, type: 3}
+      propertyPath: m_TagString
+      value: Ground
+      objectReference: {fileID: 0}
+    - target: {fileID: 8022759111684526995, guid: b095bcee1b6f3a44c887b8ca4357d9cc, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2147483647
       objectReference: {fileID: 0}
@@ -1367,6 +1473,10 @@ PrefabInstance:
       value: YellowSubwayTile (23)
       objectReference: {fileID: 0}
     - target: {fileID: 5211457588009210324, guid: 3137e76da79355b4fb36f434be672750, type: 3}
+      propertyPath: m_TagString
+      value: Ground
+      objectReference: {fileID: 0}
+    - target: {fileID: 5211457588009210324, guid: 3137e76da79355b4fb36f434be672750, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2147483647
       objectReference: {fileID: 0}
@@ -1379,11 +1489,6 @@ PrefabInstance:
 Transform:
   m_CorrespondingSourceObject: {fileID: 574258703188134119, guid: 3137e76da79355b4fb36f434be672750, type: 3}
   m_PrefabInstance: {fileID: 275466676}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &282794932 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7395297664730461285, guid: 83fbabf4b13f3e24183ece3475d3920a, type: 3}
-  m_PrefabInstance: {fileID: 2002899273}
   m_PrefabAsset: {fileID: 0}
 --- !u!4 &300772727 stripped
 Transform:
@@ -1610,6 +1715,10 @@ PrefabInstance:
     - target: {fileID: 8022759111684526995, guid: b095bcee1b6f3a44c887b8ca4357d9cc, type: 3}
       propertyPath: m_Name
       value: 1x1Tile
+      objectReference: {fileID: 0}
+    - target: {fileID: 8022759111684526995, guid: b095bcee1b6f3a44c887b8ca4357d9cc, type: 3}
+      propertyPath: m_TagString
+      value: Ground
       objectReference: {fileID: 0}
     - target: {fileID: 8022759111684526995, guid: b095bcee1b6f3a44c887b8ca4357d9cc, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -1978,6 +2087,10 @@ PrefabInstance:
       value: 1x1Tile
       objectReference: {fileID: 0}
     - target: {fileID: 8022759111684526995, guid: b095bcee1b6f3a44c887b8ca4357d9cc, type: 3}
+      propertyPath: m_TagString
+      value: Ground
+      objectReference: {fileID: 0}
+    - target: {fileID: 8022759111684526995, guid: b095bcee1b6f3a44c887b8ca4357d9cc, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2147483647
       objectReference: {fileID: 0}
@@ -2055,6 +2168,10 @@ PrefabInstance:
     - target: {fileID: 5211457588009210324, guid: 3137e76da79355b4fb36f434be672750, type: 3}
       propertyPath: m_Name
       value: YellowSubwayTile (6)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5211457588009210324, guid: 3137e76da79355b4fb36f434be672750, type: 3}
+      propertyPath: m_TagString
+      value: Ground
       objectReference: {fileID: 0}
     - target: {fileID: 5211457588009210324, guid: 3137e76da79355b4fb36f434be672750, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -2136,6 +2253,10 @@ PrefabInstance:
       value: YellowSubwayTile (22)
       objectReference: {fileID: 0}
     - target: {fileID: 5211457588009210324, guid: 3137e76da79355b4fb36f434be672750, type: 3}
+      propertyPath: m_TagString
+      value: Ground
+      objectReference: {fileID: 0}
+    - target: {fileID: 5211457588009210324, guid: 3137e76da79355b4fb36f434be672750, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2147483647
       objectReference: {fileID: 0}
@@ -2154,6 +2275,37 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 8628395807554901958, guid: 381339e7f2e10994291a397b48978d61, type: 3}
   m_PrefabInstance: {fileID: 957149383}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &402548087
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 402548088}
+  m_Layer: 0
+  m_Name: spawnpoint (2)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &402548088
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 402548087}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -32.38, y: 1.16501, z: 6.85}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1228225362}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &410087039
 GameObject:
   m_ObjectHideFlags: 0
@@ -2387,6 +2539,10 @@ PrefabInstance:
       value: 1x1Tile
       objectReference: {fileID: 0}
     - target: {fileID: 8022759111684526995, guid: b095bcee1b6f3a44c887b8ca4357d9cc, type: 3}
+      propertyPath: m_TagString
+      value: Ground
+      objectReference: {fileID: 0}
+    - target: {fileID: 8022759111684526995, guid: b095bcee1b6f3a44c887b8ca4357d9cc, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2147483647
       objectReference: {fileID: 0}
@@ -2561,6 +2717,10 @@ PrefabInstance:
     - target: {fileID: 8022759111684526995, guid: b095bcee1b6f3a44c887b8ca4357d9cc, type: 3}
       propertyPath: m_Name
       value: 1x1Tile
+      objectReference: {fileID: 0}
+    - target: {fileID: 8022759111684526995, guid: b095bcee1b6f3a44c887b8ca4357d9cc, type: 3}
+      propertyPath: m_TagString
+      value: Ground
       objectReference: {fileID: 0}
     - target: {fileID: 8022759111684526995, guid: b095bcee1b6f3a44c887b8ca4357d9cc, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -2776,6 +2936,10 @@ PrefabInstance:
       value: 1x1Tile
       objectReference: {fileID: 0}
     - target: {fileID: 8022759111684526995, guid: b095bcee1b6f3a44c887b8ca4357d9cc, type: 3}
+      propertyPath: m_TagString
+      value: Ground
+      objectReference: {fileID: 0}
+    - target: {fileID: 8022759111684526995, guid: b095bcee1b6f3a44c887b8ca4357d9cc, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2147483647
       objectReference: {fileID: 0}
@@ -2869,6 +3033,14 @@ PrefabInstance:
     - target: {fileID: 1270321313152020058, guid: 8ffcf527829b62a43ade49b5f24a7c9e, type: 3}
       propertyPath: m_Name
       value: rails (10)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1270321313152020058, guid: 8ffcf527829b62a43ade49b5f24a7c9e, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 1270321313152020058, guid: 8ffcf527829b62a43ade49b5f24a7c9e, type: 3}
+      propertyPath: m_TagString
+      value: Ground
       objectReference: {fileID: 0}
     - target: {fileID: 1270321313152020058, guid: 8ffcf527829b62a43ade49b5f24a7c9e, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -3040,7 +3212,7 @@ GameObject:
   - component: {fileID: 530151776}
   m_Layer: 7
   m_Name: Tiles
-  m_TagString: Untagged
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
@@ -3122,6 +3294,10 @@ PrefabInstance:
     - target: {fileID: 5211457588009210324, guid: 3137e76da79355b4fb36f434be672750, type: 3}
       propertyPath: m_Name
       value: YellowSubwayTile (13)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5211457588009210324, guid: 3137e76da79355b4fb36f434be672750, type: 3}
+      propertyPath: m_TagString
+      value: Ground
       objectReference: {fileID: 0}
     - target: {fileID: 5211457588009210324, guid: 3137e76da79355b4fb36f434be672750, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -3213,6 +3389,10 @@ PrefabInstance:
       value: YellowSubwayTile (11)
       objectReference: {fileID: 0}
     - target: {fileID: 5211457588009210324, guid: 3137e76da79355b4fb36f434be672750, type: 3}
+      propertyPath: m_TagString
+      value: Ground
+      objectReference: {fileID: 0}
+    - target: {fileID: 5211457588009210324, guid: 3137e76da79355b4fb36f434be672750, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2147483647
       objectReference: {fileID: 0}
@@ -3277,6 +3457,10 @@ PrefabInstance:
     - target: {fileID: 8022759111684526995, guid: b095bcee1b6f3a44c887b8ca4357d9cc, type: 3}
       propertyPath: m_Name
       value: 1x1Tile
+      objectReference: {fileID: 0}
+    - target: {fileID: 8022759111684526995, guid: b095bcee1b6f3a44c887b8ca4357d9cc, type: 3}
+      propertyPath: m_TagString
+      value: Ground
       objectReference: {fileID: 0}
     - target: {fileID: 8022759111684526995, guid: b095bcee1b6f3a44c887b8ca4357d9cc, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -3353,6 +3537,10 @@ PrefabInstance:
       value: YellowSubwayTile (25)
       objectReference: {fileID: 0}
     - target: {fileID: 5211457588009210324, guid: 3137e76da79355b4fb36f434be672750, type: 3}
+      propertyPath: m_TagString
+      value: Ground
+      objectReference: {fileID: 0}
+    - target: {fileID: 5211457588009210324, guid: 3137e76da79355b4fb36f434be672750, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2147483647
       objectReference: {fileID: 0}
@@ -3417,6 +3605,10 @@ PrefabInstance:
     - target: {fileID: 8022759111684526995, guid: b095bcee1b6f3a44c887b8ca4357d9cc, type: 3}
       propertyPath: m_Name
       value: 1x1Tile
+      objectReference: {fileID: 0}
+    - target: {fileID: 8022759111684526995, guid: b095bcee1b6f3a44c887b8ca4357d9cc, type: 3}
+      propertyPath: m_TagString
+      value: Ground
       objectReference: {fileID: 0}
     - target: {fileID: 8022759111684526995, guid: b095bcee1b6f3a44c887b8ca4357d9cc, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -3560,7 +3752,7 @@ Transform:
   m_GameObject: {fileID: 613670644}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -35.94952, y: 1.16501, z: 4.1511307}
+  m_LocalPosition: {x: -40.08, y: 1.16501, z: 3.23}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3794,9 +3986,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e5bebaad9ddd4c82b45fcfb0f195708, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DispenserSupplyBox
-  targetDispenser: {fileID: 1525894012}
+  targetDispenser: {fileID: 2108424508}
   refillAmount: 5
-  requiredIngredient: {fileID: 11400000, guid: bfa5a3bec37ee234d93e8b470b906a6c, type: 2}
+  requiredIngredient: {fileID: 0}
 --- !u!65 &651241919
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -3909,6 +4101,10 @@ PrefabInstance:
     - target: {fileID: 6078990745760949115, guid: 7e3759da865ae0448a8685cd45baa888, type: 3}
       propertyPath: m_Layer
       value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 6078990745760949115, guid: 7e3759da865ae0448a8685cd45baa888, type: 3}
+      propertyPath: m_TagString
+      value: Ground
       objectReference: {fileID: 0}
     - target: {fileID: 6078990745760949115, guid: 7e3759da865ae0448a8685cd45baa888, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -4294,6 +4490,10 @@ PrefabInstance:
       value: YellowSubwayTile (7)
       objectReference: {fileID: 0}
     - target: {fileID: 5211457588009210324, guid: 3137e76da79355b4fb36f434be672750, type: 3}
+      propertyPath: m_TagString
+      value: Ground
+      objectReference: {fileID: 0}
+    - target: {fileID: 5211457588009210324, guid: 3137e76da79355b4fb36f434be672750, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2147483647
       objectReference: {fileID: 0}
@@ -4358,6 +4558,10 @@ PrefabInstance:
     - target: {fileID: 8022759111684526995, guid: b095bcee1b6f3a44c887b8ca4357d9cc, type: 3}
       propertyPath: m_Name
       value: 1x1Tile
+      objectReference: {fileID: 0}
+    - target: {fileID: 8022759111684526995, guid: b095bcee1b6f3a44c887b8ca4357d9cc, type: 3}
+      propertyPath: m_TagString
+      value: Ground
       objectReference: {fileID: 0}
     - target: {fileID: 8022759111684526995, guid: b095bcee1b6f3a44c887b8ca4357d9cc, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -4696,6 +4900,10 @@ PrefabInstance:
     - target: {fileID: 6078990745760949115, guid: 7e3759da865ae0448a8685cd45baa888, type: 3}
       propertyPath: m_Layer
       value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 6078990745760949115, guid: 7e3759da865ae0448a8685cd45baa888, type: 3}
+      propertyPath: m_TagString
+      value: Ground
       objectReference: {fileID: 0}
     - target: {fileID: 6078990745760949115, guid: 7e3759da865ae0448a8685cd45baa888, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -5161,11 +5369,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 731039088}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &837410544 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7538396205923085216, guid: 83fbabf4b13f3e24183ece3475d3920a, type: 3}
-  m_PrefabInstance: {fileID: 2002899273}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &864944809 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6274962998334015401, guid: 968ce0dd07e83fd4cae7e8be237b2bae, type: 3}
@@ -5222,6 +5425,10 @@ PrefabInstance:
     - target: {fileID: 8022759111684526995, guid: b095bcee1b6f3a44c887b8ca4357d9cc, type: 3}
       propertyPath: m_Name
       value: 1x1Tile
+      objectReference: {fileID: 0}
+    - target: {fileID: 8022759111684526995, guid: b095bcee1b6f3a44c887b8ca4357d9cc, type: 3}
+      propertyPath: m_TagString
+      value: Ground
       objectReference: {fileID: 0}
     - target: {fileID: 8022759111684526995, guid: b095bcee1b6f3a44c887b8ca4357d9cc, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -5288,6 +5495,10 @@ PrefabInstance:
     - target: {fileID: 8022759111684526995, guid: b095bcee1b6f3a44c887b8ca4357d9cc, type: 3}
       propertyPath: m_Name
       value: 1x1Tile
+      objectReference: {fileID: 0}
+    - target: {fileID: 8022759111684526995, guid: b095bcee1b6f3a44c887b8ca4357d9cc, type: 3}
+      propertyPath: m_TagString
+      value: Ground
       objectReference: {fileID: 0}
     - target: {fileID: 8022759111684526995, guid: b095bcee1b6f3a44c887b8ca4357d9cc, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -5361,6 +5572,10 @@ PrefabInstance:
       value: 1x1Tile
       objectReference: {fileID: 0}
     - target: {fileID: 8022759111684526995, guid: b095bcee1b6f3a44c887b8ca4357d9cc, type: 3}
+      propertyPath: m_TagString
+      value: Ground
+      objectReference: {fileID: 0}
+    - target: {fileID: 8022759111684526995, guid: b095bcee1b6f3a44c887b8ca4357d9cc, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2147483647
       objectReference: {fileID: 0}
@@ -5374,79 +5589,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 926061051224223135, guid: b095bcee1b6f3a44c887b8ca4357d9cc, type: 3}
   m_PrefabInstance: {fileID: 905196594}
   m_PrefabAsset: {fileID: 0}
---- !u!1001 &913897892
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 4777336152046692441, guid: 49abeb7bbc1b6dc40827cfd8b8fb0409, type: 3}
-      propertyPath: m_Name
-      value: Player
-      objectReference: {fileID: 0}
-    - target: {fileID: 7850579716480685622, guid: 49abeb7bbc1b6dc40827cfd8b8fb0409, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 7850579716480685622, guid: 49abeb7bbc1b6dc40827cfd8b8fb0409, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 7850579716480685622, guid: 49abeb7bbc1b6dc40827cfd8b8fb0409, type: 3}
-      propertyPath: m_LocalScale.z
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 7850579716480685622, guid: 49abeb7bbc1b6dc40827cfd8b8fb0409, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 18.28
-      objectReference: {fileID: 0}
-    - target: {fileID: 7850579716480685622, guid: 49abeb7bbc1b6dc40827cfd8b8fb0409, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0.71
-      objectReference: {fileID: 0}
-    - target: {fileID: 7850579716480685622, guid: 49abeb7bbc1b6dc40827cfd8b8fb0409, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 17.65
-      objectReference: {fileID: 0}
-    - target: {fileID: 7850579716480685622, guid: 49abeb7bbc1b6dc40827cfd8b8fb0409, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7850579716480685622, guid: 49abeb7bbc1b6dc40827cfd8b8fb0409, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7850579716480685622, guid: 49abeb7bbc1b6dc40827cfd8b8fb0409, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7850579716480685622, guid: 49abeb7bbc1b6dc40827cfd8b8fb0409, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7850579716480685622, guid: 49abeb7bbc1b6dc40827cfd8b8fb0409, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7850579716480685622, guid: 49abeb7bbc1b6dc40827cfd8b8fb0409, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7850579716480685622, guid: 49abeb7bbc1b6dc40827cfd8b8fb0409, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7850579716480685622, guid: 49abeb7bbc1b6dc40827cfd8b8fb0409, type: 3}
-      propertyPath: m_ConstrainProportionsScale
-      value: 1
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 49abeb7bbc1b6dc40827cfd8b8fb0409, type: 3}
 --- !u!1001 &930340238
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5506,6 +5648,10 @@ PrefabInstance:
     - target: {fileID: 5211457588009210324, guid: 3137e76da79355b4fb36f434be672750, type: 3}
       propertyPath: m_Name
       value: YellowSubwayTile (4)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5211457588009210324, guid: 3137e76da79355b4fb36f434be672750, type: 3}
+      propertyPath: m_TagString
+      value: Ground
       objectReference: {fileID: 0}
     - target: {fileID: 5211457588009210324, guid: 3137e76da79355b4fb36f434be672750, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -5574,6 +5720,10 @@ PrefabInstance:
       value: 1x1Tile
       objectReference: {fileID: 0}
     - target: {fileID: 8022759111684526995, guid: b095bcee1b6f3a44c887b8ca4357d9cc, type: 3}
+      propertyPath: m_TagString
+      value: Ground
+      objectReference: {fileID: 0}
+    - target: {fileID: 8022759111684526995, guid: b095bcee1b6f3a44c887b8ca4357d9cc, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2147483647
       objectReference: {fileID: 0}
@@ -5638,6 +5788,10 @@ PrefabInstance:
     - target: {fileID: 8022759111684526995, guid: b095bcee1b6f3a44c887b8ca4357d9cc, type: 3}
       propertyPath: m_Name
       value: 1x1Tile
+      objectReference: {fileID: 0}
+    - target: {fileID: 8022759111684526995, guid: b095bcee1b6f3a44c887b8ca4357d9cc, type: 3}
+      propertyPath: m_TagString
+      value: Ground
       objectReference: {fileID: 0}
     - target: {fileID: 8022759111684526995, guid: b095bcee1b6f3a44c887b8ca4357d9cc, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -5849,6 +6003,10 @@ PrefabInstance:
       value: 1x1Tile
       objectReference: {fileID: 0}
     - target: {fileID: 8022759111684526995, guid: b095bcee1b6f3a44c887b8ca4357d9cc, type: 3}
+      propertyPath: m_TagString
+      value: Ground
+      objectReference: {fileID: 0}
+    - target: {fileID: 8022759111684526995, guid: b095bcee1b6f3a44c887b8ca4357d9cc, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2147483647
       objectReference: {fileID: 0}
@@ -5920,6 +6078,10 @@ PrefabInstance:
       value: 1x1Tile
       objectReference: {fileID: 0}
     - target: {fileID: 8022759111684526995, guid: b095bcee1b6f3a44c887b8ca4357d9cc, type: 3}
+      propertyPath: m_TagString
+      value: Ground
+      objectReference: {fileID: 0}
+    - target: {fileID: 8022759111684526995, guid: b095bcee1b6f3a44c887b8ca4357d9cc, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2147483647
       objectReference: {fileID: 0}
@@ -5984,6 +6146,10 @@ PrefabInstance:
     - target: {fileID: 8022759111684526995, guid: b095bcee1b6f3a44c887b8ca4357d9cc, type: 3}
       propertyPath: m_Name
       value: 1x1Tile
+      objectReference: {fileID: 0}
+    - target: {fileID: 8022759111684526995, guid: b095bcee1b6f3a44c887b8ca4357d9cc, type: 3}
+      propertyPath: m_TagString
+      value: Ground
       objectReference: {fileID: 0}
     - target: {fileID: 8022759111684526995, guid: b095bcee1b6f3a44c887b8ca4357d9cc, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -6125,6 +6291,10 @@ PrefabInstance:
       value: YellowSubwayTile
       objectReference: {fileID: 0}
     - target: {fileID: 5211457588009210324, guid: 3137e76da79355b4fb36f434be672750, type: 3}
+      propertyPath: m_TagString
+      value: Ground
+      objectReference: {fileID: 0}
+    - target: {fileID: 5211457588009210324, guid: 3137e76da79355b4fb36f434be672750, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2147483647
       objectReference: {fileID: 0}
@@ -6183,6 +6353,7 @@ MonoBehaviour:
   flightPath: []
   flightPathContainer: {fileID: 436042510}
   isDroneActive: 0
+  ingredientsToSpawn: 4
 --- !u!1001 &1063397971
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6234,6 +6405,10 @@ PrefabInstance:
     - target: {fileID: 8022759111684526995, guid: b095bcee1b6f3a44c887b8ca4357d9cc, type: 3}
       propertyPath: m_Name
       value: 1x1Tile
+      objectReference: {fileID: 0}
+    - target: {fileID: 8022759111684526995, guid: b095bcee1b6f3a44c887b8ca4357d9cc, type: 3}
+      propertyPath: m_TagString
+      value: Ground
       objectReference: {fileID: 0}
     - target: {fileID: 8022759111684526995, guid: b095bcee1b6f3a44c887b8ca4357d9cc, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -6423,6 +6598,10 @@ PrefabInstance:
       value: YellowSubwayTile (9)
       objectReference: {fileID: 0}
     - target: {fileID: 5211457588009210324, guid: 3137e76da79355b4fb36f434be672750, type: 3}
+      propertyPath: m_TagString
+      value: Ground
+      objectReference: {fileID: 0}
+    - target: {fileID: 5211457588009210324, guid: 3137e76da79355b4fb36f434be672750, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2147483647
       objectReference: {fileID: 0}
@@ -6528,6 +6707,10 @@ PrefabInstance:
       value: YellowSubwayTile (26)
       objectReference: {fileID: 0}
     - target: {fileID: 5211457588009210324, guid: 3137e76da79355b4fb36f434be672750, type: 3}
+      propertyPath: m_TagString
+      value: Ground
+      objectReference: {fileID: 0}
+    - target: {fileID: 5211457588009210324, guid: 3137e76da79355b4fb36f434be672750, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2147483647
       objectReference: {fileID: 0}
@@ -6592,6 +6775,10 @@ PrefabInstance:
     - target: {fileID: 8022759111684526995, guid: b095bcee1b6f3a44c887b8ca4357d9cc, type: 3}
       propertyPath: m_Name
       value: 1x1Tile
+      objectReference: {fileID: 0}
+    - target: {fileID: 8022759111684526995, guid: b095bcee1b6f3a44c887b8ca4357d9cc, type: 3}
+      propertyPath: m_TagString
+      value: Ground
       objectReference: {fileID: 0}
     - target: {fileID: 8022759111684526995, guid: b095bcee1b6f3a44c887b8ca4357d9cc, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -7723,6 +7910,10 @@ PrefabInstance:
       value: YellowSubwayTile (2)
       objectReference: {fileID: 0}
     - target: {fileID: 5211457588009210324, guid: 3137e76da79355b4fb36f434be672750, type: 3}
+      propertyPath: m_TagString
+      value: Ground
+      objectReference: {fileID: 0}
+    - target: {fileID: 5211457588009210324, guid: 3137e76da79355b4fb36f434be672750, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2147483647
       objectReference: {fileID: 0}
@@ -7787,6 +7978,10 @@ PrefabInstance:
     - target: {fileID: 8022759111684526995, guid: b095bcee1b6f3a44c887b8ca4357d9cc, type: 3}
       propertyPath: m_Name
       value: 1x1Tile
+      objectReference: {fileID: 0}
+    - target: {fileID: 8022759111684526995, guid: b095bcee1b6f3a44c887b8ca4357d9cc, type: 3}
+      propertyPath: m_TagString
+      value: Ground
       objectReference: {fileID: 0}
     - target: {fileID: 8022759111684526995, guid: b095bcee1b6f3a44c887b8ca4357d9cc, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -7887,7 +8082,7 @@ GameObject:
   - component: {fileID: 1209421259}
   m_Layer: 7
   m_Name: MainFloor
-  m_TagString: Untagged
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
@@ -8044,6 +8239,10 @@ PrefabInstance:
     - target: {fileID: 5211457588009210324, guid: 3137e76da79355b4fb36f434be672750, type: 3}
       propertyPath: m_Name
       value: YellowSubwayTile (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5211457588009210324, guid: 3137e76da79355b4fb36f434be672750, type: 3}
+      propertyPath: m_TagString
+      value: Ground
       objectReference: {fileID: 0}
     - target: {fileID: 5211457588009210324, guid: 3137e76da79355b4fb36f434be672750, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -8206,6 +8405,8 @@ Transform:
   m_Children:
   - {fileID: 613670645}
   - {fileID: 1279200189}
+  - {fileID: 402548088}
+  - {fileID: 173355122}
   m_Father: {fileID: 1873004223}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1237775486
@@ -8219,6 +8420,14 @@ PrefabInstance:
     - target: {fileID: 1270321313152020058, guid: 8ffcf527829b62a43ade49b5f24a7c9e, type: 3}
       propertyPath: m_Name
       value: rails (8)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1270321313152020058, guid: 8ffcf527829b62a43ade49b5f24a7c9e, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 1270321313152020058, guid: 8ffcf527829b62a43ade49b5f24a7c9e, type: 3}
+      propertyPath: m_TagString
+      value: Ground
       objectReference: {fileID: 0}
     - target: {fileID: 1270321313152020058, guid: 8ffcf527829b62a43ade49b5f24a7c9e, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -8540,6 +8749,10 @@ PrefabInstance:
       value: 1x1Tile
       objectReference: {fileID: 0}
     - target: {fileID: 8022759111684526995, guid: b095bcee1b6f3a44c887b8ca4357d9cc, type: 3}
+      propertyPath: m_TagString
+      value: Ground
+      objectReference: {fileID: 0}
+    - target: {fileID: 8022759111684526995, guid: b095bcee1b6f3a44c887b8ca4357d9cc, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2147483647
       objectReference: {fileID: 0}
@@ -8606,6 +8819,10 @@ PrefabInstance:
       value: 1x1Tile
       objectReference: {fileID: 0}
     - target: {fileID: 8022759111684526995, guid: b095bcee1b6f3a44c887b8ca4357d9cc, type: 3}
+      propertyPath: m_TagString
+      value: Ground
+      objectReference: {fileID: 0}
+    - target: {fileID: 8022759111684526995, guid: b095bcee1b6f3a44c887b8ca4357d9cc, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2147483647
       objectReference: {fileID: 0}
@@ -8654,6 +8871,10 @@ PrefabInstance:
     - target: {fileID: 6078990745760949115, guid: 7e3759da865ae0448a8685cd45baa888, type: 3}
       propertyPath: m_Layer
       value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 6078990745760949115, guid: 7e3759da865ae0448a8685cd45baa888, type: 3}
+      propertyPath: m_TagString
+      value: Ground
       objectReference: {fileID: 0}
     - target: {fileID: 6078990745760949115, guid: 7e3759da865ae0448a8685cd45baa888, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -8805,7 +9026,7 @@ Transform:
   m_GameObject: {fileID: 1279200188}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -16.57952, y: 1.16501, z: 3.8011303}
+  m_LocalPosition: {x: -24.47, y: 1.16501, z: 3.52}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -8959,6 +9180,10 @@ PrefabInstance:
     - target: {fileID: 5211457588009210324, guid: 3137e76da79355b4fb36f434be672750, type: 3}
       propertyPath: m_Name
       value: YellowSubwayTile (8)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5211457588009210324, guid: 3137e76da79355b4fb36f434be672750, type: 3}
+      propertyPath: m_TagString
+      value: Ground
       objectReference: {fileID: 0}
     - target: {fileID: 5211457588009210324, guid: 3137e76da79355b4fb36f434be672750, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -9139,6 +9364,10 @@ PrefabInstance:
     - target: {fileID: 8022759111684526995, guid: b095bcee1b6f3a44c887b8ca4357d9cc, type: 3}
       propertyPath: m_Name
       value: 1x1Tile
+      objectReference: {fileID: 0}
+    - target: {fileID: 8022759111684526995, guid: b095bcee1b6f3a44c887b8ca4357d9cc, type: 3}
+      propertyPath: m_TagString
+      value: Ground
       objectReference: {fileID: 0}
     - target: {fileID: 8022759111684526995, guid: b095bcee1b6f3a44c887b8ca4357d9cc, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -9625,6 +9854,10 @@ PrefabInstance:
       value: YellowSubwayTile (18)
       objectReference: {fileID: 0}
     - target: {fileID: 5211457588009210324, guid: 3137e76da79355b4fb36f434be672750, type: 3}
+      propertyPath: m_TagString
+      value: Ground
+      objectReference: {fileID: 0}
+    - target: {fileID: 5211457588009210324, guid: 3137e76da79355b4fb36f434be672750, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2147483647
       objectReference: {fileID: 0}
@@ -9689,6 +9922,10 @@ PrefabInstance:
     - target: {fileID: 8022759111684526995, guid: b095bcee1b6f3a44c887b8ca4357d9cc, type: 3}
       propertyPath: m_Name
       value: 1x1Tile
+      objectReference: {fileID: 0}
+    - target: {fileID: 8022759111684526995, guid: b095bcee1b6f3a44c887b8ca4357d9cc, type: 3}
+      propertyPath: m_TagString
+      value: Ground
       objectReference: {fileID: 0}
     - target: {fileID: 8022759111684526995, guid: b095bcee1b6f3a44c887b8ca4357d9cc, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -9763,6 +10000,10 @@ PrefabInstance:
     - target: {fileID: 5211457588009210324, guid: 3137e76da79355b4fb36f434be672750, type: 3}
       propertyPath: m_Name
       value: YellowSubwayTile (20)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5211457588009210324, guid: 3137e76da79355b4fb36f434be672750, type: 3}
+      propertyPath: m_TagString
+      value: Ground
       objectReference: {fileID: 0}
     - target: {fileID: 5211457588009210324, guid: 3137e76da79355b4fb36f434be672750, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -9950,6 +10191,10 @@ PrefabInstance:
       value: 1x1Tile
       objectReference: {fileID: 0}
     - target: {fileID: 8022759111684526995, guid: b095bcee1b6f3a44c887b8ca4357d9cc, type: 3}
+      propertyPath: m_TagString
+      value: Ground
+      objectReference: {fileID: 0}
+    - target: {fileID: 8022759111684526995, guid: b095bcee1b6f3a44c887b8ca4357d9cc, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2147483647
       objectReference: {fileID: 0}
@@ -10094,6 +10339,10 @@ PrefabInstance:
       value: 1x1Tile
       objectReference: {fileID: 0}
     - target: {fileID: 8022759111684526995, guid: b095bcee1b6f3a44c887b8ca4357d9cc, type: 3}
+      propertyPath: m_TagString
+      value: Ground
+      objectReference: {fileID: 0}
+    - target: {fileID: 8022759111684526995, guid: b095bcee1b6f3a44c887b8ca4357d9cc, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2147483647
       objectReference: {fileID: 0}
@@ -10158,6 +10407,10 @@ PrefabInstance:
     - target: {fileID: 8022759111684526995, guid: b095bcee1b6f3a44c887b8ca4357d9cc, type: 3}
       propertyPath: m_Name
       value: 1x1Tile
+      objectReference: {fileID: 0}
+    - target: {fileID: 8022759111684526995, guid: b095bcee1b6f3a44c887b8ca4357d9cc, type: 3}
+      propertyPath: m_TagString
+      value: Ground
       objectReference: {fileID: 0}
     - target: {fileID: 8022759111684526995, guid: b095bcee1b6f3a44c887b8ca4357d9cc, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -10480,6 +10733,10 @@ PrefabInstance:
       value: YellowSubwayTile (14)
       objectReference: {fileID: 0}
     - target: {fileID: 5211457588009210324, guid: 3137e76da79355b4fb36f434be672750, type: 3}
+      propertyPath: m_TagString
+      value: Ground
+      objectReference: {fileID: 0}
+    - target: {fileID: 5211457588009210324, guid: 3137e76da79355b4fb36f434be672750, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2147483647
       objectReference: {fileID: 0}
@@ -10528,6 +10785,10 @@ PrefabInstance:
     - target: {fileID: 6078990745760949115, guid: 7e3759da865ae0448a8685cd45baa888, type: 3}
       propertyPath: m_Layer
       value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 6078990745760949115, guid: 7e3759da865ae0448a8685cd45baa888, type: 3}
+      propertyPath: m_TagString
+      value: Ground
       objectReference: {fileID: 0}
     - target: {fileID: 6078990745760949115, guid: 7e3759da865ae0448a8685cd45baa888, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -10656,6 +10917,10 @@ PrefabInstance:
       value: 1x1Tile
       objectReference: {fileID: 0}
     - target: {fileID: 8022759111684526995, guid: b095bcee1b6f3a44c887b8ca4357d9cc, type: 3}
+      propertyPath: m_TagString
+      value: Ground
+      objectReference: {fileID: 0}
+    - target: {fileID: 8022759111684526995, guid: b095bcee1b6f3a44c887b8ca4357d9cc, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2147483647
       objectReference: {fileID: 0}
@@ -10669,17 +10934,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 926061051224223135, guid: b095bcee1b6f3a44c887b8ca4357d9cc, type: 3}
   m_PrefabInstance: {fileID: 1499844794}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1525894012 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7258749895374514097, guid: 667519b2f2aade040843bf189d54ea98, type: 3}
-  m_PrefabInstance: {fileID: 885722253996037621}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5167092fb2496b14caa6b45753d2db6b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Dispenser
 --- !u!4 &1526040290 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 617036722816844253, guid: a2a449d4da6852e408ad015fe88bcf02, type: 3}
@@ -10741,6 +10995,10 @@ PrefabInstance:
     - target: {fileID: 8022759111684526995, guid: b095bcee1b6f3a44c887b8ca4357d9cc, type: 3}
       propertyPath: m_Name
       value: 1x1Tile
+      objectReference: {fileID: 0}
+    - target: {fileID: 8022759111684526995, guid: b095bcee1b6f3a44c887b8ca4357d9cc, type: 3}
+      propertyPath: m_TagString
+      value: Ground
       objectReference: {fileID: 0}
     - target: {fileID: 8022759111684526995, guid: b095bcee1b6f3a44c887b8ca4357d9cc, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -10807,6 +11065,10 @@ PrefabInstance:
     - target: {fileID: 8022759111684526995, guid: b095bcee1b6f3a44c887b8ca4357d9cc, type: 3}
       propertyPath: m_Name
       value: 1x1Tile
+      objectReference: {fileID: 0}
+    - target: {fileID: 8022759111684526995, guid: b095bcee1b6f3a44c887b8ca4357d9cc, type: 3}
+      propertyPath: m_TagString
+      value: Ground
       objectReference: {fileID: 0}
     - target: {fileID: 8022759111684526995, guid: b095bcee1b6f3a44c887b8ca4357d9cc, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -10881,6 +11143,10 @@ PrefabInstance:
     - target: {fileID: 5211457588009210324, guid: 3137e76da79355b4fb36f434be672750, type: 3}
       propertyPath: m_Name
       value: YellowSubwayTile (24)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5211457588009210324, guid: 3137e76da79355b4fb36f434be672750, type: 3}
+      propertyPath: m_TagString
+      value: Ground
       objectReference: {fileID: 0}
     - target: {fileID: 5211457588009210324, guid: 3137e76da79355b4fb36f434be672750, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -11023,7 +11289,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DispenserSupplyBox
   targetDispenser: {fileID: 2108424508}
   refillAmount: 5
-  requiredIngredient: {fileID: 11400000, guid: af2388abb82ad4f41a4f472d1ad3afe0, type: 2}
+  requiredIngredient: {fileID: 0}
 --- !u!65 &1593566170
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -11316,6 +11582,10 @@ PrefabInstance:
       value: 1x1Tile
       objectReference: {fileID: 0}
     - target: {fileID: 8022759111684526995, guid: b095bcee1b6f3a44c887b8ca4357d9cc, type: 3}
+      propertyPath: m_TagString
+      value: Ground
+      objectReference: {fileID: 0}
+    - target: {fileID: 8022759111684526995, guid: b095bcee1b6f3a44c887b8ca4357d9cc, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2147483647
       objectReference: {fileID: 0}
@@ -11408,6 +11678,10 @@ PrefabInstance:
     - target: {fileID: 6078990745760949115, guid: 7e3759da865ae0448a8685cd45baa888, type: 3}
       propertyPath: m_Layer
       value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 6078990745760949115, guid: 7e3759da865ae0448a8685cd45baa888, type: 3}
+      propertyPath: m_TagString
+      value: Ground
       objectReference: {fileID: 0}
     - target: {fileID: 6078990745760949115, guid: 7e3759da865ae0448a8685cd45baa888, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -11541,6 +11815,10 @@ PrefabInstance:
       value: 1x1Tile
       objectReference: {fileID: 0}
     - target: {fileID: 8022759111684526995, guid: b095bcee1b6f3a44c887b8ca4357d9cc, type: 3}
+      propertyPath: m_TagString
+      value: Ground
+      objectReference: {fileID: 0}
+    - target: {fileID: 8022759111684526995, guid: b095bcee1b6f3a44c887b8ca4357d9cc, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2147483647
       objectReference: {fileID: 0}
@@ -11553,11 +11831,6 @@ PrefabInstance:
 Transform:
   m_CorrespondingSourceObject: {fileID: 926061051224223135, guid: b095bcee1b6f3a44c887b8ca4357d9cc, type: 3}
   m_PrefabInstance: {fileID: 1705515220}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &1710474634 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5850189600674760041, guid: 83fbabf4b13f3e24183ece3475d3920a, type: 3}
-  m_PrefabInstance: {fileID: 2002899273}
   m_PrefabAsset: {fileID: 0}
 --- !u!114 &1730943978 stripped
 MonoBehaviour:
@@ -11654,6 +11927,10 @@ PrefabInstance:
       value: 1x1Tile
       objectReference: {fileID: 0}
     - target: {fileID: 8022759111684526995, guid: b095bcee1b6f3a44c887b8ca4357d9cc, type: 3}
+      propertyPath: m_TagString
+      value: Ground
+      objectReference: {fileID: 0}
+    - target: {fileID: 8022759111684526995, guid: b095bcee1b6f3a44c887b8ca4357d9cc, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2147483647
       objectReference: {fileID: 0}
@@ -11718,6 +11995,10 @@ PrefabInstance:
     - target: {fileID: 8022759111684526995, guid: b095bcee1b6f3a44c887b8ca4357d9cc, type: 3}
       propertyPath: m_Name
       value: 1x1Tile
+      objectReference: {fileID: 0}
+    - target: {fileID: 8022759111684526995, guid: b095bcee1b6f3a44c887b8ca4357d9cc, type: 3}
+      propertyPath: m_TagString
+      value: Ground
       objectReference: {fileID: 0}
     - target: {fileID: 8022759111684526995, guid: b095bcee1b6f3a44c887b8ca4357d9cc, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -11805,6 +12086,10 @@ PrefabInstance:
     - target: {fileID: 8022759111684526995, guid: b095bcee1b6f3a44c887b8ca4357d9cc, type: 3}
       propertyPath: m_Name
       value: 1x1Tile
+      objectReference: {fileID: 0}
+    - target: {fileID: 8022759111684526995, guid: b095bcee1b6f3a44c887b8ca4357d9cc, type: 3}
+      propertyPath: m_TagString
+      value: Ground
       objectReference: {fileID: 0}
     - target: {fileID: 8022759111684526995, guid: b095bcee1b6f3a44c887b8ca4357d9cc, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -12993,6 +13278,10 @@ PrefabInstance:
       value: YellowSubwayTile (16)
       objectReference: {fileID: 0}
     - target: {fileID: 5211457588009210324, guid: 3137e76da79355b4fb36f434be672750, type: 3}
+      propertyPath: m_TagString
+      value: Ground
+      objectReference: {fileID: 0}
+    - target: {fileID: 5211457588009210324, guid: 3137e76da79355b4fb36f434be672750, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2147483647
       objectReference: {fileID: 0}
@@ -13160,6 +13449,10 @@ PrefabInstance:
     - target: {fileID: 5211457588009210324, guid: 3137e76da79355b4fb36f434be672750, type: 3}
       propertyPath: m_Name
       value: YellowSubwayTile (27)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5211457588009210324, guid: 3137e76da79355b4fb36f434be672750, type: 3}
+      propertyPath: m_TagString
+      value: Ground
       objectReference: {fileID: 0}
     - target: {fileID: 5211457588009210324, guid: 3137e76da79355b4fb36f434be672750, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -13362,17 +13655,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1915277212 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8842360113989553784, guid: 667519b2f2aade040843bf189d54ea98, type: 3}
-  m_PrefabInstance: {fileID: 885722253996037621}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5167092fb2496b14caa6b45753d2db6b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Dispenser
 --- !u!1 &1916208192
 GameObject:
   m_ObjectHideFlags: 0
@@ -13457,6 +13739,10 @@ PrefabInstance:
     - target: {fileID: 8022759111684526995, guid: b095bcee1b6f3a44c887b8ca4357d9cc, type: 3}
       propertyPath: m_Name
       value: 1x1Tile
+      objectReference: {fileID: 0}
+    - target: {fileID: 8022759111684526995, guid: b095bcee1b6f3a44c887b8ca4357d9cc, type: 3}
+      propertyPath: m_TagString
+      value: Ground
       objectReference: {fileID: 0}
     - target: {fileID: 8022759111684526995, guid: b095bcee1b6f3a44c887b8ca4357d9cc, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -13661,6 +13947,10 @@ PrefabInstance:
       value: 1x1Tile
       objectReference: {fileID: 0}
     - target: {fileID: 8022759111684526995, guid: b095bcee1b6f3a44c887b8ca4357d9cc, type: 3}
+      propertyPath: m_TagString
+      value: Ground
+      objectReference: {fileID: 0}
+    - target: {fileID: 8022759111684526995, guid: b095bcee1b6f3a44c887b8ca4357d9cc, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2147483647
       objectReference: {fileID: 0}
@@ -13725,6 +14015,10 @@ PrefabInstance:
     - target: {fileID: 8022759111684526995, guid: b095bcee1b6f3a44c887b8ca4357d9cc, type: 3}
       propertyPath: m_Name
       value: 1x1Tile
+      objectReference: {fileID: 0}
+    - target: {fileID: 8022759111684526995, guid: b095bcee1b6f3a44c887b8ca4357d9cc, type: 3}
+      propertyPath: m_TagString
+      value: Ground
       objectReference: {fileID: 0}
     - target: {fileID: 8022759111684526995, guid: b095bcee1b6f3a44c887b8ca4357d9cc, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -13878,6 +14172,10 @@ PrefabInstance:
       value: YellowSubwayTile (1)
       objectReference: {fileID: 0}
     - target: {fileID: 5211457588009210324, guid: 3137e76da79355b4fb36f434be672750, type: 3}
+      propertyPath: m_TagString
+      value: Ground
+      objectReference: {fileID: 0}
+    - target: {fileID: 5211457588009210324, guid: 3137e76da79355b4fb36f434be672750, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2147483647
       objectReference: {fileID: 0}
@@ -13991,6 +14289,10 @@ PrefabInstance:
       value: YellowSubwayTile (12)
       objectReference: {fileID: 0}
     - target: {fileID: 5211457588009210324, guid: 3137e76da79355b4fb36f434be672750, type: 3}
+      propertyPath: m_TagString
+      value: Ground
+      objectReference: {fileID: 0}
+    - target: {fileID: 5211457588009210324, guid: 3137e76da79355b4fb36f434be672750, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2147483647
       objectReference: {fileID: 0}
@@ -14017,6 +14319,22 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 212377640265227891, guid: 83fbabf4b13f3e24183ece3475d3920a, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 212377640265227891, guid: 83fbabf4b13f3e24183ece3475d3920a, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 212377640265227891, guid: 83fbabf4b13f3e24183ece3475d3920a, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 212377640265227891, guid: 83fbabf4b13f3e24183ece3475d3920a, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1942217648908060055, guid: 83fbabf4b13f3e24183ece3475d3920a, type: 3}
       propertyPath: xMultiplier
       value: -379.2
@@ -14032,19 +14350,35 @@ PrefabInstance:
     - target: {fileID: 4363685343087126051, guid: 83fbabf4b13f3e24183ece3475d3920a, type: 3}
       propertyPath: 'ingredientCatalog.Array.data[0]'
       value: 
-      objectReference: {fileID: 257453218}
+      objectReference: {fileID: 11400000, guid: bfa5a3bec37ee234d93e8b470b906a6c, type: 2}
     - target: {fileID: 4363685343087126051, guid: 83fbabf4b13f3e24183ece3475d3920a, type: 3}
       propertyPath: 'ingredientCatalog.Array.data[1]'
       value: 
-      objectReference: {fileID: 282794932}
+      objectReference: {fileID: 11400000, guid: 3aa5f0e864d754b4a927b3b5c13b8566, type: 2}
     - target: {fileID: 4363685343087126051, guid: 83fbabf4b13f3e24183ece3475d3920a, type: 3}
       propertyPath: 'ingredientCatalog.Array.data[2]'
       value: 
-      objectReference: {fileID: 1710474634}
+      objectReference: {fileID: 11400000, guid: 08324ce263965544eb9b4681a362e0ac, type: 2}
     - target: {fileID: 4363685343087126051, guid: 83fbabf4b13f3e24183ece3475d3920a, type: 3}
       propertyPath: 'ingredientCatalog.Array.data[3]'
       value: 
-      objectReference: {fileID: 837410544}
+      objectReference: {fileID: 11400000, guid: af2388abb82ad4f41a4f472d1ad3afe0, type: 2}
+    - target: {fileID: 5469685254797308764, guid: 83fbabf4b13f3e24183ece3475d3920a, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5469685254797308764, guid: 83fbabf4b13f3e24183ece3475d3920a, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5469685254797308764, guid: 83fbabf4b13f3e24183ece3475d3920a, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5469685254797308764, guid: 83fbabf4b13f3e24183ece3475d3920a, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6047424273761191966, guid: 83fbabf4b13f3e24183ece3475d3920a, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.18
@@ -14056,6 +14390,22 @@ PrefabInstance:
     - target: {fileID: 6667233472336886869, guid: 83fbabf4b13f3e24183ece3475d3920a, type: 3}
       propertyPath: m_Name
       value: IngredientTerminal
+      objectReference: {fileID: 0}
+    - target: {fileID: 8122830501096927485, guid: 83fbabf4b13f3e24183ece3475d3920a, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8122830501096927485, guid: 83fbabf4b13f3e24183ece3475d3920a, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8122830501096927485, guid: 83fbabf4b13f3e24183ece3475d3920a, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8122830501096927485, guid: 83fbabf4b13f3e24183ece3475d3920a, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8302251170652403979, guid: 83fbabf4b13f3e24183ece3475d3920a, type: 3}
       propertyPath: m_LocalScale.x
@@ -14112,6 +14462,22 @@ PrefabInstance:
     - target: {fileID: 8302251170652403979, guid: 83fbabf4b13f3e24183ece3475d3920a, type: 3}
       propertyPath: m_ConstrainProportionsScale
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8706761872618637114, guid: 83fbabf4b13f3e24183ece3475d3920a, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8706761872618637114, guid: 83fbabf4b13f3e24183ece3475d3920a, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8706761872618637114, guid: 83fbabf4b13f3e24183ece3475d3920a, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8706761872618637114, guid: 83fbabf4b13f3e24183ece3475d3920a, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -14466,6 +14832,10 @@ PrefabInstance:
       value: 1x1Tile
       objectReference: {fileID: 0}
     - target: {fileID: 8022759111684526995, guid: b095bcee1b6f3a44c887b8ca4357d9cc, type: 3}
+      propertyPath: m_TagString
+      value: Ground
+      objectReference: {fileID: 0}
+    - target: {fileID: 8022759111684526995, guid: b095bcee1b6f3a44c887b8ca4357d9cc, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2147483647
       objectReference: {fileID: 0}
@@ -14529,9 +14899,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e5bebaad9ddd4c82b45fcfb0f195708, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DispenserSupplyBox
-  targetDispenser: {fileID: 1915277212}
+  targetDispenser: {fileID: 2108424508}
   refillAmount: 5
-  requiredIngredient: {fileID: 11400000, guid: 08324ce263965544eb9b4681a362e0ac, type: 2}
+  requiredIngredient: {fileID: 0}
 --- !u!65 &2046713841
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -14717,6 +15087,10 @@ PrefabInstance:
       value: YellowSubwayTile (5)
       objectReference: {fileID: 0}
     - target: {fileID: 5211457588009210324, guid: 3137e76da79355b4fb36f434be672750, type: 3}
+      propertyPath: m_TagString
+      value: Ground
+      objectReference: {fileID: 0}
+    - target: {fileID: 5211457588009210324, guid: 3137e76da79355b4fb36f434be672750, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2147483647
       objectReference: {fileID: 0}
@@ -14764,6 +15138,7 @@ Transform:
   - {fileID: 1311408796}
   - {fileID: 1644953532}
   - {fileID: 1046197351}
+  - {fileID: 198521438}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2086482996
@@ -14838,6 +15213,10 @@ PrefabInstance:
     - target: {fileID: 6078990745760949115, guid: 7e3759da865ae0448a8685cd45baa888, type: 3}
       propertyPath: m_Layer
       value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 6078990745760949115, guid: 7e3759da865ae0448a8685cd45baa888, type: 3}
+      propertyPath: m_TagString
+      value: Ground
       objectReference: {fileID: 0}
     - target: {fileID: 6078990745760949115, guid: 7e3759da865ae0448a8685cd45baa888, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -14995,6 +15374,10 @@ PrefabInstance:
       value: YellowSubwayTile (15)
       objectReference: {fileID: 0}
     - target: {fileID: 5211457588009210324, guid: 3137e76da79355b4fb36f434be672750, type: 3}
+      propertyPath: m_TagString
+      value: Ground
+      objectReference: {fileID: 0}
+    - target: {fileID: 5211457588009210324, guid: 3137e76da79355b4fb36f434be672750, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2147483647
       objectReference: {fileID: 0}
@@ -15074,6 +15457,10 @@ PrefabInstance:
       value: YellowSubwayTile (19)
       objectReference: {fileID: 0}
     - target: {fileID: 5211457588009210324, guid: 3137e76da79355b4fb36f434be672750, type: 3}
+      propertyPath: m_TagString
+      value: Ground
+      objectReference: {fileID: 0}
+    - target: {fileID: 5211457588009210324, guid: 3137e76da79355b4fb36f434be672750, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2147483647
       objectReference: {fileID: 0}
@@ -15103,6 +15490,14 @@ PrefabInstance:
     - target: {fileID: 1270321313152020058, guid: 8ffcf527829b62a43ade49b5f24a7c9e, type: 3}
       propertyPath: m_Name
       value: rails (11)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1270321313152020058, guid: 8ffcf527829b62a43ade49b5f24a7c9e, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 1270321313152020058, guid: 8ffcf527829b62a43ade49b5f24a7c9e, type: 3}
+      propertyPath: m_TagString
+      value: Ground
       objectReference: {fileID: 0}
     - target: {fileID: 1270321313152020058, guid: 8ffcf527829b62a43ade49b5f24a7c9e, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -15216,6 +15611,10 @@ PrefabInstance:
       value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 6078990745760949115, guid: 7e3759da865ae0448a8685cd45baa888, type: 3}
+      propertyPath: m_TagString
+      value: Ground
+      objectReference: {fileID: 0}
+    - target: {fileID: 6078990745760949115, guid: 7e3759da865ae0448a8685cd45baa888, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2147483647
       objectReference: {fileID: 0}
@@ -15288,10 +15687,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 305679078}
     m_Modifications:
-    - target: {fileID: 1030256150254830248, guid: 667519b2f2aade040843bf189d54ea98, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 2111839649111011229, guid: 667519b2f2aade040843bf189d54ea98, type: 3}
       propertyPath: m_IsActive
       value: 1
@@ -15369,10 +15764,6 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 11400000, guid: 907575f452cc31f4fbb1df84e6e096de, type: 2}
     - target: {fileID: 7258749895374514097, guid: 667519b2f2aade040843bf189d54ea98, type: 3}
-      propertyPath: startingUses
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 7258749895374514097, guid: 667519b2f2aade040843bf189d54ea98, type: 3}
       propertyPath: dispenserIngredientType
       value: 1
       objectReference: {fileID: 0}
@@ -15392,10 +15783,6 @@ PrefabInstance:
       propertyPath: ingredient
       value: 
       objectReference: {fileID: 11400000, guid: 22bc0d22a5a8abd409b671bbc2d18b3c, type: 2}
-    - target: {fileID: 8842360113989553784, guid: 667519b2f2aade040843bf189d54ea98, type: 3}
-      propertyPath: startingUses
-      value: 10
-      objectReference: {fileID: 0}
     - target: {fileID: 8842360113989553784, guid: 667519b2f2aade040843bf189d54ea98, type: 3}
       propertyPath: dispenserIngredientType
       value: 2
@@ -15598,6 +15985,10 @@ PrefabInstance:
     - target: {fileID: 8022759111684526995, guid: b095bcee1b6f3a44c887b8ca4357d9cc, type: 3}
       propertyPath: m_Name
       value: 1x1Tile
+      objectReference: {fileID: 0}
+    - target: {fileID: 8022759111684526995, guid: b095bcee1b6f3a44c887b8ca4357d9cc, type: 3}
+      propertyPath: m_TagString
+      value: Ground
       objectReference: {fileID: 0}
     - target: {fileID: 8022759111684526995, guid: b095bcee1b6f3a44c887b8ca4357d9cc, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -15836,4 +16227,3 @@ SceneRoots:
   - {fileID: 1897306671}
   - {fileID: 140551206}
   - {fileID: 2002899273}
-  - {fileID: 913897892}
