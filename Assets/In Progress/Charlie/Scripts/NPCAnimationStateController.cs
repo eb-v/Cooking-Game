@@ -13,13 +13,15 @@ public class NPC : MonoBehaviour
         if (animator == null) animator = GetComponentInChildren<Animator>();
         if (animator == null) animator = GetComponent<Animator>();
 
-        agent.updateRotation = false;
+        agent.updateRotation = true;
     }
 
     void Update()
     {
         bool walking = agent.pathPending || agent.remainingDistance > agent.stoppingDistance;
         animator.SetBool("isWalking", walking);
+
+        
     }
 
     public void MoveTo(Vector3 destination)

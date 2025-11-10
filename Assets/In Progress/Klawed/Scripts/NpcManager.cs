@@ -56,6 +56,8 @@ public class NpcManager : MonoBehaviour
 
     public void SpawnNpc()
     {
+        Debug.Log("Spawning NPC");
+
         int index = npcLine.Count;
         if (index >= linePositions.Length || index >= tablePositions.Length) return;
 
