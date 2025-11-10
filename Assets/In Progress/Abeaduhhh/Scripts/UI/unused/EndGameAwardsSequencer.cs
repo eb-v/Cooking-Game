@@ -23,7 +23,7 @@ public class EndGameAwardsSequencer : MonoBehaviour {
 
     public void ShowAwards() {
         Debug.Log("=== PRE-CEREMONY DEBUG ===");
-        List<PlayerStats> debugPlayers = PlayerManager.Instance.GetAllPlayers();
+        List<PlayerStats> debugPlayers = PlayerStatsManager.Instance.GetAllPlayers();
         Debug.Log($"Total players found: {debugPlayers.Count}");
         foreach (var player in debugPlayers) {
             if (player != null) {
@@ -174,7 +174,7 @@ public class EndGameAwardsSequencer : MonoBehaviour {
     private List<PlayerStats> GetMVPWinners() => GetWinners(p => p.pointsGenerated, skipIfZero: true);
     private List<PlayerStats> GetGuardianAngelWinners() => GetWinners(p => p.jointsReconnected, skipIfZero: true);
     private List<PlayerStats> GetNoobWinners() {
-        List<PlayerStats> allPlayers = PlayerManager.Instance.GetAllPlayers();
+        List<PlayerStats> allPlayers = PlayerStatsManager.Instance.GetAllPlayers();
         if (allPlayers.Count == 0) return new List<PlayerStats>();
 
         float worstScore = float.MaxValue;
@@ -190,7 +190,7 @@ public class EndGameAwardsSequencer : MonoBehaviour {
     }
 
     private List<PlayerStats> GetWinners(System.Func<PlayerStats, int> statSelector, bool skipIfZero = false) {
-        List<PlayerStats> allPlayers = PlayerManager.Instance.GetAllPlayers();
+        List<PlayerStats> allPlayers = PlayerStatsManager.Instance.GetAllPlayers();
         if (allPlayers.Count == 0) return new List<PlayerStats>();
 
         int maxValue = 0;
