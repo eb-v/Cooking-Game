@@ -325,6 +325,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f11b4c6382ad3f5469c5bb8df5b02bd0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NonNormalizedSpringAPI
+  springPosValue: 0
+  springVelValue: 0
   goalValue: 0
   angularFrequency: 20
   dampingRatio: 0.7
@@ -431,8 +433,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -3.53, y: 2.08, z: -7.36}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 2, y: 2, z: 2}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 405059385414257075}
   - {fileID: 6047424273761191966}
@@ -454,10 +456,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::IngredientTerminalScript
   displaySpring: {fileID: 6160492053205242168}
   ingredientCatalog:
-  - {fileID: 6146276810886880057, guid: 0c3abc298b59b9647a355475454f52b5, type: 3}
-  - {fileID: 2124827240769879742, guid: 4f42cf54272c75248b3b55b1a5acdded, type: 3}
-  - {fileID: 8951732315266403281, guid: ada8c63bc3eb6e24a968acc71ec43192, type: 3}
-  - {fileID: 1422892609253288512, guid: d8b360af66ad0ed42911951e89f8f47a, type: 3}
+  - {fileID: 694779199704929400}
+  - {fileID: 7395297664730461285}
+  - {fileID: 5850189600674760041}
+  - {fileID: 7538396205923085216}
   currentItemIndex: 0
 --- !u!1 &7395297664730461285
 GameObject:
@@ -901,9 +903,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 978d91e3ece14dc49ac503fe5348eea8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PositionSpringScript
-  verticalMultiplier: 0
-  horizontalMultiplier: -380
+  yMultiplier: 0
+  xMultiplier: -379.2
+  zMultiplier: 0
   _assignedChannel: OrderIngredientsDisplay
+  nudgeStrength: 1
+  useGameObjectNameAsEventChannel: 0
+  useCustomEventChannelName: 1
+  useGameObjectIDAsEventChannel: 0
 --- !u!1 &8700860800027165259
 GameObject:
   m_ObjectHideFlags: 0
@@ -930,7 +937,7 @@ Transform:
   m_GameObject: {fileID: 8700860800027165259}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0.18, y: 0, z: 0.03}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

@@ -159,3 +159,9 @@ public class ScoreChangedEvent : UnityEvent<int> { }
 public class UpdateScoreDisplayEvent : UnityEvent<int> { }
 
 public class ReleaseCrate : UnityEvent { }
+
+public class DroneCompletedPath : UnityEvent<GameObject> { }
+
+public class DroneDeliveryCalled : UnityEvent<Ingredient> { }
+
+public class InitiateDespawnTimerEvent : UnityEvent { }

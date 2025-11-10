@@ -23,6 +23,10 @@ public class DroneScript : MonoBehaviour
     private Vector3 currentTargetDestination;
     private Rigidbody rb;
 
+    [Header("References")]
+    [SerializeField] private Transform forwardTransform;
+    [SerializeField] private GameObject crate;
+
     [Header("Drone Debug Info")]
     [SerializeField] private Vector3 currentVelocity;
     [SerializeField] private int currentPathIndex = 0;
@@ -43,19 +47,18 @@ public class DroneScript : MonoBehaviour
     private void Update()
     {
         RunStateLogic();
-
-        UpdateRotation();
     }
 
 
-    private Vector3 GetMovementVector(Vector3 currentPos)
+    private Vector3 UpdateMovementVector(Vector3 currentPos)
     {
         Vector3 targetPos = flightPath[currentPathIndex].position;
-        Vector3 direction = (targetPos - currentPos).normalized;
-        Vector3 newVelocity = new Vector3(direction.x * droneData.HorizontalSpeed,
-                                      direction.y * droneData.VerticalSpeed,
-                                      direction.z * droneData.HorizontalSpeed);
-        return newVelocity;
+        Vector3 moveDir = (targetPos - currentPos).normalized;
+        moveDir.x *= droneData.HorizontalSpeed;
+        moveDir.y *= droneData.VerticalSpeed;
+        moveDir.z *= droneData.HorizontalSpeed;
+
+        return moveDir; 
     }
 
     private void RunStateLogic()
@@ -86,9 +89,8 @@ public class DroneScript : MonoBehaviour
 
     private void RunMovingToDestinationLogic()
     {
-        Vector3 newVel = GetMovementVector(transform.position);
-        rb.MovePosition(rb.position + newVel * Time.deltaTime);
-
+        Vector3 moveVector = UpdateMovementVector(transform.position);
+        rb.MovePosition(rb.position + moveVector * Time.deltaTime);
 
         float distanceToTarget = Vector3.Distance(transform.position, currentTargetDestination);
         if (distanceToTarget < 0.5f)
@@ -115,23 +117,28 @@ public class DroneScript : MonoBehaviour
     private void RunDroppingCrateLogic()
     {
         // Implement crate dropping logic here
-        Debug.Log("Crate Dropped");
+        FixedJoint joint = crate.GetComponent<FixedJoint>();
+        Destroy(joint);
         currentState = DroneState.Idle;
     }
 
-    private void UpdateRotation()
-    {
-        currentVelocity = rb.linearVelocity;
-        if (currentVelocity != Vector3.zero)
-        {
-            Quaternion targetRotation = Quaternion.LookRotation(currentVelocity);
-            rb.rotation = Quaternion.Slerp(rb.rotation, targetRotation, Time.deltaTime * 5f);
-        }
-    }
+    
 
     private void RunEndPathReachedLogic()
     {
-        ObjectPoolManager.ReturnObjectToPool(this.gameObject);
+        ResetValues();
+        GenericEvent<DroneCompletedPath>.GetEvent("DroneManager").Invoke(this.gameObject);
+    }
+
+    private void ResetValues()
+    {
+        currentPathIndex = 0;
+        currentState = DroneState.Idle;
+    }
+
+    public void SetCrateReference(GameObject crate)
+    {
+        this.crate = crate;
     }
 
 }

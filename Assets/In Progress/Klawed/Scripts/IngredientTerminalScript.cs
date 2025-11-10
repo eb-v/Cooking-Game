@@ -6,7 +6,7 @@ using System.Collections.Generic;
 public class IngredientTerminalScript : MonoBehaviour
 {
     [SerializeField] private NonNormalizedSpringAPI displaySpring;
-    [SerializeField] private List<GameObject> ingredientCatalog;
+    [SerializeField] private List<Ingredient> ingredientCatalog;
     public int currentItemIndex = 0;
 
     private void Start()
@@ -53,11 +53,11 @@ public class IngredientTerminalScript : MonoBehaviour
         displaySpring.SetGoalValue(itemIndex);
     }
 
-    public GameObject GetCurrentItem() => ingredientCatalog[currentItemIndex];
+    public Ingredient GetCurrentItem() => ingredientCatalog[currentItemIndex];
 
     public void OrderDelivery(GameObject player)
     {
-        GenericEvent<IngredientOrderedEvent>.GetEvent(gameObject.name).Invoke(GetCurrentItem());
+        GenericEvent<DroneDeliveryCalled>.GetEvent("DroneManager").Invoke(GetCurrentItem());
     }
 
 

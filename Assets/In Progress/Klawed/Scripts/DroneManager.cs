@@ -16,20 +16,23 @@ public class DroneManager : MonoBehaviour
     [SerializeField] private GameObject flightPathContainer;
     private int dropNodeIndex;
 
+    [Header("Debug Info")]
+    [SerializeField] private bool isDroneActive = false;
+    [SerializeField] private int ingredientsToSpawn = 4;
+
     private Transform crateSnapPoint;
+
     
 
     private void Awake()
     {
         InitializeFlightPath();
+
+        GenericEvent<DroneCompletedPath>.GetEvent("DroneManager").AddListener(DespawnDrone);
+        GenericEvent<DroneDeliveryCalled>.GetEvent("DroneManager").AddListener(CallDroneDelivery);
     }
 
-    void Start()
-    {
-        GameObject drone = SpawnDrone();
-        //GameObject crate = SpawnCrate();
-        //ConnectCrateToDrone(drone, crate);
-    }
+    
 
     private void InitializeFlightPath()
     {
@@ -49,14 +52,17 @@ public class DroneManager : MonoBehaviour
         GameObject drone = ObjectPoolManager.SpawnObject(dronePrefab, flightPath[0].position, dronePrefab.transform.rotation);
         DroneScript droneScript = drone.GetComponent<DroneScript>();
         droneScript.Initialize(droneSO, flightPath, dropNodeIndex);
+
         crateSnapPoint = drone.GetComponent<DroneScript>().crateSnapPoint;
+        isDroneActive = true;
 
         return drone;
     }
 
     private GameObject SpawnCrate()
     {
-        GameObject crate = ObjectPoolManager.SpawnObject(cratePrefab, crateSnapPoint.position, Quaternion.identity);
+        //GameObject crate = ObjectPoolManager.SpawnObject(cratePrefab, crateSnapPoint.position, Quaternion.identity);
+        GameObject crate = Instantiate(cratePrefab, crateSnapPoint.position, Quaternion.identity);
         crate.transform.position = crateSnapPoint.position;
         return crate;
     }
@@ -70,12 +76,33 @@ public class DroneManager : MonoBehaviour
         }
 
         joint.connectedBody = drone.GetComponent<Rigidbody>();
+        drone.GetComponent<DroneScript>().SetCrateReference(crate);
     }
 
-    public void ReleaseCreate()
+    private void CallDroneDelivery(Ingredient orderedIngredient)
     {
-        GenericEvent<ReleaseCrate>.GetEvent("releaseCrate").Invoke();
+        if (!isDroneActive)
+        {
+            GameObject drone = SpawnDrone();
+            GameObject crate = SpawnCrate();
+            ConnectCrateToDrone(drone, crate);
+            CrateScript crateScript = crate.GetComponent<CrateScript>();
+            crateScript.SetIngredient(orderedIngredient.Prefab);
+        }
+        else
+        {
+            Debug.Log("Delivery is in Progress");
+        }
     }
+
+    private void DespawnDrone(GameObject drone)
+    {
+        ObjectPoolManager.ReturnObjectToPool(drone);
+        isDroneActive = false;
+    }
+
+    
+
 
 
 }

@@ -8,7 +8,7 @@ public class tilesizedebugger : MonoBehaviour
         if (renderer != null)
         {
             Vector3 worldSize = renderer.bounds.size;
-            Debug.Log($"{name} world size: {worldSize}");
+           // Debug.Log($"{name} world size: {worldSize}");
         }
     }
 }
