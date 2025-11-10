@@ -5,7 +5,7 @@ public class ProjectSettingsInjector : EditorWindow
 {
     private static ProjectSettingsInjector instance;
     
-    [MenuItem("Tools/Active Ragdoll Project Settings Injector")]
+    [UnityEditor.MenuItem("Tools/Active Ragdoll Project Settings Injector")]
     static void APRPlayerSettingsInjectorWindow()
     {
         if(instance == null)

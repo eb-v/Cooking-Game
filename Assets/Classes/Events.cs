@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.InputSystem;
 
 public class OnMoveInput : UnityEvent<Vector2> { }
 public class OnJumpInput : UnityEvent { }
@@ -43,3 +44,126 @@ public class ExitCounter : UnityEvent { }
 
 public class ObjectGrabbed : UnityEvent<GameObject> { }
 public class ObjectReleased : UnityEvent { }
+
+public class OnPlaceTile : UnityEvent { }
+
+public class RemovePlacedObject : UnityEvent<GameObject> { }
+
+public class SkillCheckInput : UnityEvent<GameObject> { }
+
+public class SkillCheckCompleted : UnityEvent { }
+
+public class SetUser : UnityEvent { }
+
+public class ObjectRemovedFromKitchenStation : UnityEvent { }
+public class PlayerStoppedLookingAtKitchenStation : UnityEvent { }
+
+public class  InteractableLookedAtChanged : UnityEvent<GameObject> { }
+
+
+public class OnPlaceIngredientInput : UnityEvent { }
+
+public class InteractEvent : UnityEvent<GameObject> { }
+
+public class AlternateInteractInput : UnityEvent<GameObject> { }
+
+public class PlayerStoppedLookingAtInteractable : UnityEvent<GameObject> { }
+
+public class DeliveredDishEvent : UnityEvent { }
+
+public class SkillCheckAttemptFailed : UnityEvent<float> { }
+
+public class OnExplodeInput : UnityEvent { }
+
+public class OnRemoveJoint : UnityEvent<string> { }
+
+public class OnPlayerJointReconnect : UnityEvent { }
+
+public class JointRemoved : UnityEvent<GameObject, JointBackup> { }
+
+public class ReleaseHeldJoint : UnityEvent<GameObject> { }
+
+public class LimbDamaged : UnityEvent<float> { }
+
+public class IngredientEnteredAssemblyArea : UnityEvent<GameObject> { }
+
+public class IngredientExitedAssemblyArea : UnityEvent<GameObject> { }
+
+
+public class MoveImageEvent : UnityEvent<bool> { }
+
+public class UpdateGoalValueEvent : UnityEvent<float> { }
+
+public class SpringUpdateEvent : UnityEvent<float> { }
+
+public class OnButtonPressedEvent : UnityEvent { }
+
+public class OnPlayerJoinedEvent : UnityEvent<int> { }
+
+public class OnChangeColorEvent : UnityEvent<GameObject> { }
+
+public class OnChangeHatEvent : UnityEvent<GameObject> { }
+
+public class PlayerReadyInputEvent : UnityEvent { }
+
+public class CrateLandedEvent : UnityEvent { }
+
+public class IngredientOrderedEvent : UnityEvent<GameObject> { }
+
+public class DPadInteractEvent : UnityEvent<Vector2> { }
+
+public class StartTrainEvent : UnityEvent { }
+
+public class LeverStateChangedEvent : UnityEvent<int> { }
+
+public class DispenserButtonPressedEvent : UnityEvent { }
+
+public class PizzaDoughEnteredOvenEvent : UnityEvent<GameObject> { }
+
+public class PizzaDoughExitedOvenEvent : UnityEvent<GameObject> { }
+
+public class NewOrderAddedEvent : UnityEvent<MenuItem> { }
+
+public class MaxOrderSetEvent : UnityEvent<int> { }
+
+public class OrderCompletedEvent : UnityEvent<MenuItem> { }
+
+public class OnAllPlayersReadyEvent : UnityEvent { }
+
+public class OnNextOptionInput : UnityEvent { }
+public class OnPreviousOptionInput : UnityEvent { }
+
+public class OnNavigateInput : UnityEvent<Vector2> { }
+
+public class SlotsFinishedEvent : UnityEvent { }
+
+public class OnSelectInput : UnityEvent { }
+
+public class StartFireEvent : UnityEvent { }
+public class StopFireEvent : UnityEvent { }
+
+public class StartSprinklerEvent : UnityEvent { }
+public class StopSprinklerEvent : UnityEvent { }
+
+public class GameTimeUpdatedEvent : UnityEvent<float> { }
+public class GameOverEvent : UnityEvent { }
+public class ShowEndGameUIEvent : UnityEvent { }
+public class HideEndGameUIEvent : UnityEvent { }
+
+public class OnCustomerInteract : UnityEvent<GameObject> { }
+
+public class NpcReceivedCorrectOrder : UnityEvent<GameObject> { }
+
+public class ScoreChangedEvent : UnityEvent<int> { }
+
+public class UpdateScoreDisplayEvent : UnityEvent<int> { }
+
+public class ReleaseCrate : UnityEvent { }
+
+public class DroneCompletedPath : UnityEvent<GameObject> { }
+
+public class DroneDeliveryCalled : UnityEvent<Ingredient> { }
+
+public class InitiateDespawnTimerEvent : UnityEvent { }
+
+public class OnGameStartEvent : UnityEvent { }

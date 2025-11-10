@@ -39,13 +39,14 @@ public class ObjectPoolManager : MonoBehaviour
     private void SetupEmpties()
     {
         _emptyHolder = new GameObject("Object Pools");
+        _emptyHolder.transform.SetParent(this.transform);
 
         _gameObjectsEmpty = new GameObject("GameObject");
         _gameObjectsEmpty.transform.SetParent(_emptyHolder.transform);
 
         if (_addToDontDestroyOnLoad)
         {
-            DontDestroyOnLoad(_gameObjectsEmpty.transform.root);
+            DontDestroyOnLoad(gameObject.transform);
         }
     }
 
@@ -250,6 +251,10 @@ public class ObjectPoolManager : MonoBehaviour
         {
             Debug.LogWarning($"ReturnObjectToPool(): The object '{obj.name}' does not belong to any pool and cannot be returned.");
         }
+    }
+
+    public static bool IsPooledObject(GameObject obj) {
+        return _cloneToPrefabMap.ContainsKey(obj);
     }
 
 
