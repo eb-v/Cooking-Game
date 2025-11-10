@@ -8,43 +8,59 @@ public class DispenserRefill : MonoBehaviour
     [Header("Refill Settings")]
     [SerializeField] private int refillAmount = 5;
 
-    //private IngredientType requiredType;
+    [Header("Ingredient (auto from dispenser)")]
+    [SerializeField] private Ingredient requiredIngredient;
 
     private void Awake()
     {
-        if (targetDispenser != null)
+        if (targetDispenser == null)
         {
-            //requiredType = targetDispenser.GetIngredientType();
+            Debug.LogWarning($"{name}: No targetDispenser assigned on DispenserRefill.");
+            return;
         }
-        else
+
+        // auto pull from the dispenser if not manually set
+        if (requiredIngredient == null)
         {
-            Debug.LogWarning($"{name}: No targetDispenser assigned on DispenserSupplyBox.");
+            requiredIngredient = targetDispenser.Ingredient;
+        }
+
+        if (requiredIngredient == null)
+        {
+            Debug.LogWarning(
+                $"{name}: targetDispenser {targetDispenser.name} has no Ingredient assigned."
+            );
         }
     }
 
-    // Ingredient object is dropped / thrown into the box trigger
     private void OnTriggerEnter(Collider other)
     {
-        //if (targetDispenser == null) return;
+        if (targetDispenser == null || requiredIngredient == null)
+            return;
 
-        //// Look for IngredientTag on the object or its parent
-        //IngredientTag ingredient = other.GetComponent<IngredientTag>() 
-        //                           ?? other.GetComponentInParent<IngredientTag>();
+        IngredientScript ingredientScript =
+            other.GetComponent<IngredientScript>() ??
+            other.GetComponentInParent<IngredientScript>();
 
-        //if (ingredient == null) return; // not an ingredient at all
+        if (ingredientScript == null || ingredientScript.Ingredient == null)
+            return; // not an ingredient refill object
 
-        //if (ingredient.type != requiredType)
-        //{
-        //    Debug.Log($"{name}: Wrong ingredient ({ingredient.type}) for {requiredType} dispenser.");
-        //    return;
-        //}
+        if (ingredientScript.Ingredient != requiredIngredient)
+        {
+            Debug.Log(
+                $"{name}: Wrong ingredient ({ingredientScript.Ingredient.name}) " +
+                $"for dispenser {targetDispenser.name} (needs {requiredIngredient.name})."
+            );
+            return;
+        }
 
-        //// Correct ingredient -> refill
-        //targetDispenser.Refill(refillAmount);
-        //Debug.Log($"{name}: Refilled {targetDispenser.name} with {ingredient.type} ({refillAmount} uses).");
+        targetDispenser.Refill(refillAmount);
+        Debug.Log(
+            $"{name}: Refilled {targetDispenser.name} with {requiredIngredient.name} " +
+            $"(+{refillAmount} uses)."
+        );
 
-        //// Consume the ingredient object
-        //Destroy(ingredient.gameObject);
+        Destroy(ingredientScript.gameObject);
     }
 
     private void OnDrawGizmosSelected()
