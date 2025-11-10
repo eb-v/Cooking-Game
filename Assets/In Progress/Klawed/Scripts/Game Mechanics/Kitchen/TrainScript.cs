@@ -7,7 +7,7 @@ public class TrainScript : MonoBehaviour
     [SerializeField] private float trainSpeed = 100.0f;
     [SerializeField] private float stopPositionX = 0.0f;
     [SerializeField] private float resetDelay = 10.0f; // Time before train resets after stopping
-    [SerializeField] private float randomCallInterval = 45.0f; // Random call every 45 seconds
+    [SerializeField] private float randomCallInterval = 20.0f; // Random call every 20 seconds
     [SerializeField] private TrafficLightController trafficLight; // Reference to traffic light
     
     private Rigidbody trainRb;
