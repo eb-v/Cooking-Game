@@ -23,6 +23,11 @@ public class FireController : MonoBehaviour {
         GenericEvent<StopFireEvent>.GetEvent("FireController").AddListener(OnStopFireEvent);
     }
 
+    private void Start() {
+        // Optionally start burning immediately
+        StartFire();
+    }
+
     private void OnDestroy() {
         // Always unsubscribe to prevent leaks
         GenericEvent<StartFireEvent>.GetEvent("FireController").RemoveListener(OnStartFireEvent);
@@ -74,10 +79,8 @@ public class FireController : MonoBehaviour {
 
         if (ObjectPoolManager.IsPooledObject(gameObject)) {
             ObjectPoolManager.ReturnObjectToPool(gameObject);
-            Debug.Log($"[FireController] Fire returned to pool: {name}");
         } else {
             Destroy(gameObject);
-            Debug.LogWarning($"[FireController] Fire was not pooled — destroyed instead: {name}");
         }
     }
 

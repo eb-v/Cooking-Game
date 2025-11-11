@@ -7240,7 +7240,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &305679078
 Transform:
   m_ObjectHideFlags: 0
@@ -14770,6 +14770,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DispenserSupplyBox
   targetDispenser: {fileID: 2108424508}
   refillAmount: 5
+  requiredIngredient: {fileID: 0}
 --- !u!65 &651241919
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -38010,6 +38011,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DispenserSupplyBox
   targetDispenser: {fileID: 2108424508}
   refillAmount: 5
+  requiredIngredient: {fileID: 0}
 --- !u!65 &1593566170
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -39177,6 +39179,8 @@ MonoBehaviour:
   delayBeforeLaunch: 2
   trainSpeed: 125
   stopPositionX: -76
+  resetDelay: 10
+  randomCallInterval: 20
   trafficLight: {fileID: 83183349}
 --- !u!65 &1620776847
 BoxCollider:
@@ -50039,6 +50043,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DispenserSupplyBox
   targetDispenser: {fileID: 2108424508}
   refillAmount: 5
+  requiredIngredient: {fileID: 0}
 --- !u!65 &2046713841
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -52727,6 +52732,7 @@ MonoBehaviour:
   dampingRatio: 0.7
   maxGoal: 1
   minGoal: 0
+  startAtEndPosition: 0
   assignedEventChannel: DefaultChannel
   nudgeStrength: 1
   useGameObjectNameAsEventChannel: 1
@@ -54929,6 +54935,7 @@ MonoBehaviour:
   dampingRatio: 0.7
   maxGoal: 1
   minGoal: 0
+  startAtEndPosition: 0
   assignedEventChannel: DefaultChannel
   nudgeStrength: 1
   useGameObjectNameAsEventChannel: 1
@@ -55132,6 +55139,7 @@ MonoBehaviour:
   dampingRatio: 0.7
   maxGoal: 1
   minGoal: 0
+  startAtEndPosition: 0
   assignedEventChannel: DefaultChannel
   nudgeStrength: 1
   useGameObjectNameAsEventChannel: 1
@@ -55235,6 +55243,7 @@ MonoBehaviour:
   dampingRatio: 0.7
   maxGoal: 1
   minGoal: 0
+  startAtEndPosition: 0
   assignedEventChannel: Text (TMP)
   nudgeStrength: 1
   useGameObjectNameAsEventChannel: 1
@@ -55671,6 +55680,7 @@ MonoBehaviour:
   dampingRatio: 0.7
   maxGoal: 1
   minGoal: 0
+  startAtEndPosition: 0
   assignedEventChannel: DefaultChannel
   nudgeStrength: 1
   useGameObjectNameAsEventChannel: 1
@@ -55963,12 +55973,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EndGameAwards
   awardDisplayPanel: {fileID: 900559350929080882}
-  podiumParent: {fileID: 0}
   awardTitleText: {fileID: 1064647322452336522}
   awardDescriptionText: {fileID: 4436544479511078372}
   playerNamesText: {fileID: 8261174148368111782}
   statsText: {fileID: 1171980480471661958}
   displayDuration: 4
+  buttonsController: {fileID: 0}
   awardCamera: {fileID: 0}
   rotationSpeed: 30
   springDelayBetweenTexts: 0.2
@@ -56238,6 +56248,7 @@ MonoBehaviour:
   dampingRatio: 0.7
   maxGoal: 1
   minGoal: 0
+  startAtEndPosition: 0
   assignedEventChannel: DefaultChannel
   nudgeStrength: 1
   useGameObjectNameAsEventChannel: 1
@@ -56585,6 +56596,7 @@ MonoBehaviour:
   dampingRatio: 0.7
   maxGoal: 1
   minGoal: 0
+  startAtEndPosition: 0
   assignedEventChannel: DefaultChannel
   nudgeStrength: 1
   useGameObjectNameAsEventChannel: 1
@@ -56681,6 +56693,7 @@ MonoBehaviour:
   dampingRatio: 0.7
   maxGoal: 1
   minGoal: 0
+  startAtEndPosition: 0
   assignedEventChannel: DefaultChannel
   nudgeStrength: 1
   useGameObjectNameAsEventChannel: 1
