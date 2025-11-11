@@ -167,3 +167,6 @@ public class DroneDeliveryCalled : UnityEvent<Ingredient> { }
 public class InitiateDespawnTimerEvent : UnityEvent { }
 
 public class OnGameStartEvent : UnityEvent { }
+
+public class PlayerLookingAtObject : UnityEvent { }
+public class PlayerStoppedLookingAtObject : UnityEvent { }
