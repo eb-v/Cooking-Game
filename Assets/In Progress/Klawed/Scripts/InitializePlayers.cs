@@ -3,6 +3,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using JetBrains.Annotations;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Users;
 
 public class InitializePlayers : MonoBehaviour
 {
@@ -31,7 +32,7 @@ public class InitializePlayers : MonoBehaviour
 
         foreach (GameObject player in playerManager.players)
         {
-            player.SetActive(false);
+           // player.SetActive(false);
             player.transform.position = playerSpawnPoints[spawnIndex].position;
             
             player.transform.rotation = Quaternion.identity;
@@ -47,6 +48,18 @@ public class InitializePlayers : MonoBehaviour
             PlayerInput playerInput = player.GetComponent<PlayerInput>();
             playerInput.SwitchCurrentActionMap("Player");
             playerInput.SwitchCurrentControlScheme(playerManager.PlayerInputDeviceMappings[playerInput]);
+            //InputDevice device = playerManager.PlayerInputDeviceMappings[playerInput];
+
+            //var user = playerInput.user;
+            //playerInput.user.ActivateControlScheme("Gamepad");
+            //playerInput.user.AssociateActionsWithUser(playerInput.actions);
+            //playerInput.user.UnpairDevices();
+            //InputUser.PerformPairingWithDevice(device, user: playerInput.user);
+
+
+            // Ensure action map association is updated
+            //playerInput.SwitchCurrentControlScheme(device);
+
 
             // do debug statement for player input device assignment
             Debug.Log($"Player {playerInput.name} assigned to device {playerManager.PlayerInputDeviceMappings[playerInput].displayName}");
