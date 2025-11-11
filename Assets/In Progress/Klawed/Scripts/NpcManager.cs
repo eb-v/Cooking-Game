@@ -107,6 +107,9 @@ public class NpcManager : MonoBehaviour
         {
             npcLine[i].targetLine = linePositions[i];
             npcLine[i].npc.MoveTo(linePositions[i].position);
+            
+            npcLine[i].transform.rotation = linePositions[i].rotation;
+
             Debug.Log($"{npcLine[i].name} moved up to line position {linePositions[i].position}");
         }
 
