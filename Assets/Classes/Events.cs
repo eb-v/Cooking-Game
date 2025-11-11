@@ -4,7 +4,7 @@ using UnityEngine.InputSystem;
 
 public class OnMoveInput : UnityEvent<Vector2> { }
 public class OnJumpInput : UnityEvent { }
-
+public class OnBoostInput : UnityEvent { }
 public class Move : UnityEvent { }
 public class Idle : UnityEvent { }
 public class HasLanded : UnityEvent { }

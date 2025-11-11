@@ -1,6 +1,7 @@
 using Unity.VisualScripting;
 using UnityEngine;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 
 public class PizzaOvenScript : MonoBehaviour
@@ -24,10 +25,25 @@ public class PizzaOvenScript : MonoBehaviour
     public BaseStateSO _idleStateInstance;
     public BaseStateSO _cookingStateInstance;
 
+    [Header("Explosion Settings")]
+    [SerializeField] private ExplosionData explosionData;
+    [SerializeField] private GameObject explosionPointContainer;
+    [SerializeField] private List<Transform> explosionPoints;
+    private ExplosionData explosionDataInstance;
+
     private bool isClosed = true;
 
     private void Awake()
     {
+        explosionPoints = new List<Transform>();
+
+        foreach (Transform child in explosionPointContainer.transform)
+        {
+            explosionPoints.Add(child);
+        }
+
+        explosionDataInstance = Instantiate(explosionData);
+
         if (_useCustomChannel)
         {
             GenericEvent<InteractEvent>.GetEvent(_assignedChannel).AddListener(OnInteract);
@@ -66,6 +82,17 @@ public class PizzaOvenScript : MonoBehaviour
 
     private void OnInteract(GameObject player)
     {
+        // check for explosion condition
+        if (ExplosionSystem.RunExplosionLogic(explosionPoints, explosionDataInstance))
+        {
+            foreach (Transform point in explosionPoints)
+            {
+                FireSystem.IgniteObject(point.gameObject);
+            }
+
+            return;
+        }
+
         // Close or open pizza oven
         JointSpring spring = _ovenDoorHinge.spring;
         float targetPos = spring.targetPosition;
@@ -115,9 +142,5 @@ public class PizzaOvenScript : MonoBehaviour
         pizzaInOven = pizza;
     }
 
-    private void Explode()
-    {
-        ExplosionSystem.Explode(gameObject);
-    }
-
+    
 }

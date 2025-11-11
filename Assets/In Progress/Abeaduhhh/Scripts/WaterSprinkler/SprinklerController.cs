@@ -102,7 +102,8 @@ public class SprinklerController : MonoBehaviour {
     private void CheckForFires() {
         int count = Physics.OverlapSphereNonAlloc(transform.position, extinguishRadius, overlapResults);
         for (int i = 0; i < count; i++) {
-            FireController fire = overlapResults[i].GetComponentInParent<FireController>();
+            //FireController fire = overlapResults[i].GetComponentInParent<FireController>();
+            FireController fire = overlapResults[i].GetComponent<FireController>();
             if (fire != null) {
                 fire.StopFireImmediate();
             }
