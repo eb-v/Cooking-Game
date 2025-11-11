@@ -17,6 +17,8 @@ public class RotationSpringScript : MonoBehaviour, ISpringUI
 
     private void Awake()
     {
+        initialRotation = transform.localEulerAngles;
+
         switch (true)
         {
             case true when useGameObjectNameAsEventChannel:
@@ -56,7 +58,7 @@ public class RotationSpringScript : MonoBehaviour, ISpringUI
         }
         else
         {
-            transform.localEulerAngles += newRotation;
+            transform.localEulerAngles = initialRotation + newRotation;
         }
     }
 

@@ -7,7 +7,7 @@ public class FireController : MonoBehaviour {
     [SerializeField] private ParticleSystem[] fireParticles;
 
     [Header("Fire Settings")]
-    [SerializeField] private float burnDuration = 20f;
+    [SerializeField] private float burnDuration = 60f;
 
     private bool burning = false;
 
@@ -66,7 +66,8 @@ public class FireController : MonoBehaviour {
         if (!burning) return;
         burning = false;
 
-        foreach (var ps in fireParticles) {
+        foreach (var ps in fireParticles)
+        {
             if (ps != null)
                 ps.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
         }
