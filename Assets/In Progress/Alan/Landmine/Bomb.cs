@@ -15,6 +15,9 @@ public class Bomb : MonoBehaviour
     [Header("Player Layer")]
     public string playerLayerName = "Player"; 
 
+    [Header("Ignore Layers")]
+    public string trainLayerName = "Train";
+
     [Header("Audio")]
     public AudioClip explosionSfx;
     [Range(0f, 1f)]
@@ -26,6 +29,7 @@ public class Bomb : MonoBehaviour
     private AudioSource audioSource;
     private Rigidbody rb;
     private int playerLayer;
+    private int trainLayer;
 
     void Awake()
     {
@@ -40,8 +44,9 @@ public class Bomb : MonoBehaviour
 
         // cache the player layer index
         playerLayer = LayerMask.NameToLayer(playerLayerName);
-    }
+        trainLayer  = LayerMask.NameToLayer(trainLayerName);
 
+    }
     private void OnEnable()
     {
         ResetValues();
@@ -92,16 +97,21 @@ public class Bomb : MonoBehaviour
             audioSource.PlayOneShot(explosionSfx, explosionVolume);
         }
 
-        // explosion force
+       // explosion force
         Collider[] hitColliders = Physics.OverlapSphere(transform.position, explosionRadius);
         foreach (Collider hit in hitColliders)
         {
+            // skip the train layer 
+            if (hit.gameObject.layer == trainLayer)
+                continue;
+
             Rigidbody hitRb = hit.attachedRigidbody;
             if (hitRb != null)
             {
                 hitRb.AddExplosionForce(explosionForce, transform.position, explosionRadius);
             }
         }
+
 
         // hide mesh after explosion
         foreach (var rend in GetComponentsInChildren<Renderer>())
