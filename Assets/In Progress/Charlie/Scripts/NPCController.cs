@@ -21,6 +21,7 @@ public class NPCController : MonoBehaviour
     private Transform assignedTable;
     private Transform leavePosition;
     private bool hasReceivedOrder = false;
+    private bool isEating = false;
 
     void Start()
     {
@@ -101,6 +102,7 @@ public class NPCController : MonoBehaviour
         {
             npc.agent.ResetPath();
             leaveTimer = 0f;
+            transform.rotation = targetLine.rotation; 
             currentState = NPCState.WaitingAtTable;
             Debug.Log($"{name} reached table {assignedTable.name}, starting WaitAtTable");
         }
@@ -108,12 +110,21 @@ public class NPCController : MonoBehaviour
 
     void WaitAtTable()
     {
-        leaveTimer += Time.deltaTime;
-
-        if (leaveTimer >= leaveDuration)
+        if (!isEating)
         {
-            leaveTimer = 0f;
-            Debug.Log($"{name} done waiting at table, starting Leaving");
+            npc.animator.SetBool("isEating", true);
+            isEating = true;
+            Debug.Log($"{name} started eating");
+        }
+        
+        AnimatorStateInfo stateInfo = npc.animator.GetCurrentAnimatorStateInfo(0);
+        AnimatorClipInfo[] clipInfo = npc.animator.GetCurrentAnimatorClipInfo(0);
+        
+        if (isEating && stateInfo.normalizedTime >= 0.95f && !npc.animator.IsInTransition(0))
+        {
+            npc.animator.SetBool("isEating", false);
+            isEating = false;
+            Debug.Log($"{name} done eating, starting Leaving");
             leavePosition = manager.GetLeavePosition();
             currentState = NPCState.Leaving;
         }
@@ -121,6 +132,8 @@ public class NPCController : MonoBehaviour
 
     void Leave()
     {
+        npc.animator.SetBool("isEating", false);
+
         npc.MoveTo(leavePosition.position);
         if (!npc.agent.pathPending && npc.agent.remainingDistance <= npc.agent.stoppingDistance)
         {

@@ -21,7 +21,6 @@ public class NPC : MonoBehaviour
         bool walking = agent.pathPending || agent.remainingDistance > agent.stoppingDistance;
         animator.SetBool("isWalking", walking);
 
-        
     }
 
     public void MoveTo(Vector3 destination)
