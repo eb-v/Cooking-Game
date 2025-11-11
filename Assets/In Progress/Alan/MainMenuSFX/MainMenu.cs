@@ -36,7 +36,7 @@ public class MainMenu : MonoBehaviour
 
         yield return new WaitForSecondsRealtime(loadDelaySeconds);
 
-        Loader.Load(Loader.Scene.PregameLobby);
+        Loader.Load(Loader.Scene.Level1Scene);
     }
 
     private void QuitClick()
