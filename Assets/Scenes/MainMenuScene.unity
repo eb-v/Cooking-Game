@@ -194,6 +194,50 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 238187493}
   m_CullTransparentMesh: 1
+--- !u!1 &317868757
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 317868759}
+  - component: {fileID: 317868758}
+  m_Layer: 0
+  m_Name: logdisable
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &317868758
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 317868757}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7202bac66b962d644ba332778ed34c6b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+--- !u!4 &317868759
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 317868757}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -9.49647, y: 0, z: 15.79848}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &626552583
 GameObject:
   m_ObjectHideFlags: 0
@@ -468,6 +512,7 @@ MonoBehaviour:
   dampingRatio: 0.7
   maxGoal: 1
   minGoal: 0
+  startAtEndPosition: 0
   assignedEventChannel: PlayButton
   nudgeStrength: 1
   useGameObjectNameAsEventChannel: 1
@@ -645,6 +690,7 @@ MonoBehaviour:
   dampingRatio: 0.7
   maxGoal: 1
   minGoal: 0
+  startAtEndPosition: 0
   assignedEventChannel: QuitButton
   nudgeStrength: 1
   useGameObjectNameAsEventChannel: 1
@@ -819,6 +865,7 @@ MonoBehaviour:
   dampingRatio: 0.7
   maxGoal: 1
   minGoal: 0
+  startAtEndPosition: 0
   assignedEventChannel: title
   nudgeStrength: 1
   useGameObjectNameAsEventChannel: 1
@@ -1285,6 +1332,7 @@ MonoBehaviour:
   dampingRatio: 0.7
   maxGoal: 1
   minGoal: 0
+  startAtEndPosition: 0
   assignedEventChannel: DefaultChannel
   nudgeStrength: 1
   useGameObjectNameAsEventChannel: 1
@@ -1708,6 +1756,7 @@ MonoBehaviour:
   dampingRatio: 0.7
   maxGoal: 1
   minGoal: 0
+  startAtEndPosition: 0
   assignedEventChannel: DefaultChannel
   nudgeStrength: 1
   useGameObjectNameAsEventChannel: 1
@@ -1720,3 +1769,4 @@ SceneRoots:
   - {fileID: 1471596154}
   - {fileID: 626552587}
   - {fileID: 1273292151}
+  - {fileID: 317868759}

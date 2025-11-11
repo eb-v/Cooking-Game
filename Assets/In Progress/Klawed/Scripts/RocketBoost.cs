@@ -29,10 +29,11 @@ public class RocketBoost : MonoBehaviour
         
     }
 
-    private void OnEnable()
+    private void Update()
     {
         if (SceneManager.GetActiveScene().name == "Level 2")
         {
+            if (rocketBoosterObj.activeSelf) return;
             rocketBoosterObj.SetActive(true);
         }
     }
