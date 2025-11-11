@@ -18389,6 +18389,56 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 617036722816844253, guid: a2a449d4da6852e408ad015fe88bcf02, type: 3}
   m_PrefabInstance: {fileID: 1431496514}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1628239686
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1628239688}
+  - component: {fileID: 1628239687}
+  m_Layer: 0
+  m_Name: spawnDrinks
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1628239687
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1628239686}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b2d68d444a575394284a1b2e03209f8b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::spawndrinks
+  menuItem:
+  - {fileID: 11400000, guid: 7127fb563563c6e41926c611810d387c, type: 2}
+  - {fileID: 11400000, guid: 8dae872c3a28f5743a8aeb642b1ef878, type: 2}
+  - {fileID: 11400000, guid: f2faddd42e353f24483367ace29c363f, type: 2}
+  - {fileID: 11400000, guid: dd4f7bf041f2a354ebdacef8bdfc56ba, type: 2}
+  spawnPoint: {fileID: 1628239688}
+--- !u!4 &1628239688
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1628239686}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -29.6, y: 3.18, z: 27.15}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &1629692457 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2956435588388697076, guid: c61c55e63e7a04e4fa89f79507842c4b, type: 3}
@@ -26674,3 +26724,4 @@ SceneRoots:
   - {fileID: 1809561684}
   - {fileID: 608543643}
   - {fileID: 801679160}
+  - {fileID: 1628239688}

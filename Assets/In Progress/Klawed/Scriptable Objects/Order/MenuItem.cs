@@ -8,6 +8,8 @@ public class MenuItem : ScriptableObject
     [SerializeField] private MenuItemType orderType;
 
 
+
+
     public MenuItemType GetOrderType()
     {
         return orderType;
