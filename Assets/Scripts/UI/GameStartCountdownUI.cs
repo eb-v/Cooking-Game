@@ -6,6 +6,10 @@ public class GameStartCountdownUI : MonoBehaviour
     [SerializeField] private TMP_Text countdownText;
     [SerializeField] private float countdownDuration = 3f;
     [SerializeField] private float fadeDuration = 0.3f;
+
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip tickSFX;
+    [SerializeField] private AudioClip finalSFX;
     
     private float countdownTimer;
     private bool isCountingDown = false;
@@ -27,6 +31,7 @@ public class GameStartCountdownUI : MonoBehaviour
     private void Start()
     {
         if (countdownText == null) countdownText = GetComponent<TMP_Text>();
+        if (audioSource == null) audioSource = GetComponent<AudioSource>();
         
         textColor = countdownText.color;
         countdownTimer = countdownDuration;
@@ -54,6 +59,7 @@ public class GameStartCountdownUI : MonoBehaviour
             {
                 if (!isFading)
                 {
+                    PlayTickSFX();
                     isFading = true;
                     fadeTimer = fadeDuration;
                 }
@@ -92,10 +98,12 @@ public class GameStartCountdownUI : MonoBehaviour
             // Countdown finished
             if (countdownTimer <= 0f)
             {
+                PlayFinalSFX();
+                
                 Time.timeScale = 1f;
                 isCountingDown = false;
                 CountdownIsActive = false;
-                gameObject.SetActive(false);
+                countdownText.enabled = false;
                 
                 Debug.Log("Countdown finished! Time.timeScale set to 1. Timer starts NOW.");
             }
@@ -106,5 +114,21 @@ public class GameStartCountdownUI : MonoBehaviour
     {
         CountdownIsActive = false;
         CountdownIsPaused = false;
+    }
+
+    private void PlayTickSFX()
+    {
+        if (audioSource != null && tickSFX != null)
+        {
+            audioSource.PlayOneShot(tickSFX);
+        }
+    }
+
+    private void PlayFinalSFX()
+    {
+        if (audioSource != null && finalSFX != null)
+        {
+            audioSource.PlayOneShot(finalSFX);
+        }
     }
 }
