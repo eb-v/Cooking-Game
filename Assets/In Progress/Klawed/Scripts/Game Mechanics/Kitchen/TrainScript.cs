@@ -9,6 +9,8 @@ public class TrainScript : MonoBehaviour
     [SerializeField] private float resetDelay = 10.0f; // Time before train resets after stopping
     [SerializeField] private float randomCallInterval = 20.0f; // Random call every 20 seconds
     [SerializeField] private TrafficLightController trafficLight; // Reference to traffic light
+    [SerializeField] private float knockbackForce = 1000f; // Force applied when hitting objects
+    [SerializeField] private float upwardForce = 0.5f; // Upward component for knockback (0-1)
     
     private Rigidbody trainRb;
     private bool hasLaunched = false;
@@ -50,12 +52,37 @@ public class TrainScript : MonoBehaviour
         }
     }
     
-    // Random spawn loop - calls train randomly within each 45 second interval
+private void OnCollisionEnter(Collision collision)
+{
+    // Check if we hit something with a Rigidbody (like the player)
+    Rigidbody hitRb = collision.gameObject.GetComponent<Rigidbody>();
+    
+    // Check if it's not part of the train itself
+    if (hitRb != null && hitRb != trainRb && !collision.transform.IsChildOf(transform))
+    {
+        // Calculate knockback direction (away from train)
+        Vector3 knockbackDirection = (collision.transform.position - transform.position).normalized;
+        
+        // Add upward component for more dramatic effect
+        knockbackDirection.y = upwardForce;
+        knockbackDirection.Normalize();
+        
+        // Apply massive force
+        hitRb.AddForce(knockbackDirection * knockbackForce, ForceMode.Impulse);
+        
+        // Optional: Add random spin for ragdoll effect
+        hitRb.AddTorque(Random.insideUnitSphere * 300f);
+        
+        Debug.Log("Train hit: " + collision.gameObject.name);
+    }
+}
+    
+    // Random spawn loop - calls train randomly within each interval
     private IEnumerator RandomTrainSpawnLoop()
     {
         while (true)
         {
-            // Wait a random time within the 45 second interval
+            // Wait a random time within the interval
             float randomTime = Random.Range(0f, randomCallInterval);
             yield return new WaitForSeconds(randomTime);
             
@@ -65,7 +92,7 @@ public class TrainScript : MonoBehaviour
                 OnStartTrain();
             }
             
-            // Wait for the remaining time to complete the 45 second cycle
+            // Wait for the remaining time to complete the cycle
             yield return new WaitForSeconds(randomCallInterval - randomTime);
         }
     }
