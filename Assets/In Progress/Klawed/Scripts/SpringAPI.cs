@@ -14,6 +14,8 @@ public class SpringAPI : MonoBehaviour, IEventChannel
     public float maxGoal = 1f;
     public float minGoal = 0f;
 
+    [SerializeField] private bool startAtEndPosition = false;
+
     public string eventChannel => gameObject.name;
 
     public string assignedEventChannel = "DefaultChannel";
@@ -27,6 +29,11 @@ public class SpringAPI : MonoBehaviour, IEventChannel
     [SerializeField] private bool useGameObjectIDAsEventChannel = false;
     private void Start()
     {
+        if (startAtEndPosition)
+        {
+            springPosValue = maxGoal;
+            goalValue = maxGoal;
+        }
     }
     private void Update() {
         float deltaTime = Time.deltaTime;
