@@ -4,20 +4,22 @@ public class UISFXManager : MonoBehaviour
 {
     public static UISFXManager Instance { get; private set; }
 
+    [Header("Audio Source")]
     [SerializeField] private AudioSource audioSource;
 
-    [Header("Buttons")]
-    [SerializeField] private AudioClip buttonHoverSFX;
-    [SerializeField] private AudioClip buttonClickSFX;
-    [SerializeField] private AudioClip buttonBackSFX;
+    [Header("Buttons / Menus")]
+    [SerializeField] private AudioClip buttonHoverClip;
+    [SerializeField] private AudioClip buttonClickClip;
+    [SerializeField] private AudioClip pauseOpenClip;
+    [SerializeField] private AudioClip pauseCloseClip;
 
-    [Header("Panels")]
-    [SerializeField] private AudioClip panelOpenSFX;
-    [SerializeField] private AudioClip panelCloseSFX;
-
-    [Header("Game States")]
-    [SerializeField] private AudioClip gameOverSFX;
-    [SerializeField] private AudioClip awardsSFX;
+    [Header("Gameplay UI")]
+    [SerializeField] private AudioClip countdownTickClip;
+    [SerializeField] private AudioClip countdownFinalClip;
+    [SerializeField] private AudioClip timerAlmostDoneClip;
+    [SerializeField] private AudioClip scoreGainClip;
+    [SerializeField] private AudioClip gameOverClip;
+    [SerializeField] private AudioClip awardsClip;
 
     private void Awake()
     {
@@ -28,24 +30,24 @@ public class UISFXManager : MonoBehaviour
         }
 
         Instance = this;
-
-        if (audioSource == null)
-            audioSource = GetComponent<AudioSource>();
+        DontDestroyOnLoad(gameObject); 
     }
 
-    public void PlayButtonHover()  { PlayOneShot(buttonHoverSFX); }
-    public void PlayButtonClick()  { PlayOneShot(buttonClickSFX); }
-    public void PlayButtonBack()   { PlayOneShot(buttonBackSFX); }
-
-    public void PlayPanelOpen()    { PlayOneShot(panelOpenSFX); }
-    public void PlayPanelClose()   { PlayOneShot(panelCloseSFX); }
-
-    public void PlayGameOver()     { PlayOneShot(gameOverSFX); }
-    public void PlayAwards()       { PlayOneShot(awardsSFX); }
-
-    private void PlayOneShot(AudioClip clip)
+    private void PlayClip(AudioClip clip)
     {
-        if (audioSource != null && clip != null)
-            audioSource.PlayOneShot(clip);
+        if (clip == null || audioSource == null) return;
+        audioSource.PlayOneShot(clip);
     }
+
+    // Public methods other scripts will call:
+    public void PlayButtonHover()      => PlayClip(buttonHoverClip);
+    public void PlayButtonClick()      => PlayClip(buttonClickClip);
+    public void PlayPauseOpen()        => PlayClip(pauseOpenClip);
+    public void PlayPauseClose()       => PlayClip(pauseCloseClip);
+    public void PlayCountdownTick()    => PlayClip(countdownTickClip);
+    public void PlayCountdownFinal()   => PlayClip(countdownFinalClip);
+    public void PlayTimerAlmostDone()  => PlayClip(timerAlmostDoneClip);
+    public void PlayScoreGain()        => PlayClip(scoreGainClip);
+    public void PlayGameOver()         => PlayClip(gameOverClip);
+    public void PlayAwards()           => PlayClip(awardsClip);
 }
