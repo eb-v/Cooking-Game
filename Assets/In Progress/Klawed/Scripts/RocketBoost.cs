@@ -6,7 +6,6 @@ public class RocketBoost : MonoBehaviour
     [SerializeField] private float forwardBoostForce = 5f;
     private Rigidbody rootRb;
     [SerializeField] private Transform centerOfMass;
-    [SerializeField] private Transform particlePoint;
     [SerializeField] private GameObject boostParticlesPrefab;
 
     private void Awake()

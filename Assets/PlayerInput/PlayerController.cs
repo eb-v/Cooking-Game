@@ -33,6 +33,14 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public void OnRespawn(InputAction.CallbackContext context)
+    {
+        if (context.started) // pressed down
+        {
+            GenericEvent<OnRespawnInput>.GetEvent("RespawnManager").Invoke(gameObject);
+        }
+    }
+
     public void OnBoost(InputAction.CallbackContext context) {
         if (context.started) // pressed down
         {

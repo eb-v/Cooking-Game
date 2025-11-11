@@ -170,3 +170,5 @@ public class OnGameStartEvent : UnityEvent { }
 
 public class PlayerLookingAtObject : UnityEvent { }
 public class PlayerStoppedLookingAtObject : UnityEvent { }
+
+public class OnRespawnInput : UnityEvent<GameObject> { }
