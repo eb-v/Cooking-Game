@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class RocketBoost : MonoBehaviour
 {
@@ -7,6 +8,7 @@ public class RocketBoost : MonoBehaviour
     private Rigidbody rootRb;
     [SerializeField] private Transform centerOfMass;
     [SerializeField] private GameObject boostParticlesPrefab;
+    [SerializeField] private GameObject rocketBoosterObj;
 
     private void Awake()
     {
@@ -25,5 +27,13 @@ public class RocketBoost : MonoBehaviour
         rootRb.AddForce(Vector3.up * verticalBoostForce, ForceMode.Impulse);
         rootRb.AddForce(centerOfMass.forward * forwardBoostForce, ForceMode.Impulse);
         
+    }
+
+    private void OnEnable()
+    {
+        if (SceneManager.GetActiveScene().name == "Level 2")
+        {
+            rocketBoosterObj.SetActive(true);
+        }
     }
 }
