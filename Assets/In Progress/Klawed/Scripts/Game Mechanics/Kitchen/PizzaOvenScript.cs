@@ -115,4 +115,9 @@ public class PizzaOvenScript : MonoBehaviour
         pizzaInOven = pizza;
     }
 
+    private void Explode()
+    {
+        ExplosionSystem.Explode(gameObject);
+    }
+
 }

@@ -14,7 +14,7 @@ public class ScoreSystem : ScriptableObject
         {
             if (instance == null)
             {
-                instance = Resources.Load<ScoreSystem>("Score System");
+                instance = Resources.Load<ScoreSystem>("Systems/Score System");
             }
             return instance;
         }

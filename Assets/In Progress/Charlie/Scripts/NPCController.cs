@@ -71,7 +71,7 @@ public class NPCController : MonoBehaviour
         if (!npc.agent.pathPending && npc.agent.remainingDistance <= npc.agent.stoppingDistance)
         {
             npc.agent.ResetPath();
-            transform.rotation = targetLine.rotation; //added
+            transform.rotation = targetLine.rotation; 
             currentState = NPCState.WaitingInLine;
             Debug.Log($"{name} reached line position, switching to WaitingInLine");
         }

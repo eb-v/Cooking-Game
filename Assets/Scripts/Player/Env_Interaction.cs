@@ -69,6 +69,11 @@ public class Env_Interaction : MonoBehaviour
                     mat.EnableKeyword("_EMISSION");
                     mat.SetColor("_EmissionColor", Color.white * glowIntensity);
                 }
+
+                if (currentlyLookingAt.GetComponent<DisplayTerminalUI>() != null)
+                {
+                    GenericEvent<PlayerLookingAtObject>.GetEvent(currentlyLookingAt.name).Invoke();
+                }
             }
             else
             {
@@ -108,6 +113,7 @@ public class Env_Interaction : MonoBehaviour
             {
                 GenericEvent<InteractableLookedAtChanged>.GetEvent(gameObject.name).Invoke(null);
                 GenericEvent<PlayerStoppedLookingAtInteractable>.GetEvent(lastLookedAt.name).Invoke(gameObject);
+                GenericEvent<PlayerStoppedLookingAtObject>.GetEvent(lastLookedAt.name).Invoke();
                 ResetHighlight(lastLookedAt);
                 lastLookedAt = null;
             }
