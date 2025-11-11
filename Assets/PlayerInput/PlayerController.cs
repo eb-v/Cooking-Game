@@ -33,10 +33,10 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void OnJump(InputAction.CallbackContext context) {
+    public void OnBoost(InputAction.CallbackContext context) {
         if (context.started) // pressed down
         {
-            GenericEvent<OnJumpInput>.GetEvent(gameObject.name).Invoke();
+            GenericEvent<OnBoostInput>.GetEvent(gameObject.name).Invoke();
         }
     }
 
