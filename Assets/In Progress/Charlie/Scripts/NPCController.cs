@@ -9,6 +9,8 @@ public class NPCController : MonoBehaviour
 
     [Header("Order Settings")]
     [SerializeField] private string assignedChannel;
+    [SerializeField] private Transform handHoldPoint;
+
     private NpcOrderScript npcOrderScript;
 
 
@@ -22,6 +24,7 @@ public class NPCController : MonoBehaviour
     private Transform leavePosition;
     private bool hasReceivedOrder = false;
     private bool isEating = false;
+    private GameObject heldFoodItem;
 
     void Start()
     {
@@ -112,19 +115,36 @@ public class NPCController : MonoBehaviour
     {
         if (!isEating)
         {
-            npc.animator.SetBool("isEating", true);
+            var currentOrder = npcOrderScript.GetFoodOrder();
+            if (currentOrder != null)
+            {
+                switch (currentOrder.GetOrderType())
+                {
+                    case MenuItemType.Drink:
+                        npc.animator.SetBool("isDrinking", true);
+                        Debug.Log($"{name} started drinking");
+                        break;
+
+                    default: 
+                        npc.animator.SetBool("isEating", true);
+                        Debug.Log($"{name} started eating");
+                        break;
+                }
+            }
+
             isEating = true;
-            Debug.Log($"{name} started eating");
         }
-        
+
         AnimatorStateInfo stateInfo = npc.animator.GetCurrentAnimatorStateInfo(0);
-        AnimatorClipInfo[] clipInfo = npc.animator.GetCurrentAnimatorClipInfo(0);
-        
+
         if (isEating && stateInfo.normalizedTime >= 0.95f && !npc.animator.IsInTransition(0))
         {
             npc.animator.SetBool("isEating", false);
+            npc.animator.SetBool("isDrinking", false);
+
             isEating = false;
-            Debug.Log($"{name} done eating, starting Leaving");
+            Debug.Log($"{name} finished eating/drinking, leaving now");
+
             leavePosition = manager.GetLeavePosition();
             currentState = NPCState.Leaving;
         }
@@ -133,6 +153,11 @@ public class NPCController : MonoBehaviour
     void Leave()
     {
         npc.animator.SetBool("isEating", false);
+
+        if (heldFoodItem != null)
+        {
+            Destroy(heldFoodItem);
+        }
 
         npc.MoveTo(leavePosition.position);
         if (!npc.agent.pathPending && npc.agent.remainingDistance <= npc.agent.stoppingDistance)
@@ -170,6 +195,9 @@ public class NPCController : MonoBehaviour
                 GrabSystem.ReleaseObject(player.GetComponent<HandContainer>().LeftHand);
                 ObjectPoolManager.ReturnObjectToPool(leftHandGrabbedObj);
                 Debug.Log($"{name} received correct order from player!");
+
+                SpawnFoodInHand();
+
                 assignedTable = manager.GetNextTable();
                 currentState = NPCState.WalkingToTable;
                 return;
@@ -191,6 +219,9 @@ public class NPCController : MonoBehaviour
                 ScoreSystem.ChangeScore(545);
                 GrabSystem.ReleaseObject(player.GetComponent<HandContainer>().RightHand);
                 ObjectPoolManager.ReturnObjectToPool(rightHandGrabbedObj);
+
+                SpawnFoodInHand();
+
                 assignedTable = manager.GetNextTable();
                 currentState = NPCState.WalkingToTable;
                 return;
@@ -201,6 +232,32 @@ public class NPCController : MonoBehaviour
                 // maybe play a sad sound or animation here
                 return;
             }
+        }
+    }
+
+    private void SpawnFoodInHand()
+    {
+        if (handHoldPoint == null)
+        {
+            Debug.LogWarning($"{name}: handHoldPoint not assigned!");
+            return;
+        }
+
+        MenuItem currentOrder = npcOrderScript.GetFoodOrder();
+        if (currentOrder != null && currentOrder.GetOrderItemPrefab() != null)
+        {
+            heldFoodItem = Instantiate(currentOrder.GetOrderItemPrefab(), handHoldPoint.position, handHoldPoint.rotation, handHoldPoint);
+
+            heldFoodItem.transform.localScale *= 3f;
+
+            Rigidbody rb = heldFoodItem.GetComponent<Rigidbody>();
+            if (rb != null)
+            {
+                rb.isKinematic = true;   // animation/NPC movement fully controls it
+                rb.useGravity = false;   // prevent it from falling
+            }
+        
+            Debug.Log($"{name} spawned {currentOrder.GetOrderItemPrefab().name} in hand");
         }
     }
 }
