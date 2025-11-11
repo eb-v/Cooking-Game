@@ -105,7 +105,7 @@ public class NPCController : MonoBehaviour
         {
             npc.agent.ResetPath();
             leaveTimer = 0f;
-            transform.rotation = targetLine.rotation; 
+            transform.rotation = assignedTable.rotation; 
             currentState = NPCState.WaitingAtTable;
             Debug.Log($"{name} reached table {assignedTable.name}, starting WaitAtTable");
         }
