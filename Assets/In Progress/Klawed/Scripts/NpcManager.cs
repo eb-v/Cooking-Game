@@ -15,14 +15,14 @@ public class NpcManager : MonoBehaviour
     [SerializeField] private string assignedChannel = "OrderDisplay";
 
     [Header("Spawn Settings")]
-   // [SerializeField] private float spawnInterval = 5f;  //remove
+    [SerializeField] private float spawnInterval = 5f;
     [SerializeField] private Transform[] spawnPositions;
 
     [Header("References")]
     [SerializeField] private OrderSystem orderDeliveryManager;
 
     private List<NPCController> npcLine = new List<NPCController>();
-   // private float spawnTimer = 0f;  //remove
+    private float spawnTimer = 0f;  //remove
     private int nextTableIndex = 0;
 
     void Start()
@@ -42,7 +42,7 @@ public class NpcManager : MonoBehaviour
         SpawnNpc();
     }
 
-/*
+
     void Update()
     {
         spawnTimer += Time.deltaTime;
@@ -52,7 +52,7 @@ public class NpcManager : MonoBehaviour
             SpawnNpc();
         }
     }
-*/
+
 
     public void SpawnNpc()
     {
