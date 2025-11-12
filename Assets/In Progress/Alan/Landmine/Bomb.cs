@@ -84,44 +84,67 @@ public class Bomb : MonoBehaviour
     {
         if (hasExploded) return;
         hasExploded = true;
-
+        
         // 1. Spawn VFX
         if (explosionVFX != null)
         {
             Instantiate(explosionVFX, transform.position, Quaternion.identity);
         }
-
+        
         // play sound
         if (explosionSfx != null)
         {
             audioSource.PlayOneShot(explosionSfx, explosionVolume);
         }
-
-       // explosion force
+        
+        // explosion force
         Collider[] hitColliders = Physics.OverlapSphere(transform.position, explosionRadius);
         foreach (Collider hit in hitColliders)
         {
             // skip the train layer 
             if (hit.gameObject.layer == trainLayer)
                 continue;
-
+            
             Rigidbody hitRb = hit.attachedRigidbody;
             if (hitRb != null)
             {
                 hitRb.AddExplosionForce(explosionForce, transform.position, explosionRadius);
+                
+                // Track player explosions
+                if (hit.gameObject.layer == playerLayer)
+                {
+                    Debug.Log($"Hit player layer object: {hit.gameObject.name}");
+                    
+                    if (PlayerStatsManager.Instance != null)
+                    {
+                        PlayerStats playerStats = hit.GetComponentInParent<PlayerStats>();
+                        if (playerStats != null)
+                        {
+                            Debug.Log($"Found PlayerStats with player number: {playerStats.playerNumber}");
+                            PlayerStatsManager.Instance.IncrementExplosionsReceived(playerStats.playerNumber);
+                        }
+                        else
+                        {
+                            Debug.LogWarning($"No PlayerStats found in parent hierarchy of {hit.gameObject.name}");
+                        }
+                    }
+                    else
+                    {
+                        Debug.LogWarning("PlayerStatsManager.Instance is null!");
+                    }
+                }
             }
         }
-
-
-        // hide mesh after explosion
-        foreach (var rend in GetComponentsInChildren<Renderer>())
-        {
-            rend.enabled = false;
-        }
-
-        // return to pool
-        StartCoroutine(DestroyAfterExplosion());
+    
+    // hide mesh after explosion
+    foreach (var rend in GetComponentsInChildren<Renderer>())
+    {
+        rend.enabled = false;
     }
+    
+    // return to pool
+    StartCoroutine(DestroyAfterExplosion());
+}
 
     private IEnumerator DestroyAfterExplosion()
     {

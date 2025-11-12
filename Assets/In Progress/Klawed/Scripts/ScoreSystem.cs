@@ -5,9 +5,9 @@ public class ScoreSystem : ScriptableObject
 {
     [SerializeField] private static int currentScore = 0;
     [SerializeField] private static float multiplier = 1.0f;   
-
+    
     private static ScoreSystem instance;
-
+    
     public static ScoreSystem Instance
     {
         get
@@ -19,23 +19,29 @@ public class ScoreSystem : ScriptableObject
             return instance;
         }
     }
-
-    public static void ChangeScore(int amount)
+    
+    public static void ChangeScore(int amount, int playerNumber)
     {
-        amount = Mathf.RoundToInt(amount * multiplier);
-        currentScore += amount;
+        int scoreAdded = Mathf.RoundToInt(amount * multiplier);
+        currentScore += scoreAdded;
+        
+        // Track via PlayerStatsManager using player number
+        if (PlayerStatsManager.Instance != null)
+        {
+            PlayerStatsManager.Instance.AddPoints(playerNumber, scoreAdded);
+        }
+        
         GenericEvent<UpdateScoreDisplayEvent>.GetEvent("UpdateScoreDisplayEvent").Invoke(currentScore);
     }
-
+    
     public static void ResetScore()
     {
         currentScore = 0;
         GenericEvent<UpdateScoreDisplayEvent>.GetEvent("UpdateScoreDisplayEvent").Invoke(currentScore);
     }
-
+    
     public static int GetCurrentScore()
     {
         return currentScore;
     }
-
 }

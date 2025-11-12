@@ -1,88 +1,105 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class PlayerStatsManager : MonoBehaviour
 {
     public static PlayerStatsManager Instance;
-    
-    private List<PlayerStats> allPlayers = new List<PlayerStats>();
-    
+
+    private Dictionary<int, PlayerStatsData> playerStatsData = new Dictionary<int, PlayerStatsData>();
+
     private void Awake()
     {
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject);
         }
         else
         {
             Destroy(gameObject);
         }
     }
-    
+
+    private void Start()
+    {
+        if (SceneManager.GetActiveScene().name == "Pregame Lobby")
+        {
+            if (playerStatsData.Count > 0)
+            {
+                ClearAllPlayers();
+            }
+        }
+    }
+
     private void OnEnable()
     {
-        // Subscribe to player joined event
         GenericEvent<OnPlayerJoinedEvent>.GetEvent("PlayerJoined").AddListener(OnPlayerJoined);
     }
-    
+
     private void OnDisable()
     {
-        // Unsubscribe from player joined event
         GenericEvent<OnPlayerJoinedEvent>.GetEvent("PlayerJoined").RemoveListener(OnPlayerJoined);
     }
-    
+
     private void OnPlayerJoined(int playerNumber)
     {
-        // Get the player GameObject from PlayerManager
-        GameObject playerObj = PlayerManager.Instance.players[playerNumber - 1];
-        
-        // Check if PlayerStats already exists
-        PlayerStats existingStats = playerObj.GetComponent<PlayerStats>();
-        if (existingStats != null && allPlayers.Contains(existingStats))
+        if (playerStatsData.ContainsKey(playerNumber))
         {
-            Debug.LogWarning($"Player {playerNumber} already registered for stats tracking, skipping duplicate");
             return;
         }
-        
-        // Get or add PlayerStats component
-        PlayerStats stats = playerObj.GetComponent<PlayerStats>();
-        if (stats == null)
+
+        PlayerStatsData newStats = new PlayerStatsData(playerNumber);
+        playerStatsData[playerNumber] = newStats;
+    }
+
+    public void AddPoints(int playerNumber, int points)
+    {
+        if (playerStatsData.ContainsKey(playerNumber))
         {
-            stats = playerObj.AddComponent<PlayerStats>();
-            Debug.Log($"Added new PlayerStats component to Player {playerNumber}");
-        }
-        
-        // Set player number
-        stats.playerNumber = playerNumber;
-        
-        // Add to allPlayers list if not already there
-        if (!allPlayers.Contains(stats))
-        {
-            allPlayers.Add(stats);
-            Debug.Log($"Player {playerNumber} registered for stats tracking");
+            playerStatsData[playerNumber].pointsGenerated += points;
         }
     }
-    
-    // Method for EndGameAwards or other scripts to get all players
-    public List<PlayerStats> GetAllPlayers()
+
+    public void IncrementItemsGrabbed(int playerNumber)
     {
-        // Remove any null references (in case players were destroyed)
-        allPlayers.RemoveAll(player => player == null);
-        return allPlayers;
+        if (playerStatsData.ContainsKey(playerNumber))
+        {
+            playerStatsData[playerNumber].itemsGrabbed++;
+        }
     }
-    
-    // Get a specific player's stats by player number
-    public PlayerStats GetPlayerStats(int playerNumber)
+
+    public void IncrementJointsReconnected(int playerNumber)
     {
-        return allPlayers.Find(stats => stats.playerNumber == playerNumber);
+        if (playerStatsData.ContainsKey(playerNumber))
+        {
+            playerStatsData[playerNumber].jointsReconnected++;
+        }
     }
-    
-    // Completely clear all tracked players (for returning to main menu, etc.)
+
+    public void IncrementExplosionsReceived(int playerNumber)
+    {
+        if (playerStatsData.ContainsKey(playerNumber))
+        {
+            playerStatsData[playerNumber].explosionsReceived++;
+        }
+    }
+
+    public List<PlayerStatsData> GetAllPlayersData()
+    {
+        return new List<PlayerStatsData>(playerStatsData.Values);
+    }
+
+    public PlayerStatsData GetPlayerStats(int playerNumber)
+    {
+        if (playerStatsData.ContainsKey(playerNumber))
+        {
+            return playerStatsData[playerNumber];
+        }
+        return null;
+    }
+
     public void ClearAllPlayers()
     {
-        allPlayers.Clear();
-        Debug.Log("All player stats cleared");
+        playerStatsData.Clear();
     }
 }

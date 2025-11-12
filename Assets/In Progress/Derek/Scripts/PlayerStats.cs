@@ -3,16 +3,17 @@ using UnityEngine;
 public class PlayerStats : MonoBehaviour
 {
     public int playerNumber;
-    public int ingredientsHandled = 0;
+
     public int pointsGenerated = 0;
     public int jointsReconnected = 0;  // Changed from teammatesRevived
     public int explosionsReceived = 0;
+    public int itemsGrabbed = 0;  // NEW: Track items grabbed
     
-    // Call this whenever player picks up/handles an ingredient
-    public void IncrementIngredientsHandled()
+    // NEW: Call this whenever player grabs any item
+    public void IncrementItemsGrabbed()
     {
-        ingredientsHandled++;
-        Debug.Log($"Player {playerNumber} - Ingredients Handled: {ingredientsHandled}");
+        itemsGrabbed++;
+        Debug.Log($"Player {playerNumber} - Items Grabbed: {itemsGrabbed}");
     }
     
     // Call this whenever player generates points (delivers dish)
@@ -45,6 +46,6 @@ public class PlayerStats : MonoBehaviour
     // Get all stats as a formatted string (useful for debugging)
     public string GetStatsString()
     {
-        return $"Player {playerNumber}\nIngredients: {ingredientsHandled}\nPoints: {pointsGenerated}\nJoints Reconnected: {jointsReconnected}\nExplosions: {explosionsReceived}";
+        return $"Player {playerNumber}\nPoints: {pointsGenerated}\nJoints Reconnected: {jointsReconnected}\nExplosions: {explosionsReceived}\nItems Grabbed: {itemsGrabbed}";
     }
 }

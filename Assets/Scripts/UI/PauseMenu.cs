@@ -199,6 +199,22 @@ public class PauseMenu : MonoBehaviour
         Time.timeScale = 1;
         isPausedByMenu = false;
         GameStartCountdownUI.CountdownIsPaused = false;
+        
+        // Clear player stats
+        if (PlayerStatsManager.Instance != null)
+        {
+            PlayerStatsManager.Instance.ClearAllPlayers();
+            Debug.Log("Player stats cleared");
+        }
+        
+        // Clear and destroy all players
+        if (PlayerManager.Instance != null)
+        {
+            PlayerManager.Instance.ClearAllPlayers();
+            Debug.Log("All players cleared and destroyed");
+        }
+        
+        // Load main menu scene
         UnityEngine.SceneManagement.SceneManager.LoadScene("MainMenuScene");
     }
 
