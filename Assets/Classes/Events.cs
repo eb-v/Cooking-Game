@@ -98,13 +98,13 @@ public class SpringUpdateEvent : UnityEvent<float> { }
 
 public class OnButtonPressedEvent : UnityEvent { }
 
-public class OnPlayerJoinedEvent : UnityEvent<int> { }
+public class OnPlayerJoinedEvent : UnityEvent<GameObject> { }
 
 public class OnChangeColorEvent : UnityEvent<GameObject> { }
 
 public class OnChangeHatEvent : UnityEvent<GameObject> { }
 
-public class PlayerReadyInputEvent : UnityEvent { }
+public class PlayerReadyInputEvent : UnityEvent<GameObject> { }
 
 public class CrateLandedEvent : UnityEvent { }
 

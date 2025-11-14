@@ -34,9 +34,8 @@ public class MainMenuUI : MonoBehaviour
         if (_loadingBarGameObject) _loadingBarGameObject.SetActive(true);
 
         // (kept as-is) If you intended additive for both, change the first line to Additive later
-        // _scenesToLoad.Add(SceneManager.LoadSceneAsync(_persistentGamePlay));
-        //_scenesToLoad.Add(SceneManager.LoadSceneAsync(_playScene, LoadSceneMode.Additive));
-        _scenesToLoad.Add(SceneManager.LoadSceneAsync(_playScene));
+        _scenesToLoad.Add(SceneManager.LoadSceneAsync(_persistentGamePlay));
+        _scenesToLoad.Add(SceneManager.LoadSceneAsync(_playScene, LoadSceneMode.Additive));
 
         StartCoroutine(ProgressLoadingBar());
     }
@@ -73,6 +72,7 @@ public class MainMenuUI : MonoBehaviour
         }
 
         // set play scene as active
+        SceneManager.SetActiveScene(SceneManager.GetSceneByName(_playScene.SceneName));
     }
 
     // === Minimal visual helper ===

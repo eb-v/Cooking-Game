@@ -233,7 +233,7 @@ public class PlayerController : MonoBehaviour
     {
         if (context.started)
         {
-            GenericEvent<PlayerReadyInputEvent>.GetEvent(gameObject.name).Invoke();
+            GenericEvent<PlayerReadyInputEvent>.GetEvent("PlayerReady").Invoke(gameObject);
         }
     }
 }

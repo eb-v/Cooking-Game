@@ -1,21 +1,22 @@
 using System;
+using UnityEngine;
 
 [Serializable]
 public class PlayerStatsData
 {
-    public int playerNumber;
+    public GameObject player;
     public int pointsGenerated = 0;
     public int jointsReconnected = 0;
     public int explosionsReceived = 0;
     public int itemsGrabbed = 0;
 
-    public PlayerStatsData(int playerNum)
+    public PlayerStatsData(GameObject player)
     {
-        playerNumber = playerNum;
+        this.player = player;
     }
 
     public string GetStatsString()
     {
-        return $"Player {playerNumber}\nPoints: {pointsGenerated}\nJoints Reconnected: {jointsReconnected}\nExplosions: {explosionsReceived}\nItems Grabbed: {itemsGrabbed}";
+        return $"Player {player.name}\nPoints: {pointsGenerated}\nJoints Reconnected: {jointsReconnected}\nExplosions: {explosionsReceived}\nItems Grabbed: {itemsGrabbed}";
     }
 }

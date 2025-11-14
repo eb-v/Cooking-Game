@@ -29,6 +29,8 @@ public class PizzaOvenScript : MonoBehaviour
     [SerializeField] private ExplosionData explosionData;
     [SerializeField] private GameObject explosionPointContainer;
     [SerializeField] private List<Transform> explosionPoints;
+
+    
     private ExplosionData explosionDataInstance;
 
     private bool isClosed = true;
@@ -63,7 +65,6 @@ public class PizzaOvenScript : MonoBehaviour
 
         _stateMachine = new StateMachine();
     }
-
 
     private void Start()
     {

@@ -20,16 +20,15 @@ public class ScoreSystem : ScriptableObject
         }
     }
     
-    public static void ChangeScore(int amount, int playerNumber)
+    public static void ChangeScore(int amount, GameObject player)
     {
         int scoreAdded = Mathf.RoundToInt(amount * multiplier);
         currentScore += scoreAdded;
         
         // Track via PlayerStatsManager using player number
-        if (PlayerStatsManager.Instance != null)
-        {
-            PlayerStatsManager.Instance.AddPoints(playerNumber, scoreAdded);
-        }
+        
+        PlayerStatsManager.AddPoints(player, scoreAdded);
+        
         
         GenericEvent<UpdateScoreDisplayEvent>.GetEvent("UpdateScoreDisplayEvent").Invoke(currentScore);
     }

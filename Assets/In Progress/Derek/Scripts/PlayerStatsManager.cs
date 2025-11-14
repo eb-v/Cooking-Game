@@ -4,21 +4,8 @@ using UnityEngine.SceneManagement;
 
 public class PlayerStatsManager : MonoBehaviour
 {
-    public static PlayerStatsManager Instance;
 
-    private Dictionary<int, PlayerStatsData> playerStatsData = new Dictionary<int, PlayerStatsData>();
-
-    private void Awake()
-    {
-        if (Instance == null)
-        {
-            Instance = this;
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
-    }
+    private static Dictionary<GameObject, PlayerStatsData> playerStatsData = new Dictionary<GameObject, PlayerStatsData>();
 
     private void Start()
     {
@@ -41,18 +28,18 @@ public class PlayerStatsManager : MonoBehaviour
         GenericEvent<OnPlayerJoinedEvent>.GetEvent("PlayerJoined").RemoveListener(OnPlayerJoined);
     }
 
-    private void OnPlayerJoined(int playerNumber)
+    private static void OnPlayerJoined(GameObject player)
     {
-        if (playerStatsData.ContainsKey(playerNumber))
+        if (playerStatsData.ContainsKey(player))
         {
             return;
         }
 
-        PlayerStatsData newStats = new PlayerStatsData(playerNumber);
-        playerStatsData[playerNumber] = newStats;
+        PlayerStatsData newStats = new PlayerStatsData(player);
+        playerStatsData[player] = newStats;
     }
 
-    public void AddPoints(int playerNumber, int points)
+    public static void AddPoints(GameObject playerNumber, int points)
     {
         if (playerStatsData.ContainsKey(playerNumber))
         {
@@ -60,45 +47,45 @@ public class PlayerStatsManager : MonoBehaviour
         }
     }
 
-    public void IncrementItemsGrabbed(int playerNumber)
+    public static void IncrementItemsGrabbed(GameObject player)
     {
-        if (playerStatsData.ContainsKey(playerNumber))
+        if (playerStatsData.ContainsKey(player))
         {
-            playerStatsData[playerNumber].itemsGrabbed++;
+            playerStatsData[player].itemsGrabbed++;
         }
     }
 
-    public void IncrementJointsReconnected(int playerNumber)
+    public static void IncrementJointsReconnected(GameObject player)
     {
-        if (playerStatsData.ContainsKey(playerNumber))
+        if (playerStatsData.ContainsKey(player))
         {
-            playerStatsData[playerNumber].jointsReconnected++;
+            playerStatsData[player].jointsReconnected++;
         }
     }
 
-    public void IncrementExplosionsReceived(int playerNumber)
+    public static void IncrementExplosionsReceived(GameObject player)
     {
-        if (playerStatsData.ContainsKey(playerNumber))
+        if (playerStatsData.ContainsKey(player))
         {
-            playerStatsData[playerNumber].explosionsReceived++;
+            playerStatsData[player].explosionsReceived++;
         }
     }
 
-    public List<PlayerStatsData> GetAllPlayersData()
+    public static List<PlayerStatsData> GetAllPlayersData()
     {
         return new List<PlayerStatsData>(playerStatsData.Values);
     }
 
-    public PlayerStatsData GetPlayerStats(int playerNumber)
+    public static PlayerStatsData GetPlayerStats(GameObject player)
     {
-        if (playerStatsData.ContainsKey(playerNumber))
+        if (playerStatsData.ContainsKey(player))
         {
-            return playerStatsData[playerNumber];
+            return playerStatsData[player];
         }
         return null;
     }
 
-    public void ClearAllPlayers()
+    public static void ClearAllPlayers()
     {
         playerStatsData.Clear();
     }

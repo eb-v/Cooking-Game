@@ -13,7 +13,7 @@ public class Bomb : MonoBehaviour
     public string groundTag = "Floor";
 
     [Header("Player Layer")]
-    public string playerLayerName = "Player"; 
+    public string playerLayerName = "Player";
 
     [Header("Ignore Layers")]
     public string trainLayerName = "Train";
@@ -44,7 +44,7 @@ public class Bomb : MonoBehaviour
 
         // cache the player layer index
         playerLayer = LayerMask.NameToLayer(playerLayerName);
-        trainLayer  = LayerMask.NameToLayer(trainLayerName);
+        trainLayer = LayerMask.NameToLayer(trainLayerName);
 
     }
     private void OnEnable()
@@ -67,7 +67,7 @@ public class Bomb : MonoBehaviour
             {
                 rb.linearVelocity = Vector3.zero;
                 rb.angularVelocity = Vector3.zero;
-                rb.isKinematic = true; 
+                rb.isKinematic = true;
             }
 
             return;
@@ -84,19 +84,19 @@ public class Bomb : MonoBehaviour
     {
         if (hasExploded) return;
         hasExploded = true;
-        
+
         // 1. Spawn VFX
         if (explosionVFX != null)
         {
             Instantiate(explosionVFX, transform.position, Quaternion.identity);
         }
-        
+
         // play sound
         if (explosionSfx != null)
         {
             audioSource.PlayOneShot(explosionSfx, explosionVolume);
         }
-        
+
         // explosion force
         Collider[] hitColliders = Physics.OverlapSphere(transform.position, explosionRadius);
         foreach (Collider hit in hitColliders)
@@ -104,47 +104,32 @@ public class Bomb : MonoBehaviour
             // skip the train layer 
             if (hit.gameObject.layer == trainLayer)
                 continue;
-            
+
             Rigidbody hitRb = hit.attachedRigidbody;
             if (hitRb != null)
             {
                 hitRb.AddExplosionForce(explosionForce, transform.position, explosionRadius);
-                
+
                 // Track player explosions
                 if (hit.gameObject.layer == playerLayer)
                 {
-                    Debug.Log($"Hit player layer object: {hit.gameObject.name}");
-                    
-                    if (PlayerStatsManager.Instance != null)
-                    {
-                        PlayerStats playerStats = hit.GetComponentInParent<PlayerStats>();
-                        if (playerStats != null)
-                        {
-                            Debug.Log($"Found PlayerStats with player number: {playerStats.playerNumber}");
-                            PlayerStatsManager.Instance.IncrementExplosionsReceived(playerStats.playerNumber);
-                        }
-                        else
-                        {
-                            Debug.LogWarning($"No PlayerStats found in parent hierarchy of {hit.gameObject.name}");
-                        }
-                    }
-                    else
-                    {
-                        Debug.LogWarning("PlayerStatsManager.Instance is null!");
-                    }
+                    Debug.Log($"Hit player: {hit.gameObject.name}");
+                    GameObject player = hit.transform.root.gameObject;
+                    PlayerStatsManager.IncrementExplosionsReceived(player);
+
                 }
             }
         }
-    
-    // hide mesh after explosion
-    foreach (var rend in GetComponentsInChildren<Renderer>())
-    {
-        rend.enabled = false;
+
+        // hide mesh after explosion
+        foreach (var rend in GetComponentsInChildren<Renderer>())
+        {
+            rend.enabled = false;
+        }
+
+        // return to pool
+        StartCoroutine(DestroyAfterExplosion());
     }
-    
-    // return to pool
-    StartCoroutine(DestroyAfterExplosion());
-}
 
     private IEnumerator DestroyAfterExplosion()
     {

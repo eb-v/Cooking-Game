@@ -186,20 +186,17 @@ public class NPCController : MonoBehaviour
             return;
         }
 
-        // Get the player number from the player GameObject
-        int playerNumber = GetPlayerNumber(player);
-        
         if (leftHandGrabbedObj != null)
         {
             string leftHandGrabbedObjPrefabName = leftHandGrabbedObj.GetComponent<PrefabContainer>().GetPrefabName();
             if (leftHandGrabbedObjPrefabName == npcOrderScript.GetFoodOrder().GetOrderItemPrefab().name)
             {
                 // Pass the player number instead of GameObject
-                ScoreSystem.ChangeScore(545, playerNumber);
+                ScoreSystem.ChangeScore(545, player);
                 
                 GrabSystem.ReleaseObject(player.GetComponent<HandContainer>().LeftHand);
                 ObjectPoolManager.ReturnObjectToPool(leftHandGrabbedObj);
-                Debug.Log($"{name} received correct order from player {playerNumber}!");
+                Debug.Log($"{name} received correct order from {player.name}!");
                 SpawnFoodInHand();
                 assignedTable = manager.GetNextTable();
                 currentState = NPCState.WalkingToTable;
@@ -207,7 +204,7 @@ public class NPCController : MonoBehaviour
             }
             else
             {
-                Debug.Log($"{name} received incorrect order from player.");
+                Debug.Log($"{name} received incorrect order from {player.name}.");
                 return;
             }
         }
@@ -217,10 +214,9 @@ public class NPCController : MonoBehaviour
             string rightHandGrabbedObjPrefabName = rightHandGrabbedObj.GetComponent<PrefabContainer>().GetPrefabName();
             if (rightHandGrabbedObjPrefabName == npcOrderScript.GetFoodOrder().GetOrderItemPrefab().name)
             {
-                Debug.Log($"{name} received correct order from player {playerNumber}!");
+                Debug.Log($"{name} received correct order from {player.name}!");
                 
-                // Pass the player number instead of GameObject
-                ScoreSystem.ChangeScore(545, playerNumber);
+                ScoreSystem.ChangeScore(545, player);
                 
                 GrabSystem.ReleaseObject(player.GetComponent<HandContainer>().RightHand);
                 ObjectPoolManager.ReturnObjectToPool(rightHandGrabbedObj);
@@ -237,36 +233,6 @@ public class NPCController : MonoBehaviour
         }
     }
 
-    // Helper method to get player number from GameObject
-    private int GetPlayerNumber(GameObject player)
-    {
-        // Try to find the player in PlayerManager's list
-        if (PlayerManager.Instance != null)
-        {
-            for (int i = 0; i < PlayerManager.Instance.players.Count; i++)
-            {
-                if (PlayerManager.Instance.players[i] == player)
-                {
-                    return i + 1; // Player numbers are 1-indexed
-                }
-            }
-        }
-
-        // Fallback: try to extract from player name (e.g., "Player 1")
-        string playerName = player.name;
-        if (playerName.Contains("Player "))
-        {
-            string numberStr = playerName.Replace("Player ", "").Trim();
-            if (int.TryParse(numberStr, out int number))
-            {
-                return number;
-            }
-        }
-
-        Debug.LogWarning($"Could not determine player number for {player.name}, defaulting to 1");
-        return 1; // Default fallback
-    }
-    
     private void SpawnFoodInHand()
     {
         if (handHoldPoint == null)

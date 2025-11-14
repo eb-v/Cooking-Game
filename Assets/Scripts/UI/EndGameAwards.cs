@@ -36,13 +36,7 @@ public class EndGameAwards : MonoBehaviour {
     {
         Debug.Log("ShowAwards called");
 
-        if (PlayerStatsManager.Instance == null)
-        {
-            Debug.LogError("PlayerStatsManager instance not found!");
-            return null;
-        }
-
-        players = PlayerStatsManager.Instance.GetAllPlayersData();
+        players = PlayerStatsManager.GetAllPlayersData();
         Debug.Log($"Retrieved {players?.Count ?? 0} players");
 
         if (players == null || players.Count == 0)
@@ -54,9 +48,9 @@ public class EndGameAwards : MonoBehaviour {
         Debug.Log($"Starting awards ceremony with {players.Count} players");
         
         // Debug log each player's stats
-        foreach (var player in players)
+        foreach (PlayerStatsData playerStats in players)
         {
-            Debug.Log($"Player {player.playerNumber}: Points={player.pointsGenerated}, Items={player.itemsGrabbed}, Joints={player.jointsReconnected}, Explosions={player.explosionsReceived}");
+            Debug.Log($"{playerStats.player.name}: Points={playerStats.pointsGenerated}, Items={playerStats.itemsGrabbed}, Joints={playerStats.jointsReconnected}, Explosions={playerStats.explosionsReceived}");
         }
         
         return caller.StartCoroutine(AwardCeremony());
@@ -108,7 +102,7 @@ public class EndGameAwards : MonoBehaviour {
 
         awardTitleText.text = title + (winners.Count > 1 && title != "Hot Hands" ? "s" : "");
         awardDescriptionText.text = description;
-        playerNamesText.text = string.Join(" & ", winners.Select(p => $"Player {p.playerNumber}"));
+        playerNamesText.text = string.Join(" & ", winners.Select(p => $"{p.player.name}"));
         statsText.text = string.Join(" | ", winners.Select(getStatText));
 
         SpringAPI[] springs =

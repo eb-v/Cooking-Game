@@ -10,9 +10,12 @@ public class PlayerManager : MonoBehaviour
     public static PlayerManager Instance;
     public LobbyUIManager lobbyUIManager;
     public Transform[] SpawnPoints;
-    public List<GameObject> players = new List<GameObject>();
-    
-    [SerializeField] private int m_playerCount = 0;
+    private static List<GameObject> players = new List<GameObject>();
+    public static List<GameObject> Players => players;
+
+    [ReadOnly] [SerializeField] private static int m_playerCount = 0;
+    public static int PlayerCount => m_playerCount;
+
     [SerializeField] private List<PlayerLobbySpawnInfoSO> lobbySpawnInfoSOs = new List<PlayerLobbySpawnInfoSO>();
     [SerializeField] private string lobbySceneName = "Pregame Lobby";
     
@@ -23,6 +26,7 @@ public class PlayerManager : MonoBehaviour
 
     private void Awake()
     {
+        m_playerCount = 0;
         if (Instance == null)
         {
             Instance = this;
@@ -31,6 +35,8 @@ public class PlayerManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+
+        GenericEvent<OnPlayerJoinedEvent>.GetEvent("PlayerJoined").AddListener(OnPlayerJoined);
     }
 
     private void Start()
@@ -43,51 +49,25 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
-    public void OnPlayerJoined(PlayerInput playerInput)
+    public void OnPlayerJoined(GameObject player)
     {
-        if (players.Contains(playerInput.gameObject))
-        {
-            return;
-        }
-        
-        if (playerInputDeviceMappings.ContainsKey(playerInput))
-        {
-            return;
-        }
-
-        Scene currentScene = SceneManager.GetActiveScene();
-        
-        players.Add(playerInput.gameObject);
-        playerInputDeviceMappings[playerInput] = playerInput.devices[0];
-        
+        players.Add(player);
         m_playerCount++;
-        playerInput.name = "Player " + m_playerCount;
-        
-        if (currentScene.name == lobbySceneName)
-        {
-            playerInput.SwitchCurrentActionMap("Lobby");
-            lobbyUIManager.EnablePlayerCanvas(m_playerCount);
-            Rigidbody rb = playerInput.GetComponent<RagdollController>().GetPelvis().GetComponent<Rigidbody>();
-            playerInput.GetComponent<RagdollController>().enabled = false;
-            rb.isKinematic = true;
-            PlayerLobbySpawnInfoSO spawnInfoSO = lobbySpawnInfoSOs[m_playerCount - 1];
-            Quaternion spawnRot = Quaternion.Euler(spawnInfoSO.spawnRot);
-            playerInput.transform.SetPositionAndRotation(spawnInfoSO.spawnPos, spawnRot);
-            playerInput.transform.parent = gameObject.transform;
-        }
-        
-        if (!registeredPlayerNumbers.Contains(m_playerCount))
-        {
-            registeredPlayerNumbers.Add(m_playerCount);
-            GenericEvent<OnPlayerJoinedEvent>.GetEvent("PlayerJoined").Invoke(m_playerCount);
-        }
-    }
+        //playerInputDeviceMappings[playerInput] = playerInput.devices[0];
+        player.name = "Player " + m_playerCount;
 
-    public int GetPlayerCount() => m_playerCount;
-    public GameObject GetPlayer1() => players[0];
-    public GameObject GetPlayer2() => players[1];
-    public GameObject GetPlayer3() => players[2];
-    public GameObject GetPlayer4() => players[3];
+        //if (currentScene.name == lobbySceneName)
+        //{
+        //    Rigidbody rb = playerInput.GetComponent<RagdollController>().GetPelvis().GetComponent<Rigidbody>();
+        //    playerInput.GetComponent<RagdollController>().enabled = false;
+        //    rb.isKinematic = true;
+        //    PlayerLobbySpawnInfoSO spawnInfoSO = lobbySpawnInfoSOs[m_playerCount - 1];
+        //    Quaternion spawnRot = Quaternion.Euler(spawnInfoSO.spawnRot);
+        //    playerInput.transform.SetPositionAndRotation(spawnInfoSO.spawnPos, spawnRot);
+        //    playerInput.transform.parent = gameObject.transform;
+        //}
+        
+    }
 
     public void ClearAllPlayers()
     {

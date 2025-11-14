@@ -110,7 +110,7 @@ public class PauseMenu : MonoBehaviour
         {
             playerInput.actions["Pause"].performed -= OnPause;
         }
-        
+
         // If disabled while paused by menu, unpause
         if (isPausedByMenu)
         {
@@ -161,35 +161,35 @@ public class PauseMenu : MonoBehaviour
         container.SetActive(true);
         Time.timeScale = 0;
         isPausedByMenu = true;
-        
+
         // If countdown is active, pause it too
         if (GameStartCountdownUI.CountdownIsActive)
         {
             GameStartCountdownUI.CountdownIsPaused = true;
             Debug.Log("Countdown paused by pause menu");
         }
-        
+
         Debug.Log("Game paused by pause menu");
     }
 
     public void ResumeGame()
     {
         container.SetActive(false);
-        
+
         // Resume countdown if it was paused
         if (GameStartCountdownUI.CountdownIsActive)
         {
             GameStartCountdownUI.CountdownIsPaused = false;
             Debug.Log("Countdown resumed from pause menu");
         }
-        
+
         // Only unpause if countdown isn't active
         // (If countdown is active, it will handle unpausing when done)
         if (!GameStartCountdownUI.CountdownIsActive)
         {
             Time.timeScale = 1;
         }
-        
+
         isPausedByMenu = false;
         Debug.Log("Game resumed from pause menu");
     }
@@ -199,21 +199,14 @@ public class PauseMenu : MonoBehaviour
         Time.timeScale = 1;
         isPausedByMenu = false;
         GameStartCountdownUI.CountdownIsPaused = false;
-        
+
         // Clear player stats
-        if (PlayerStatsManager.Instance != null)
-        {
-            PlayerStatsManager.Instance.ClearAllPlayers();
-            Debug.Log("Player stats cleared");
-        }
-        
+        PlayerStatsManager.ClearAllPlayers();
+        Debug.Log("Player stats cleared");
+
         // Clear and destroy all players
-        if (PlayerManager.Instance != null)
-        {
-            PlayerManager.Instance.ClearAllPlayers();
-            Debug.Log("All players cleared and destroyed");
-        }
-        
+        PlayerManager.Instance.ClearAllPlayers();
+        Debug.Log("All players cleared and destroyed");
         // Load main menu scene
         UnityEngine.SceneManagement.SceneManager.LoadScene("MainMenuScene");
     }
