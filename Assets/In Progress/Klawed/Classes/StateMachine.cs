@@ -25,6 +25,10 @@ public class StateMachine
             currentState = newState;
             currentState.Enter();
         }
+        else
+        {
+            Debug.LogWarning("StateMachine: Attempted to change state, but current state is null.");
+        }
     }
 
     public void RunCurrentStateLogic()

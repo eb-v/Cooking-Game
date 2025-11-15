@@ -17,7 +17,7 @@ public class EndGameAwards : MonoBehaviour {
 
     [Header("Camera")]
     [SerializeField] private Camera awardCamera;
-    [SerializeField] private float rotationSpeed = 30f;
+   // [SerializeField] private float rotationSpeed = 30f;
 
     [Header("Spring Animations")]
     [SerializeField] private float springDelayBetweenTexts = 0f;

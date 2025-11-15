@@ -18,7 +18,7 @@ public class DroneManager : MonoBehaviour
 
     [Header("Debug Info")]
     [SerializeField] private bool isDroneActive = false;
-    [SerializeField] private int ingredientsToSpawn = 4;
+    //[SerializeField] private int ingredientsToSpawn = 4;
 
     private Transform crateSnapPoint;
 

@@ -18,8 +18,8 @@ public class NPCController : MonoBehaviour
     [HideInInspector] public Transform tablePositions;
     [HideInInspector] public Transform exitPoint;
 
-    private float leaveTimer = 0f;
-    private float leaveDuration = 5f;
+   private float leaveTimer = 0f;
+   // private float leaveDuration = 5f;
     private Transform assignedTable;
     private Transform leavePosition;
     private bool hasReceivedOrder = false;
@@ -77,7 +77,6 @@ public class NPCController : MonoBehaviour
             npc.agent.ResetPath();
             transform.rotation = targetLine.rotation; 
             currentState = NPCState.WaitingInLine;
-            Debug.Log($"{name} reached line position, switching to WaitingInLine");
         }
     }
     void WaitInLine()   //replace with delivery condition here...

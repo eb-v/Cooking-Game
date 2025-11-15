@@ -29,7 +29,6 @@ public class NpcManager : MonoBehaviour
     {
         GenericEvent<NewOrderAddedEvent>.GetEvent(assignedChannel).AddListener(OnNewOrderAdded);
 
-        Debug.Log($"NpcManager listening on channel: {assignedChannel}");
     }
 
     void OnDestroy()
@@ -56,7 +55,6 @@ public class NpcManager : MonoBehaviour
 
     public void SpawnNpc()
     {
-        Debug.Log("Spawning NPC");
 
         int index = npcLine.Count;
         if (index >= linePositions.Length || index >= tablePositions.Length) return;

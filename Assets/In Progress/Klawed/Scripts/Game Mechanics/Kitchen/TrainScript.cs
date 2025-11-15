@@ -145,6 +145,5 @@ private void OnCollisionEnter(Collision collision)
         transform.rotation = initialRotation;
         
         isResetting = false;
-        Debug.Log("Train reset to starting position");
     }
 }

@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
+using System.Collections.Generic;
 
 public class OnMoveInput : UnityEvent<Vector2> { }
 public class OnJumpInput : UnityEvent { }
@@ -172,3 +173,7 @@ public class PlayerLookingAtObject : UnityEvent { }
 public class PlayerStoppedLookingAtObject : UnityEvent { }
 
 public class OnRespawnInput : UnityEvent<GameObject> { }
+
+public class OnModifiersChoosenEvent : UnityEvent<List<LevelModifiers>> { }
+
+public class OnSlotMachineAnimationCompleteEvent : UnityEvent { }

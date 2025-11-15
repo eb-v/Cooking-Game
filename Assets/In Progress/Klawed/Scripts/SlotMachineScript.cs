@@ -2,7 +2,18 @@ using NUnit.Framework;
 using System.Collections;
 using UnityEngine;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 
+public enum LevelModifiers
+{
+    Jetpack,
+    OilSpill,
+    LandMines,
+    LowGravity,
+    SpeedBoost,
+    ReverseControls,
+    test
+}
 
 public class SlotMachineScript : MonoBehaviour
 {
@@ -29,14 +40,20 @@ public class SlotMachineScript : MonoBehaviour
     private SlotStruct slot2;
     private SlotStruct slot3;
 
-    private void Awake()
+   [ReadOnly]
+   [SerializeField] private List<LevelModifiers> _activeModifiers = new List<LevelModifiers>();
+
+    public void StartSlotMachine()
     {
         int num1, num2, num3;
-
         num1 = Random.Range(0, 6);
         do { num2 = Random.Range(0, 6); } while (num2 == num1);
         do { num3 = Random.Range(0, 6); } while (num3 == num1 || num3 == num2);
 
+        _activeModifiers.Clear();
+        _activeModifiers.Add((LevelModifiers)num1);
+        _activeModifiers.Add((LevelModifiers)num2);
+        _activeModifiers.Add((LevelModifiers)num3);
 
         slot1 = new SlotStruct
         {
@@ -59,13 +76,20 @@ public class SlotMachineScript : MonoBehaviour
             spinDuration = spinDuration3,
             finalGoal = num3
         };
+        StartSpinningAll();
+
     }
 
-    private void Update()
+    
+
+    public void RunUpdateLogic()
     {
-        RunSpinCheckLogic(slot1);
-        RunSpinCheckLogic(slot2);
-        RunSpinCheckLogic(slot3);
+        if (slot1 != null)
+            RunSpinCheckLogic(slot1);
+        if (slot2 != null)
+            RunSpinCheckLogic(slot2);
+        if (slot3 != null)
+            RunSpinCheckLogic(slot3);
     }
 
 
@@ -95,7 +119,8 @@ public class SlotMachineScript : MonoBehaviour
     {
         if (slot1.isDone && slot2.isDone && slot3.isDone)
         {
-            GenericEvent<SlotsFinishedEvent>.GetEvent("SlotMachinePanelScript").Invoke();
+            GenericEvent<OnModifiersChoosenEvent>.GetEvent("OnModifiersChoosenEvent").Invoke(_activeModifiers);
+
         }
     }
 
@@ -138,12 +163,9 @@ public class SlotMachineScript : MonoBehaviour
         {
             RandomizeSlotGoals();
         }
-
         StartCoroutine(StartSlotCoroutine(slot1));
         StartCoroutine(StartSlotCoroutine(slot2));
         StartCoroutine(StartSlotCoroutine(slot3));
-
-        Debug.Log($"Slot Goals: {slot1.finalGoal}, {slot2.finalGoal}, {slot3.finalGoal}");
     }
 
     private IEnumerator StartSlotCoroutine(SlotStruct slot)
@@ -185,4 +207,5 @@ public class SlotMachineScript : MonoBehaviour
 
         return randomInts;
     }
+
 }

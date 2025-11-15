@@ -9,7 +9,7 @@ public class InitializePlayers : MonoBehaviour
 {
     [SerializeField] private List<Transform> playerSpawnPoints = new List<Transform>();
     [SerializeField] private PlayerManager playerManager;
-    private int spawnIndex = 0;
+    //private int spawnIndex = 0;
 
     private void Awake()
     {

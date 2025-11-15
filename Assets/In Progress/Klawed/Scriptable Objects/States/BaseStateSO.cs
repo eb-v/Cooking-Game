@@ -13,7 +13,7 @@ public class BaseStateSO : ScriptableObject
 
     public virtual void Enter()
     {
-
+        
     }
 
     public virtual void Execute()
