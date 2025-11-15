@@ -3,15 +3,41 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "InLevel", menuName = "Scriptable Objects/States/Game/InLevel")]
 public class InLevel : BaseStateSO
 {
+    private NpcManager npcManager;
+    private TrainManager trainManager;
+
     public override void Enter()
     {
         base.Enter();
+
+        GameObject rootManager = GameObject.Find("Managers");
+        if (rootManager == null)
+        {
+            rootManager = new GameObject("Managers");
+        }
+
+        npcManager = GameObject.FindFirstObjectByType<NpcManager>();
+        if (npcManager == null)
+        {
+            npcManager = new GameObject("NpcManager").AddComponent<NpcManager>();
+            npcManager.transform.parent = rootManager.transform;
+        }
+
+        trainManager = GameObject.FindFirstObjectByType<TrainManager>();
+        if (trainManager == null)
+        {
+            trainManager = new GameObject("TrainManager").AddComponent<TrainManager>();
+            trainManager.transform.parent = rootManager.transform;
+        }
+        trainManager.Initialize();
+
+
     }
 
     public override void Execute()
     {
-        // Logic to execute while in level
-        Debug.Log("In Level State Executing");
+        npcManager.RunUpdateLogic();
+        trainManager.RunUpdateLogic();
     }
 
     public override void Exit()

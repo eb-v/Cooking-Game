@@ -18,8 +18,6 @@ public class NPCController : MonoBehaviour
     [HideInInspector] public Transform tablePositions;
     [HideInInspector] public Transform exitPoint;
 
-   private float leaveTimer = 0f;
-   // private float leaveDuration = 5f;
     private Transform assignedTable;
     private Transform leavePosition;
     private bool hasReceivedOrder = false;
@@ -103,7 +101,6 @@ public class NPCController : MonoBehaviour
         if (!npc.agent.pathPending && npc.agent.remainingDistance <= npc.agent.stoppingDistance)
         {
             npc.agent.ResetPath();
-            leaveTimer = 0f;
             transform.rotation = assignedTable.rotation; 
             currentState = NPCState.WaitingAtTable;
             Debug.Log($"{name} reached table {assignedTable.name}, starting WaitAtTable");
