@@ -177,3 +177,9 @@ public class OnRespawnInput : UnityEvent<GameObject> { }
 public class OnModifiersChoosenEvent : UnityEvent<List<LevelModifiers>> { }
 
 public class OnSlotMachineAnimationCompleteEvent : UnityEvent { }
+
+public class OnGrabStatusChanged : UnityEvent<bool> { }
+
+public class OnInteractInput : UnityEvent<GameObject> { }
+
+public class OnAlternateInteractInput : UnityEvent<GameObject> { }

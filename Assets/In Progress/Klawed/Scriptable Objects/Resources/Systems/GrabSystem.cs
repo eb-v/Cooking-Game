@@ -38,52 +38,26 @@ public class GrabSystem : ScriptableObject
 
 
     // attach object to hand
-    public static void GrabObject(GameObject hand, GameObject objToGrab)
+    public static void GrabObject(GameObject player, GameObject objToGrab)
     {
         if (!SystemEnabled)
             return;
 
-        GrabScript grabScript = hand.GetComponent<GrabScript>();
-        GameObject player = hand.transform.root.gameObject;
+        RagdollController rc = player.GetComponent<RagdollController>();
 
-        if (grabScript == null || grabScript.isGrabbing)
-            return;
+        rc.ExtendArmsOutward();
 
-        FixedJoint grabJoint = hand.transform.parent.gameObject.AddComponent<FixedJoint>();
-
-        if (objToGrab.GetComponent<Rigidbody>() == null)
-        {
-            grabJoint.connectedBody = objToGrab.transform.parent.GetComponent<Rigidbody>();
-        }
-        else
-        {
-            grabJoint.connectedBody = objToGrab.GetComponent<Rigidbody>();
-        }
-
-        grabScript.isGrabbing = true;
-        grabScript.grabbedObj = objToGrab;
-
-        // Track items grabbed
-        PlayerStatsManager.IncrementItemsGrabbed(player);
     }
 
 
 
     // detach object from hand
-    public static void ReleaseObject(GameObject hand)
+    public static void ReleaseObject(GameObject player, GameObject objToRelease)
     {
         if (!SystemEnabled)
             return;
 
-        if (hand.GetComponent<GrabScript>().isGrabbing == false)
-            return;
-
-        if (hand.transform.parent.gameObject.GetComponent<FixedJoint>() != null)
-        {
-            Destroy(hand.transform.parent.gameObject.GetComponent<FixedJoint>());
-        }
-
-        hand.GetComponent<GrabScript>().isGrabbing = false;
-        hand.GetComponent<GrabScript>().grabbedObj = null;
+        RagdollController rc = player.GetComponent<RagdollController>();
+        rc.LowerArms();
     }
 }

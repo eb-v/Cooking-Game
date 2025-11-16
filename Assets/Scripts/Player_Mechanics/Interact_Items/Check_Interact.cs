@@ -23,9 +23,9 @@ public class CheckInteract : MonoBehaviour {
     }
     private void Update() {
         if (currentInteractable != null && playerController.IsInteractPressed) {
-            currentInteractable.Interact();
+           // currentInteractable.Interact();
         } else if(currentInteractable != null && !playerController.IsInteractPressed){
-            currentInteractable.StopInteract();
+           // currentInteractable.StopInteract();
         }
     }
 }

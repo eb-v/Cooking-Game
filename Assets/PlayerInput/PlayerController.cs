@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -6,12 +7,16 @@ public class PlayerController : MonoBehaviour
 {
 
     private Env_Interaction env_Interaction;
+    private GameObject lookedAtObj => env_Interaction.currentlyLookingAt;
 
 
     private void Awake()
     {
         env_Interaction = GetComponent<Env_Interaction>();
+        
     }
+
+    
 
     public void OnMove(InputAction.CallbackContext context)
     {
@@ -48,29 +53,30 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void OnLeftGrab(InputAction.CallbackContext context)
-    {
-        if (context.started) // button pressed
-        {
-            GenericEvent<OnLeftGrabInput>.GetEvent(gameObject.name).Invoke(true);
-        }
-        else if (context.canceled) // button released
-        {
-            GenericEvent<OnLeftGrabInput>.GetEvent(gameObject.name).Invoke(false);
-        }
-    }
+    //public void OnLeftGrab(InputAction.CallbackContext context)
+    //{
+    //    if (context.started) // button pressed
+    //    {
+    //        GenericEvent<OnLeftGrabInput>.GetEvent(gameObject.name).Invoke(true);
+    //    }
+    //    else if (context.canceled) // button released
+    //    {
+    //        GenericEvent<OnLeftGrabInput>.GetEvent(gameObject.name).Invoke(false);
+    //    }
+    //}
 
-    public void OnRightGrab(InputAction.CallbackContext context)
-    {
-        if (context.started) // pressed down
-        {
-            GenericEvent<OnRightGrabInput>.GetEvent(gameObject.name).Invoke(true);
-        }
-        else if (context.canceled) // button released
-        {
-            GenericEvent<OnRightGrabInput>.GetEvent(gameObject.name).Invoke(false);
-        }
-    }
+    //public void OnRightGrab(InputAction.CallbackContext context)
+    //{
+    //    if (context.started) // pressed down
+    //    {
+    //        GenericEvent<OnRightGrabInput>.GetEvent(gameObject.name).Invoke(true);
+    //    }
+    //    else if (context.canceled) // button released
+    //    {
+    //        GenericEvent<OnRightGrabInput>.GetEvent(gameObject.name).Invoke(false);
+    //    }
+    //}
+
 
 
 
@@ -99,36 +105,45 @@ public class PlayerController : MonoBehaviour
     }
     public bool IsInteractPressed { get; private set; } = false;
 
-    public void OnInteract(InputAction.CallbackContext context) {
-        if (context.started) {
-            IsInteractPressed = true;
-            if (env_Interaction.currentlyLookingAt == null) return;
-            RagdollController ragdollController = GetComponent<RagdollController>();
+    //public void OnInteract(InputAction.CallbackContext context) {
+    //    if (context.started) {
+    //        IsInteractPressed = true;
+    //        if (env_Interaction.currentlyLookingAt == null) return;
+    //        RagdollController ragdollController = GetComponent<RagdollController>();
 
-            if (!ragdollController.RagdollDict["UpperLeftArm"].isConnected && !ragdollController.RagdollDict["UpperRightArm"].isConnected)
-            {
-                Debug.Log("Both arms are missing, cannot interact.");
-                return;
-            }
-            if (env_Interaction.currentlyLookingAt.tag != "Player")
-            {
-                if (env_Interaction.currentlyLookingAt.tag == "Customer")
-                {
-                    GenericEvent<OnCustomerInteract>.GetEvent(env_Interaction.currentlyLookingAt.GetInstanceID().ToString()).Invoke(gameObject);
-                }
+    //        if (!ragdollController.RagdollDict["UpperLeftArm"].isConnected && !ragdollController.RagdollDict["UpperRightArm"].isConnected)
+    //        {
+    //            Debug.Log("Both arms are missing, cannot interact.");
+    //            return;
+    //        }
+    //        if (env_Interaction.currentlyLookingAt.tag != "Player")
+    //        {
+    //            if (env_Interaction.currentlyLookingAt.tag == "Customer")
+    //            {
+    //                GenericEvent<OnCustomerInteract>.GetEvent(env_Interaction.currentlyLookingAt.GetInstanceID().ToString()).Invoke(gameObject);
+    //            }
 
-                GenericEvent<Interact>.GetEvent(env_Interaction.currentlyLookingAt?.name).Invoke();
-                GenericEvent<InteractEvent>.GetEvent(env_Interaction.currentlyLookingAt?.name).Invoke(gameObject);
-            }
-            else
-            {
-                // player is looking at other player
-                // attempt to reconnect joint
-                GenericEvent<InteractEvent>.GetEvent(env_Interaction.currentlyLookingAt.transform.root.name).Invoke(gameObject);
-            }
-        } else if (context.canceled) {
-            IsInteractPressed = false;
-            GenericEvent<StopInteract>.GetEvent(gameObject.name).Invoke();
+    //            GenericEvent<Interact>.GetEvent(env_Interaction.currentlyLookingAt?.name).Invoke();
+    //            GenericEvent<InteractEvent>.GetEvent(env_Interaction.currentlyLookingAt?.name).Invoke(gameObject);
+    //        }
+    //        else
+    //        {
+    //            // player is looking at other player
+    //            // attempt to reconnect joint
+    //            GenericEvent<InteractEvent>.GetEvent(env_Interaction.currentlyLookingAt.transform.root.name).Invoke(gameObject);
+    //        }
+    //    } else if (context.canceled) {
+    //        IsInteractPressed = false;
+    //        GenericEvent<StopInteract>.GetEvent(gameObject.name).Invoke();
+    //    }
+    //}
+
+    public void OnInteract(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            if (lookedAtObj == null) return;
+            GenericEvent<OnInteractInput>.GetEvent(lookedAtObj.name).Invoke(gameObject);
         }
     }
 
@@ -136,10 +151,8 @@ public class PlayerController : MonoBehaviour
     {
         if (context.started)
         {
-            if (env_Interaction.currentlyLookingAt != null)
-            {
-                GenericEvent<AlternateInteractInput>.GetEvent(env_Interaction.currentlyLookingAt.name).Invoke(gameObject);
-            }
+            if (lookedAtObj == null) return;
+            GenericEvent<OnAlternateInteractInput>.GetEvent(lookedAtObj.name).Invoke(gameObject);
         }
     }
 

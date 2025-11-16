@@ -34,7 +34,7 @@ public class MapSelectionScript : MonoBehaviour
     private void OnSelect()
     {
         if (gameObject.activeInHierarchy == false) return;
-        SceneManager.LoadScene("Level 2");
+        SceneManager.LoadScene("Level 1");
     }
 
 

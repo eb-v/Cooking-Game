@@ -35,7 +35,7 @@ public class PlaceIngredient : MonoBehaviour
                         return;
                     if (allowedIngredients.Contains(ingredientScript.Ingredient))
                     {
-                        GrabSystem.ReleaseObject(leftGrabScript.gameObject);
+                        //GrabSystem.ReleaseObject(leftGrabScript.gameObject);
                         grabbedObject.transform.position = targetPosition.position;
                         grabbedObject.transform.rotation = Quaternion.identity;
                         Debug.Log("Placed ingredient: " + ingredientScript.Ingredient.name);
@@ -49,7 +49,7 @@ public class PlaceIngredient : MonoBehaviour
                         return;
                     if (allowedIngredients.Contains(ingredientScript.Ingredient))
                     {
-                        GrabSystem.ReleaseObject(rightGrabScript.gameObject);
+                        //GrabSystem.ReleaseObject(rightGrabScript.gameObject);
                         grabbedObject.transform.position = targetPosition.position;
                         grabbedObject.transform.rotation = Quaternion.identity;
                         Debug.Log("Placed ingredient: " + ingredientScript.Ingredient.name);
@@ -72,8 +72,8 @@ public class PlaceIngredient : MonoBehaviour
                 if (allowedIngredients.Contains(ingredientScript.Ingredient))
                 {
                     // release object from both hands
-                    GrabSystem.ReleaseObject(rightGrabScript.gameObject);
-                    GrabSystem.ReleaseObject(leftGrabScript.gameObject);
+                   // GrabSystem.ReleaseObject(rightGrabScript.gameObject);
+                   // GrabSystem.ReleaseObject(leftGrabScript.gameObject);
                     grabbedObject.transform.position = targetPosition.position;
                     grabbedObject.transform.rotation = Quaternion.identity;
                 }

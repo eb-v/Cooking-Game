@@ -172,61 +172,61 @@ public class NPCController : MonoBehaviour
     private void OnPlayerInteractedWithMe(GameObject player)
     {
         // is the player holding an object?
-        RagdollController rdController = player.GetComponent<RagdollController>();
-        GameObject leftHandGrabbedObj = rdController.leftHandGrabDetection.grabbedObj;
-        GameObject rightHandGrabbedObj = rdController.rightHandGrabDetection.grabbedObj;
+        //RagdollController rdController = player.GetComponent<RagdollController>();
+        //GameObject leftHandGrabbedObj = rdController.leftHandGrabDetection.grabbedObj;
+        //GameObject rightHandGrabbedObj = rdController.rightHandGrabDetection.grabbedObj;
 
-        if (leftHandGrabbedObj == null && rightHandGrabbedObj == null)
-        {
-            Debug.Log($"{name}: Player is not holding any object.");
-            return;
-        }
+        //if (leftHandGrabbedObj == null && rightHandGrabbedObj == null)
+        //{
+        //    Debug.Log($"{name}: Player is not holding any object.");
+        //    return;
+        //}
 
-        if (leftHandGrabbedObj != null)
-        {
-            string leftHandGrabbedObjPrefabName = leftHandGrabbedObj.GetComponent<PrefabContainer>().GetPrefabName();
-            if (leftHandGrabbedObjPrefabName == npcOrderScript.GetFoodOrder().GetOrderItemPrefab().name)
-            {
-                // Pass the player number instead of GameObject
-                ScoreSystem.ChangeScore(545, player);
+        //if (leftHandGrabbedObj != null)
+        //{
+        //    string leftHandGrabbedObjPrefabName = leftHandGrabbedObj.GetComponent<PrefabContainer>().GetPrefabName();
+        //    if (leftHandGrabbedObjPrefabName == npcOrderScript.GetFoodOrder().GetOrderItemPrefab().name)
+        //    {
+        //        // Pass the player number instead of GameObject
+        //        ScoreSystem.ChangeScore(545, player);
                 
-                GrabSystem.ReleaseObject(player.GetComponent<HandContainer>().LeftHand);
-                ObjectPoolManager.ReturnObjectToPool(leftHandGrabbedObj);
-                Debug.Log($"{name} received correct order from {player.name}!");
-                SpawnFoodInHand();
-                assignedTable = manager.GetNextTable();
-                currentState = NPCState.WalkingToTable;
-                return;
-            }
-            else
-            {
-                Debug.Log($"{name} received incorrect order from {player.name}.");
-                return;
-            }
-        }
+        //        GrabSystem.ReleaseObject(player.GetComponent<HandContainer>().LeftHand);
+        //        ObjectPoolManager.ReturnObjectToPool(leftHandGrabbedObj);
+        //        Debug.Log($"{name} received correct order from {player.name}!");
+        //        SpawnFoodInHand();
+        //        assignedTable = manager.GetNextTable();
+        //        currentState = NPCState.WalkingToTable;
+        //        return;
+        //    }
+        //    else
+        //    {
+        //        Debug.Log($"{name} received incorrect order from {player.name}.");
+        //        return;
+        //    }
+        //}
 
-        if (rightHandGrabbedObj != null)
-        {
-            string rightHandGrabbedObjPrefabName = rightHandGrabbedObj.GetComponent<PrefabContainer>().GetPrefabName();
-            if (rightHandGrabbedObjPrefabName == npcOrderScript.GetFoodOrder().GetOrderItemPrefab().name)
-            {
-                Debug.Log($"{name} received correct order from {player.name}!");
+        //if (rightHandGrabbedObj != null)
+        //{
+        //    string rightHandGrabbedObjPrefabName = rightHandGrabbedObj.GetComponent<PrefabContainer>().GetPrefabName();
+        //    if (rightHandGrabbedObjPrefabName == npcOrderScript.GetFoodOrder().GetOrderItemPrefab().name)
+        //    {
+        //        Debug.Log($"{name} received correct order from {player.name}!");
                 
-                ScoreSystem.ChangeScore(545, player);
+        //        ScoreSystem.ChangeScore(545, player);
                 
-                GrabSystem.ReleaseObject(player.GetComponent<HandContainer>().RightHand);
-                ObjectPoolManager.ReturnObjectToPool(rightHandGrabbedObj);
-                SpawnFoodInHand();
-                assignedTable = manager.GetNextTable();
-                currentState = NPCState.WalkingToTable;
-                return;
-            }
-            else
-            {
-                Debug.Log($"{name} received incorrect order from player.");
-                return;
-            }
-        }
+        //        GrabSystem.ReleaseObject(player.GetComponent<HandContainer>().RightHand);
+        //        ObjectPoolManager.ReturnObjectToPool(rightHandGrabbedObj);
+        //        SpawnFoodInHand();
+        //        assignedTable = manager.GetNextTable();
+        //        currentState = NPCState.WalkingToTable;
+        //        return;
+        //    }
+        //    else
+        //    {
+        //        Debug.Log($"{name} received incorrect order from player.");
+        //        return;
+        //    }
+        //}
     }
 
     private void SpawnFoodInHand()

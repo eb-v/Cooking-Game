@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Interactable_Item : MonoBehaviour, IInteractable {
+public class Interactable_Item : MonoBehaviour{
 
     private void Awake() {
         Debug.Log($"{gameObject.name} Interactable_Item active");
@@ -11,7 +11,7 @@ public class Interactable_Item : MonoBehaviour, IInteractable {
 
         if (root.CompareTag("Player")) {
             CheckInteract ci = root.GetComponent<CheckInteract>();
-            if (ci != null) ci.SetCurrentInteractable(this);
+            //if (ci != null) ci.SetCurrentInteractable(this);
             //Debug.Log($"Trigger Enter: {root.name} entered {gameObject.name}");
 
         }
@@ -21,7 +21,7 @@ public class Interactable_Item : MonoBehaviour, IInteractable {
         GameObject root = other.transform.root.gameObject;
         if (root.CompareTag("Player")) {
             CheckInteract ci = root.GetComponent<CheckInteract>();
-            if (ci != null) ci.ClearCurrentInteractable(this);
+            //if (ci != null) ci.ClearCurrentInteractable(this);
         }
     }
 

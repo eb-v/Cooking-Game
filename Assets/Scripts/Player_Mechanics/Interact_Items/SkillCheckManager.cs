@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class SkillCheckManager : MonoBehaviour, IInteractable {
+public class SkillCheckManager : MonoBehaviour {
     [Header("UI & Visuals")]
     [SerializeField] private GameObject skillCheckUI;
     [SerializeField] private Renderer skillCheckSphere;
