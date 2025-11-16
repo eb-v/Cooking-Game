@@ -5,7 +5,10 @@ using System.Collections;
 public class SprinklerController : MonoBehaviour {
     [Header("Button Reference")]
     public SprinklerButton buttonA;
-    //public SprinklerButton buttonB;
+    public SprinklerButton buttonB;
+
+    private bool buttonAPressed = false;
+    private bool buttonBPressed = false;
 
     [Header("Pooling Settings")]
     public GameObject waterEffectPrefab;
@@ -46,8 +49,8 @@ public class SprinklerController : MonoBehaviour {
         if (buttonA != null)
             buttonA.OnButtonStateChanged.AddListener(OnButtonAChanged);
 
-        //if(buttonB != null)
-        //    buttonB.OnButtonStateChanged.AddListener(OnButtonBChanged);
+        if (buttonB != null)
+            buttonB.OnButtonStateChanged.AddListener(OnButtonBChanged);
 
         if (waterEffectPrefab != null) {
             if (ObjectPoolManager.IsPooledObject(waterEffectPrefab)) {
@@ -59,23 +62,30 @@ public class SprinklerController : MonoBehaviour {
             sprinklerEffect = sprinklerEffectInstance.GetComponent<ParticleSystem>();
 
             if (sprinklerEffectInstance != null)
-                sprinklerEffectInstance.SetActive(false); // disable initially
+                sprinklerEffectInstance.SetActive(false);
         }
     }
 
     private void OnButtonAChanged(bool pressed) {
-        if (pressed)
-            GenericEvent<StartSprinklerEvent>.GetEvent("SprinklerController").Invoke();
+        buttonAPressed = pressed;
+        CheckButtons();
     }
 
-    //private void OnButtonBChanged(bool pressed) {
-    //    if (pressed)
-    //        GenericEvent<StartSprinklerEvent>.GetEvent("SprinklerController").Invoke();
-    //}
+    private void OnButtonBChanged(bool pressed) {
+        buttonBPressed = pressed;
+        CheckButtons();
+    }
 
     private void OnStartSprinklerEvent() => StartSprinkler();
     private void OnStopSprinklerEvent() => StopSprinkler();
-
+    private void CheckButtons() {
+        if (buttonAPressed && buttonBPressed) {
+            GenericEvent<StartSprinklerEvent>.GetEvent("SprinklerController").Invoke();
+        }
+        else {
+            GenericEvent<StopSprinklerEvent>.GetEvent("SprinklerController").Invoke();
+        }
+    }
     public void StartSprinkler() {
         if (sprinklerActive) return;
         sprinklerActive = true;
