@@ -29,6 +29,7 @@ public class PlayerReadyManager : MonoBehaviour
         {
             GenericEvent<OnAllPlayersReadyEvent>.GetEvent(assignedChannel).Invoke();
         }
+        Debug.Log(AllPlayersReady());
     }
 
     private bool AllPlayersReady()

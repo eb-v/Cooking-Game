@@ -1979,50 +1979,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 175400485}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!1 &177854259
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 177854261}
-  - component: {fileID: 177854260}
-  m_Layer: 0
-  m_Name: PlayerReadyChecker
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &177854260
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 177854259}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bf0b4b42c911df44aa01017a5305e16d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: '::'
---- !u!4 &177854261
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 177854259}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -6.54129, y: 17.44163, z: -23.10269}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &178741259
 GameObject:
   m_ObjectHideFlags: 0
@@ -2835,7 +2791,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   targetEndTransform: {fileID: 1263092282}
-  assignedChannel: Calamatus
+  assignedChannel: DefaultChannel
   springAPI: {fileID: 206092864}
 --- !u!114 &206092864
 MonoBehaviour:
@@ -11101,6 +11057,7 @@ Transform:
   - {fileID: 1459221412}
   - {fileID: 1552357472}
   - {fileID: 844050606}
+  - {fileID: 2583203606801005139}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &892452630
@@ -26815,7 +26772,7 @@ MonoBehaviour:
   - {fileID: 396873734}
   playerSelectBanner: {fileID: 1429673028}
   mapSelectionUIObject: {fileID: 1023471087}
-  assignedChannel: Calamatus
+  assignedChannel: DefaultChannel
   currentCanvasIndex: 1
 --- !u!4 &2583203606801005139
 Transform:
@@ -26826,11 +26783,11 @@ Transform:
   m_GameObject: {fileID: 4147694804609400255}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 430.5294, y: 0.00001, z: 266.09274}
+  m_LocalPosition: {x: 427.09326, y: -3.97999, z: 275.19067}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 886367919}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4147694804609400255
 GameObject:
@@ -26999,7 +26956,6 @@ SceneRoots:
   - {fileID: 1471256908}
   - {fileID: 1606070432}
   - {fileID: 790446294}
-  - {fileID: 2583203606801005139}
   - {fileID: 1065844899}
   - {fileID: 1499493147}
   - {fileID: 1025215496}
@@ -27007,6 +26963,5 @@ SceneRoots:
   - {fileID: 65609016}
   - {fileID: 1323654999}
   - {fileID: 1263092282}
-  - {fileID: 177854261}
   - {fileID: 6187241}
   - {fileID: 886367919}
