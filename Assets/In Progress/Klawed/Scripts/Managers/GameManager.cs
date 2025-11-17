@@ -21,6 +21,7 @@ public class GameManager : MonoBehaviour
     [HideInInspector] public BaseStateSO _DisplayEndgameStatsInstance;
     [HideInInspector] public BaseStateSO _slotMachineStateInstance;
 
+
     public static GameManager Instance { get; private set; }
 
 
@@ -55,7 +56,7 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        _stateMachine.Initialize(_slotMachineStateInstance);
+        _stateMachine.Initialize(_lobbyStateInstance);
     }
 
 

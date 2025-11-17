@@ -13,7 +13,6 @@ public class RagdollController : MonoBehaviour
 
     public Rigidbody rightHand;
     public Rigidbody leftHand;
-    public Transform objSnapTransform;
 
 
     public Transform ObjectSnapPoint;
@@ -148,7 +147,6 @@ public class RagdollController : MonoBehaviour
 
 
 
-
     void Start()
     {
         //cam = Camera.main;
@@ -238,7 +236,7 @@ public class RagdollController : MonoBehaviour
     {
         if (!inAir)
         {
-            if (IsMovementOn())
+            if (IsMovementOn() && !isRagdoll)
             {
                 PlayerMovement();
             }
@@ -249,7 +247,10 @@ public class RagdollController : MonoBehaviour
         }
 
         //PlayerReach();
-        UpdateArmRotations();
+        if (!isRagdoll)
+        {
+            UpdateArmRotations();
+        }
 
         if (balanced && useStepPrediction)
         {

@@ -103,7 +103,9 @@ public class UDictionary
             else
                 height += SingleLineHeight;
 
-            return height;
+            //return height;
+            return Mathf.Max(height, EditorGUIUtility.singleLineHeight);
+
         }
 
         public override void OnGUI(Rect rect, SerializedProperty property, GUIContent label)
@@ -201,7 +203,9 @@ public class UDictionary
 
             if (max < SingleLineHeight) max = SingleLineHeight;
 
-            return max + ElementHeightPadding;
+            //return max + ElementHeightPadding;
+            return Mathf.Max(max + ElementHeightPadding, EditorGUIUtility.singleLineHeight + 4f);
+
         }
 
         #region Draw Element
@@ -333,7 +337,9 @@ public class UDictionary
             foreach (var child in IterateChildern(property))
                 height += SingleLineHeight + 2f;
 
-            return height;
+            //return height;
+            return Mathf.Max(height, EditorGUIUtility.singleLineHeight);
+
         }
     }
 #endif
