@@ -40,11 +40,29 @@ public class SlotMachineScript : MonoBehaviour
     private SlotStruct slot2;
     private SlotStruct slot3;
 
-   [ReadOnly]
-   [SerializeField] private List<LevelModifiers> _activeModifiers = new List<LevelModifiers>();
+    [ReadOnly]
+    [SerializeField] private List<LevelModifiers> _activeModifiers = new List<LevelModifiers>();
+
+    // -------------------------
+    // MINIMAL ADDITION #1:
+    // Allow springs to update using unscaled time
+    // -------------------------
+    private void Update()
+    {
+        if (FreezeManager.PauseMenuOverride)
+            return;
+
+        RunSpinCheckLogic(slot1);
+        RunSpinCheckLogic(slot2);
+        RunSpinCheckLogic(slot3);
+    }
+
 
     public void StartSlotMachine()
     {
+        // Freeze the rest of the game
+        FreezeManager.FreezeGameplay();
+
         int num1, num2, num3;
         num1 = Random.Range(0, 6);
         do { num2 = Random.Range(0, 6); } while (num2 == num1);
@@ -76,11 +94,9 @@ public class SlotMachineScript : MonoBehaviour
             spinDuration = spinDuration3,
             finalGoal = num3
         };
+
         StartSpinningAll();
-
     }
-
-    
 
     public void RunUpdateLogic()
     {
@@ -92,13 +108,9 @@ public class SlotMachineScript : MonoBehaviour
             RunSpinCheckLogic(slot3);
     }
 
-
     private void StartSlotSpin(SlotStruct slot)
     {
         NonNormalizedSpringAPI springAPI = slot.springSlot;
-        // this value is the goal needed in order to move the spring 1 position past the last visible slot
-        // For 6 images available, the goal would be 7 (0-6 visible positions, 7 to loop back to 0)
-        // the spring will constantly try to reach this goal value, but once it goes past it, the postion is reset to 0 to create a looping effect
         float spinGoalValue = 7f;
         springAPI.SetGoalValue(spinGoalValue);
         slot.shouldSpin = true;
@@ -119,23 +131,27 @@ public class SlotMachineScript : MonoBehaviour
     {
         if (slot1.isDone && slot2.isDone && slot3.isDone)
         {
-            GenericEvent<OnModifiersChoosenEvent>.GetEvent("OnModifiersChoosenEvent").Invoke(_activeModifiers);
+            // Unfreeze gameplay when slot finishes
+            FreezeManager.UnfreezeGameplay();
 
+            GenericEvent<OnModifiersChoosenEvent>.GetEvent("OnModifiersChoosenEvent").Invoke(_activeModifiers);
         }
     }
 
-    
-
     private void RunSpinCheckLogic(SlotStruct slot)
     {
-        if (slot.shouldSpin)
+        if (slot == null || !slot.shouldSpin) return;
+
+        NonNormalizedSpringAPI springAPI = slot.springSlot;
+
+        if (springAPI.GetPosition() >= springAPI.goalValue)
         {
-            NonNormalizedSpringAPI springAPI = slot.springSlot;
-            if (springAPI.GetPosition() >= springAPI.goalValue)
-            {
-                springAPI.ResetPosition();
-            }
+            springAPI.ResetPosition();
         }
+
+        // MINIMAL ADDITION #2:
+        // Ensure spring updates during freeze
+        springAPI.SetGoalValue(springAPI.goalValue);
     }
 
     public void StartSpinningSlot1()
@@ -163,6 +179,7 @@ public class SlotMachineScript : MonoBehaviour
         {
             RandomizeSlotGoals();
         }
+
         StartCoroutine(StartSlotCoroutine(slot1));
         StartCoroutine(StartSlotCoroutine(slot2));
         StartCoroutine(StartSlotCoroutine(slot3));
@@ -171,7 +188,19 @@ public class SlotMachineScript : MonoBehaviour
     private IEnumerator StartSlotCoroutine(SlotStruct slot)
     {
         StartSlotSpin(slot);
-        yield return new WaitForSeconds(slot.spinDuration);
+
+        // Use a manual timer that respects pause state
+        float elapsedTime = 0f;
+        while (elapsedTime < slot.spinDuration)
+        {
+            // Only increment time when NOT paused
+            if (!FreezeManager.PauseMenuOverride)
+            {
+                elapsedTime += Time.unscaledDeltaTime;
+            }
+            yield return null;
+        }
+
         StopSlotSpin(slot);
     }
 
@@ -189,7 +218,6 @@ public class SlotMachineScript : MonoBehaviour
         slot2.finalGoal = 1;
         slot3.finalGoal = 2;
     }
-    
 
     private List<int> GenerateRandomInts()
     {
@@ -207,5 +235,4 @@ public class SlotMachineScript : MonoBehaviour
 
         return randomInts;
     }
-
 }

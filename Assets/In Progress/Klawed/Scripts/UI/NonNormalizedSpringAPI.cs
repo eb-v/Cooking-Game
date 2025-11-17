@@ -22,13 +22,17 @@ public class NonNormalizedSpringAPI : MonoBehaviour
 
     private void Update()
     {
+        if (FreezeManager.PauseMenuOverride)
+            return;
+            
         float springPosValue = CalculateSpringValue();
         OnUpdateSpring(springPosValue);
     }
 
     private float CalculateSpringValue()
     {
-        float deltaTime = Time.deltaTime;
+        float deltaTime = Time.unscaledDeltaTime;
+
         CalcDampedSpringMotionParams(out _motionParams, deltaTime, angularFrequency, dampingRatio);
         UpdateDampedSpringMotion(ref springPosValue, ref springVelValue, goalValue, in _motionParams);
 

@@ -41,12 +41,13 @@ public class Timer : MonoBehaviour {
     }
 
     private void DisplayTime(float timeToDisplay) {
-        timeToDisplay = Mathf.Max(0, timeToDisplay);
-        int minutes = Mathf.FloorToInt(timeToDisplay / 60);
-        int seconds = Mathf.FloorToInt(timeToDisplay % 60);
-        if (timerText != null)
-            timerText.text = $"{minutes:00}:{seconds:00}";
-    }
+    timeToDisplay = Mathf.Max(0, timeToDisplay);
+    timeToDisplay = Mathf.Ceil(timeToDisplay); // Add this line to round up
+    int minutes = Mathf.FloorToInt(timeToDisplay / 60);
+    int seconds = Mathf.FloorToInt(timeToDisplay % 60);
+    if (timerText != null)
+        timerText.text = $"{minutes:00}:{seconds:00}";
+}
 
     public void StartTimer() => timerOn = true;
     public void StopTimer() => timerOn = false;

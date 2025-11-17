@@ -36,7 +36,7 @@ public class SpringAPI : MonoBehaviour, IEventChannel
         }
     }
     private void Update() {
-        float deltaTime = Time.deltaTime;
+        float deltaTime = Time.unscaledDeltaTime;
         springPosValue = CalculateSpringValue(deltaTime);
         OnUpdateSpring(springPosValue);
     }
