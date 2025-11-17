@@ -143,7 +143,7 @@ public class PlayerController : MonoBehaviour
         if (context.started)
         {
             if (lookedAtObj == null) return;
-            GenericEvent<OnInteractInput>.GetEvent(lookedAtObj.name).Invoke(gameObject);
+            GenericEvent<OnInteractInput>.GetEvent(gameObject.name).Invoke(gameObject);
         }
     }
 
@@ -151,8 +151,7 @@ public class PlayerController : MonoBehaviour
     {
         if (context.started)
         {
-            if (lookedAtObj == null) return;
-            GenericEvent<OnAlternateInteractInput>.GetEvent(lookedAtObj.name).Invoke(gameObject);
+            GenericEvent<OnAlternateInteractInput>.GetEvent(gameObject.name).Invoke(gameObject);
         }
     }
 

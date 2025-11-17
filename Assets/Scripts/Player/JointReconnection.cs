@@ -18,56 +18,56 @@ public class JointReconnection : MonoBehaviour
 
     private void HandleJointReconnection(GameObject otherPlayer)
     {
-        // is player missing any joints?
-        if (PlayerIsMissingParts())
-        {
-            // get the objects the other player is holding
-            GrabScript leftHandGD = otherPlayer.GetComponent<RagdollController>().leftHand.GetComponent<GrabScript>();
-            GrabScript rightHandGD = otherPlayer.GetComponent<RagdollController>().rightHand.GetComponent<GrabScript>();
+        //// is player missing any joints?
+        //if (PlayerIsMissingParts())
+        //{
+        //    // get the objects the other player is holding
+        //    GrabScript leftHandGD = otherPlayer.GetComponent<RagdollController>().leftHand.GetComponent<GrabScript>();
+        //    GrabScript rightHandGD = otherPlayer.GetComponent<RagdollController>().rightHand.GetComponent<GrabScript>();
 
             
-            if (leftHandGD.grabbedObj != null)
-            {
-                // check if left hand is holding one of the missing joints
-                GameObject rootGrabbedObj = leftHandGD.grabbedObj.transform.root.gameObject;
-                if (CheckForJointObjMatch(rootGrabbedObj))
-                {
-                    // if other player is holding a missing joint, disconnect it from their hand
-                    //GenericEvent<ReleaseHeldJoint>.GetEvent("GrabSystem").Invoke(leftHandGD.gameObject);
-                   // GrabSystem.ReleaseObject(leftHandGD.gameObject);
+        //    if (leftHandGD.grabbedObj != null)
+        //    {
+        //        // check if left hand is holding one of the missing joints
+        //        GameObject rootGrabbedObj = leftHandGD.grabbedObj.transform.root.gameObject;
+        //        if (CheckForJointObjMatch(rootGrabbedObj))
+        //        {
+        //            // if other player is holding a missing joint, disconnect it from their hand
+        //            //GenericEvent<ReleaseHeldJoint>.GetEvent("GrabSystem").Invoke(leftHandGD.gameObject);
+        //           // GrabSystem.ReleaseObject(leftHandGD.gameObject);
 
-                    // reconnect the joint to this player
-                    ConnectJoint(rootGrabbedObj, storedJointData[rootGrabbedObj], otherPlayer);
-                }
-                else
-                {
-                    Debug.Log("Left hand is not holding a missing joint.");
-                }
-            }
+        //            // reconnect the joint to this player
+        //            ConnectJoint(rootGrabbedObj, storedJointData[rootGrabbedObj], otherPlayer);
+        //        }
+        //        else
+        //        {
+        //            Debug.Log("Left hand is not holding a missing joint.");
+        //        }
+        //    }
 
-            if (rightHandGD.grabbedObj != null)
-            {
-                // check if right hand is holding one of the missing joints
-                GameObject rootGrabbedObj = rightHandGD.grabbedObj.transform.root.gameObject;
-                if (CheckForJointObjMatch(rootGrabbedObj))
-                {
-                    // if other player is holding a missing joint, disconnect it from their hand
-                    //GenericEvent<ReleaseHeldJoint>.GetEvent("GrabSystem").Invoke(rightHandGD.gameObject);
-                   // GrabSystem.ReleaseObject(rightHandGD.gameObject);
+        //    if (rightHandGD.grabbedObj != null)
+        //    {
+        //        // check if right hand is holding one of the missing joints
+        //        GameObject rootGrabbedObj = rightHandGD.grabbedObj.transform.root.gameObject;
+        //        if (CheckForJointObjMatch(rootGrabbedObj))
+        //        {
+        //            // if other player is holding a missing joint, disconnect it from their hand
+        //            //GenericEvent<ReleaseHeldJoint>.GetEvent("GrabSystem").Invoke(rightHandGD.gameObject);
+        //           // GrabSystem.ReleaseObject(rightHandGD.gameObject);
 
-                    // reconnect the joint to this player
-                    ConnectJoint(rootGrabbedObj, storedJointData[rootGrabbedObj], otherPlayer);
-                }
-                else
-                {
-                    Debug.Log("Right hand is not holding a missing joint.");
-                }
-            }
-        }
-        else
-        {
-            Debug.Log("Player has all parts, no need to reconnect joints.");
-        }
+        //            // reconnect the joint to this player
+        //            ConnectJoint(rootGrabbedObj, storedJointData[rootGrabbedObj], otherPlayer);
+        //        }
+        //        else
+        //        {
+        //            Debug.Log("Right hand is not holding a missing joint.");
+        //        }
+        //    }
+        //}
+        //else
+        //{
+        //    Debug.Log("Player has all parts, no need to reconnect joints.");
+        //}
     }
 
     private bool CheckForJointObjMatch(GameObject grabbedObj)

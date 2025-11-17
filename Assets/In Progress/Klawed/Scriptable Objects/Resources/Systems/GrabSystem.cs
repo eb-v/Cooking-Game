@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 
@@ -5,6 +6,7 @@ using UnityEngine;
 public class GrabSystem : ScriptableObject
 {
     private static GrabSystem instance;
+
 
     public static GrabSystem Instance
     {
@@ -38,26 +40,45 @@ public class GrabSystem : ScriptableObject
 
 
     // attach object to hand
-    public static void GrabObject(GameObject player, GameObject objToGrab)
+    public static void GrabObject(GameObject player, GameObject physicsObj, GrabData grabData)
     {
         if (!SystemEnabled)
             return;
-
         RagdollController rc = player.GetComponent<RagdollController>();
+        CoroutineRunner.Instance.StartCoroutine(GrabObjectCoroutine(rc, physicsObj, grabData));
 
-        rc.ExtendArmsOutward();
+    }
+
+    private static IEnumerator GrabObjectCoroutine(RagdollController rc, GameObject physicsObj, GrabData grabData)
+    {
+        rc.ExtendArmsOutward(grabData);
+        yield return new WaitForSeconds(0.1f);
+        GameObject lowerRightArm = rc.RagdollDict["LowerRightArm"].gameObject;
+        GameObject lowerLeftArm = rc.RagdollDict["LowerLeftArm"].gameObject;
+        GameObject body = rc.RagdollDict["Body"].gameObject;
+        physicsObj.GetComponent<Collider>().enabled = false;
+        physicsObj.transform.position = body.transform.TransformPoint(grabData.position);
+        physicsObj.transform.rotation = body.transform.rotation * grabData.rotation;
+        lowerRightArm.AddComponent<FixedJoint>().connectedBody = physicsObj.GetComponent<Rigidbody>();
+        lowerLeftArm.AddComponent<FixedJoint>().connectedBody = physicsObj.GetComponent<Rigidbody>();
+        yield return new WaitForSeconds(0.5f);
+        physicsObj.GetComponent<Collider>().enabled = true;
 
     }
 
 
 
     // detach object from hand
-    public static void ReleaseObject(GameObject player, GameObject objToRelease)
+    public static void ReleaseObject(GameObject player)
     {
         if (!SystemEnabled)
             return;
 
         RagdollController rc = player.GetComponent<RagdollController>();
+        GameObject lowerRightArm = rc.RagdollDict["LowerRightArm"].gameObject;
+        GameObject lowerLeftArm = rc.RagdollDict["LowerLeftArm"].gameObject;
+        Destroy(lowerRightArm.GetComponent<FixedJoint>());
+        Destroy(lowerLeftArm.GetComponent<FixedJoint>());
         rc.LowerArms();
     }
 }

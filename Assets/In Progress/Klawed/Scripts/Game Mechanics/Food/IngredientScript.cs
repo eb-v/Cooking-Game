@@ -1,39 +1,20 @@
 using UnityEngine;
 
-public class IngredientScript : MonoBehaviour, IInteractable, IGrabable 
+public class IngredientScript : MonoBehaviour, IGrabable 
 {
     [SerializeField] private Ingredient ingredient;
 
     public Ingredient Ingredient => ingredient;
 
     public bool isGrabbed { get; set; }
+    [field: SerializeField] public GrabData grabData { get; set; }
+    public GameObject player { get; set; }
 
-    private void Awake()
+    public void GrabObject(GameObject player)
     {
-        GenericEvent<OnInteractInput>.GetEvent(gameObject.name).AddListener(OnInteract);
-        GenericEvent<OnAlternateInteractInput>.GetEvent(gameObject.name).AddListener(OnAlternateInteract);
+        PhysicsTransform physicsTransform = gameObject.GetComponent<PhysicsTransform>();
+        GrabSystem.GrabObject(player, physicsTransform.physicsTransform.gameObject, grabData);
     }
-
-    public void OnInteract(GameObject player)
-    {
-        if (!isGrabbed)
-        {
-            isGrabbed = true;
-            GrabSystem.GrabObject(player, gameObject);
-        }
-    }
-
-    public void OnAlternateInteract(GameObject player)
-    {
-        if (isGrabbed)
-        {
-            isGrabbed = false;
-            GrabSystem.ReleaseObject(player, gameObject);
-        }
-    }
-
-    
-
 
 
 }

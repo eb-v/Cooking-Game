@@ -4,16 +4,29 @@ using System.Runtime.CompilerServices;
 using UnityEngine;
 using Utils;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 
 public class RagdollController : MonoBehaviour
 {
+
     public UDictionary<string, RagdollJoint> RagdollDict = new UDictionary<string, RagdollJoint>();
 
     public Rigidbody rightHand;
     public Rigidbody leftHand;
+    public Transform objSnapTransform;
 
+
+    public Transform ObjectSnapPoint;
 
     public Transform centerOfMass;
+
+    [Header("Save Grab Data Mode")]
+    public bool inSaveGrabDataMode = false;
+    public Vector3 upperRightArmEuler;
+    public Vector3 lowerRightArmEuler;
+    public Vector3 upperLeftArmEuler;
+    public Vector3 lowerLeftArmEuler;
+
 
     [Header("Movement Properties")] public bool forwardIsCameraDirection = true;
     public float moveSpeed = 10f;
@@ -127,7 +140,13 @@ public class RagdollController : MonoBehaviour
 
     public bool isGrabbing;
 
-    
+    private Quaternion upperRightArmTargetRot = Quaternion.identity;
+    private Quaternion lowerRightArmTargetRot = Quaternion.identity;
+    private Quaternion upperLeftArmTargetRot = Quaternion.identity;
+    private Quaternion lowerLeftArmTargetRot = Quaternion.identity;
+
+
+
 
 
     void Start()
@@ -230,6 +249,7 @@ public class RagdollController : MonoBehaviour
         }
 
         //PlayerReach();
+        UpdateArmRotations();
 
         if (balanced && useStepPrediction)
         {
@@ -273,6 +293,8 @@ public class RagdollController : MonoBehaviour
             PerformLeanBackward();
         }
     }
+
+   
 
     //private void PerformPlayerRotation()
     //{
@@ -774,41 +796,76 @@ public class RagdollController : MonoBehaviour
         SetJointAngularDrives(LEFT_FOOT, in jointDrive);
     }
 
-    
 
-    // handle player arm rotation when reaching
-    //private void PlayerReach()
-    //{
-    //    // set arm rotation to 90 degrees when reaching
-    //    if (RagdollDict[UPPER_LEFT_ARM].isConnected && RagdollDict[UPPER_RIGHT_ARM].isConnected)
-    //    {
-    //        ConfigurableJoint leftArmJoint = RagdollDict[UPPER_LEFT_ARM].Joint;
-    //        ConfigurableJoint rightArmJoint = RagdollDict[UPPER_RIGHT_ARM].Joint;
 
-    //        if (isGrabbing)
-    //        {
-    //            ExtendArmsOutward(leftArmJoint, rightArmJoint);
-    //        }
-    //        // set arm rotation back to 0 degrees when not reaching 
-    //        else
-    //        {
-    //            LowerArms(leftArmJoint, rightArmJoint);
-    //        }
-    //    }
-    //}
-
-    public void ExtendArmsOutward()
+    private void PlayerReach()
     {
-
+        // set arm rotation to 90 degrees when reaching
         if (RagdollDict[UPPER_LEFT_ARM].isConnected && RagdollDict[UPPER_RIGHT_ARM].isConnected)
         {
             ConfigurableJoint leftArmJoint = RagdollDict[UPPER_LEFT_ARM].Joint;
             ConfigurableJoint rightArmJoint = RagdollDict[UPPER_RIGHT_ARM].Joint;
 
-            Vector3 newTargetRotEuler = new Vector3(-90f, 0f, 0f);
-            Quaternion newTargetRotation = Quaternion.Euler(newTargetRotEuler);
-            leftArmJoint.targetRotation = newTargetRotation;
-            rightArmJoint.targetRotation = newTargetRotation;
+            if (isGrabbing)
+            {
+                //ExtendArmsOutward();
+            }
+            // set arm rotation back to 0 degrees when not reaching 
+            else
+            {
+                LowerArms();
+            }
+        }
+    }
+
+    public void UpdateArmRotations()
+    {
+        ConfigurableJoint upperLeftArm = RagdollDict[UPPER_LEFT_ARM].Joint;
+        ConfigurableJoint upperRightArm = RagdollDict[UPPER_RIGHT_ARM].Joint;
+        ConfigurableJoint lowerLeftArm = RagdollDict[LOWER_LEFT_ARM].Joint;
+        ConfigurableJoint lowerRightArm = RagdollDict[LOWER_RIGHT_ARM].Joint;
+
+        if (inSaveGrabDataMode)
+        {
+            upperLeftArm.targetRotation = Quaternion.Euler(upperLeftArmEuler);
+            upperRightArm.targetRotation = Quaternion.Euler(upperRightArmEuler);
+            lowerLeftArm.targetRotation = Quaternion.Euler(lowerLeftArmEuler);
+            lowerRightArm.targetRotation = Quaternion.Euler(lowerRightArmEuler);
+        }
+        else
+        {
+            upperLeftArm.targetRotation = upperLeftArmTargetRot;
+            upperRightArm.targetRotation = upperRightArmTargetRot;
+            lowerLeftArm.targetRotation = lowerLeftArmTargetRot;
+            lowerRightArm.targetRotation = lowerRightArmTargetRot;
+        }
+    }
+
+    public void ExtendArmsOutward(GrabData grabData)
+    {
+
+        if (RagdollDict[UPPER_LEFT_ARM].isConnected && RagdollDict[UPPER_RIGHT_ARM].isConnected)
+        {
+            //ConfigurableJoint leftUpperArm = RagdollDict[UPPER_LEFT_ARM].Joint;
+            //ConfigurableJoint leftLowerArm = RagdollDict[LOWER_LEFT_ARM].Joint;
+            //ConfigurableJoint rightUpperArm = RagdollDict[UPPER_RIGHT_ARM].Joint;
+            //ConfigurableJoint rightLowerArm = RagdollDict[LOWER_RIGHT_ARM].Joint;
+
+            //leftUpperArm.targetRotation = poseData.leftArmPose.upperArmRot;
+            //leftLowerArm.targetRotation = poseData.leftArmPose.lowerArmRot;
+            //rightUpperArm.targetRotation = poseData.rightArmPose.upperArmRot;
+            //rightLowerArm.targetRotation = poseData.rightArmPose.lowerArmRot;
+            //Debug.Log("Extending Arms Outward");
+
+            upperLeftArmTargetRot = grabData.leftArmPose.upperArmRot;
+            lowerLeftArmTargetRot = grabData.leftArmPose.lowerArmRot;
+            upperRightArmTargetRot = grabData.rightArmPose.upperArmRot;
+            lowerRightArmTargetRot = grabData.rightArmPose.lowerArmRot;
+
+            //Vector3 newTargetRotEuler = new Vector3(-90f, 0f, 0f);
+            //Quaternion newTargetRotation = Quaternion.Euler(newTargetRotEuler);
+            //leftUpperArm.targetRotation = newTargetRotation;
+            //rightUpperArm.targetRotation = newTargetRotation;
         }
 
         //leftArmJoint.targetRotation = Quaternion.Lerp(
@@ -827,13 +884,26 @@ public class RagdollController : MonoBehaviour
     {
         if (RagdollDict[UPPER_LEFT_ARM].isConnected && RagdollDict[UPPER_RIGHT_ARM].isConnected)
         {
-            ConfigurableJoint leftArmJoint = RagdollDict[UPPER_LEFT_ARM].Joint;
-            ConfigurableJoint rightArmJoint = RagdollDict[UPPER_RIGHT_ARM].Joint;
+            //ConfigurableJoint leftArmJoint = RagdollDict[UPPER_LEFT_ARM].Joint;
+            //ConfigurableJoint rightArmJoint = RagdollDict[UPPER_RIGHT_ARM].Joint;
 
-            Vector3 newTargetRotEuler = new Vector3(0f, 0f, 0f);
-            Quaternion newTargetRotation = Quaternion.Euler(newTargetRotEuler);
-            leftArmJoint.targetRotation = newTargetRotation;
-            rightArmJoint.targetRotation = newTargetRotation;
+            //Vector3 newTargetRotEuler = new Vector3(0f, 0f, 0f);
+            //Quaternion newTargetRotation = Quaternion.Euler(newTargetRotEuler);
+            //leftArmJoint.targetRotation = newTargetRotation;
+            //rightArmJoint.targetRotation = newTargetRotation;
+            ConfigurableJoint leftUpperArm = RagdollDict[UPPER_LEFT_ARM].Joint;
+            ConfigurableJoint leftLowerArm = RagdollDict[LOWER_LEFT_ARM].Joint;
+            ConfigurableJoint rightUpperArm = RagdollDict[UPPER_RIGHT_ARM].Joint;
+            ConfigurableJoint rightLowerArm = RagdollDict[LOWER_RIGHT_ARM].Joint;
+
+            //leftUpperArm.targetRotation = Quaternion.identity;
+            //leftLowerArm.targetRotation = Quaternion.identity;
+            //rightUpperArm.targetRotation = Quaternion.identity;
+            //rightLowerArm.targetRotation = Quaternion.identity;
+            upperLeftArmTargetRot = Quaternion.identity;
+            lowerLeftArmTargetRot = Quaternion.identity;
+            upperRightArmTargetRot = Quaternion.identity;
+            lowerRightArmTargetRot = Quaternion.identity;
         }
         
 
@@ -1203,32 +1273,7 @@ public class RagdollController : MonoBehaviour
         }
     }
 
-    public bool IsHoldingSomething()
-    {
-        GrabScript leftHandGb = leftHand.GetComponent<GrabScript>();
-        GrabScript rightHandGb = rightHand.GetComponent<GrabScript>();
-
-        return leftHandGb.isGrabbing || rightHandGb.isGrabbing;
-    }
-
-    // should only be called if IsHoldingSomething() is true
-    public GameObject GetHeldObject()
-    {
-        GrabScript leftHandGb = leftHand.GetComponent<GrabScript>();
-        GrabScript rightHandGb = rightHand.GetComponent<GrabScript>();
-
-        if (leftHandGb.isGrabbing)
-        {
-            return leftHandGb.grabbedObj;
-        }
-
-        if (rightHandGb.isGrabbing)
-        {
-            return rightHandGb.grabbedObj;
-        }
-
-        return null; // should never reach here if used correctly
-    }
+   
 
     public Vector3 GetPlayerPosition()
     {

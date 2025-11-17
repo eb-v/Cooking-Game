@@ -2,24 +2,49 @@ using UnityEngine;
 
 public class GrabScript : MonoBehaviour
 {
-    [HideInInspector] public bool isGrabbing = false;
-    public GameObject grabbedObj;
+    [SerializeField] private Env_Interaction env_Interaction;
+    private GameObject lookedAtObj => env_Interaction.currentlyLookingAt;
+    private GameObject grabbedObject;
+    public bool isGrabbing => grabbedObject != null;
+    public GameObject GrabbedObject => grabbedObject;
 
-    private void OnTriggerEnter(Collider other)
+    private void Awake()
     {
-        string layerName = LayerMask.LayerToName(other.gameObject.layer);
-        if (layerName == "Player")
+        env_Interaction = GetComponent<Env_Interaction>();
+        if (env_Interaction == null)
         {
-            GameObject rootPlayerObj = other.transform.root.gameObject;
-            if (rootPlayerObj == gameObject.transform.root.gameObject) 
+            Debug.LogError("Env_Interaction component not found on GrabScript GameObject.");
+        }
+    }
+
+    private void Start()
+    {
+        GenericEvent<OnInteractInput>.GetEvent(gameObject.name).AddListener(OnInteract);
+        GenericEvent<OnAlternateInteractInput>.GetEvent(gameObject.name).AddListener(OnAlternateInteract);
+    }
+
+    private void OnInteract(GameObject player)
+    {
+        if (lookedAtObj != null)
+        {
+            // if object can be grabbed
+            IGrabable grabable = lookedAtObj.GetComponent<IGrabable>();
+            if (grabable != null)
             {
-                return;
+                grabable.GrabObject(player);
+                grabbedObject = lookedAtObj;
             }
         }
-
-        if (layerName == LayerMask.LayerToName(LayerMask.NameToLayer("Buttons")))
-            return;
-
-        GrabSystem.GrabObject(this.gameObject, other.gameObject);
     }
+
+    private void OnAlternateInteract(GameObject player)
+    {
+        if (isGrabbing)
+        {
+            GrabSystem.ReleaseObject(player);
+        }
+    }
+
+
+
 }
