@@ -13,7 +13,7 @@ public class CuttingCounter : MonoBehaviour, IInteractable, IAltInteractable
     private GameObject _currentObject;
     private GameObject _currentPlayer;
 
-    private BaseRecipe _currentRecipe;
+    private CuttingRecipe _currentRecipe;
 
     private int cuttingProgress = 0;
 
@@ -49,7 +49,7 @@ public class CuttingCounter : MonoBehaviour, IInteractable, IAltInteractable
                 if (IsCuttable(ingredient))
                 {
                     PlaceObjectOntoCounter(gs.grabbedObject);
-                    _currentRecipe = ingredient.recipes.Find(recipe => recipe is CuttingRecipe);
+                    _currentRecipe = ingredient.recipes.Find(recipe => recipe is CuttingRecipe) as CuttingRecipe;
 
                     gs.grabbedObject = null;
                 }

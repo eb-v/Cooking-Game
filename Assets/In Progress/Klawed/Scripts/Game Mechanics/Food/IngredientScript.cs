@@ -14,6 +14,8 @@ public class IngredientScript : MonoBehaviour, IGrabable, IInteractable
 
     [field: SerializeField] public List<BaseRecipe> recipes { get; set; }
 
+    [field: SerializeField] public Collider grabCollider { get; set; }
+
 
     public void OnInteract(GameObject player)
     {
@@ -39,6 +41,7 @@ public class IngredientScript : MonoBehaviour, IGrabable, IInteractable
 
         isGrabbed = true;
         currentPlayer = player;
+        grabCollider.enabled = false;
     }
 
     public void ReleaseObject(GameObject player)
@@ -46,6 +49,7 @@ public class IngredientScript : MonoBehaviour, IGrabable, IInteractable
         GrabSystem.ReleaseObject(player);
         isGrabbed = false;
         currentPlayer = null;
+        grabCollider.enabled = true;
     }
 
     public GameObject GetGameObject() => gameObject;

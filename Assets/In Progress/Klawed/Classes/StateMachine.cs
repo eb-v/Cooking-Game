@@ -39,6 +39,22 @@ public class StateMachine
         }
     }
 
+    public void RunFixedUpdateLogic()
+    {
+        if (currentState != null)
+        {
+            currentState.FixedUpdateLogic();
+        }
+    }
+
+    public void RunUpdateLogic()
+    {
+        if (currentState != null)
+        {
+            currentState.UpdateLogic();
+        }
+    }
+
     public BaseStateSO GetCurrentState()
     {
         return currentState;

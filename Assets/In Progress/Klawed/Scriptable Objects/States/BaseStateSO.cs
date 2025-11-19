@@ -20,7 +20,14 @@ public class BaseStateSO : ScriptableObject
     {
 
     }
-    
+
+    public virtual void FixedUpdateLogic()
+    {
+    }
+
+    public virtual void UpdateLogic()
+    {
+    }
 
     public virtual void Exit()
     {
