@@ -2152,6 +2152,8 @@ GameObject:
   - component: {fileID: 1085952519114288308}
   - component: {fileID: 1671781964517461680}
   - component: {fileID: 1774118094218312297}
+  - component: {fileID: 6688558834217459117}
+  - component: {fileID: 1362008162283589234}
   m_Layer: 10
   m_Name: Player
   m_TagString: Player
@@ -2247,6 +2249,8 @@ MonoBehaviour:
   StepDuration: 0.22
   StepHeight: 1.7
   FeetMountForce: 15
+  minKnockOutRecoveryTime: 3
+  maxKnockOutRecoveryTime: 6
   reachSensitivity: 25
   armReachStiffness: 2000
   canBeKnockoutByImpact: 1
@@ -2255,11 +2259,6 @@ MonoBehaviour:
   punchForce: 15
   WalkForward: 0
   WalkBackward: 0
-  jumping: 0
-  isJumping: 0
-  inAir: 0
-  punchingRight: 0
-  punchingLeft: 0
   _angleMultiplier: 122.5
   isGrabbing: 0
 --- !u!114 &7631047085410713992
@@ -2331,38 +2330,6 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: 641cd816-40e6-41b4-8c3d-04687c349290
     m_ActionName: 'Player/Sprint[/Keyboard/leftShift,/DualSenseGamepadHID/leftStickPress]'
-  - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 7145388165237822340}
-        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
-        m_MethodName: OnLeftGrab
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_ActionId: 90de7cc9-e1a6-4978-ac62-d04cfc27d8d2
-    m_ActionName: 'Player/LeftGrab[/Mouse/leftButton,/DualSenseGamepadHID/leftTrigger]'
-  - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 7145388165237822340}
-        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
-        m_MethodName: OnRightGrab
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_ActionId: 3f49ad57-9708-4328-838e-c3b540ed0838
-    m_ActionName: 'Player/RightGrab[/Mouse/rightButton,/DualSenseGamepadHID/rightTrigger]'
   - m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 7145388165237822340}
@@ -2619,6 +2586,22 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 903cdf6a-ee58-4f20-8320-d6e13965d1d2
     m_ActionName: 'Player/Respawn[/DualSenseGamepadHID/select]'
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 7145388165237822340}
+        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
+        m_MethodName: OnRightTrigger
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: d1efed0b-4a74-41f5-a138-e70562486f65
+    m_ActionName: 'Player/RightTrigger[/DualSenseGamepadHID/rightTrigger]'
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
@@ -2732,7 +2715,36 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c64957956423a9d4bbc60209f835e36c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GrabScript
-  env_Interaction: {fileID: 0}
+  env_Interaction: {fileID: 8473676373622355774}
+--- !u!114 &6688558834217459117
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4777336152046692441}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6faec147617f6f043a66179042832a79, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Player
+  _defaultStateBase: {fileID: 11400000, guid: 2c89edb8df63aed468f35ca427f920cb, type: 2}
+  _airborneStateBase: {fileID: 11400000, guid: 5410e733b7659664b8d9cf46c2621ee3, type: 2}
+  _cuttingStateBase: {fileID: 11400000, guid: ea09548f0ff867e4082d39a28cb52eaf, type: 2}
+  _unconsciousStateBase: {fileID: 11400000, guid: fad65e87088d9a1479d3ee4113d074c0, type: 2}
+--- !u!114 &1362008162283589234
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4777336152046692441}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6fb45355cbe83a64295e7aba83b7ae52, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerInteraction
+  env_Interaction: {fileID: 8473676373622355774}
 --- !u!1 &4875189699825966719
 GameObject:
   m_ObjectHideFlags: 0

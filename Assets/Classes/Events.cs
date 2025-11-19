@@ -183,3 +183,10 @@ public class OnGrabStatusChanged : UnityEvent<bool> { }
 public class OnInteractInput : UnityEvent<GameObject> { }
 
 public class OnAlternateInteractInput : UnityEvent<GameObject> { }
+
+public class OnObjectGrabbed : UnityEvent<IGrabable> { }
+
+public class OnCutInput : UnityEvent { }
+
+public class OnRightTriggerInput : UnityEvent { }
+public class OnRightTriggerCancel : UnityEvent { }

@@ -1,12 +1,13 @@
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public class GrabScript : MonoBehaviour
 {
     [SerializeField] private Env_Interaction env_Interaction;
     private GameObject lookedAtObj => env_Interaction.currentlyLookingAt;
-    private GameObject grabbedObject;
+    [field:SerializeField] public IGrabable grabbedObject { get; set; }
     public bool isGrabbing => grabbedObject != null;
-    public GameObject GrabbedObject => grabbedObject;
+    
 
     private void Awake()
     {
@@ -19,11 +20,12 @@ public class GrabScript : MonoBehaviour
 
     private void Start()
     {
-        GenericEvent<OnInteractInput>.GetEvent(gameObject.name).AddListener(OnInteract);
+        //GenericEvent<OnInteractInput>.GetEvent(gameObject.name).AddListener(GrabObject);
         GenericEvent<OnAlternateInteractInput>.GetEvent(gameObject.name).AddListener(OnAlternateInteract);
+        GenericEvent<OnObjectGrabbed>.GetEvent(gameObject.name).AddListener(OnObjectGrabbed);
     }
 
-    private void OnInteract(GameObject player)
+    private void GrabObject(GameObject player)
     {
         if (lookedAtObj != null)
         {
@@ -31,8 +33,16 @@ public class GrabScript : MonoBehaviour
             IGrabable grabable = lookedAtObj.GetComponent<IGrabable>();
             if (grabable != null)
             {
-                grabable.GrabObject(player);
-                grabbedObject = lookedAtObj;
+                if (!isGrabbing)
+                {
+                    grabable.GrabObject(player);
+                    grabbedObject = grabable;
+                }
+                else
+                {
+                    Debug.Log("Already grabbing an object.");
+                }
+                
             }
         }
     }
@@ -41,10 +51,14 @@ public class GrabScript : MonoBehaviour
     {
         if (isGrabbing)
         {
-            GrabSystem.ReleaseObject(player);
+            grabbedObject.ReleaseObject(player);
+            grabbedObject = null;
         }
     }
 
-
+    private void OnObjectGrabbed(IGrabable grabbedObj)
+    {
+        this.grabbedObject = grabbedObj;
+    }
 
 }

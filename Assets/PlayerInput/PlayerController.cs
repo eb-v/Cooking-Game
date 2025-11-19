@@ -53,31 +53,19 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    //public void OnLeftGrab(InputAction.CallbackContext context)
-    //{
-    //    if (context.started) // button pressed
-    //    {
-    //        GenericEvent<OnLeftGrabInput>.GetEvent(gameObject.name).Invoke(true);
-    //    }
-    //    else if (context.canceled) // button released
-    //    {
-    //        GenericEvent<OnLeftGrabInput>.GetEvent(gameObject.name).Invoke(false);
-    //    }
-    //}
-
-    //public void OnRightGrab(InputAction.CallbackContext context)
-    //{
-    //    if (context.started) // pressed down
-    //    {
-    //        GenericEvent<OnRightGrabInput>.GetEvent(gameObject.name).Invoke(true);
-    //    }
-    //    else if (context.canceled) // button released
-    //    {
-    //        GenericEvent<OnRightGrabInput>.GetEvent(gameObject.name).Invoke(false);
-    //    }
-    //}
-
-
+    public void OnRightTrigger(InputAction.CallbackContext context)
+    {
+        if (context.performed) // pressed down
+        {
+            GenericEvent<OnRightTriggerInput>.GetEvent(gameObject.name).Invoke();
+            Debug.Log("Right Trigger Pressed");
+        }
+        else if (context.canceled) // button released
+        {
+            GenericEvent<OnRightTriggerCancel>.GetEvent(gameObject.name).Invoke();
+            Debug.Log("Right Trigger Released");
+        }
+    }
 
 
     public void OnLeanForwards(InputAction.CallbackContext context)
