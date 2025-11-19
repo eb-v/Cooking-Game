@@ -2,7 +2,8 @@
 //using UnityEngine.UI;
 //using TMPro;
 
-//public class CookingStation : BaseStation, IPrepStation {
+//public class CookingStation : BaseStation
+//{
 //    [Header("Cooking Settings")]
 //    [SerializeField] private float defaultCookingTime = 5f;
 //    [SerializeField] private GameObject cookingUI;
@@ -40,11 +41,13 @@
 //    public GameObject currentPlacedObject { get => ingredientInPan ?? panOnStove; set { } }
 //    public bool containsObject { get => panOnStove != null || ingredientInPan != null; set { } }
 
-//    private void Awake() {
+//    private void Awake()
+//    {
 
 //        // fireEffect.gameObject.SetActive(true);
 
-//        if (cookingUI != null) {
+//        if (cookingUI != null)
+//        {
 //            //if (progressSlider != null) {
 //            //    Transform fillTransform = progressSlider.transform.Find("Fill Area/Fill");
 //            //    if (fillTransform != null) fillImage = fillTransform.GetComponent<Image>();
@@ -61,29 +64,35 @@
 //        GenericEvent<AlternateInteractInput>.GetEvent(gameObject.name).AddListener(RemovePlacedKitchenObj);
 //    }
 
-//    private void Update() {
-//        if (isCooking && ingredientInPan != null) {
+//    private void Update()
+//    {
+//        if (isCooking && ingredientInPan != null)
+//        {
 //            cookingTimer += Time.deltaTime;
 //            float progress = cookingTimer / GetCookingTime(ingredientInPan);
 //            if (fillImage != null) fillImage.fillAmount = Mathf.Clamp01(progress);
 //            if (fillImage != null) fillImage.color = progressColor;
 
-//            if (cookingTimer >= GetCookingTime(ingredientInPan)) {
+//            if (cookingTimer >= GetCookingTime(ingredientInPan))
+//            {
 //                FinishCooking();
 //            }
 //        }
 
-//        if (isComplete && !isBurning && ingredientInPan != null) {
+//        if (isComplete && !isBurning && ingredientInPan != null)
+//        {
 //            burnTimer += Time.deltaTime;
 
 //            float timeLeft = burnDelay - burnTimer;
 
-//            if (timeLeft <= 5f && fillImage != null) {
+//            if (timeLeft <= 5f && fillImage != null)
+//            {
 //                float t = Mathf.PingPong(Time.time * 4f, 1f);
 //                fillImage.color = Color.Lerp(progressColor, completeColor, t);
 //            }
 
-//            if (burnTimer >= burnDelay) {
+//            if (burnTimer >= burnDelay)
+//            {
 //                // fireEffect.gameObject.SetActive(true);
 //                BurnItem();
 //            }
@@ -91,16 +100,20 @@
 //    }
 
 //    //checking interactions
-//    public override void Interact(GameObject player) {
-//        if (isCooking) {
+//    public override void Interact(GameObject player)
+//    {
+//        if (isCooking)
+//        {
 //            Debug.Log("Cooking in progress — cannot interact now.");
 //            return;
 //        }
 
 //        RagdollController ragdoll = player.GetComponent<RagdollController>();
 
-//        if (!ragdoll.IsHoldingSomething()) {
-//            if ((isComplete || isBurning) && ingredientInPan != null) {
+//        if (!ragdoll.IsHoldingSomething())
+//        {
+//            if ((isComplete || isBurning) && ingredientInPan != null)
+//            {
 //                TakeOutCookedItem();
 //                return;
 //            }
@@ -109,13 +122,15 @@
 
 //        GameObject heldObj = ragdoll.GetHeldObject();
 
-//        if (panOnStove == null && heldObj.CompareTag("Pan")) {
+//        if (panOnStove == null && heldObj.CompareTag("Pan"))
+//        {
 //            DetachFromHands(ragdoll, heldObj);
 //            PlacePanOnStation(heldObj);
 //            return;
 //        }
 
-//        if (panOnStove != null && ingredientInPan == null && HasRecipeWithInput(heldObj)) {
+//        if (panOnStove != null && ingredientInPan == null && HasRecipeWithInput(heldObj))
+//        {
 //            DetachFromHands(ragdoll, heldObj);
 //            PlaceIngredientInPan(heldObj);
 //            return;
@@ -125,18 +140,22 @@
 //    }
 
 //    //can not remove items when the item is raw -> cooked, they can only remove when its cooked -> burnt
-//    public override void RemovePlacedKitchenObj(GameObject player) {
-//        if (isCooking) {
+//    public override void RemovePlacedKitchenObj(GameObject player)
+//    {
+//        if (isCooking)
+//        {
 //            Debug.Log("You can’t remove anything while cooking!");
 //            return;
 //        }
 
-//        if ((isComplete || isBurning) && ingredientInPan != null) {
+//        if ((isComplete || isBurning) && ingredientInPan != null)
+//        {
 //            TakeOutCookedItem();
 //            return;
 //        }
 
-//        if (ingredientInPan != null && !isCooking && !isComplete && !isBurning) {
+//        if (ingredientInPan != null && !isCooking && !isComplete && !isBurning)
+//        {
 //            Destroy(ingredientInPan);
 //            ingredientInPan = null;
 //            StopCooking();
@@ -144,7 +163,8 @@
 //            return;
 //        }
 
-//        if (panOnStove != null && ingredientInPan == null) {
+//        if (panOnStove != null && ingredientInPan == null)
+//        {
 //            Rigidbody rb = panOnStove.GetComponent<Rigidbody>();
 //            if (rb != null) rb.isKinematic = false;
 //            panOnStove.transform.SetParent(null);
@@ -158,8 +178,10 @@
 
 //    //cooking idea, gets player input to start cooking, starts the progress bar,
 //    //allows for the player to take it out when cooked, if not taken out within 10 seconds, the item burns and starts the fire.
-//    private void StartCooking() {
-//        if (panOnStove != null && ingredientInPan != null && !isCooking) {
+//    private void StartCooking()
+//    {
+//        if (panOnStove != null && ingredientInPan != null && !isCooking)
+//        {
 //            isCooking = true;
 //            _isBeingUsed = true;
 //            isComplete = false;
@@ -175,7 +197,8 @@
 //        }
 //    }
 
-//    private void StopCooking() {
+//    private void StopCooking()
+//    {
 //        isCooking = false;
 //        _isBeingUsed = false;
 //        isComplete = false;
@@ -188,7 +211,8 @@
 //        if (completeText != null) completeText.gameObject.SetActive(false);
 //    }
 
-//    private void FinishCooking() {
+//    private void FinishCooking()
+//    {
 //        if (ingredientInPan == null) return;
 
 //        isCooking = false;
@@ -196,7 +220,8 @@
 //        burnTimer = 0f;
 
 //        CookingRecipeSO recipe = GetCookingRecipeWithInput(ingredientInPan);
-//        if (recipe != null && recipe.output != null) {
+//        if (recipe != null && recipe.output != null)
+//        {
 //            Vector3 pos = panOnStove.transform.position + Vector3.up * 0.1f;
 //            Destroy(ingredientInPan);
 
@@ -208,7 +233,8 @@
 //        }
 
 //        if (fillImage != null) fillImage.fillAmount = 1f;
-//        if (completeText != null) {
+//        if (completeText != null)
+//        {
 //            completeText.text = "Complete!";
 //            completeText.gameObject.SetActive(true);
 //        }
@@ -216,7 +242,8 @@
 //        Debug.Log("Cooking finished");
 //    }
 
-//    private void BurnItem() {
+//    private void BurnItem()
+//    {
 //        if (ingredientInPan == null || panOnStove == null) return;
 
 //        isBurning = true;
@@ -231,7 +258,8 @@
 
 //        if (recipe != null && recipe.canBurn && recipe.burntOutput != null)
 //            burntObj = ObjectPoolManager.SpawnObject(recipe.burntOutput, panPos, Quaternion.identity);
-//        else {
+//        else
+//        {
 //            burntObj = ObjectPoolManager.SpawnObject(ingredientInPan, panPos, Quaternion.identity);
 //            burntObj.name = "Burnt " + ingredientInPan.name;
 //            var renderer = burntObj.GetComponentInChildren<Renderer>();
@@ -247,7 +275,8 @@
 //        ingredientInPan = burntObj;
 
 //        // Always instantiate a new fire prefab — don’t reuse old activeFire
-//        if (fireEffectPrefab != null) {
+//        if (fireEffectPrefab != null)
+//        {
 //            Debug.Log("Spawning fire effect.");
 //            FireController fire = ObjectPoolManager
 //                .SpawnObject(fireEffectPrefab.gameObject, panPos, Quaternion.identity)
@@ -258,7 +287,8 @@
 //            Debug.Log("Fire effect started.");
 //        }
 
-//        if (completeText != null) {
+//        if (completeText != null)
+//        {
 //            completeText.text = "Burnt!";
 //            completeText.gameObject.SetActive(true);
 //        }
@@ -269,7 +299,8 @@
 //        Debug.Log("Item has burnt!");
 //    }
 
-//    private void TakeOutCookedItem() {
+//    private void TakeOutCookedItem()
+//    {
 //        if (ingredientInPan == null) return;
 
 //        isComplete = false;
@@ -281,7 +312,8 @@
 //        ingredientInPan.transform.position = liftPos;
 
 //        Rigidbody rb = ingredientInPan.GetComponent<Rigidbody>();
-//        if (rb != null) {
+//        if (rb != null)
+//        {
 //            rb.isKinematic = false;
 //            rb.linearVelocity = Vector3.zero;
 //            rb.angularVelocity = Vector3.zero;
@@ -293,7 +325,8 @@
 //        _isBeingUsed = false;
 //        isCooking = false;
 
-//        if (activeFire != null) {
+//        if (activeFire != null)
+//        {
 //            activeFire.StopFire();
 
 //            if (activeFire.gameObject != null)
@@ -305,7 +338,8 @@
 //        Debug.Log("Item set above pan");
 //    }
 //    //helpers to place pan and ingredients for the process
-//    private void PlacePanOnStation(GameObject pan) {
+//    private void PlacePanOnStation(GameObject pan)
+//    {
 //        Collider stationCollider = GetComponent<Collider>();
 //        Vector3 placePos = stationCollider.bounds.center + Vector3.up * stationCollider.bounds.extents.y;
 
@@ -322,7 +356,8 @@
 //        Debug.Log("Pan placed on CookingStation.");
 //    }
 
-//    private void PlaceIngredientInPan(GameObject ingredient) {
+//    private void PlaceIngredientInPan(GameObject ingredient)
+//    {
 //        ingredient.transform.SetParent(panOnStove.transform);
 //        ingredient.transform.localPosition = Vector3.up * 0.1f;
 //        ingredient.transform.localRotation = Quaternion.identity;
@@ -334,34 +369,41 @@
 //        StartCooking();
 //    }
 
-//    public void PrepIngredient() {
+//    public void PrepIngredient()
+//    {
 //    }
 
 //    private bool HasRecipeWithInput(GameObject obj) => GetCookingRecipeWithInput(obj) != null;
 
-//    private CookingRecipeSO GetCookingRecipeWithInput(GameObject obj) {
+//    private CookingRecipeSO GetCookingRecipeWithInput(GameObject obj)
+//    {
 //        string nameTrimmed = obj.name.Replace("(Clone)", "").Trim();
-//        foreach (var recipe in cookingRecipeSOArray) {
+//        foreach (var recipe in cookingRecipeSOArray)
+//        {
 //            if (recipe.input.name == nameTrimmed) return recipe;
 //        }
 //        return null;
 //    }
 
-//    private float GetCookingTime(GameObject ingredient) {
+//    private float GetCookingTime(GameObject ingredient)
+//    {
 //        CookingRecipeSO recipe = GetCookingRecipeWithInput(ingredient);
 //        return recipe != null && recipe.cookingTime > 0 ? recipe.cookingTime : defaultCookingTime;
 //    }
 
-//    private void DetachFromHands(RagdollController ragdoll, GameObject heldObj) {
+//    private void DetachFromHands(RagdollController ragdoll, GameObject heldObj)
+//    {
 //        var leftGrab = ragdoll.leftHand.GetComponent<GrabDetection>();
-//        if (leftGrab.isGrabbing && leftGrab.grabbedObj == heldObj) {
+//        if (leftGrab.isGrabbing && leftGrab.grabbedObj == heldObj)
+//        {
 //            Destroy(ragdoll.leftHand.transform.parent.GetComponent<FixedJoint>());
 //            leftGrab.isGrabbing = false;
 //            leftGrab.grabbedObj = null;
 //        }
 
 //        var rightGrab = ragdoll.rightHand.GetComponent<GrabDetection>();
-//        if (rightGrab.isGrabbing && rightGrab.grabbedObj == heldObj) {
+//        if (rightGrab.isGrabbing && rightGrab.grabbedObj == heldObj)
+//        {
 //            Destroy(ragdoll.rightHand.transform.parent.GetComponent<FixedJoint>());
 //            rightGrab.isGrabbing = false;
 //            rightGrab.grabbedObj = null;
