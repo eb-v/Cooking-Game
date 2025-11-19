@@ -46,7 +46,9 @@ public class GrabSystem : ScriptableObject
             return;
         RagdollController rc = player.GetComponent<RagdollController>();
         CoroutineRunner.Instance.StartCoroutine(GrabObjectCoroutine(rc, physicsObj, grabData));
-
+        IGrabable grabable = physicsObj.GetComponent<IGrabable>();
+        GrabScript gs = player.GetComponent<GrabScript>();
+        gs.grabbedObject = grabable;
     }
 
     private static IEnumerator GrabObjectCoroutine(RagdollController rc, GameObject physicsObj, GrabData grabData)

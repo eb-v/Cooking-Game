@@ -190,3 +190,5 @@ public class OnCutInput : UnityEvent { }
 
 public class OnRightTriggerInput : UnityEvent { }
 public class OnRightTriggerCancel : UnityEvent { }
+
+public class SodaSelectedEvent : UnityEvent<MenuItem> { }
