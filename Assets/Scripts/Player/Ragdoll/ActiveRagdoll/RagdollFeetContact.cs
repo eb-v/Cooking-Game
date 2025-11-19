@@ -7,12 +7,12 @@ public class RagdollFeetContact : MonoBehaviour
     
     void OnCollisionEnter(Collision col)
     {
-        if(!RagdollPlayer.isJumping && RagdollPlayer.inAir)
-        {
-            if(col.gameObject.layer == LayerMask.NameToLayer(GROUND))
-            {
-                RagdollPlayer.PlayerLanded();
-            }
-        }
+        //if(!RagdollPlayer.isJumping && RagdollPlayer.inAir)
+        //{
+        //    if(col.gameObject.layer == LayerMask.NameToLayer(GROUND))
+        //    {
+        //        RagdollPlayer.PlayerLanded();
+        //    }
+        //}
     }
 }

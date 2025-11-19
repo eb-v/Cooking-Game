@@ -46,7 +46,9 @@ public class GrabSystem : ScriptableObject
             return;
         RagdollController rc = player.GetComponent<RagdollController>();
         CoroutineRunner.Instance.StartCoroutine(GrabObjectCoroutine(rc, physicsObj, grabData));
-
+        IGrabable grabable = physicsObj.GetComponent<IGrabable>();
+        GrabScript gs = player.GetComponent<GrabScript>();
+        gs.grabbedObject = grabable;
     }
 
     private static IEnumerator GrabObjectCoroutine(RagdollController rc, GameObject physicsObj, GrabData grabData)
@@ -74,6 +76,7 @@ public class GrabSystem : ScriptableObject
         if (!SystemEnabled)
             return;
 
+        GrabScript grabScript = player.GetComponent<GrabScript>();
         RagdollController rc = player.GetComponent<RagdollController>();
         GameObject lowerRightArm = rc.RagdollDict["LowerRightArm"].gameObject;
         GameObject lowerLeftArm = rc.RagdollDict["LowerLeftArm"].gameObject;

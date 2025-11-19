@@ -52,24 +52,6 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "LeftGrab",
-                    "type": "Button",
-                    "id": "90de7cc9-e1a6-4978-ac62-d04cfc27d8d2",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "RightGrab",
-                    "type": "Button",
-                    "id": "3f49ad57-9708-4328-838e-c3b540ed0838",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
                     "name": "LeanBack",
                     "type": "Value",
                     "id": "960c7dff-c11a-4f8c-809b-d3fd7708f716",
@@ -154,6 +136,15 @@
                     "name": "Respawn",
                     "type": "Button",
                     "id": "903cdf6a-ee58-4f20-8320-d6e13965d1d2",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "RightTrigger",
+                    "type": "Button",
+                    "id": "d1efed0b-4a74-41f5-a138-e70562486f65",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -361,50 +352,6 @@
                 },
                 {
                     "name": "",
-                    "id": "4c8efaea-5e64-4df1-8b37-98905788072b",
-                    "path": "<Mouse>/leftButton",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Keyboard&Mouse",
-                    "action": "LeftGrab",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "e7d0139a-2eba-4b4d-9415-284f79d57b81",
-                    "path": "<Gamepad>/leftTrigger",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Gamepad",
-                    "action": "LeftGrab",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "3ddaccdb-a690-43e8-a746-99ed90e835c2",
-                    "path": "<Mouse>/rightButton",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Keyboard&Mouse",
-                    "action": "RightGrab",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "c3d307f7-5641-47a5-a4f0-b01080c88a54",
-                    "path": "<Gamepad>/rightTrigger",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Gamepad",
-                    "action": "RightGrab",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "88fbc957-8ad7-40df-b065-3962ce5ee977",
                     "path": "<Keyboard>/q",
                     "interactions": "",
@@ -587,6 +534,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "Respawn",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "fecd8d9e-1434-4f78-affd-86f981e9a9b5",
+                    "path": "<Gamepad>/rightTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "RightTrigger",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
