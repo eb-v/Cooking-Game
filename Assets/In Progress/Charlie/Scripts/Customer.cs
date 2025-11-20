@@ -100,6 +100,7 @@ public class Customer : MonoBehaviour, IInteractable, IOrder
         _stateMachine.GetCurrentState().InteractLogic(player);
     }
 
+
     private void SpawnFoodInHand()
     {
         if (handHoldPoint == null)
