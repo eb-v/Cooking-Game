@@ -85,11 +85,18 @@ public class NpcManager : MonoBehaviour
         npcOrderScript.SetFoodOrder(order);
     }
 
-    private void RemoveCustomerFromLine()
-    {
-        customerLine.Dequeue();
-        UpdateCustomerLinePositions();
-    }
+    // private void RemoveCustomerFromLine()
+    // {
+    //     customerLine.Dequeue();
+    //     UpdateCustomerLinePositions();
+    // }
+
+    public void RemoveCustomerFromLine()
+{
+    customerLine.Dequeue();
+    UpdateCustomerLinePositions();
+}
+
 
     private void UpdateCustomerLinePositions()
     {

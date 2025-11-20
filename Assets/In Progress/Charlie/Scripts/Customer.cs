@@ -153,7 +153,9 @@ public class Customer : MonoBehaviour, IInteractable
        // npc.SetSpeechBubbleActive(false);
         //npc.MoveTo(assignedTable.position);
 
-        manager.RemoveCustomerFromLine(this);
+        // manager.RemoveCustomerFromLine(this);
+        manager.RemoveCustomerFromLine();
+
 
         if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance)
         {
