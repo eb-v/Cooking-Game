@@ -4,18 +4,18 @@ using UnityEngine.AI;
 [CreateAssetMenu(fileName = "CS_Ordering", menuName = "Scriptable Objects/States/Customer/Ordering")]
 public class OrderingState : CustomerState
 {
-    private NavMeshAgent agent;
     private Customer customer;
 
     public override void Enter()
     {
         base.Enter();
-        customer.MoveTo(customer.targetLine.position);
+        customer.DisplayImage(true);
     }
 
     public override void Exit()
     {
         base.Exit();
+        customer.DisplayImage(false);
     }
 
     public override void FixedUpdateLogic()
@@ -26,11 +26,6 @@ public class OrderingState : CustomerState
     public override void Initialize(GameObject gameObject, StateMachine<CustomerState> stateMachine)
     {
         base.Initialize(gameObject, stateMachine);
-        agent = gameObject.GetComponent<NavMeshAgent>();
-        if (agent == null)
-        {
-            Debug.LogError("NavMeshAgent component not found on the Customer GameObject.");
-        }
 
         customer = gameObject.GetComponent<Customer>();
         if (customer == null)
@@ -52,27 +47,29 @@ public class OrderingState : CustomerState
 
             if (menuItemScript != null)
             {
-                if (menuItemScript.MenuItem == customer.CustomersOrder)
+                if (menuItemScript.MenuItem == customer.currentOrder)
                 {
                     ServeCustomer(heldObject, player);
                 }
+                else
+                {
+                    Debug.Log("Customer did not order this item.");
+                }
             }
+            else
+            {
+                Debug.Log("Held object is not a MenuItem.");
+            }
+        }
+        else
+        {
+            Debug.Log("Player is not holding any object.");
         }
     }
 
     public override void UpdateLogic()
     {
         base.UpdateLogic();
-        WalkToLine();
-    }
-
-    private void WalkToLine()
-    {
-        if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance)
-        {
-            agent.ResetPath();
-            gameObject.transform.rotation = customer.targetLine.rotation;
-        }
     }
 
     private void ServeCustomer(GameObject menuItemObject, GameObject player)
@@ -80,6 +77,7 @@ public class OrderingState : CustomerState
         IGrabable grabable = menuItemObject.GetComponent<IGrabable>();
         grabable.ReleaseObject(player);
         Destroy(menuItemObject);
+        GenericEvent<OnCustomerServed>.GetEvent("OnCustomerServed").Invoke(customer);
         customer.ChangeState(customer._walkToTableInstance);
         // increase score/money here
     }

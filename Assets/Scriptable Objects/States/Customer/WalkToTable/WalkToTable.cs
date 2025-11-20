@@ -1,9 +1,11 @@
 using UnityEngine;
+using UnityEngine.AI;
 
 [CreateAssetMenu(fileName = "CS_WalkToTable", menuName = "Scriptable Objects/States/Customer/WalkToTable")]
 public class WalkToTable : CustomerState
 {
     private Customer customer;
+    private NavMeshAgent agent => customer.Agent;
 
     public override void Enter()
     {
@@ -35,5 +37,12 @@ public class WalkToTable : CustomerState
     public override void UpdateLogic()
     {
         base.UpdateLogic();
+        if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance)
+        {
+            agent.ResetPath();
+            gameObject.transform.rotation = customer.assignedTable.rotation;
+            customer.ChangeState(customer._eatAtTableInstance);
+        }
     }
+
 }
