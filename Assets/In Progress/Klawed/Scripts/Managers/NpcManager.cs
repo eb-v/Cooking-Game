@@ -21,25 +21,15 @@ public class NpcManager : MonoBehaviour
     [Header("References")]
     [SerializeField] private OrderSystem orderDeliveryManager;
 
-    private List<NPCController> npcLine = new List<NPCController>();
+    private Queue<Customer> customerLine = new Queue<Customer>();
     private float spawnTimer = 0f;  //remove
     private int nextTableIndex = 0;
 
-    void Start()
+    private void Start()
     {
-        GenericEvent<NewOrderAddedEvent>.GetEvent(assignedChannel).AddListener(OnNewOrderAdded);
-
+        GenericEvent<OnCustomerServed>.GetEvent("OnCustomerServed").AddListener(RemoveCustomerFromLine);
     }
 
-    void OnDestroy()
-    {
-        GenericEvent<NewOrderAddedEvent>.GetEvent(assignedChannel).RemoveListener(OnNewOrderAdded);
-    }
-
-    private void OnNewOrderAdded(MenuItem order)
-    {
-        SpawnNpc();
-    }
 
 
     private void Update()
@@ -48,17 +38,15 @@ public class NpcManager : MonoBehaviour
         spawnTimer += Time.deltaTime;
         if (spawnTimer >= spawnInterval)
         {
-            SpawnNpc();
+            SpawnCustomer();
             spawnTimer = 0f;
         }
 
     }
 
-
-    public void SpawnNpc()
+    public void SpawnCustomer()
     {
-        Debug.Log("Attempting to spawn NPC...");
-        int index = npcLine.Count;
+        int index = customerLine.Count;
         if (index >= linePositions.Length || index >= tablePositions.Length) return;
 
         Transform spawnPoint = spawnPositions[Random.Range(0, spawnPositions.Length)];
@@ -77,16 +65,16 @@ public class NpcManager : MonoBehaviour
 
         GameObject npcObj = Instantiate(npcPrefab, spawnPoint.position, spawnPoint.rotation);
         
-        NPCController npcController = npcObj.GetComponent<NPCController>();
-        npcController.manager = this;
+        Customer customer = npcObj.GetComponent<Customer>();
+        customer.manager = this;
 
         InitializeNpcOrder(npcObj);
 
-        npcController.targetLine = linePositions[index];
-        npcController.tablePositions = tablePositions[index];
-        npcController.currentState = NPCState.WalkingToLine;
+        customer.targetLine = linePositions[index];
+        customer.tablePositions = tablePositions[index];
+        customer.currentState = NPCState.WalkingToLine;
 
-        npcLine.Add(npcController);
+        customerLine.Enqueue(customer);
         UpdateSpeechBubbles();
     }
 
@@ -97,32 +85,30 @@ public class NpcManager : MonoBehaviour
         npcOrderScript.SetFoodOrder(order);
     }
 
-    public void RemoveNpc(NPCController npc)
+    private void RemoveCustomerFromLine()
     {
-        if (!npcLine.Contains(npc)) return;
+        customerLine.Dequeue();
+        UpdateCustomerLinePositions();
+    }
 
-        npcLine.Remove(npc); 
+    private void UpdateCustomerLinePositions()
+    {
+        Customer[] customers = customerLine.ToArray();
 
-        for (int i = 0; i < npcLine.Count; i++)
+        for (int i = 0; i < customers.Length; i++)
         {
-            npcLine[i].targetLine = linePositions[i];
-            npcLine[i].npc.MoveTo(linePositions[i].position);
-            
-            npcLine[i].transform.rotation = linePositions[i].rotation;
-
-            Debug.Log($"{npcLine[i].name} moved up to line position {linePositions[i].position}");
+            customers[i].targetLine = linePositions[i];
+            customers[i].MoveTo(customers[i].targetLine.position);
+            customers[i].transform.rotation = linePositions[i].rotation;
         }
-
-        UpdateSpeechBubbles();
-        SpawnNpc();
     }
 
     private void UpdateSpeechBubbles()
     {
-        for (int i = 0; i < npcLine.Count; i++)
+        for (int i = 0; i < customerLine.Count; i++)
         {
             bool showBubble = i < maxVisibleSpeech;
-            npcLine[i].npc.SetSpeechBubbleActive(showBubble);
+            //npcLine[i].npc.SetSpeechBubbleActive(showBubble);
         }
     }
 

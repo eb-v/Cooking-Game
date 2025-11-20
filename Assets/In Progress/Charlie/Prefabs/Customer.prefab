@@ -235,6 +235,7 @@ MonoBehaviour:
   dampingRatio: 0.7
   maxGoal: 1
   minGoal: 0
+  startAtEndPosition: 0
   assignedEventChannel: DefaultChannel
   nudgeStrength: 1
   useGameObjectNameAsEventChannel: 0
@@ -425,7 +426,7 @@ GameObject:
   - component: {fileID: 4797103230959545440}
   - component: {fileID: 5001999792659915111}
   m_Layer: 0
-  m_Name: animated_npc
+  m_Name: Customer
   m_TagString: Customer
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -506,6 +507,15 @@ MonoBehaviour:
   npc: {fileID: 806953584572983670}
   manager: {fileID: 0}
   assignedChannel: OrderDisplay
+  handHoldPoint: {fileID: 0}
+  ordering: {fileID: 11400000, guid: 11949402b54d1b34fb6d546bc793143e, type: 2}
+  walkToTable: {fileID: 11400000, guid: a03d694545c188849bce2691b4e6ad9d, type: 2}
+  eating: {fileID: 11400000, guid: 3bf7c97c40cc4644e9e83722d3c3640c, type: 2}
+  leaving: {fileID: 11400000, guid: a84c2f6ba85844f4697d9c6139a789d3, type: 2}
+  _orderingInstance: {fileID: 0}
+  _walkToTableInstance: {fileID: 0}
+  _eatAtTableInstance: {fileID: 0}
+  _leaveInstance: {fileID: 0}
   targetLine: {fileID: 0}
   tablePositions: {fileID: 0}
   exitPoint: {fileID: 0}

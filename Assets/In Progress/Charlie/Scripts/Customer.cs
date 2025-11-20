@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.AI;
 
-public class NPCController : MonoBehaviour
+public class Customer : MonoBehaviour, IInteractable
 {
     public NPCState currentState;
     public NPC npc;
@@ -13,37 +13,83 @@ public class NPCController : MonoBehaviour
 
     private NpcOrderScript npcOrderScript;
 
+    [Header("References")]
+    [field: SerializeField] public NavMeshAgent agent { get; private set; }
+    [field: SerializeField] public Animator animator { get; private set; }
+    [field: SerializeField] public GameObject npcCanvas { get; private set; }
+
+
+    [Header("Customer States")]
+    [SerializeField] private CustomerState ordering;
+    [SerializeField] private CustomerState walkToTable;
+    [SerializeField] private CustomerState eating;
+    [SerializeField] private CustomerState leaving;
+
+
+    #region State Instances
+    [HideInInspector] public CustomerState _orderingInstance;
+    [HideInInspector] public CustomerState _walkToTableInstance;
+    [HideInInspector] public CustomerState _eatAtTableInstance;
+    [HideInInspector] public CustomerState _leaveInstance;
+    #endregion
+
 
     [HideInInspector] public Transform targetLine;
     [HideInInspector] public Transform tablePositions;
     [HideInInspector] public Transform exitPoint;
 
-    private Transform assignedTable;
+    public Transform assignedTable { get; set; }
     private Transform leavePosition;
     private bool hasReceivedOrder = false;
     private bool isEating = false;
     private GameObject heldFoodItem;
 
-    void Start()
+    private StateMachine<CustomerState> _stateMachine;
+
+    [Header("Debug")]
+    [ReadOnly]
+    [SerializeField] private CustomerState _currentState;
+    [ReadOnly]
+    [SerializeField] private MenuItem customersOrder;
+    public MenuItem CustomersOrder => customersOrder;
+
+    private void Awake()
     {
-        if (npc == null) npc = GetComponent<NPC>();
+        if (animator == null) animator = GetComponentInChildren<Animator>();
+        if (agent == null) agent = GetComponent<NavMeshAgent>();
 
-        npcOrderScript = GetComponentInChildren<NpcOrderScript>();
-        if (npcOrderScript == null)
-        {
-            Debug.LogWarning($"{name}: NpcOrderScript not found in children!");
-        }
 
-        GenericEvent<NewOrderAddedEvent>.GetEvent(assignedChannel).AddListener(OnOrderReceived);
-        GenericEvent<OnCustomerInteract>.GetEvent(gameObject.GetInstanceID().ToString()).AddListener(OnPlayerInteractedWithMe);
+        _orderingInstance = Instantiate(ordering);
+        _walkToTableInstance = Instantiate(walkToTable);
+        _eatAtTableInstance = Instantiate(eating);
+        _leaveInstance = Instantiate(leaving);
 
-        if (currentState == NPCState.WalkingToLine && targetLine != null)
-            npc.MoveTo(targetLine.position);
+        _stateMachine = new StateMachine<CustomerState>();
     }
 
-    void OnDestroy()
+    void Start()
     {
-        GenericEvent<NewOrderAddedEvent>.GetEvent(assignedChannel).RemoveListener(OnOrderReceived);
+        //if (npc == null) npc = GetComponent<NPC>();
+
+        //npcOrderScript = GetComponentInChildren<NpcOrderScript>();
+        //if (npcOrderScript == null)
+        //{
+        //    Debug.LogWarning($"{name}: NpcOrderScript not found in children!");
+        //}
+
+        //if (currentState == NPCState.WalkingToLine && targetLine != null)
+        //    npc.MoveTo(targetLine.position);
+
+
+
+
+        _orderingInstance.Initialize(gameObject, _stateMachine);
+        _walkToTableInstance.Initialize(gameObject, _stateMachine);
+        _eatAtTableInstance.Initialize(gameObject, _stateMachine);
+        _leaveInstance.Initialize(gameObject, _stateMachine);
+
+        _stateMachine.Initialize(_orderingInstance);
+        _currentState = _stateMachine.GetCurrentState();
     }
 
     private void OnOrderReceived(MenuItem order)
@@ -58,21 +104,32 @@ public class NPCController : MonoBehaviour
     
     void Update()
     {
-        switch (currentState)
-        {
-            case NPCState.WalkingToLine: WalkToLine(); break;
-            case NPCState.WaitingInLine: WaitInLine(); break;
-            case NPCState.WalkingToTable: WalkToTable(); break;
-            case NPCState.WaitingAtTable: WaitAtTable(); break;
-            case NPCState.Leaving: Leave(); break;
-        }
+        //switch (currentState)
+        //{
+        //    case NPCState.WalkingToLine: WalkToLine(); break;
+        //    case NPCState.WaitingInLine: WaitInLine(); break;
+        //    case NPCState.WalkingToTable: WalkToTable(); break;
+        //    case NPCState.WaitingAtTable: WaitAtTable(); break;
+        //    case NPCState.Leaving: Leave(); break;
+        //}
+        _stateMachine.RunUpdateLogic();
+    }
+
+    void FixedUpdate()
+    {
+        _stateMachine.RunFixedUpdateLogic();
+    }
+
+    public void OnInteract(GameObject player)
+    {
+        _stateMachine.GetCurrentState().InteractLogic(player);
     }
 
     void WalkToLine()
     {
-        if (!npc.agent.pathPending && npc.agent.remainingDistance <= npc.agent.stoppingDistance)
+        if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance)
         {
-            npc.agent.ResetPath();
+            agent.ResetPath();
             transform.rotation = targetLine.rotation; 
             currentState = NPCState.WaitingInLine;
         }
@@ -93,14 +150,14 @@ public class NPCController : MonoBehaviour
     }
     void WalkToTable()
     {
-        npc.SetSpeechBubbleActive(false);
-        npc.MoveTo(assignedTable.position);
+       // npc.SetSpeechBubbleActive(false);
+        //npc.MoveTo(assignedTable.position);
 
-        manager.RemoveNpc(this);
+        manager.RemoveCustomerFromLine(this);
 
-        if (!npc.agent.pathPending && npc.agent.remainingDistance <= npc.agent.stoppingDistance)
+        if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance)
         {
-            npc.agent.ResetPath();
+            agent.ResetPath();
             transform.rotation = assignedTable.rotation; 
             currentState = NPCState.WaitingAtTable;
             Debug.Log($"{name} reached table {assignedTable.name}, starting WaitAtTable");
@@ -117,12 +174,12 @@ public class NPCController : MonoBehaviour
                 switch (currentOrder.GetOrderType())
                 {
                     case MenuItemType.Drink:
-                        npc.animator.SetBool("isDrinking", true);
+                        animator.SetBool("isDrinking", true);
                         Debug.Log($"{name} started drinking");
                         break;
 
                     default: 
-                        npc.animator.SetBool("isEating", true);
+                        animator.SetBool("isEating", true);
                         Debug.Log($"{name} started eating");
                         break;
                 }
@@ -131,12 +188,12 @@ public class NPCController : MonoBehaviour
             isEating = true;
         }
 
-        AnimatorStateInfo stateInfo = npc.animator.GetCurrentAnimatorStateInfo(0);
+        AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
 
-        if (isEating && stateInfo.normalizedTime >= 0.95f && !npc.animator.IsInTransition(0))
+        if (isEating && stateInfo.normalizedTime >= 0.95f && !animator.IsInTransition(0))
         {
-            npc.animator.SetBool("isEating", false);
-            npc.animator.SetBool("isDrinking", false);
+            animator.SetBool("isEating", false);
+            animator.SetBool("isDrinking", false);
 
             isEating = false;
             Debug.Log($"{name} finished eating/drinking, leaving now");
@@ -148,20 +205,20 @@ public class NPCController : MonoBehaviour
 
     void Leave()
     {
-        npc.animator.SetBool("isEating", false);
+        //animator.SetBool("isEating", false);
 
-        if (heldFoodItem != null)
-        {
-            Destroy(heldFoodItem);
-        }
+        //if (heldFoodItem != null)
+        //{
+        //    Destroy(heldFoodItem);
+        //}
 
-        npc.MoveTo(leavePosition.position);
-        if (!npc.agent.pathPending && npc.agent.remainingDistance <= npc.agent.stoppingDistance)
-        {
-            npc.agent.ResetPath();
-            Debug.Log($"{name} has left, destroying NPC object");
-            Destroy(gameObject);
-        }
+        //npc.MoveTo(leavePosition.position);
+        //if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance)
+        //{
+        //    agent.ResetPath();
+        //    Debug.Log($"{name} has left, destroying NPC object");
+        //    Destroy(gameObject);
+        //}
     }
     
     public MenuItem GetCurrentOrder()
@@ -254,4 +311,16 @@ public class NPCController : MonoBehaviour
             Debug.Log($"{name} spawned {currentOrder.GetOrderItemPrefab().name} in hand");
         }
     }
+
+    public void MoveTo(Vector3 destination)
+    {
+        agent.SetDestination(destination);
+    }
+
+    public void ChangeState(CustomerState newState)
+    {
+        _stateMachine.ChangeState(newState);
+        _currentState = newState;
+    }
+
 }

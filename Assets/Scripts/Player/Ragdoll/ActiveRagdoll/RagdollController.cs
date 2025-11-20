@@ -747,7 +747,7 @@ public class RagdollController : MonoBehaviour
         if (isRagdoll)
             SetJointAngularDrivesForLegs(in legsJointDrive);
     }
-
+    
     private void SetJointAngularDrivesForLegs(in JointDrive jointDrive)
     {
         SetJointAngularDrives(UPPER_RIGHT_LEG, in jointDrive);
@@ -782,16 +782,26 @@ public class RagdollController : MonoBehaviour
 
     public void UpdateArmRotations()
     {
+
         ConfigurableJoint upperLeftArm = RagdollDict[UPPER_LEFT_ARM].Joint;
         ConfigurableJoint upperRightArm = RagdollDict[UPPER_RIGHT_ARM].Joint;
         ConfigurableJoint lowerLeftArm = RagdollDict[LOWER_LEFT_ARM].Joint;
         ConfigurableJoint lowerRightArm = RagdollDict[LOWER_RIGHT_ARM].Joint;
 
-        upperLeftArm.targetRotation = upperLeftArmTargetRot;
-        upperRightArm.targetRotation = upperRightArmTargetRot;
-        lowerLeftArm.targetRotation = lowerLeftArmTargetRot;
-        lowerRightArm.targetRotation = lowerRightArmTargetRot;
-
+        if (!inSaveGrabDataMode)
+        {
+            upperLeftArm.targetRotation = upperLeftArmTargetRot;
+            upperRightArm.targetRotation = upperRightArmTargetRot;
+            lowerLeftArm.targetRotation = lowerLeftArmTargetRot;
+            lowerRightArm.targetRotation = lowerRightArmTargetRot;
+        }
+        else
+        {
+            upperLeftArm.targetRotation = Quaternion.Euler(upperLeftArmEuler);
+            upperRightArm.targetRotation = Quaternion.Euler(upperRightArmEuler);
+            lowerLeftArm.targetRotation = Quaternion.Euler(lowerLeftArmEuler);
+            lowerRightArm.targetRotation = Quaternion.Euler(lowerRightArmEuler);
+        }
     }
 
     public void ExtendArmsOutward(GrabData grabData)
