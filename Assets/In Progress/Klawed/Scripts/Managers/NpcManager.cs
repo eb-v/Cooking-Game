@@ -42,20 +42,22 @@ public class NpcManager : MonoBehaviour
     }
 
 
-    public void RunUpdateLogic()
+    private void Update()
     {
+
         spawnTimer += Time.deltaTime;
         if (spawnTimer >= spawnInterval)
         {
-            spawnTimer = 0f;
             SpawnNpc();
+            spawnTimer = 0f;
         }
+
     }
 
 
     public void SpawnNpc()
     {
-
+        Debug.Log("Attempting to spawn NPC...");
         int index = npcLine.Count;
         if (index >= linePositions.Length || index >= tablePositions.Length) return;
 

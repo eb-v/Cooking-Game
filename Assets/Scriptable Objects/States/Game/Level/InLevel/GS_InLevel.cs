@@ -7,31 +7,23 @@ public class GS_InLevel : GameState
 {
     [SerializeField] private SceneField inLevelScene;
 
-    private GameObject _rootManagerObject;
-    private List<GameObject> _levelSpecificManagers = new List<GameObject>();
+    [SerializeField] private List<GameObject> _levelSpecificManagers;
 
     public override void Enter()
     {
         base.Enter();
 
-
-        _rootManagerObject = GameObject.Find("Managers");
-        if (_rootManagerObject == null)
+        GameObject rootManager = new GameObject("LevelManagers");
+        foreach (GameObject managerPrefab in _levelSpecificManagers)
         {
-            Debug.LogError("Ensure there is a GameObject named 'Managers' in the scene.");
+            GameObject managerInstance = Instantiate(managerPrefab, rootManager.transform);
         }
 
-        foreach (Transform child in _rootManagerObject.transform)
-        {
-            _levelSpecificManagers.Add(child.gameObject);
-        }
-        Debug.Log("Entered In-Level State");
     }
 
     public override void Exit()
     {
         base.Exit();
-        Debug.Log("Exited In-Level State");
     }
 
     public override void FixedUpdateLogic()
