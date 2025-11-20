@@ -3,6 +3,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using TMPro;
 using System.Collections.Generic;
+using UnityEngine.Audio;
 
 public class PauseMenu : MonoBehaviour
 {
@@ -65,7 +66,7 @@ public class PauseMenu : MonoBehaviour
 
         for (int i = 0; i < resolutions.Length; i++)
         {
-            string option = resolutions[i].width + " x " + resolutions[i].height + " @ " + 
+            string option = resolutions[i].width + " x " + resolutions[i].height + " @ " +
                             resolutions[i].refreshRateRatio.value.ToString("F0") + "Hz";
             options.Add(option);
 
@@ -107,8 +108,8 @@ public class PauseMenu : MonoBehaviour
 
         if (isPausedByMenu)
         {
-            FreezeManager.PauseMenuOverride = false;       // ⭐ NEW
-            FreezeManager.ApplyState();                    // ⭐ NEW
+            FreezeManager.PauseMenuOverride = false;
+            FreezeManager.ApplyState();
 
             GameStartCountdownUI.CountdownIsPaused = false;
             isPausedByMenu = false;
@@ -148,8 +149,8 @@ public class PauseMenu : MonoBehaviour
     {
         container.SetActive(true);
 
-        FreezeManager.PauseMenuOverride = true;   // ⭐ NEW
-        FreezeManager.ApplyState();                // ⭐ NEW
+        FreezeManager.PauseMenuOverride = true;
+        FreezeManager.ApplyState();
 
         isPausedByMenu = true;
 
@@ -158,6 +159,9 @@ public class PauseMenu : MonoBehaviour
             GameStartCountdownUI.CountdownIsPaused = true;
         }
 
+        // Pause SFX
+        AudioManager.Instance?.PlaySFX("Pause");
+
         Debug.Log("Game paused by pause menu");
     }
 
@@ -165,8 +169,8 @@ public class PauseMenu : MonoBehaviour
     {
         container.SetActive(false);
 
-        FreezeManager.PauseMenuOverride = false;   // ⭐ NEW
-        FreezeManager.ApplyState();                 // ⭐ NEW
+        FreezeManager.PauseMenuOverride = false;
+        FreezeManager.ApplyState();
 
         if (GameStartCountdownUI.CountdownIsActive)
         {
@@ -175,13 +179,16 @@ public class PauseMenu : MonoBehaviour
 
         isPausedByMenu = false;
 
+        // Unpause SFX
+        AudioManager.Instance?.PlaySFX("Unpause");
+
         Debug.Log("Game resumed from pause menu");
     }
 
     public void MainMenuButton()
     {
-        FreezeManager.PauseMenuOverride = false;   // ⭐ NEW
-        FreezeManager.ApplyState();                 // ⭐ NEW
+        FreezeManager.PauseMenuOverride = false;
+        FreezeManager.ApplyState();
 
         isPausedByMenu = false;
         GameStartCountdownUI.CountdownIsPaused = false;

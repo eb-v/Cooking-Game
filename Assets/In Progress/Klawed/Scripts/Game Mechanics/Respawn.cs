@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class Respawn : MonoBehaviour
 {
-
     private void Start()
     {
         GenericEvent<OnRespawnInput>.GetEvent("RespawnManager").AddListener(OnRespawn);
@@ -11,7 +10,10 @@ public class Respawn : MonoBehaviour
     private void OnRespawn(GameObject player)
     {
         Debug.Log("Respawning player: " + player.name);
-        
+
+        // Play respawn sound via AudioManager
+        AudioManager.Instance?.PlaySFX("Respawn");
+
         // Optionally reset velocity if there's a Rigidbody component
         RagdollController rc = player.GetComponent<RagdollController>();
 
@@ -25,4 +27,3 @@ public class Respawn : MonoBehaviour
         rootRb.angularVelocity = Vector3.zero;
     }
 }
-

@@ -87,22 +87,26 @@ public class SprinklerController : MonoBehaviour {
         }
     }
     public void StartSprinkler() {
-        if (sprinklerActive) return;
-        sprinklerActive = true;
+    if (sprinklerActive) return;
+    sprinklerActive = true;
 
-        if (sprinklerEffectInstance != null) {
-            sprinklerEffectInstance.SetActive(true);
-            if (!sprinklerEffect.isPlaying)
-                sprinklerEffect.Play();
-        }
+    // sprinkler SFX
+    AudioManager.Instance?.PlaySFX("SprinklerOn");
 
-        InvokeRepeating(nameof(CheckForFires), extinguishDelay, extinguishCheckInterval);
-
-        if (sprinklerDuration > 0)
-            StartCoroutine(AutoStopSprinkler());
-
-        Debug.Log($"{name}: Sprinkler Activated for {sprinklerDuration} seconds (fires extinguish after {extinguishDelay}s)");
+    if (sprinklerEffectInstance != null) {
+        sprinklerEffectInstance.SetActive(true);
+        if (!sprinklerEffect.isPlaying)
+            sprinklerEffect.Play();
     }
+
+    InvokeRepeating(nameof(CheckForFires), extinguishDelay, extinguishCheckInterval);
+
+    if (sprinklerDuration > 0)
+        StartCoroutine(AutoStopSprinkler());
+
+    Debug.Log($"{name}: Sprinkler Activated for {sprinklerDuration} seconds (fires extinguish after {extinguishDelay}s)");
+}
+
 
     private IEnumerator AutoStopSprinkler() {
         yield return new WaitForSeconds(sprinklerDuration);
@@ -121,24 +125,28 @@ public class SprinklerController : MonoBehaviour {
     }
 
     public void StopSprinkler() {
-        if (!sprinklerActive) return;
-        sprinklerActive = false;
+    if (!sprinklerActive) return;
+    sprinklerActive = false;
 
-        CancelInvoke(nameof(CheckForFires));
-        CancelInvoke(nameof(StopSprinkler));
+    // sprinkler stop SFX
+    AudioManager.Instance?.PlaySFX("SprinklerOff");
 
-        if (sprinklerEffect != null) {
-            sprinklerEffect.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+    CancelInvoke(nameof(CheckForFires));
+    CancelInvoke(nameof(StopSprinkler));
 
-            if (ObjectPoolManager.IsPooledObject(sprinklerEffectInstance)) {
-                StartCoroutine(ReturnEffectNextFrame(sprinklerEffectInstance.GetComponent<ParticleSystem>()));
-            } else {
-                sprinklerEffectInstance.SetActive(false);
-            }
+    if (sprinklerEffect != null) {
+        sprinklerEffect.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+
+        if (ObjectPoolManager.IsPooledObject(sprinklerEffectInstance)) {
+            StartCoroutine(ReturnEffectNextFrame(sprinklerEffectInstance.GetComponent<ParticleSystem>()));
+        } else {
+            sprinklerEffectInstance.SetActive(false);
         }
-
-        Debug.Log($"{name}: Sprinkler Deactivated");
     }
+
+    Debug.Log($"{name}: Sprinkler Deactivated");
+}
+
 
     private IEnumerator ReturnEffectNextFrame(ParticleSystem ps) {
         yield return null;
@@ -149,7 +157,7 @@ public class SprinklerController : MonoBehaviour {
                 Debug.Log($"{name}: Sprinkler Effect Returned to Pool");
             } else {
                 ps.gameObject.SetActive(false);
-                Debug.LogWarning($"{name}: Sprinkler Effect was not pooled — just disabled instead.");
+                Debug.LogWarning($"{name}: Sprinkler Effect was not pooled ï¿½ just disabled instead.");
             }
         }
     }
