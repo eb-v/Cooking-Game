@@ -48,6 +48,9 @@ public class ExplosionSystem : ScriptableObject
         float roll = Random.Range(0f, 1f);
         if (roll <= explosionData.explosionChance)
         {
+            //explosion sfx
+            AudioManager.Instance?.PlaySFX("Explosion");
+
             // Trigger explosion
             // Note: The actual explosion logic should be handled elsewhere, this is just a chance check
             foreach (Transform point in explosionPoints)
