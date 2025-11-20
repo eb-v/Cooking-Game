@@ -26,11 +26,6 @@ public class SodaDispenser : MonoBehaviour, IInteractable, IAltInteractable {
 
     private MenuItem selectedDrink;
 
-    private void Start() {
-        GenericEvent<SodaSelectedEvent>.GetEvent("SodaDispenser")
-            .AddListener(OnDrinkSelected);
-    }
-
     private void OnDrinkSelected(MenuItem drink) {
         selectedDrink = drink;
         Debug.Log("Dispenser received drink selection: " + drink.name);
@@ -38,7 +33,19 @@ public class SodaDispenser : MonoBehaviour, IInteractable, IAltInteractable {
         if (hasCup) {
             Debug.Log("Cup present. Dispensing now...");
 
-            Dispense(drink.name, Color.red);
+            if (drink.name == "Coke") {
+                drinkColor = Color.black;
+            }
+            if (drink.name == "Fanta") {
+                drinkColor = Color.orange;
+            }
+            if (drink.name == "Sprite") {
+                drinkColor = Color.green;
+            }
+            if (drink.name == "Pepsi") {
+                drinkColor = Color.blue;
+            }
+            Dispense(drink.name, drinkColor);
         } else {
             Debug.Log("No cup. Waiting for cup placement...");
         }
@@ -63,7 +70,6 @@ public class SodaDispenser : MonoBehaviour, IInteractable, IAltInteractable {
     public void OnInteract(GameObject player) {
         GrabScript gs = player.GetComponent<GrabScript>();
         if (gs == null) return;
-
         if (gs.isGrabbing) {
             GameObject grabbedObject = gs.grabbedObject.GetGameObject();
             Cup drink = grabbedObject.GetComponent<Cup>();
@@ -72,24 +78,25 @@ public class SodaDispenser : MonoBehaviour, IInteractable, IAltInteractable {
 
             PlaceCupOnDispenser(drink);
 
-            gs.grabbedObject.ReleaseObject(player);
-            gs.grabbedObject = null;
+            drink.ReleaseObject(player);
         }
+        if(SodaMenu != null) {
+            SodaMenu.SetActive(true);
+        }
+
+
+        GenericEvent<InteractEvent>.GetEvent("SodaDispenser").Invoke(player);
+
     }
 
     public void OnAltInteract(GameObject player) {
         if (!hasCup) return;
 
-        GameObject cupObj = RemoveCupFromDispenser();
-        IGrabable grabable = cupObj.GetComponent<IGrabable>();
-        if (grabable != null)
-            grabable.GrabObject(player);
+        GameObject cupObj = RemoveCupFromDispenser(player);
+        if (cupObj == null) return;
     }
 
     private void PlaceCupOnDispenser(Cup cup) {
-        if (cup.isGrabbed && cup.currentPlayer != null)
-            cup.ReleaseObject(cup.currentPlayer);
-
         _currentCup = cup;
 
         Rigidbody rb = cup.GetComponent<Rigidbody>();
@@ -97,31 +104,31 @@ public class SodaDispenser : MonoBehaviour, IInteractable, IAltInteractable {
 
         cup.transform.SetParent(_cupSnapPoint);
         cup.transform.position = _cupSnapPoint.position;
-        cup.transform.localRotation = Quaternion.Euler(-90f, 90f, 0f); // cup upright and rotated Y=90
+        cup.transform.localRotation = Quaternion.Euler(-90f, 90f, 0f);
 
         Debug.Log("Cup placed. Waiting for drink selection...");
 
-        if(SodaMenu != null) {
-            SodaMenu.SetActive(true);
-        }
+        GenericEvent<SodaSelectedEvent>.GetEvent("SodaDispenser").AddListener(OnDrinkSelected);
     }
 
-    private GameObject RemoveCupFromDispenser() {
+    private GameObject RemoveCupFromDispenser(GameObject player) {
+        if (_currentCup == null) return null;
+
         GameObject cupObj = _currentCup.gameObject;
 
         Rigidbody rb = cupObj.GetComponent<Rigidbody>();
         if (rb != null) rb.isKinematic = false;
 
         cupObj.transform.SetParent(null);
+        cupObj.transform.rotation = Quaternion.identity;
+
         _currentCup = null;
 
         if (progressBar != null) progressBar.fillAmount = 0f;
-        if (SodaMenu != null) {
-            SodaMenu.SetActive(false);
-        }
+        if (SodaMenu != null) SodaMenu.SetActive(false);
         if (CompleteText != null) CompleteText.SetActive(false);
-        return cupObj;
 
+        return cupObj;
     }
 
 

@@ -20,6 +20,10 @@ public class Player : MonoBehaviour
     [HideInInspector] public BasePlayerState _unconsciousStateInstance { get; private set; }
     #endregion
 
+    [Header("Debug")]
+    [ReadOnly]
+    [SerializeField] private BasePlayerState _currentState;
+
     private void Awake()
     {
         _stateMachine = new PlayerStateMachine();
@@ -43,11 +47,13 @@ public class Player : MonoBehaviour
         _unconsciousStateInstance.Initialize(gameObject, _stateMachine);
 
         _stateMachine.Initialize(_defaultStateInstance);
+        _currentState = _defaultStateInstance;
     }
 
     public void ChangeState(BasePlayerState newState)
     {
         _stateMachine.ChangeState(newState);
+        _currentState = newState;
     }
 
     private void Update()

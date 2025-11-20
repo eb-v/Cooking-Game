@@ -13,25 +13,27 @@ public class PlayerInteraction : MonoBehaviour
 
     private void HandleInteract(GameObject player)
     {
-        if (lookedAtObj != null)
-        {
-            IInteractable interactable = lookedAtObj.GetComponent<IInteractable>();
-            if (interactable != null)
-            {
-                interactable.OnInteract(player);
-            }
-        }
+        if (lookedAtObj == null) return;
+
+        IInteractable interactable = lookedAtObj.GetComponent<IInteractable>();
+        if (interactable == null) return;
+
+        // play interact SFX
+        AudioManager.Instance?.PlaySFX("Item Interact");
+
+        interactable.OnInteract(player);
     }
 
     private void HandleAltInteract(GameObject player)
     {
-        if (lookedAtObj != null)
-        {
-            IAltInteractable altInteractable = lookedAtObj.GetComponent<IAltInteractable>();
-            if (altInteractable != null)
-            {
-                altInteractable.OnAltInteract(player);
-            }
-        }
+        if (lookedAtObj == null) return;
+
+        IAltInteractable altInteractable = lookedAtObj.GetComponent<IAltInteractable>();
+        if (altInteractable == null) return;
+
+        // use same SFX
+        AudioManager.Instance?.PlaySFX("Item Interact");
+
+        altInteractable.OnAltInteract(player);
     }
 }

@@ -43,19 +43,23 @@ public class FireController : MonoBehaviour {
     }
 
     public void StartFire() {
-        if (burning) return;
-        burning = true;
+    if (burning) return;
+    burning = true;
 
-        foreach (var ps in fireParticles) {
-            if (ps != null) {
-                ps.Clear();
-                ps.Play();
-            }
+    // fire start
+    AudioManager.Instance?.PlaySFX("FireStart");
+
+    foreach (var ps in fireParticles) {
+        if (ps != null) {
+            ps.Clear();
+            ps.Play();
         }
-
-        if (burnDuration > 0)
-            StartCoroutine(AutoStopFire());
     }
+
+    if (burnDuration > 0)
+        StartCoroutine(AutoStopFire());
+}
+
 
     private IEnumerator AutoStopFire() {
         yield return new WaitForSeconds(burnDuration);
@@ -63,17 +67,21 @@ public class FireController : MonoBehaviour {
     }
 
     public void StopFire() {
-        if (!burning) return;
-        burning = false;
+    if (!burning) return;
+    burning = false;
 
-        foreach (var ps in fireParticles)
-        {
-            if (ps != null)
-                ps.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
-        }
+    // fire extinguished SFX
+    AudioManager.Instance?.PlaySFX("FireOut");
 
-        StartCoroutine(ReturnFireNextFrame());
+    foreach (var ps in fireParticles)
+    {
+        if (ps != null)
+            ps.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
     }
+
+    StartCoroutine(ReturnFireNextFrame());
+}
+
 
     private IEnumerator ReturnFireNextFrame() {
         yield return null;

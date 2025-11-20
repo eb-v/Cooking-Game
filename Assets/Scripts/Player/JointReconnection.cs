@@ -152,7 +152,11 @@ public class JointReconnection : MonoBehaviour
         {
             Debug.LogWarning($"[JOINT RECONNECTION] {playerWhoReconnected.name} has no PlayerStats component!");
         }
+
+         // play joint reconnect SFX
+        AudioManager.Instance?.PlaySFX("Joint reconnect");
     }
+    
 
     private void SetTagRecursively(GameObject obj, string newTag)
     {

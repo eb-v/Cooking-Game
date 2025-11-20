@@ -23,6 +23,9 @@ public class RocketBoost : MonoBehaviour
 
     private void PerformRocketBoost()
     {
+        //Play rocket boost SFX
+        AudioManager.Instance?.PlaySFX("RocketBoost");
+
         // Implement rocket boost logic here
         rootRb.AddForce(Vector3.up * verticalBoostForce, ForceMode.Impulse);
         rootRb.AddForce(centerOfMass.forward * forwardBoostForce, ForceMode.Impulse);

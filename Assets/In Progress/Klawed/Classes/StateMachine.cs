@@ -2,64 +2,46 @@ using NUnit.Framework;
 using UnityEngine;
 using System.Collections.Generic;
 
-public class StateMachine
+public class StateMachine<T> where T : BaseStateSO<T>
 {
-    private BaseStateSO currentState;
-    private BaseStateSO previousState;
+    private T currentState;
+    private T previousState;
 
-    public void Initialize(BaseStateSO startingState)
+    public void Initialize(T startingState)
     {
         currentState = startingState;
-        if (currentState != null)
-        {
-            currentState.Enter();
-        }
+        currentState?.Enter();
     }
 
-    public void ChangeState(BaseStateSO newState)
+    public void ChangeState(T newState)
     {
         if (currentState != null)
         {
             currentState.Exit();
-            previousState = currentState;
-            currentState = newState;
-            currentState.Enter();
         }
-        else
-        {
-            Debug.LogWarning("StateMachine: Attempted to change state, but current state is null.");
-        }
-    }
 
-    public void RunCurrentStateLogic()
-    {
-        if (currentState != null)
-        {
-            currentState.Execute();
-        }
-    }
-
-    public void RunFixedUpdateLogic()
-    {
-        if (currentState != null)
-        {
-            currentState.FixedUpdateLogic();
-        }
+        previousState = currentState;
+        currentState = newState;
+        currentState?.Enter();
     }
 
     public void RunUpdateLogic()
     {
-        if (currentState != null)
-        {
-            currentState.UpdateLogic();
-        }
+        currentState?.UpdateLogic();
     }
 
-    public BaseStateSO GetCurrentState()
+    public void RunFixedUpdateLogic()
+    {
+        currentState?.FixedUpdateLogic();
+    }
+
+    public T GetCurrentState()
     {
         return currentState;
     }
 
-
-
+    public TS GetCurrentState<TS>() where TS : T
+    {
+        return currentState as TS;
+    }
 }

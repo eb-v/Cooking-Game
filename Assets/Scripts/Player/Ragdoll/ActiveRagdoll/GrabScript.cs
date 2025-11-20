@@ -4,9 +4,9 @@ using UnityEngine;
 public class GrabScript : MonoBehaviour
 {
     [SerializeField] private Env_Interaction env_Interaction;
-    private GameObject lookedAtObj => env_Interaction.currentlyLookingAt;
+    //private GameObject lookedAtObj => env_Interaction.currentlyLookingAt;
     [field:SerializeField] public IGrabable grabbedObject { get; set; }
-    public bool isGrabbing => grabbedObject != null;
+     public bool isGrabbing => grabbedObject != null;
     
 
     private void Awake()
@@ -24,35 +24,11 @@ public class GrabScript : MonoBehaviour
         GenericEvent<OnAlternateInteractInput>.GetEvent(gameObject.name).AddListener(OnAlternateInteract);
         GenericEvent<OnObjectGrabbed>.GetEvent(gameObject.name).AddListener(OnObjectGrabbed);
     }
-
-    private void GrabObject(GameObject player)
-    {
-        if (lookedAtObj != null)
-        {
-            // if object can be grabbed
-            IGrabable grabable = lookedAtObj.GetComponent<IGrabable>();
-            if (grabable != null)
-            {
-                if (!isGrabbing)
-                {
-                    grabable.GrabObject(player);
-                    grabbedObject = grabable;
-                }
-                else
-                {
-                    Debug.Log("Already grabbing an object.");
-                }
-                
-            }
-        }
-    }
-
     private void OnAlternateInteract(GameObject player)
     {
         if (isGrabbing)
         {
             grabbedObject.ReleaseObject(player);
-            grabbedObject = null;
         }
     }
 

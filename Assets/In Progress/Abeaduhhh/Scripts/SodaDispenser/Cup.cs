@@ -8,7 +8,7 @@ public class Cup : MonoBehaviour, IGrabable, IInteractable, IAltInteractable {
     [field: SerializeField] public GrabData grabData { get; set; }
     [field: SerializeField] public GameObject currentPlayer { get; set; }
 
-    [SerializeField] public GameObject liquidObject;
+    [SerializeField] public GameObject LidObject;
 
     public void FillCup(string drinkName, Color drinkColor) {
         if (isFilled) return;
@@ -16,14 +16,18 @@ public class Cup : MonoBehaviour, IGrabable, IInteractable, IAltInteractable {
         drinkType = drinkName;
         isFilled = true;
 
-        if (liquidObject != null)
-            liquidObject.SetActive(true);
-            Renderer rend = liquidObject.GetComponent<Renderer>();
+        if (LidObject != null) {
+            LidObject.SetActive(true);
+
+            Renderer rend = LidObject.GetComponent<Renderer>();
             if (rend != null) {
                 rend.material.color = drinkColor;
             }
+        }
+
         Debug.Log("Cup filled with: " + drinkName);
     }
+
 
     public void GrabObject(GameObject player) {
         if (isGrabbed) return;
@@ -52,6 +56,7 @@ public class Cup : MonoBehaviour, IGrabable, IInteractable, IAltInteractable {
     }
 
     public void ReleaseObject(GameObject player) {
+        if (!isGrabbed) return;
         GrabSystem.ReleaseObject(player);
         isGrabbed = false;
         currentPlayer = null;

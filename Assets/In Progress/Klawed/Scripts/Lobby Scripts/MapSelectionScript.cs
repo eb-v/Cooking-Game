@@ -12,6 +12,9 @@ public class MapSelectionScript : MonoBehaviour
     [SerializeField] private int currentIndex = 0;
     [SerializeField] private string assignedPlayerName = "Player 1";
 
+    [SerializeField] private SceneField levelToLoad;
+    [SerializeField] private SceneField lobbyScene;
+
     private void Awake()
     {
         GenericEvent<OnNextOptionInput>.GetEvent(assignedPlayerName).AddListener(OnNextOption);
@@ -34,7 +37,10 @@ public class MapSelectionScript : MonoBehaviour
     private void OnSelect()
     {
         if (gameObject.activeInHierarchy == false) return;
-        SceneManager.LoadScene("Level 1");
+        SceneManager.LoadScene(levelToLoad, LoadSceneMode.Additive);
+        SceneManager.UnloadSceneAsync(lobbyScene);
+
+        GameManager.Instance.ChangeState(GameManager.Instance._inLevelStateInstance);
     }
 
 
