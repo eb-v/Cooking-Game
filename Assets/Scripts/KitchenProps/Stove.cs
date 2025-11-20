@@ -1,66 +1,64 @@
+using NUnit.Framework;
 using UnityEditor.Rendering;
 using UnityEngine;
+using System.Collections.Generic;
+using UnityEngine.UI;
 
 public class Stove : MonoBehaviour, IInteractable, IAltInteractable
 {
-    [SerializeField] private Transform objectSnapPoint;
+    [field: SerializeField] public Transform objectSnapPoint { get; private set; }
 
-    private CookingRecipe _currentRecipe;
+    public CookingRecipe _currentRecipe { get; set; }
 
+    public GameObject _currentObject { get; set; }
 
-    private GameObject _currentObject;
+    public bool hasObject => _currentObject != null;
 
-    private bool hasObject => _currentObject != null;
+    private StateMachine<StoveState> _stateMachine;
 
-    private StateMachine _stateMachine;
+    [Header("Visuals")]
+    public Canvas _stoveUICanvas;
+    public Image _stoveUICookFillImage;
+    public Image _stoveUIBurnFillImage;
+
+    [Header("States")]
+    [SerializeField] private StoveState _idleStateBase;
+    [SerializeField] private StoveState _cookingStateBase;
+
+    [Header("Cooking Settings")]
+    [field: SerializeField] public float cookingDuration { get; private set; } = 5f;
+    [field: SerializeField] public float burnDuration { get; private set; } = 8f;
+
+    public StoveState _idleStateInstance { get; private set; }
+    public StoveState _cookingStateInstance { get; private set; }
 
 
     private void Awake()
     {
-        _stateMachine = new StateMachine();
+        _stateMachine = new StateMachine<StoveState>();
 
-
+        _idleStateInstance = Instantiate(_idleStateBase);
+        _cookingStateInstance = Instantiate(_cookingStateBase);
     }
+
+    private void Start()
+    {
+        _idleStateInstance.Initialize(gameObject, _stateMachine);
+        _cookingStateInstance.Initialize(gameObject, _stateMachine);
+
+        _stateMachine.Initialize(_idleStateInstance);
+    }
+
 
     public void OnAltInteract(GameObject player)
     {
-        if (!hasObject)
-            return;
-        IGrabable grabable = _currentObject.GetComponent<IGrabable>();
-        RemoveObjectFromStove(grabable);
-
+        _stateMachine.GetCurrentState<StoveState>().AltInteractLogic(player);
     }
 
     public void OnInteract(GameObject player)
     {
-        if (hasObject)
-            return;
-
-        GrabScript gs = player.GetComponent<GrabScript>();
-        if (gs.isGrabbing)
-        {
-            GameObject grabbedObject = gs.grabbedObject.GetGameObject();
-
-            if (!IsItemCompatible(grabbedObject))
-            {
-                Debug.Log("Object is not compatible with the stove.");
-                return;
-            }
-
-            PlaceObjectOntoStove(gs.grabbedObject);
-        }
+        _stateMachine.GetCurrentState<StoveState>().InteractLogic(player, this);
     }
-
-    private void PlaceObjectOntoStove(IGrabable grabbedObj)
-    {
-        Debug.Log("Placing object onto stove.");
-    }
-
-    private void RemoveObjectFromStove(IGrabable grabbedObj)
-    {
-        Debug.Log("Removing object from stove.");
-    }
-
     private void Update()
     {
         _stateMachine.RunUpdateLogic();
@@ -71,13 +69,13 @@ public class Stove : MonoBehaviour, IInteractable, IAltInteractable
         _stateMachine.RunFixedUpdateLogic();
     }
 
-    public void ChangeState(BaseStateSO newState)
+    public void ChangeState(StoveState newState)
     {
         _stateMachine.ChangeState(newState);
     }
 
 
-    private bool IsItemCompatible(GameObject objectToCheck)
+    public bool IsItemCompatible(GameObject objectToCheck)
     {
         if (objectToCheck.GetComponent<IngredientScript>() == null)
             return false;
@@ -89,12 +87,32 @@ public class Stove : MonoBehaviour, IInteractable, IAltInteractable
         if (cookingRecipe == null)
             return false;
 
-        _currentRecipe = cookingRecipe;
-
         return true;
     }
 
+    public GameObject RemoveObject(GameObject player)
+    {
+        IngredientScript ingredient = _currentObject.GetComponent<IngredientScript>();
+
+        GameObject physicsObj = _currentObject.GetComponent<PhysicsTransform>().physicsTransform.gameObject;
+
+        if (physicsObj == null)
+        {
+            Debug.LogError("Physics obj not found when removing object from counter");
+            return null;
+        }
 
 
+        Rigidbody rb = physicsObj.GetComponent<Rigidbody>();
+        rb.isKinematic = false;
+
+        IGrabable grabable = _currentObject.GetComponent<IGrabable>();
+        grabable.GrabObject(player);
+
+
+        _currentObject = null;
+        _currentRecipe = null;
+        return physicsObj;
+    }
 
 }

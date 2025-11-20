@@ -25,6 +25,7 @@ public class MainMenuUI : MonoBehaviour
     {
         if (_loadingBarGameObject) _loadingBarGameObject.SetActive(false);
         ApplyLoadingBarColors(); // <- purely visual
+        SceneManager.LoadSceneAsync(_persistentGamePlay, LoadSceneMode.Additive);
     }
 
     public void StartGame()
@@ -34,8 +35,8 @@ public class MainMenuUI : MonoBehaviour
         if (_loadingBarGameObject) _loadingBarGameObject.SetActive(true);
 
         // (kept as-is) If you intended additive for both, change the first line to Additive later
-        _scenesToLoad.Add(SceneManager.LoadSceneAsync(_persistentGamePlay));
         _scenesToLoad.Add(SceneManager.LoadSceneAsync(_playScene, LoadSceneMode.Additive));
+        SceneManager.UnloadSceneAsync("MainMenuScene");
 
         StartCoroutine(ProgressLoadingBar());
     }
@@ -73,6 +74,7 @@ public class MainMenuUI : MonoBehaviour
 
         // set play scene as active
         SceneManager.SetActiveScene(SceneManager.GetSceneByName(_playScene.SceneName));
+        GameManager.Instance.ChangeState(GameManager.Instance._lobbyStateInstance);
     }
 
     // === Minimal visual helper ===

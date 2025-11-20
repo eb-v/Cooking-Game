@@ -1,39 +1,19 @@
 using UnityEngine;
 
-public class BaseStateSO : ScriptableObject
+public abstract class BaseStateSO<T> : ScriptableObject where T : BaseStateSO<T>
 {
     protected GameObject gameObject;
-    protected StateMachine stateMachine;
+    protected StateMachine<T> stateMachine;
 
-    public virtual void Initialize(GameObject gameObject, StateMachine stateMachine)
+    public virtual void Initialize(GameObject gameObject, StateMachine<T> stateMachine)
     {
         this.gameObject = gameObject;
         this.stateMachine = stateMachine;
     }
 
-    public virtual void Enter()
-    {
-        
-    }
-
-    public virtual void Execute()
-    {
-
-    }
-
-    public virtual void FixedUpdateLogic()
-    {
-    }
-
-    public virtual void UpdateLogic()
-    {
-    }
-
-    public virtual void Exit()
-    {
-
-    }
-
-
-
+    public virtual void Enter() { }
+    public virtual void FixedUpdateLogic() { }
+    public virtual void UpdateLogic() { }
+    public virtual void Exit() { }
 }
+

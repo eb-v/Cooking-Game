@@ -77,6 +77,7 @@ public class GrabSystem : ScriptableObject
             return;
 
         GrabScript grabScript = player.GetComponent<GrabScript>();
+        grabScript.grabbedObject = null;
         RagdollController rc = player.GetComponent<RagdollController>();
         GameObject lowerRightArm = rc.RagdollDict["LowerRightArm"].gameObject;
         GameObject lowerLeftArm = rc.RagdollDict["LowerLeftArm"].gameObject;
