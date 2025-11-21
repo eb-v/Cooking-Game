@@ -1,35 +1,64 @@
 using System.Runtime.CompilerServices;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GrabScript : MonoBehaviour
 {
-    [SerializeField] private Env_Interaction env_Interaction;
-    //private GameObject lookedAtObj => env_Interaction.currentlyLookingAt;
+    //[SerializeField] private Env_Interaction env_Interaction;
+    [SerializeField] private float throwForceMultiplier = 1f;
+    [SerializeField] private float maxThrowCharge = 10f;
+    [Header("Visual")]
+    [SerializeField] private GameObject throwChargeVisual;
+    [SerializeField] private Image throwChargeFillImage;
+
+    [ReadOnly]
+    [SerializeField] private float throwCharge = 0f;
     [field:SerializeField] public IGrabable grabbedObject { get; set; }
      public bool isGrabbing => grabbedObject != null;
     
 
     private void Awake()
     {
-        env_Interaction = GetComponent<Env_Interaction>();
-        if (env_Interaction == null)
-        {
-            Debug.LogError("Env_Interaction component not found on GrabScript GameObject.");
-        }
+        
     }
 
     private void Start()
     {
         //GenericEvent<OnInteractInput>.GetEvent(gameObject.name).AddListener(GrabObject);
-        GenericEvent<OnAlternateInteractInput>.GetEvent(gameObject.name).AddListener(OnAlternateInteract);
+        GenericEvent<OnThrowHeld>.GetEvent(gameObject.name).AddListener(ChargeThrow);
+        //GenericEvent<OnThrowReleased>.GetEvent(gameObject.name).AddListener(PerformThrow);
         GenericEvent<OnObjectGrabbed>.GetEvent(gameObject.name).AddListener(OnObjectGrabbed);
     }
     private void OnAlternateInteract(GameObject player)
     {
         if (isGrabbing)
         {
-            grabbedObject.ReleaseObject(player);
         }
+    }
+
+    private void ChargeThrow()
+    {
+        if (!isGrabbing)
+            return;
+
+        if (throwCharge < maxThrowCharge)
+        {
+            throwCharge += Time.deltaTime * throwForceMultiplier;
+        }
+        else
+        {
+            throwCharge = maxThrowCharge;
+        }
+        throwChargeFillImage.fillAmount = throwCharge / maxThrowCharge;
+    }
+
+    private void PerformThrow(GameObject player)
+    {
+        if (!isGrabbing)
+            return;
+
+        grabbedObject.ThrowObject(player);
+
     }
 
     private void OnObjectGrabbed(IGrabable grabbedObj)

@@ -143,6 +143,18 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public void OnThrowInput(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            GenericEvent<OnThrowHeld>.GetEvent(gameObject.name).Invoke();
+        }
+        else if (context.canceled)
+        {
+            GenericEvent<OnThrowReleased>.GetEvent(gameObject.name).Invoke();
+        }
+    }
+
     public void OnDpadInteract(InputAction.CallbackContext context)
     {
         if (context.performed)

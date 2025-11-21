@@ -44,4 +44,12 @@ public class MenuItemScript : MonoBehaviour, IGrabable, IInteractable
         currentPlayer = player;
         grabCollider.enabled = false;
     }
+
+    public void ThrowObject(GameObject player)
+    {
+        ReleaseObject(player);
+        Transform physicsTransform = gameObject.GetComponent<PhysicsTransform>().physicsTransform;
+        Rigidbody rb = physicsTransform.GetComponent<Rigidbody>();
+        RagdollController rc = player.GetComponent<RagdollController>();
+    }
 }

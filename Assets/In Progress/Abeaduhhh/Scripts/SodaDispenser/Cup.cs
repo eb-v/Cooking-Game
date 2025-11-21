@@ -76,4 +76,9 @@ public class Cup : MonoBehaviour, IGrabable, IInteractable, IAltInteractable {
 
         return cupComponent?.gameObject;
     }
+
+    public void ThrowObject(GameObject player)
+    {
+
+    }
 }

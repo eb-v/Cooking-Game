@@ -10,4 +10,6 @@ public interface IGrabable
     void GrabObject(GameObject player);
 
     void ReleaseObject(GameObject player);
+
+    void ThrowObject(GameObject player);
 }

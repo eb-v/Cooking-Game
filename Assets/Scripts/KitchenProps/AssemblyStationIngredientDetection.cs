@@ -5,11 +5,7 @@ public class AssemblyStationIngredientDetection : MonoBehaviour
 {
     private void OnTriggerEnter(Collider other)
     {
-        GenericEvent<IngredientEnteredAssemblyArea>.GetEvent(transform.root.name).Invoke(other.gameObject);
+        GenericEvent<AssemblyStationColliderEntered>.GetEvent("AssemblyStation").Invoke(other.transform.root.gameObject);
     }
 
-    private void OnTriggerExit(Collider other)
-    {
-        GenericEvent<IngredientExitedAssemblyArea>.GetEvent(transform.root.name).Invoke(other.gameObject);
-    }
 }

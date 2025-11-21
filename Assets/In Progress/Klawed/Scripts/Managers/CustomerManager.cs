@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine.AI;
 using UnityEngine;
-
+using UnityEngine.SceneManagement;
 public class CustomerManager : MonoBehaviour
 {
     [Header("NPC Settings")]
@@ -16,7 +16,6 @@ public class CustomerManager : MonoBehaviour
     [SerializeField] private int maxActiveCustomers = 4;
 
     [Header("References")]
-    [SerializeField] private OrderSystem orderSystem;
     [SerializeField] private Transform[] spawnPositions;
     [SerializeField] private Transform[] linePositions;
     [SerializeField] private Transform[] tablePositions;
@@ -84,7 +83,7 @@ public class CustomerManager : MonoBehaviour
 
     private void AssignOrder(Customer customer)
     {
-        MenuItem order = orderSystem.GetRandomOrder();
+        MenuItem order = OrderManager.Instance.GetRandomOrder();
         customer.SetOrder(order);
     }
 
