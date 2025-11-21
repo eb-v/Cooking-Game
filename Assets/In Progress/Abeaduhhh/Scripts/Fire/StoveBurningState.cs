@@ -14,7 +14,6 @@ public class StoveBurningState : StoveState {
         base.Enter();
 
         burnTimer = 0f;
-
         stove._stoveUICanvas.enabled = true;
         stove._stoveUIBurnFillImage.enabled = true;
         stove._stoveUICookFillImage.enabled = false;
@@ -22,30 +21,27 @@ public class StoveBurningState : StoveState {
         Debug.Log("Entered Stove Burning State");
 
         if (FireSystem.SystemEnabled) {
-
             var burnable = stove.GetComponent<Burnable>();
-            if (burnable != null)
-                burnable.Ignite();
-            else
+            if (burnable != null) {
+                burnable.TryIgniteWithDelay();
+            } else {
                 Debug.LogWarning("Stove has no Burnable!");
+            }
 
-            FireSystem.IgniteObject(stove.objectSnapPoint.gameObject);
         }
-   
     }
-
     public override void UpdateLogic() {
         base.UpdateLogic();
 
         burnTimer += Time.deltaTime;
         stove._stoveUIBurnFillImage.fillAmount = burnTimer / stove.burnDuration;
 
-        if (burnTimer >= stove.burnDuration) {
-            BurnIngredient();
-            Debug.Log("Ingredient fully burned.");
+        //if (burnTimer >= stove.burnDuration) {
+        //    BurnIngredient();
+        //    Debug.Log("Ingredient fully burned.");
 
-            stateMachine.ChangeState(stove._idleStateInstance);
-        }
+        //    stateMachine.ChangeState(stove._idleStateInstance);
+        //}
     }
 
     public override void Exit() {
@@ -67,26 +63,26 @@ public class StoveBurningState : StoveState {
         stateMachine.ChangeState(stove._idleStateInstance);
     }
 
-    private void BurnIngredient() {
-        if (stove._currentRecipe == null) {
-            Debug.LogError("Burning: No recipe while trying to burn ingredient!");
-            return;
-        }
+    //private void BurnIngredient() {
+    //    if (stove._currentRecipe == null) {
+    //        Debug.LogError("Burning: No recipe while trying to burn ingredient!");
+    //        return;
+    //    }
 
-        GameObject burnedPrefab = stove._currentRecipe.output[^1].Prefab;
-        GameObject burnedObj = Instantiate(burnedPrefab, stove.objectSnapPoint.position, Quaternion.identity);
+    //    GameObject burnedPrefab = stove._currentRecipe.output[^1].Prefab;
+    //    GameObject burnedObj = Instantiate(burnedPrefab, stove.objectSnapPoint.position, Quaternion.identity);
 
-        var ingredientScript = burnedObj.GetComponent<IngredientScript>();
-        ingredientScript.grabCollider.enabled = false;
+    //    var ingredientScript = burnedObj.GetComponent<IngredientScript>();
+    //    ingredientScript.grabCollider.enabled = false;
 
-        Transform physicsObj = burnedObj.GetComponent<PhysicsTransform>().physicsTransform;
-        Rigidbody rb = physicsObj.GetComponent<Rigidbody>();
+    //    Transform physicsObj = burnedObj.GetComponent<PhysicsTransform>().physicsTransform;
+    //    Rigidbody rb = physicsObj.GetComponent<Rigidbody>();
 
-        rb.isKinematic = true;
-        physicsObj.position = stove.objectSnapPoint.position;
+    //    rb.isKinematic = true;
+    //    physicsObj.position = stove.objectSnapPoint.position;
 
-        Destroy(stove._currentObject);
-        stove._currentObject = burnedObj;
-        stove._currentRecipe = null;
-    }
+    //    Destroy(stove._currentObject);
+    //    stove._currentObject = burnedObj;
+    //    stove._currentRecipe = null;
+    //}
 }

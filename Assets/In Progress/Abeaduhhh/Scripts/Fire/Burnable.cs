@@ -41,10 +41,10 @@ public class Burnable : MonoBehaviour, IFlammable {
         while (isOnFire) {
             Collider[] hits = Physics.OverlapSphere(transform.position, spreadRadius);
             foreach (var hit in hits) {
-                if (hit.TryGetComponent(out IFlammable flame) &&
+                if (hit.TryGetComponent(out Burnable flame) &&
                     flame.CanCatchFire &&
                     !flame.IsOnFire) {
-                    flame.Ignite();
+                    flame.TryIgniteWithDelay();
                 }
             }
             yield return new WaitForSeconds(1f);
