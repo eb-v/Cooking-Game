@@ -24,6 +24,7 @@ public class Stove : MonoBehaviour, IInteractable, IAltInteractable
     [Header("States")]
     [SerializeField] private StoveState _idleStateBase;
     [SerializeField] private StoveState _cookingStateBase;
+    [SerializeField] private StoveState _burningStateBase;
 
     [Header("Cooking Settings")]
     [field: SerializeField] public float cookingDuration { get; private set; } = 5f;
@@ -31,6 +32,8 @@ public class Stove : MonoBehaviour, IInteractable, IAltInteractable
 
     public StoveState _idleStateInstance { get; private set; }
     public StoveState _cookingStateInstance { get; private set; }
+    public StoveState _burningStateInstance { get; private set; }
+
 
 
     private void Awake()
@@ -39,12 +42,14 @@ public class Stove : MonoBehaviour, IInteractable, IAltInteractable
 
         _idleStateInstance = Instantiate(_idleStateBase);
         _cookingStateInstance = Instantiate(_cookingStateBase);
+        _burningStateInstance = Instantiate(_burningStateBase);
     }
 
     private void Start()
     {
         _idleStateInstance.Initialize(gameObject, _stateMachine);
         _cookingStateInstance.Initialize(gameObject, _stateMachine);
+        _burningStateInstance.Initialize(gameObject, _stateMachine);
 
         _stateMachine.Initialize(_idleStateInstance);
     }

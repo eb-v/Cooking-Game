@@ -32,7 +32,6 @@ public class Cup : MonoBehaviour, IGrabable, IInteractable, IAltInteractable {
     public void GrabObject(GameObject player) {
         if (isGrabbed) return;
 
-        // Get the root cup object in case the player grabbed a child
         GameObject grabbedObj = GetRootCupObject();
         if (grabbedObj == null) {
             Debug.LogWarning("No valid cup object found to grab!");
@@ -70,7 +69,6 @@ public class Cup : MonoBehaviour, IGrabable, IInteractable, IAltInteractable {
 
     public void OnAltInteract(GameObject player) => ReleaseObject(player);
 
-    // Helper to get the root Cup object in case a child is grabbed
     private GameObject GetRootCupObject() {
         Cup cupComponent = GetComponent<Cup>()
                           ?? GetComponentInChildren<Cup>()
