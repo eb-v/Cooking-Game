@@ -32,7 +32,7 @@ public class AudioManager : MonoBehaviour
         }
 
         Instance = this;
-        DontDestroyOnLoad(gameObject);
+        // DontDestroyOnLoad(gameObject);
 
         if (sfxSource == null)
             sfxSource = GetComponent<AudioSource>();
