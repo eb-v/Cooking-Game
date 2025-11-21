@@ -25,7 +25,7 @@ public class MainMenuUI : MonoBehaviour
     {
         if (_loadingBarGameObject) _loadingBarGameObject.SetActive(false);
         ApplyLoadingBarColors(); // <- purely visual
-        SceneManager.LoadSceneAsync(_persistentGamePlay, LoadSceneMode.Additive);
+        // SceneManager.LoadSceneAsync(_persistentGamePlay, LoadSceneMode.Additive);
     }
 
     public void StartGame()

@@ -11,6 +11,10 @@ public class TrainScript : MonoBehaviour
     private Vector3 initialPosition;
     private Quaternion initialRotation;
     
+    [Header("Camera Shake")]
+    [SerializeField] private float shakeDuration  = 0.35f;
+    [SerializeField] private float shakeMagnitude = 0.9f;
+    
     public void Initialize(TrainData trainData)
     {
         this.trainData = trainData;
@@ -132,9 +136,14 @@ public class TrainScript : MonoBehaviour
         LaunchTrain();
     }
     
-    private void LaunchTrain()
+        private void LaunchTrain()
     {
         hasLaunched = true;
+
+        if (CameraShake.Instance != null)
+            CameraShake.Instance.Shake();
+
+        AudioManager.Instance?.PlaySFX("Train");
     }
     
     public void StopTrain()

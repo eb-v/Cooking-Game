@@ -92,8 +92,9 @@ public class StoveCookingState : StoveState
             if (cookingTimer >= stove.burnDuration)
             {
                 CookIngredient();
-                Debug.Log("Ingredient has burned. Returning to Idle State.");
-                stateMachine.ChangeState(stove._idleStateInstance);
+                Debug.Log("Ingredient has burned. Going into the burning state.");
+                stateMachine.ChangeState(stove._burningStateInstance);
+
             }
 
         }
