@@ -21,12 +21,17 @@ public class StoveBurningState : StoveState {
 
         Debug.Log("Entered Stove Burning State");
 
-        if (FireSystem.SystemEnabled && stove.objectSnapPoint != null) {
-            FireSystem.IgniteObject(stove.objectSnapPoint.gameObject);
-            Debug.Log("Ignited fire on stove.");
+        if (FireSystem.SystemEnabled) {
 
-            fireInstance = stove.objectSnapPoint.childCount > 0 ? stove.objectSnapPoint.GetChild(0).gameObject : null;
+            var burnable = stove.GetComponent<Burnable>();
+            if (burnable != null)
+                burnable.Ignite();
+            else
+                Debug.LogWarning("Stove has no Burnable!");
+
+            FireSystem.IgniteObject(stove.objectSnapPoint.gameObject);
         }
+   
     }
 
     public override void UpdateLogic() {

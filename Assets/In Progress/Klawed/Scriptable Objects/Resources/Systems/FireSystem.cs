@@ -44,12 +44,18 @@ public class FireSystem : ScriptableObject
     }
 
 
-    public static void IgniteObject(GameObject objToIgnite)
-    {
+    public static void IgniteObject(GameObject objToIgnite) {
         if (!SystemEnabled)
             return;
-        
-        GameObject fireObj = Instantiate(Instance.firePrefab, objToIgnite.transform.position, Quaternion.identity, objToIgnite.transform);
+
+        Collider col = objToIgnite.GetComponent<Collider>();
+        Vector3 spawnPos = objToIgnite.transform.position;
+
+        if (col != null) {
+            spawnPos = col.bounds.center + new Vector3(0, col.bounds.extents.y, 0);
+        }
+
+        GameObject fireObj = Instantiate(Instance.firePrefab, spawnPos, Quaternion.identity, objToIgnite.transform);
         FireController fireController = fireObj.GetComponent<FireController>();
         ignitedObjects[objToIgnite] = fireController;
     }
