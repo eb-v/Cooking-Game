@@ -57,7 +57,7 @@ public class GrabScript : MonoBehaviour
         if (!isGrabbing)
             return;
 
-        grabbedObject.ThrowObject(player, throwCharge);
+        grabbedObject.ThrowObject(player);
 
     }
 
