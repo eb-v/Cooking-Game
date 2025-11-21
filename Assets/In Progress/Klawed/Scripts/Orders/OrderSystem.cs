@@ -6,6 +6,20 @@ public class OrderSystem : MonoBehaviour
 {
     [SerializeField] private AvailableOrdersSO _availableOrders;
 
+    private static OrderSystem instance;
+
+    public static OrderSystem Instance
+    {
+        get
+        {
+            if (instance == null)
+            {
+                instance = new GameObject("OrderManager").AddComponent<OrderSystem>();
+            }
+            return instance;
+        }
+    }
+
 
     // Get a random order from the list
     public MenuItem GetRandomOrder()

@@ -192,3 +192,6 @@ public class OnRightTriggerInput : UnityEvent { }
 public class OnRightTriggerCancel : UnityEvent { }
 
 public class SodaSelectedEvent : UnityEvent<MenuItem> { }
+
+public class OnCustomerServed : UnityEvent<Customer> { }
+public class CustomerFinishedEating : UnityEvent<Customer> { }

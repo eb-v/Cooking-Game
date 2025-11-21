@@ -210,7 +210,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1170962437775558925}
-  - {fileID: 4075422545561929174}
   m_Father: {fileID: 4894856755761142468}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -235,6 +234,7 @@ MonoBehaviour:
   dampingRatio: 0.7
   maxGoal: 1
   minGoal: 0
+  startAtEndPosition: 0
   assignedEventChannel: DefaultChannel
   nudgeStrength: 1
   useGameObjectNameAsEventChannel: 0
@@ -422,10 +422,9 @@ GameObject:
   - component: {fileID: 806953584572983670}
   - component: {fileID: 5434055776899132203}
   - component: {fileID: 2285271266827683906}
-  - component: {fileID: 4797103230959545440}
   - component: {fileID: 5001999792659915111}
   m_Layer: 0
-  m_Name: animated_npc
+  m_Name: Customer
   m_TagString: Customer
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -487,8 +486,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08dd4b86e040498488a5953eedc6d0d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NPC
-  animator: {fileID: 7170812900856514564}
-  agent: {fileID: 2285271266827683906}
   npcCanvas: {fileID: 429348174620091200}
 --- !u!114 &5434055776899132203
 MonoBehaviour:
@@ -502,13 +499,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc777c791744882448d4e573a9aefacf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NPCController
-  currentState: 0
-  npc: {fileID: 806953584572983670}
-  manager: {fileID: 0}
   assignedChannel: OrderDisplay
+  handHoldPoint: {fileID: 0}
+  agent: {fileID: 2285271266827683906}
+  animator: {fileID: 7170812900856514564}
+  orderImage: {fileID: 6250342243384077011}
+  bubbleImage: {fileID: 7681488134155461885}
+  inLine: {fileID: 11400000, guid: 53f61a865daf4b14f8c84bb0ca136009, type: 2}
+  ordering: {fileID: 11400000, guid: 11949402b54d1b34fb6d546bc793143e, type: 2}
+  walkToTable: {fileID: 11400000, guid: a03d694545c188849bce2691b4e6ad9d, type: 2}
+  eating: {fileID: 11400000, guid: 3bf7c97c40cc4644e9e83722d3c3640c, type: 2}
+  leaving: {fileID: 11400000, guid: a84c2f6ba85844f4697d9c6139a789d3, type: 2}
+  _inLineInstance: {fileID: 0}
+  _orderingInstance: {fileID: 0}
+  _walkToTableInstance: {fileID: 0}
+  _eatAtTableInstance: {fileID: 0}
+  _leaveInstance: {fileID: 0}
   targetLine: {fileID: 0}
   tablePositions: {fileID: 0}
   exitPoint: {fileID: 0}
+  _currentState: {fileID: 0}
+  debug_CurrentOrder: {fileID: 0}
 --- !u!195 &2285271266827683906
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -531,19 +542,6 @@ NavMeshAgent:
   m_BaseOffset: 7.5
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &4797103230959545440
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1059928257303362132}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 543b75487f73007488fb3945968ae2d8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::NpcOrderScript
-  foodImage: {fileID: 6250342243384077011}
 --- !u!65 &5001999792659915111
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -810,7 +808,7 @@ GameObject:
   - component: {fileID: 5834681304301713022}
   - component: {fileID: 6250342243384077011}
   m_Layer: 5
-  m_Name: Food
+  m_Name: OrderImage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -825,10 +823,10 @@ RectTransform:
   m_GameObject: {fileID: 2643815156167570337}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.4876, y: 1, z: 1}
+  m_LocalScale: {x: 1.4876001, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 7837811551076327417}
+  m_Father: {fileID: 1170962437775558925}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -850,7 +848,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2643815156167570337}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
@@ -1544,8 +1542,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 8.205361, y: 11.148367, z: 5.628028}
-  m_Center: {x: 0.23598756, y: -2.9703066, z: -0.28573674}
+  m_Size: {x: 11.5304, y: 22.713959, z: 10.894087}
+  m_Center: {x: -0.08236127, y: 2.8124907, z: 0.42964807}
 --- !u!1 &9082088988438119165
 GameObject:
   m_ObjectHideFlags: 0
@@ -1726,6 +1724,7 @@ GameObject:
   - component: {fileID: 1170962437775558925}
   - component: {fileID: 3179216205660268217}
   - component: {fileID: 7681488134155461885}
+  - component: {fileID: 4150372521359573772}
   m_Layer: 5
   m_Name: BubbleImage
   m_TagString: Untagged
@@ -1744,7 +1743,8 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: -0.0000003502162}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 4075422545561929174}
   m_Father: {fileID: 7837811551076327417}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -1767,7 +1767,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9203367374009790665}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
@@ -1790,3 +1790,16 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &4150372521359573772
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9203367374009790665}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31a19414c41e5ae4aae2af33fee712f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Mask
+  m_ShowMaskGraphic: 1
