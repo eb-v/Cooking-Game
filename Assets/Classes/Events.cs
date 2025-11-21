@@ -86,11 +86,6 @@ public class ReleaseHeldJoint : UnityEvent<GameObject> { }
 
 public class LimbDamaged : UnityEvent<float> { }
 
-public class IngredientEnteredAssemblyArea : UnityEvent<GameObject> { }
-
-public class IngredientExitedAssemblyArea : UnityEvent<GameObject> { }
-
-
 public class MoveImageEvent : UnityEvent<bool> { }
 
 public class UpdateGoalValueEvent : UnityEvent<float> { }
@@ -195,3 +190,8 @@ public class SodaSelectedEvent : UnityEvent<MenuItem> { }
 
 public class OnCustomerServed : UnityEvent<Customer> { }
 public class CustomerFinishedEating : UnityEvent<Customer> { }
+
+public class AssemblyStationColliderEntered : UnityEvent<GameObject> { }
+
+public class OnThrowHeld : UnityEvent { }
+public class OnThrowReleased : UnityEvent { }

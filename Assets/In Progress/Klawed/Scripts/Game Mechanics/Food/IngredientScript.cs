@@ -43,13 +43,24 @@ public class IngredientScript : MonoBehaviour, IGrabable, IInteractable
         currentPlayer = player;
         grabCollider.enabled = false;
     }
-
     public void ReleaseObject(GameObject player)
     {
         GrabSystem.ReleaseObject(player);
         isGrabbed = false;
         currentPlayer = null;
         grabCollider.enabled = true;
+    }
+
+    public void ThrowObject(GameObject player)
+    {
+        ReleaseObject(player);
+
+        Transform physicsTransform = gameObject.GetComponent<PhysicsTransform>().physicsTransform;
+        Rigidbody rb = physicsTransform.GetComponent<Rigidbody>();
+        RagdollController rc = player.GetComponent<RagdollController>();
+        Vector3 throwDirection = rc.centerOfMass.forward;
+
+        
     }
 
     public GameObject GetGameObject() => gameObject;
