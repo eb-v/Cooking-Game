@@ -228,7 +228,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""RightTrigger"",
+                    ""name"": ""Throw"",
                     ""type"": ""Button"",
                     ""id"": ""d1efed0b-4a74-41f5-a138-e70562486f65"",
                     ""expectedControlType"": """",
@@ -630,7 +630,18 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""RightTrigger"",
+                    ""action"": ""Throw"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""0c7af3fd-7f5d-4714-813d-9bac5758f2ba"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Throw"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1374,7 +1385,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         m_Player_PlaceIngredient = m_Player.FindAction("PlaceIngredient", throwIfNotFound: true);
         m_Player_DpadInteract = m_Player.FindAction("DpadInteract", throwIfNotFound: true);
         m_Player_Respawn = m_Player.FindAction("Respawn", throwIfNotFound: true);
-        m_Player_RightTrigger = m_Player.FindAction("RightTrigger", throwIfNotFound: true);
+        m_Player_Throw = m_Player.FindAction("Throw", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1491,7 +1502,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_PlaceIngredient;
     private readonly InputAction m_Player_DpadInteract;
     private readonly InputAction m_Player_Respawn;
-    private readonly InputAction m_Player_RightTrigger;
+    private readonly InputAction m_Player_Throw;
     /// <summary>
     /// Provides access to input actions defined in input action map "Player".
     /// </summary>
@@ -1564,9 +1575,9 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// </summary>
         public InputAction @Respawn => m_Wrapper.m_Player_Respawn;
         /// <summary>
-        /// Provides access to the underlying input action "Player/RightTrigger".
+        /// Provides access to the underlying input action "Player/Throw".
         /// </summary>
-        public InputAction @RightTrigger => m_Wrapper.m_Player_RightTrigger;
+        public InputAction @Throw => m_Wrapper.m_Player_Throw;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -1638,9 +1649,9 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @Respawn.started += instance.OnRespawn;
             @Respawn.performed += instance.OnRespawn;
             @Respawn.canceled += instance.OnRespawn;
-            @RightTrigger.started += instance.OnRightTrigger;
-            @RightTrigger.performed += instance.OnRightTrigger;
-            @RightTrigger.canceled += instance.OnRightTrigger;
+            @Throw.started += instance.OnThrow;
+            @Throw.performed += instance.OnThrow;
+            @Throw.canceled += instance.OnThrow;
         }
 
         /// <summary>
@@ -1697,9 +1708,9 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @Respawn.started -= instance.OnRespawn;
             @Respawn.performed -= instance.OnRespawn;
             @Respawn.canceled -= instance.OnRespawn;
-            @RightTrigger.started -= instance.OnRightTrigger;
-            @RightTrigger.performed -= instance.OnRightTrigger;
-            @RightTrigger.canceled -= instance.OnRightTrigger;
+            @Throw.started -= instance.OnThrow;
+            @Throw.performed -= instance.OnThrow;
+            @Throw.canceled -= instance.OnThrow;
         }
 
         /// <summary>
@@ -2246,12 +2257,12 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnRespawn(InputAction.CallbackContext context);
         /// <summary>
-        /// Method invoked when associated input action "RightTrigger" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// Method invoked when associated input action "Throw" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnRightTrigger(InputAction.CallbackContext context);
+        void OnThrow(InputAction.CallbackContext context);
     }
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "UI" which allows adding and removing callbacks.
