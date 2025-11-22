@@ -23,18 +23,7 @@ public class PlayerController : MonoBehaviour
         if (context.performed || context.canceled)
         {
             Vector2 moveInput = context.ReadValue<Vector2>();
-            // Debug.Log("Move Input: " + moveInput);
-
             GenericEvent<OnMoveInput>.GetEvent(gameObject.name).Invoke(moveInput);
-
-            //if (moveInput == Vector2.zero)
-            //{
-            //    GenericEvent<OnWalkStatusChange>.GetEvent(inputChannel).Invoke(false);
-            //}
-            //else
-            //{
-            //    GenericEvent<OnWalkStatusChange>.GetEvent(inputChannel).Invoke(true);
-            //}
         }
     }
 
@@ -93,39 +82,6 @@ public class PlayerController : MonoBehaviour
     }
     public bool IsInteractPressed { get; private set; } = false;
 
-    //public void OnInteract(InputAction.CallbackContext context) {
-    //    if (context.started) {
-    //        IsInteractPressed = true;
-    //        if (env_Interaction.currentlyLookingAt == null) return;
-    //        RagdollController ragdollController = GetComponent<RagdollController>();
-
-    //        if (!ragdollController.RagdollDict["UpperLeftArm"].isConnected && !ragdollController.RagdollDict["UpperRightArm"].isConnected)
-    //        {
-    //            Debug.Log("Both arms are missing, cannot interact.");
-    //            return;
-    //        }
-    //        if (env_Interaction.currentlyLookingAt.tag != "Player")
-    //        {
-    //            if (env_Interaction.currentlyLookingAt.tag == "Customer")
-    //            {
-    //                GenericEvent<OnCustomerInteract>.GetEvent(env_Interaction.currentlyLookingAt.GetInstanceID().ToString()).Invoke(gameObject);
-    //            }
-
-    //            GenericEvent<Interact>.GetEvent(env_Interaction.currentlyLookingAt?.name).Invoke();
-    //            GenericEvent<InteractEvent>.GetEvent(env_Interaction.currentlyLookingAt?.name).Invoke(gameObject);
-    //        }
-    //        else
-    //        {
-    //            // player is looking at other player
-    //            // attempt to reconnect joint
-    //            GenericEvent<InteractEvent>.GetEvent(env_Interaction.currentlyLookingAt.transform.root.name).Invoke(gameObject);
-    //        }
-    //    } else if (context.canceled) {
-    //        IsInteractPressed = false;
-    //        GenericEvent<StopInteract>.GetEvent(gameObject.name).Invoke();
-    //    }
-    //}
-
     public void OnInteract(InputAction.CallbackContext context)
     {
         if (context.started)
@@ -147,12 +103,13 @@ public class PlayerController : MonoBehaviour
     {
         if (context.performed)
         {
-            GenericEvent<OnThrowHeld>.GetEvent(gameObject.name).Invoke();
+            GenericEvent<OnThrowStatusChanged>.GetEvent(gameObject.name).Invoke(true);
         }
         else if (context.canceled)
         {
-            GenericEvent<OnThrowReleased>.GetEvent(gameObject.name).Invoke();
+            GenericEvent<OnThrowStatusChanged>.GetEvent(gameObject.name).Invoke(false);
         }
+
     }
 
     public void OnDpadInteract(InputAction.CallbackContext context)

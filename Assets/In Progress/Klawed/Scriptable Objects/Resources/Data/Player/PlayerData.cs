@@ -56,9 +56,6 @@ public class PlayerData : ScriptableObject
 
 
     [Header("Throw Settings")]
-    [SerializeField] private float maxThrowChargeTime = 2.0f;
-    public float MaxThrowChargeTime => maxThrowChargeTime;
-
     [SerializeField] private float minThrowForce = 10.0f;
     public float MinThrowForce => minThrowForce;
 

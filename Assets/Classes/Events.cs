@@ -193,5 +193,4 @@ public class CustomerFinishedEating : UnityEvent<Customer> { }
 
 public class AssemblyStationColliderEntered : UnityEvent<GameObject> { }
 
-public class OnThrowHeld : UnityEvent { }
-public class OnThrowReleased : UnityEvent { }
+public class OnThrowStatusChanged : UnityEvent<bool> { }

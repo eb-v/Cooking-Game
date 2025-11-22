@@ -54,7 +54,7 @@ public class DynamicObjectBase : MonoBehaviour, IInteractable, IGrabable
         Transform physicsTransform = gameObject.GetComponent<PhysicsTransform>().physicsTransform;
         Rigidbody rb = physicsTransform.GetComponent<Rigidbody>();
         RagdollController rc = player.GetComponent<RagdollController>();
-        Vector3 throwDirection = rc.centerOfMass.forward;
+        Vector3 throwDirection = rc.RagdollDict["Body"].transform.forward;
 
         rb.AddForce(throwDirection * throwForce, ForceMode.Impulse);
     }
