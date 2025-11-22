@@ -1,12 +1,10 @@
 using UnityEngine;
 
-public class Cup : MonoBehaviour, IGrabable, IInteractable, IAltInteractable {
+public class Cup : DynamicObjectBase
+{
     public bool isFilled = false;
     public string drinkType = "";
 
-    public bool isGrabbed { get; set; }
-    [field: SerializeField] public GrabData grabData { get; set; }
-    [field: SerializeField] public GameObject currentPlayer { get; set; }
 
     [SerializeField] public GameObject LidObject;
 
@@ -29,7 +27,7 @@ public class Cup : MonoBehaviour, IGrabable, IInteractable, IAltInteractable {
     }
 
 
-    public void GrabObject(GameObject player) {
+    public override void GrabObject(GameObject player) {
         if (isGrabbed) return;
 
         GameObject grabbedObj = GetRootCupObject();
@@ -54,7 +52,7 @@ public class Cup : MonoBehaviour, IGrabable, IInteractable, IAltInteractable {
         Debug.Log("Cup grabbed by player");
     }
 
-    public void ReleaseObject(GameObject player) {
+    public override void ReleaseObject(GameObject player) {
         if (!isGrabbed) return;
         GrabSystem.ReleaseObject(player);
         isGrabbed = false;
@@ -63,9 +61,10 @@ public class Cup : MonoBehaviour, IGrabable, IInteractable, IAltInteractable {
         Debug.Log("Cup released by player");
     }
 
-    public GameObject GetGameObject() => gameObject;
-
-    public void OnInteract(GameObject player) => GrabObject(player);
+    public override void OnInteract(GameObject player)
+    {
+        base.OnInteract(player);
+    }
 
     public void OnAltInteract(GameObject player) => ReleaseObject(player);
 
@@ -77,8 +76,8 @@ public class Cup : MonoBehaviour, IGrabable, IInteractable, IAltInteractable {
         return cupComponent?.gameObject;
     }
 
-    public void ThrowObject(GameObject player)
+    public override void ThrowObject(GameObject player, float throwForce)
     {
-
+        base.ThrowObject(player, throwForce);
     }
 }

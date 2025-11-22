@@ -16,12 +16,6 @@ public class GrabScript : MonoBehaviour
     [field:SerializeField] public IGrabable grabbedObject { get; set; }
      public bool isGrabbing => grabbedObject != null;
     
-
-    private void Awake()
-    {
-        
-    }
-
     private void Start()
     {
         //GenericEvent<OnInteractInput>.GetEvent(gameObject.name).AddListener(GrabObject);
@@ -52,12 +46,12 @@ public class GrabScript : MonoBehaviour
         throwChargeFillImage.fillAmount = throwCharge / maxThrowCharge;
     }
 
-    private void PerformThrow(GameObject player)
+    private void PerformThrow(GameObject player, float throwForce)
     {
         if (!isGrabbing)
             return;
 
-        grabbedObject.ThrowObject(player);
+        grabbedObject.ThrowObject(player, throwForce);
 
     }
 

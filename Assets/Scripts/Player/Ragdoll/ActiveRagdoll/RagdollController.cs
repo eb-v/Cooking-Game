@@ -143,7 +143,31 @@ public class RagdollController : MonoBehaviour
     private Quaternion lowerLeftArmTargetRot = Quaternion.identity;
 
 
+    private void Awake()
+    {
+        Initialize();
+    }
 
+    private void Initialize()
+    {
+        PlayerData playerData = LoadPlayerData.GetPlayerData(); 
+
+
+        moveSpeed = playerData.MoveSpeed;
+        turnSpeed = playerData.TurnSpeed;
+        balanceHeight = playerData.GroundRayCastLength;
+        balanceStrength = playerData.BalanceStrength;
+        coreStrength = playerData.CoreStrength;
+        limbStrength = playerData.LimbStrength;
+        StepDuration = playerData.StepDuration;
+        StepHeight = playerData.StepHeight;
+        FeetMountForce = playerData.FeetMountForce;
+        minKnockOutRecoveryTime = playerData.MinKnockOutRecoveryTime;
+        maxKnockOutRecoveryTime = playerData.MaxKnockOutRecoveryTime;
+        requiredForceToBeKO = playerData.RequiredForceToBeKO;
+        _angleMultiplier = playerData.AngleMultiplier;
+
+    }
 
     void Start()
     {

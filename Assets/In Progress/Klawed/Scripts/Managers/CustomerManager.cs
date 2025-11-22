@@ -83,6 +83,12 @@ public class CustomerManager : MonoBehaviour
 
     private void AssignOrder(Customer customer)
     {
+        if (OrderManager.Instance == null)
+        {
+            Debug.LogError("OrderManager instance not found. Cannot assign order to customer.");
+            return;
+        }
+
         MenuItem order = OrderManager.Instance.GetRandomOrder();
         customer.SetOrder(order);
     }

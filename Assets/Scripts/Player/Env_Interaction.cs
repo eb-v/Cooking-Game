@@ -7,28 +7,21 @@ using UnityEngine;
 public class Env_Interaction : MonoBehaviour
 {
     [SerializeField] private Transform pelvis;
-    [SerializeField] private float interactionRange = 5f;
+    private float interactionRange;
     private int layerMask;
     private GameObject lastLookedAt;
     public GameObject currentlyLookingAt;
     [SerializeField] private float glowIntensity = 0.5f;
-    //private GameObject heldObject;
-    //private Dictionary<string, FixedJoint> grabJoints;
+
+    private void Awake()
+    {
+        PlayerData playerData = LoadPlayerData.GetPlayerData();
+        interactionRange = playerData.InteractionRange; 
+    }
 
     private void Start()
     {
         layerMask = (1 << LayerMask.NameToLayer("InteractDetectionCollider")) | (1 << LayerMask.NameToLayer("P2PInteractDetectionCollider"));
-
-        //GenericEvent<ObjectGrabbed>.GetEvent(gameObject.name).AddListener(AssignHeldObj);
-        //GenericEvent<ObjectReleased>.GetEvent(gameObject.name).AddListener(UnAssignHeldObj);
-
-        //GenericEvent<Interact>.GetEvent(gameObject.name).AddListener(PlaceObject);
-        //GenericEvent<RemovePlacedObject>.GetEvent(gameObject.name).AddListener(RemovePlacedObject);
-
-        //GenericEvent<SetUser>.GetEvent(gameObject.name).AddListener(SetCurrentUserForKitchenProp);
-
-
-        //grabJoints = gameObject.GetComponent<RagdollController>().grabJoints;
     }
 
     private void FixedUpdate()

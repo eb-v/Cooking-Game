@@ -11,16 +11,7 @@ public class OrderManager : MonoBehaviour
         {
             if (instance == null)
             {
-                if (GameObject.Find("OrderManager") == null)
-                {
-                    GameObject rootManager = GameObject.Find("Managers");
-                    if (rootManager == null)
-                    {
-                        rootManager = new GameObject("Managers");
-                    }
-                    instance = new GameObject("OrderManager").AddComponent<OrderManager>();
-                    instance.transform.parent = rootManager.transform;
-                }
+                instance = FindFirstObjectByType<OrderManager>();
             }
             return instance;
         }
