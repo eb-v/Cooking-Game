@@ -28,23 +28,24 @@ public class Burnable : MonoBehaviour, IFlammable {
         burnProgress = 0f;
         FireSystem.ExtinguishObject(gameObject);
     }
-
     private IEnumerator SpreadFire() {
         if (!settings.allowSpread) yield break;
 
         while (isOnFire) {
             Collider[] hits = Physics.OverlapSphere(transform.position, settings.spreadRadius);
+
             foreach (var hit in hits) {
-                if (hit.TryGetComponent(out Burnable flame) &&
-                    flame.CanCatchFire &&
-                    !flame.IsOnFire) {
-                    float appliedSpread = settings.spreadAmount * settings.spreadMultiplier * burnMultiplier;
-                    flame.AddBurnProgress(appliedSpread * Time.deltaTime);
+                if (hit.TryGetComponent(out Burnable flame)) {
+                    if (flame.CanCatchFire && !flame.IsOnFire) {
+                        float appliedSpread = settings.spreadAmount * settings.spreadMultiplier * burnMultiplier * Time.deltaTime;
+                        flame.AddBurnProgress(appliedSpread);
+                    }
                 }
             }
             yield return null;
         }
     }
+
 
     public void AddBurnProgress(float amount) {
         if (isOnFire || !settings.autoIgnite) return;
@@ -56,7 +57,16 @@ public class Burnable : MonoBehaviour, IFlammable {
             Ignite();
         }
     }
+    public void ReduceBurn(float amount) {
+        burnProgress -= amount * settings.burnSpeedMultiplier * burnMultiplier;
+        burnProgress = Mathf.Clamp(burnProgress, 0f, 1f);
 
+        if (burnProgress <= 0f && isOnFire) {
+            isOnFire = false;
+            burnProgress = 0f;
+            FireSystem.ExtinguishObject(gameObject);
+        }
+    }
     private void OnDrawGizmosSelected() {
         if (settings != null) {
             Gizmos.color = new Color(1f, 0.3f, 0f, 0.35f);

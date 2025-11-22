@@ -2,19 +2,16 @@ using UnityEngine;
 
 public class Extinguisher : MonoBehaviour {
     public float speed = 10f;
-    public float lifetime = 2f;
-
-    private void Start() {
-        Destroy(gameObject, lifetime);
-    }
+    public float extinguishRate = 0.3f;
 
     private void Update() {
         transform.Translate(Vector3.forward * speed * Time.deltaTime);
     }
 
-    private void OnTriggerEnter(Collider other) {
+    private void OnTriggerStay(Collider other)
+    {
         if (other.TryGetComponent(out Burnable burnable)) {
-            burnable.Extinguish();
+            burnable.ReduceBurn(extinguishRate * Time.deltaTime);
         }
     }
 }
