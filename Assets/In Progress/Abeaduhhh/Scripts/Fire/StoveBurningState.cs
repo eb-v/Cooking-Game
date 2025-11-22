@@ -4,7 +4,6 @@ using UnityEngine;
 public class StoveBurningState : StoveState {
     private float burnTimer = 0f;
     private GameObject fireInstance;
-
     public override void Initialize(GameObject gameObject, StateMachine<StoveState> stateMachine) {
         base.Initialize(gameObject, stateMachine);
         stove = gameObject.GetComponent<Stove>();
@@ -20,15 +19,15 @@ public class StoveBurningState : StoveState {
 
         Debug.Log("Entered Stove Burning State");
 
-        if (FireSystem.SystemEnabled) {
-            var burnable = stove.GetComponent<Burnable>();
-            if (burnable != null) {
-                burnable.TryIgniteWithDelay();
-            } else {
-                Debug.LogWarning("Stove has no Burnable!");
-            }
+        //if (FireSystem.SystemEnabled) {
+        //    var burnable = stove.GetComponent<Burnable>();
+        //    if (burnable != null) {
+        //        //burnable.TryIgniteWithDelay();
+        //    } else {
+        //        Debug.LogWarning("Stove has no Burnable!");
+        //    }
 
-        }
+        //}
     }
     public override void UpdateLogic() {
         base.UpdateLogic();
@@ -36,13 +35,24 @@ public class StoveBurningState : StoveState {
         burnTimer += Time.deltaTime;
         stove._stoveUIBurnFillImage.fillAmount = burnTimer / stove.burnDuration;
 
-        //if (burnTimer >= stove.burnDuration) {
-        //    BurnIngredient();
-        //    Debug.Log("Ingredient fully burned.");
+        var burnable = stove.GetComponent<Burnable>();
+        if (burnable != null) {
+            if (!burnable.IsOnFire) {
+                burnable.AddBurnProgress(Time.deltaTime / stove.burnDuration);
 
-        //    stateMachine.ChangeState(stove._idleStateInstance);
-        //}
+                if (burnable.burnProgress >= burnable.settings.burnThreshold) {
+                    burnable.Ignite();
+                }
+            }
+        }
     }
+    //private void IgniteStove() {
+    //    var burnable = stove.GetComponent<Burnable>();
+    //    if (burnable != null && !burnable.IsOnFire) {
+    //        burnable.Ignite(); // DIRECT ignition, no spreading delay
+    //        Debug.Log("Stove has caught fire from overcooking!");
+    //    }
+    //}
 
     public override void Exit() {
         base.Exit();
@@ -51,6 +61,11 @@ public class StoveBurningState : StoveState {
 
         stove._stoveUIBurnFillImage.enabled = false;
         stove._stoveUICanvas.enabled = false;
+
+        var burnable = stove.GetComponent<Burnable>();
+        if (burnable != null) {
+            burnable.Extinguish();
+        }
 
         if (fireInstance != null) {
             FireSystem.ExtinguishObject(stove.objectSnapPoint.gameObject);

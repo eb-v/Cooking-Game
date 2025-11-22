@@ -198,9 +198,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f515201e7a51d7f4d8d5b4ea53ba45f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Burnable
-  canCatchFire: 1
-  ignitionDelay: 0
-  spreadRadius: 3
+  settings: {fileID: 11400000, guid: 1110e4700a6dec14a8e3a02cc8925c27, type: 2}
+  burnMultiplier: 1
+  burnProgress: 0
   isOnFire: 0
 --- !u!1001 &82190201
 PrefabInstance:
@@ -228,11 +228,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 525c51c4ee71c954982d05886f11c879, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 525c51c4ee71c954982d05886f11c879, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 14.9
+      value: 14.6
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 525c51c4ee71c954982d05886f11c879, type: 3}
       propertyPath: m_LocalRotation.w
@@ -520,9 +520,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f515201e7a51d7f4d8d5b4ea53ba45f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Burnable
-  canCatchFire: 1
-  ignitionDelay: 5
-  spreadRadius: 3
+  settings: {fileID: 11400000, guid: 1110e4700a6dec14a8e3a02cc8925c27, type: 2}
+  burnMultiplier: 1
+  burnProgress: 0
   isOnFire: 0
 --- !u!65 &234108080
 BoxCollider:
@@ -912,6 +912,63 @@ MonoBehaviour:
   m_BeforeTransparentBundles: []
   m_BeforeStackBundles: []
   m_AfterStackBundles: []
+--- !u!1001 &343018147
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 2103231885910169065, guid: a8b05e0af95ec5742931f55bce4ca399, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -15.46483
+      objectReference: {fileID: 0}
+    - target: {fileID: 2103231885910169065, guid: a8b05e0af95ec5742931f55bce4ca399, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2103231885910169065, guid: a8b05e0af95ec5742931f55bce4ca399, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -6.255
+      objectReference: {fileID: 0}
+    - target: {fileID: 2103231885910169065, guid: a8b05e0af95ec5742931f55bce4ca399, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2103231885910169065, guid: a8b05e0af95ec5742931f55bce4ca399, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2103231885910169065, guid: a8b05e0af95ec5742931f55bce4ca399, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2103231885910169065, guid: a8b05e0af95ec5742931f55bce4ca399, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2103231885910169065, guid: a8b05e0af95ec5742931f55bce4ca399, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2103231885910169065, guid: a8b05e0af95ec5742931f55bce4ca399, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2103231885910169065, guid: a8b05e0af95ec5742931f55bce4ca399, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9046012464748313498, guid: a8b05e0af95ec5742931f55bce4ca399, type: 3}
+      propertyPath: m_Name
+      value: ObjectPoolManager
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: a8b05e0af95ec5742931f55bce4ca399, type: 3}
 --- !u!1 &386118530 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 525c51c4ee71c954982d05886f11c879, type: 3}
@@ -950,9 +1007,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f515201e7a51d7f4d8d5b4ea53ba45f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Burnable
-  canCatchFire: 1
-  ignitionDelay: 3
-  spreadRadius: 3
+  settings: {fileID: 11400000, guid: 1110e4700a6dec14a8e3a02cc8925c27, type: 2}
+  burnMultiplier: 1
+  burnProgress: 0
   isOnFire: 0
 --- !u!1 &392942221
 GameObject:
@@ -1334,11 +1391,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 525c51c4ee71c954982d05886f11c879, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 525c51c4ee71c954982d05886f11c879, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 18.8
+      value: 17.15
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 525c51c4ee71c954982d05886f11c879, type: 3}
       propertyPath: m_LocalRotation.w
@@ -1405,7 +1462,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 525c51c4ee71c954982d05886f11c879, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 15
+      value: 14.21
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 525c51c4ee71c954982d05886f11c879, type: 3}
       propertyPath: m_LocalPosition.y
@@ -1496,9 +1553,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f515201e7a51d7f4d8d5b4ea53ba45f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Burnable
-  canCatchFire: 1
-  ignitionDelay: 3
-  spreadRadius: 3
+  settings: {fileID: 11400000, guid: 1110e4700a6dec14a8e3a02cc8925c27, type: 2}
+  burnMultiplier: 1
+  burnProgress: 0
   isOnFire: 0
 --- !u!1 &634998604 stripped
 GameObject:
@@ -1538,9 +1595,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f515201e7a51d7f4d8d5b4ea53ba45f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Burnable
-  canCatchFire: 1
-  ignitionDelay: 6
-  spreadRadius: 3
+  settings: {fileID: 11400000, guid: 1110e4700a6dec14a8e3a02cc8925c27, type: 2}
+  burnMultiplier: 1
+  burnProgress: 0
   isOnFire: 0
 --- !u!1001 &735405205
 PrefabInstance:
@@ -1777,6 +1834,63 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1667229191}
   m_LocalEulerAnglesHint: {x: 34.86, y: 0, z: 0}
+--- !u!1001 &981792995
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4167148832282478695, guid: 3c659d585a4b8f648a60f6b9d1f0d4d8, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -11.001558
+      objectReference: {fileID: 0}
+    - target: {fileID: 4167148832282478695, guid: 3c659d585a4b8f648a60f6b9d1f0d4d8, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4167148832282478695, guid: 3c659d585a4b8f648a60f6b9d1f0d4d8, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 2.500341
+      objectReference: {fileID: 0}
+    - target: {fileID: 4167148832282478695, guid: 3c659d585a4b8f648a60f6b9d1f0d4d8, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4167148832282478695, guid: 3c659d585a4b8f648a60f6b9d1f0d4d8, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4167148832282478695, guid: 3c659d585a4b8f648a60f6b9d1f0d4d8, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4167148832282478695, guid: 3c659d585a4b8f648a60f6b9d1f0d4d8, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4167148832282478695, guid: 3c659d585a4b8f648a60f6b9d1f0d4d8, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4167148832282478695, guid: 3c659d585a4b8f648a60f6b9d1f0d4d8, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4167148832282478695, guid: 3c659d585a4b8f648a60f6b9d1f0d4d8, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8913922446770286736, guid: 3c659d585a4b8f648a60f6b9d1f0d4d8, type: 3}
+      propertyPath: m_Name
+      value: FireExtinguisher
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 3c659d585a4b8f648a60f6b9d1f0d4d8, type: 3}
 --- !u!1 &1040136531
 GameObject:
   m_ObjectHideFlags: 0
@@ -1946,9 +2060,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f515201e7a51d7f4d8d5b4ea53ba45f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Burnable
-  canCatchFire: 1
-  ignitionDelay: 3
-  spreadRadius: 3
+  settings: {fileID: 11400000, guid: 1110e4700a6dec14a8e3a02cc8925c27, type: 2}
+  burnMultiplier: 1
+  burnProgress: 0
   isOnFire: 0
 --- !u!1001 &1220055426
 PrefabInstance:
@@ -1972,15 +2086,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 525c51c4ee71c954982d05886f11c879, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 4.8
+      value: 4.01
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 525c51c4ee71c954982d05886f11c879, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 525c51c4ee71c954982d05886f11c879, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 10.71
+      value: 10.16
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 525c51c4ee71c954982d05886f11c879, type: 3}
       propertyPath: m_LocalRotation.w
@@ -2051,11 +2165,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 525c51c4ee71c954982d05886f11c879, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 525c51c4ee71c954982d05886f11c879, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 10.71
+      value: 9.37
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 525c51c4ee71c954982d05886f11c879, type: 3}
       propertyPath: m_LocalRotation.w
@@ -2184,9 +2298,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f515201e7a51d7f4d8d5b4ea53ba45f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Burnable
-  canCatchFire: 1
-  ignitionDelay: 10
-  spreadRadius: 3
+  settings: {fileID: 11400000, guid: 1110e4700a6dec14a8e3a02cc8925c27, type: 2}
+  burnMultiplier: 1
+  burnProgress: 0
   isOnFire: 0
 --- !u!1001 &1537940665
 PrefabInstance:
@@ -2415,9 +2529,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f515201e7a51d7f4d8d5b4ea53ba45f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Burnable
-  canCatchFire: 1
-  ignitionDelay: 1
-  spreadRadius: 3
+  settings: {fileID: 11400000, guid: 81cb71894c9d05f45b3403a8fb548f6f, type: 2}
+  burnMultiplier: 1
+  burnProgress: 0
   isOnFire: 0
 --- !u!1 &1595320845
 GameObject:
@@ -3678,6 +3792,63 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 6039062166947692089, guid: 6d9fb30bbee232e4cbaf5dc1a62d5fb1, type: 3}
   m_PrefabInstance: {fileID: 1829879017871066021}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &7103210786578343398
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4913016079913989720, guid: 08e63889f1f4c144ba368d32edf752e0, type: 3}
+      propertyPath: m_Name
+      value: Sphere
+      objectReference: {fileID: 0}
+    - target: {fileID: 6090820111414851965, guid: 08e63889f1f4c144ba368d32edf752e0, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 4.31
+      objectReference: {fileID: 0}
+    - target: {fileID: 6090820111414851965, guid: 08e63889f1f4c144ba368d32edf752e0, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6090820111414851965, guid: 08e63889f1f4c144ba368d32edf752e0, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -2.82
+      objectReference: {fileID: 0}
+    - target: {fileID: 6090820111414851965, guid: 08e63889f1f4c144ba368d32edf752e0, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6090820111414851965, guid: 08e63889f1f4c144ba368d32edf752e0, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6090820111414851965, guid: 08e63889f1f4c144ba368d32edf752e0, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6090820111414851965, guid: 08e63889f1f4c144ba368d32edf752e0, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6090820111414851965, guid: 08e63889f1f4c144ba368d32edf752e0, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6090820111414851965, guid: 08e63889f1f4c144ba368d32edf752e0, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6090820111414851965, guid: 08e63889f1f4c144ba368d32edf752e0, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 08e63889f1f4c144ba368d32edf752e0, type: 3}
 --- !u!222 &7269107228343504816
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -3812,3 +3983,6 @@ SceneRoots:
   - {fileID: 82190201}
   - {fileID: 544178529}
   - {fileID: 1607156355}
+  - {fileID: 7103210786578343398}
+  - {fileID: 981792995}
+  - {fileID: 343018147}
