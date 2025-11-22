@@ -2,20 +2,21 @@ using UnityEngine;
 using System.Collections;
 
 public class Burnable : MonoBehaviour, IFlammable {
-    [Header("Fire Spread Settings")]
-    public bool canCatchFire = true;
-    public float ignitionDelay = 3f;
-    public float spreadRadius = 2f;
+    [Header("Settings Asset")]
+    public BurnableSettings settings;
 
-    public bool IsOnFire => isOnFire;
-    public bool CanCatchFire => canCatchFire;
+    [Header("Instance Settings")]
+    [Tooltip("Multiplier applied to burn speed and spread, editable per object.")]
+    public float burnMultiplier = 1f;
 
+    [HideInInspector] public float burnProgress = 0f;
     [HideInInspector] public bool isOnFire = false;
 
-    private Coroutine ignitionRoutine;
+    public bool IsOnFire => isOnFire;
+    public bool CanCatchFire => settings != null && settings.canCatchFire;
 
     public void Ignite() {
-        if (isOnFire || !canCatchFire) return;
+        if (isOnFire || !CanCatchFire) return;
         isOnFire = true;
 
         FireSystem.IgniteObject(gameObject);
@@ -24,34 +25,42 @@ public class Burnable : MonoBehaviour, IFlammable {
 
     public void Extinguish() {
         isOnFire = false;
+        burnProgress = 0f;
         FireSystem.ExtinguishObject(gameObject);
     }
 
-    public void TryIgniteWithDelay() {
-        if (isOnFire || ignitionRoutine != null || !canCatchFire) return;
-        ignitionRoutine = StartCoroutine(IgnitionCountdown());
-    }
-
-    private IEnumerator IgnitionCountdown() {
-        yield return new WaitForSeconds(ignitionDelay);
-        Ignite();
-    }
-
     private IEnumerator SpreadFire() {
+        if (!settings.allowSpread) yield break;
+
         while (isOnFire) {
-            Collider[] hits = Physics.OverlapSphere(transform.position, spreadRadius);
+            Collider[] hits = Physics.OverlapSphere(transform.position, settings.spreadRadius);
             foreach (var hit in hits) {
                 if (hit.TryGetComponent(out Burnable flame) &&
                     flame.CanCatchFire &&
                     !flame.IsOnFire) {
-                    flame.TryIgniteWithDelay();
+                    float appliedSpread = settings.spreadAmount * settings.spreadMultiplier * burnMultiplier;
+                    flame.AddBurnProgress(appliedSpread * Time.deltaTime);
                 }
             }
-            yield return new WaitForSeconds(1f);
+            yield return null;
         }
     }
+
+    public void AddBurnProgress(float amount) {
+        if (isOnFire || !settings.autoIgnite) return;
+
+        burnProgress += amount * settings.burnSpeedMultiplier * burnMultiplier;
+        burnProgress = Mathf.Clamp01(burnProgress);
+
+        if (burnProgress >= settings.burnThreshold) {
+            Ignite();
+        }
+    }
+
     private void OnDrawGizmosSelected() {
-        Gizmos.color = new Color(1f, 0.3f, 0f, 0.35f);
-        Gizmos.DrawWireSphere(transform.position, spreadRadius);
+        if (settings != null) {
+            Gizmos.color = new Color(1f, 0.3f, 0f, 0.35f);
+            Gizmos.DrawWireSphere(transform.position, settings.spreadRadius);
+        }
     }
 }
