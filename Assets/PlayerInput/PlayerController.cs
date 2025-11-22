@@ -205,5 +205,17 @@ public class PlayerController : MonoBehaviour
             GenericEvent<PlayerReadyInputEvent>.GetEvent("PlayerReady").Invoke(gameObject);
         }
     }
+
+    public void OnUseEquipment(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            GenericEvent<OnEquipmentUseInput>.GetEvent(gameObject.name).Invoke(true);
+        }
+        else if (context.canceled)
+        {
+            GenericEvent<OnEquipmentUseInput>.GetEvent(gameObject.name).Invoke(false);
+        }
+    }
 }
 

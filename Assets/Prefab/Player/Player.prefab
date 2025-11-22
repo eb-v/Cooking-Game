@@ -2377,6 +2377,7 @@ GameObject:
   - component: {fileID: 6688558834217459117}
   - component: {fileID: 1362008162283589234}
   - component: {fileID: 3154402436841459022}
+  - component: {fileID: 7824356228643011647}
   m_Layer: 10
   m_Name: Player
   m_TagString: Player
@@ -2825,6 +2826,22 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: d1efed0b-4a74-41f5-a138-e70562486f65
     m_ActionName: 'Player/RightTrigger[/DualSenseGamepadHID/rightTrigger]'
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 7145388165237822340}
+        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
+        m_MethodName: OnUseEquipment
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 22a9254e-befb-4cbf-91d8-3e1c91213140
+    m_ActionName: 'Player/UseEquipment[/Keyboard/r,/DualSenseGamepadHID/leftTrigger]'
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
@@ -2983,6 +3000,18 @@ MonoBehaviour:
   throwMeterFillImage: {fileID: 3481710766781661967}
   playerData: {fileID: 0}
   grabScript: {fileID: 1774118094218312297}
+--- !u!114 &7824356228643011647
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4777336152046692441}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c65fb56d3fe81142a917680d54c30a5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
 --- !u!1 &4875189699825966719
 GameObject:
   m_ObjectHideFlags: 0

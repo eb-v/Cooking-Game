@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Pool;
-
+using System.Collections;
 
 public class ObjectPoolManager : MonoBehaviour
 {
@@ -251,6 +251,17 @@ public class ObjectPoolManager : MonoBehaviour
         {
             Debug.LogWarning($"ReturnObjectToPool(): The object '{obj.name}' does not belong to any pool and cannot be returned.");
         }
+    }
+
+    public static void ReturnObjectToPool(GameObject obj, float delaySeconds, PoolType poolType = PoolType.GameObjects)
+    {
+        CoroutineRunner.Instance.StartCoroutine(ReturnObjectToPoolDelayed(obj, delaySeconds, poolType));
+    }
+
+    private static IEnumerator ReturnObjectToPoolDelayed(GameObject obj, float delaySeconds, PoolType poolType)
+    {
+        yield return new WaitForSeconds(delaySeconds);
+        ReturnObjectToPool(obj, poolType);
     }
 
     public static bool IsPooledObject(GameObject obj) {

@@ -411,8 +411,6 @@ public class RagdollController : MonoBehaviour
         Vector3 axis = Vector3.right;
         _leanAngleX = Mathf.Clamp(_leanAngleX - _angleMultiplier * Time.deltaTime, -80f, 80f);
 
-        // Quaternion deltaRotation = Quaternion.AngleAxis(_leanAngleX, axis);
-
         Quaternion newTargetRotation = Quaternion.Euler(_leanAngleX, 0f, 0f);
         _bodyJoint.targetRotation = newTargetRotation;
     }
