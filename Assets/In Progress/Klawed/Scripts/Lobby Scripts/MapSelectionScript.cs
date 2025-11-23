@@ -2,6 +2,8 @@ using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+using System.Collections;
+using System.Collections.Generic;
 
 public class MapSelectionScript : MonoBehaviour
 {
@@ -37,11 +39,12 @@ public class MapSelectionScript : MonoBehaviour
     private void OnSelect()
     {
         if (gameObject.activeInHierarchy == false) return;
-        SceneManager.LoadScene(levelToLoad, LoadSceneMode.Additive);
-        SceneManager.UnloadSceneAsync(lobbyScene);
+        
+        GameManager.Instance.SwitchScene(lobbyScene, levelToLoad);
 
-        GameManager.Instance.ChangeState(GameManager.Instance._inLevelStateInstance);
     }
+
+    
 
 
 

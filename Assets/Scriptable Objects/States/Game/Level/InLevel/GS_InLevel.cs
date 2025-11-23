@@ -5,20 +5,9 @@ using System.Collections.Generic;
 [CreateAssetMenu(fileName = "GS_InLevel", menuName = "Scriptable Objects/States/Game/Level/InLevel")]
 public class GS_InLevel : GameState
 {
-    [SerializeField] private SceneField inLevelScene;
-
-    [SerializeField] private List<GameObject> _levelSpecificManagers;
-
     public override void Enter()
     {
         base.Enter();
-
-        GameObject rootManager = new GameObject("LevelManagers");
-        foreach (GameObject managerPrefab in _levelSpecificManagers)
-        {
-            GameObject managerInstance = Instantiate(managerPrefab, rootManager.transform);
-        }
-
     }
 
     public override void Exit()

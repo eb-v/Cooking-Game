@@ -1,6 +1,10 @@
+using NUnit.Framework;
 using System.Runtime.CompilerServices;
 using Unity.VisualScripting.Dependencies.Sqlite;
 using UnityEngine;
+using System.Collections.Generic;
+using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -84,4 +88,40 @@ public class GameManager : MonoBehaviour
         _stateMachine.ChangeState(newState);
         _currentState = _stateMachine.GetCurrentState();
     }
+
+    public void SwitchScene(SceneField sceneToUnload, SceneField sceneToLoad)
+    {
+        StartCoroutine(SwitchScenesCoroutine(sceneToUnload, sceneToLoad));
+    }
+
+    private IEnumerator SwitchScenesCoroutine(SceneField sceneToUnload, SceneField sceneToLoad)
+    {
+        AsyncOperation loadOp = SceneManager.LoadSceneAsync(sceneToLoad, LoadSceneMode.Additive);
+        AsyncOperation unloadOp = SceneManager.UnloadSceneAsync(sceneToUnload);
+        while (!loadOp.isDone || !unloadOp.isDone)
+        {
+            yield return null;
+        }
+
+        SceneManager.SetActiveScene(SceneManager.GetSceneByName(sceneToLoad));
+    }
+
+
+    public void RunOperations(List<AsyncOperation> operations)
+    {
+        StartCoroutine(RunAsyncOperations(operations));
+    }
+
+    private IEnumerator RunAsyncOperations(List<AsyncOperation> operations)
+    {
+        for (int i = 0; i < operations.Count; i++)
+        {
+            while (!operations[i].isDone)
+            {
+                yield return null;
+            }
+        }
+    }
+
+
 }

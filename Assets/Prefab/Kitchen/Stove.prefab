@@ -349,7 +349,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3711325884955830870}
   - component: {fileID: 8576692862625002212}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: Physics
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -402,8 +402,7 @@ GameObject:
   m_Component:
   - component: {fileID: 997177744510758395}
   - component: {fileID: 5879022160703071518}
-  - component: {fileID: 4041172219651483592}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: Stove
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -443,8 +442,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5543cefd5f5ee4c49aee08373a82343a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Stove
-  fireEffects: []
-  isOnFire: 0
+  fireEffects:
+  - {fileID: 6648820532244228075}
+  - {fileID: 1396864174945490918}
+  - {fileID: 1608255590353787112}
+  settings: {fileID: 11400000, guid: 1110e4700a6dec14a8e3a02cc8925c27, type: 2}
+  spreadRadius: 4
+  <IsOnFire>k__BackingField: 0
   burnProgress: 0
   objectSnapPoint: {fileID: 1349680231326610607}
   _stoveUICanvas: {fileID: 3505686451939692872}
@@ -455,18 +459,6 @@ MonoBehaviour:
   _burningStateBase: {fileID: 11400000, guid: b67f0ea9ab2153343a45c18a830523bd, type: 2}
   <cookingDuration>k__BackingField: 5
   <burnDuration>k__BackingField: 8
---- !u!114 &4041172219651483592
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6260594935653569358}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f515201e7a51d7f4d8d5b4ea53ba45f3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Burnable
 --- !u!1 &6966491624230064586
 GameObject:
   m_ObjectHideFlags: 0
@@ -791,8 +783,41 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f5be5a8b8de8e5745842f75ae27b68b2, type: 3}
+--- !u!114 &1396864174945490918 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 9061993456245471866, guid: f5be5a8b8de8e5745842f75ae27b68b2, type: 3}
+  m_PrefabInstance: {fileID: 7971375299456970140}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 28698469165af1c4abd49f4e4be35212, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FireController
+--- !u!114 &1608255590353787112 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8714931925084960116, guid: f5be5a8b8de8e5745842f75ae27b68b2, type: 3}
+  m_PrefabInstance: {fileID: 7971375299456970140}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 28698469165af1c4abd49f4e4be35212, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FireController
 --- !u!4 &4486662184398730672 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5828732026982176812, guid: f5be5a8b8de8e5745842f75ae27b68b2, type: 3}
   m_PrefabInstance: {fileID: 7971375299456970140}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &6648820532244228075 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3667434871905127031, guid: f5be5a8b8de8e5745842f75ae27b68b2, type: 3}
+  m_PrefabInstance: {fileID: 7971375299456970140}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 28698469165af1c4abd49f4e4be35212, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FireController

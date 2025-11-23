@@ -4,20 +4,20 @@ using System.Collections;
 
 public class GameBootstrapper : MonoBehaviour
 {
-    [SerializeField] private string persistentSceneName = "PersistentGamePlayScene";
-    [SerializeField] private string mainMenuSceneName = "MainMenuScene";
+    [SerializeField] private SceneField persistentScene;
+    [SerializeField] private SceneField mainMenuScene;
 
     private IEnumerator Start()
     {
-        var persistentLoad = SceneManager.LoadSceneAsync(persistentSceneName, LoadSceneMode.Additive);
+        var persistentLoad = SceneManager.LoadSceneAsync(persistentScene, LoadSceneMode.Additive);
         while (!persistentLoad.isDone)
             yield return null;
 
-        var menuLoad = SceneManager.LoadSceneAsync(mainMenuSceneName, LoadSceneMode.Additive);
+        var menuLoad = SceneManager.LoadSceneAsync(mainMenuScene, LoadSceneMode.Additive);
         while (!menuLoad.isDone)
             yield return null;
 
-        SceneManager.SetActiveScene(SceneManager.GetSceneByName(mainMenuSceneName));
+        SceneManager.SetActiveScene(SceneManager.GetSceneByName(mainMenuScene));
 
         SceneManager.UnloadSceneAsync(gameObject.scene);
     }

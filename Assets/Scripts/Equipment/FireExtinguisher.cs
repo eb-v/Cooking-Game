@@ -23,8 +23,8 @@ public class FireExtinguisher : DynamicObjectBase, IEquipment
     public void UseEquipment()
     {
         SprayFoam();
-        SprayFoam();
-        SprayFoam();
+        //SprayFoam();
+        //SprayFoam();
 
         ExtinguishFlamablesInRange();
 

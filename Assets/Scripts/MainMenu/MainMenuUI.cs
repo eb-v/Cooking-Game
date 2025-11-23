@@ -36,7 +36,7 @@ public class MainMenuUI : MonoBehaviour
 
         // (kept as-is) If you intended additive for both, change the first line to Additive later
         _scenesToLoad.Add(SceneManager.LoadSceneAsync(_playScene, LoadSceneMode.Additive));
-        SceneManager.UnloadSceneAsync("MainMenuScene");
+        _scenesToLoad.Add(SceneManager.UnloadSceneAsync("MainMenu"));
 
         StartCoroutine(ProgressLoadingBar());
     }

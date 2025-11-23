@@ -36,6 +36,7 @@ public class PlayerReadyManager : MonoBehaviour
     {
         foreach (var status in playerReadyStatus.Values)
         {
+            Debug.Log(status);
             if (!status)
             {
                 return false;
