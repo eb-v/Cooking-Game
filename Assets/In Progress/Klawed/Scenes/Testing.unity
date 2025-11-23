@@ -1089,6 +1089,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PerformRaycast
   raycastDistance: 10
+  angle: 0
+  posOffset: {x: 0, y: 0, z: 0}
 --- !u!1 &476863445
 GameObject:
   m_ObjectHideFlags: 0
@@ -2757,11 +2759,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!4 &1803983416 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 8534104358758067237, guid: 3c659d585a4b8f648a60f6b9d1f0d4d8, type: 3}
-  m_PrefabInstance: {fileID: 6072504369791448699}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1807396521
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3480,22 +3477,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 3454361218608581648, guid: 3c659d585a4b8f648a60f6b9d1f0d4d8, type: 3}
-      propertyPath: foamPrefab
-      value: 
-      objectReference: {fileID: 3339871681955947375, guid: 7b836b16a0cccce4bbf69b4fc92c0046, type: 3}
-    - target: {fileID: 3454361218608581648, guid: 3c659d585a4b8f648a60f6b9d1f0d4d8, type: 3}
-      propertyPath: offsetRange
-      value: 0.49
-      objectReference: {fileID: 0}
-    - target: {fileID: 3454361218608581648, guid: 3c659d585a4b8f648a60f6b9d1f0d4d8, type: 3}
-      propertyPath: maxFoamScale
-      value: 1.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 3454361218608581648, guid: 3c659d585a4b8f648a60f6b9d1f0d4d8, type: 3}
-      propertyPath: spawnTransform
-      value: 
-      objectReference: {fileID: 1803983416}
     - target: {fileID: 4167148832282478695, guid: 3c659d585a4b8f648a60f6b9d1f0d4d8, type: 3}
       propertyPath: m_LocalPosition.x
       value: -1.01

@@ -15,6 +15,7 @@ public class StoveCookingState : StoveState
     public override void Enter()
     {
         base.Enter();
+        GenericEvent<OnObjectIgnited>.GetEvent(gameObject.GetInstanceID().ToString()).AddListener(OnObjectIgnitedLogic);
         stove._stoveUICanvas.enabled = true;
         stove._stoveUICookFillImage.enabled = true;
         Debug.Log("Entered Stove Cooking State");
@@ -28,6 +29,7 @@ public class StoveCookingState : StoveState
         stove._stoveUICookFillImage.enabled = false;
         stove._stoveUIBurnFillImage.enabled = false;
         stove._stoveUICanvas.enabled = false;
+        GenericEvent<OnObjectIgnited>.GetEvent(gameObject.GetInstanceID().ToString()).RemoveListener(OnObjectIgnitedLogic);
     }
 
     public override void FixedUpdateLogic()
@@ -104,7 +106,7 @@ public class StoveCookingState : StoveState
     // Replace the current ingredient on the stove with its cooked version
     private GameObject CookIngredient()
     {
-        GameObject cookedObjVersion = Instantiate(stove._currentRecipe.output[0].Prefab, stove.objectSnapPoint.position, Quaternion.identity);
+        GameObject cookedObjVersion = Instantiate(stove._currentRecipe.output[0].Prefab, stove.ObjectSnapPoint.position, Quaternion.identity);
         IngredientScript ingredientScript = cookedObjVersion.GetComponent<IngredientScript>();
         ingredientScript.grabCollider.enabled = false;
 
@@ -116,7 +118,7 @@ public class StoveCookingState : StoveState
             return null;
         }
 
-        physicsObj.transform.position = stove.objectSnapPoint.position;
+        physicsObj.transform.position = stove.ObjectSnapPoint.position;
         physicsObj.transform.rotation = Quaternion.identity;
         Rigidbody rb = physicsObj.GetComponent<Rigidbody>();
         rb.isKinematic = true;
@@ -126,5 +128,12 @@ public class StoveCookingState : StoveState
         Destroy(stove._currentObject);
         stove._currentObject = cookedObjVersion;
         return cookedObjVersion;
+    }
+
+    private void OnObjectIgnitedLogic()
+    {
+        Destroy(stove._currentObject);
+        stove._currentObject = null;
+        stateMachine.ChangeState(stove._idleStateInstance);
     }
 }

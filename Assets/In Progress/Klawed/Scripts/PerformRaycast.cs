@@ -3,6 +3,8 @@ using UnityEngine;
 public class PerformRaycast : MonoBehaviour
 {
     [SerializeField] private float raycastDistance = 10f;
+    [SerializeField] private float angle;
+    [SerializeField] private Vector3 posOffset;
 
     private void Update()
     {
@@ -11,7 +13,10 @@ public class PerformRaycast : MonoBehaviour
 
     private void RaycastForward()
     {
-        Ray ray = new Ray(transform.position, transform.forward);
+        Quaternion rotation = Quaternion.AngleAxis(angle, Vector3.up);
+        Vector3 direction = rotation * Vector3.forward;
+
+        Ray ray = new Ray(transform.position + posOffset, direction);
         Debug.DrawRay(ray.origin, ray.direction * raycastDistance, Color.green);
     }
 }

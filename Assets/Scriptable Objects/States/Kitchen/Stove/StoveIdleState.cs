@@ -92,7 +92,7 @@ public class StoveIdleState : StoveState
             return;
         }
 
-        physicsObj.transform.position = stove.objectSnapPoint.position;
+        physicsObj.transform.position = stove.ObjectSnapPoint.position;
         physicsObj.transform.rotation = Quaternion.identity;
 
         Rigidbody rb = physicsObj.GetComponent<Rigidbody>();

@@ -24,8 +24,11 @@ public class FireSystem : ScriptableObject
     [Header("References")]
     [SerializeField] private GameObject firePrefab;
 
-    // (GameObject) -> (fire Controller)
-    private static Dictionary<GameObject, FireController> ignitedObjects = new Dictionary<GameObject, FireController>();
+    [Header("Settings")]
+    [SerializeField] private BurnableSettings settings;
+
+    // (IFlammable) -> (Fire GameObject)
+    private static Dictionary<IFlammable, List<FireController>> ignitedObjects = new Dictionary<IFlammable, List<FireController>>();
 
     public static bool SystemEnabled
     {
@@ -44,36 +47,74 @@ public class FireSystem : ScriptableObject
     }
 
 
-    public static void IgniteObject(GameObject objToIgnite) {
+    public static void IgniteObject(IFlammable objToIgnite) {
         if (!SystemEnabled)
             return;
 
-        Collider col = objToIgnite.GetComponent<Collider>();
-        Vector3 spawnPos = objToIgnite.transform.position;
+        if (objToIgnite.IsOnFire)
+            return;
 
-        if (col != null) {
-            spawnPos = col.bounds.center + new Vector3(0, col.bounds.extents.y, 0);
+        foreach (FireController fireEffect in objToIgnite.FireEffects)
+        {
+            fireEffect.StartFire();
         }
-
-        GameObject fireObj = Instantiate(Instance.firePrefab, spawnPos, Quaternion.identity, objToIgnite.transform);
-        FireController fireController = fireObj.GetComponent<FireController>();
-        ignitedObjects[objToIgnite] = fireController;
+        objToIgnite.IsOnFire = true;
     }
 
-    public static void ExtinguishObject(GameObject objToExtinguish)
+
+    public static void ExtinguishObject(IFlammable objToExtinguish)
     {
         if (!SystemEnabled)
             return;
-        if (ignitedObjects.ContainsKey(objToExtinguish))
+
+        if (!objToExtinguish.IsOnFire)
+            return;
+
+        foreach (FireController fireController in objToExtinguish.FireEffects)
         {
-            FireController fireController = ignitedObjects[objToExtinguish];
-            ignitedObjects.Remove(objToExtinguish); 
             fireController.StopFire();
         }
-        else
+        objToExtinguish.IsOnFire = false;
+    }
+
+    public void SpreadFire(Vector3 position, float spreadRadius)
+    {
+        if (!SystemEnabled)
+            return;
+
+        List<IFlammable> flammables = GetFlammableObjectsInRange(position, spreadRadius);
+        foreach (IFlammable flammable in flammables)
         {
-            Debug.LogWarning($"[FireSystem] Attempted to extinguish object that is not on fire: {objToExtinguish.name}");
+            if (!flammable.IsOnFire)
+            {
+                if (settings == null)
+                {
+                    Debug.LogError("FireSystem SpreadFire: settings is null!");
+                    return;
+                }
+                    
+                flammable.ModifyBurnProgress(settings.spreadMultiplier * Time.deltaTime);
+            }
         }
+
+    }
+
+    private static List<IFlammable> GetFlammableObjectsInRange(Vector3 pos, float spreadRadius)
+    {
+        Collider[] hits = Physics.OverlapSphere(pos, spreadRadius);
+        List<IFlammable> flammable = new List<IFlammable>();
+
+        foreach (var hit in hits)
+        {
+            GameObject rootObj = hit.transform.root.gameObject;
+            if (rootObj.TryGetComponent(out IFlammable flammableComponent))
+            {
+                if (!flammable.Contains(flammableComponent))
+                    flammable.Add(flammableComponent);
+            }
+        }
+
+        return flammable;
     }
 
 }

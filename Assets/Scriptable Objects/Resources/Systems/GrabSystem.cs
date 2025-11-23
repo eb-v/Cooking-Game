@@ -44,6 +44,9 @@ public class GrabSystem : ScriptableObject
     {
         if (!SystemEnabled)
             return;
+        Rigidbody rb = physicsObj.GetComponent<Rigidbody>();
+        rb.linearVelocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
         RagdollController rc = player.GetComponent<RagdollController>();
         CoroutineRunner.Instance.StartCoroutine(GrabObjectCoroutine(rc, physicsObj, grabData));
         IGrabable grabable = physicsObj.GetComponent<IGrabable>();
@@ -55,6 +58,10 @@ public class GrabSystem : ScriptableObject
     {
         rc.ExtendArmsOutward(grabData);
         yield return new WaitForSeconds(0.1f);
+        Rigidbody rb = physicsObj.GetComponent<Rigidbody>();
+        rb.linearVelocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
+
         GameObject lowerRightArm = rc.RagdollDict["LowerRightArm"].gameObject;
         GameObject lowerLeftArm = rc.RagdollDict["LowerLeftArm"].gameObject;
         GameObject body = rc.RagdollDict["Body"].gameObject;

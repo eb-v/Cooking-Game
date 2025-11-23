@@ -195,6 +195,58 @@ Transform:
   - {fileID: 3235047593306277234}
   m_Father: {fileID: 5723749386816978444}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1240317321180793471
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3539553526511087865}
+  - component: {fileID: 8162865217901593550}
+  m_Layer: 0
+  m_Name: ConeDetection
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3539553526511087865
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1240317321180793471}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: 0.9702957, z: -0, w: -0.24192192}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5723749386816978444}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8162865217901593550
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1240317321180793471}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bad207cd2f8e8544ea59568a79bd5acb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ConeGizmo
+  distance: 10
+  angle: 46.4
+  posOffset: {x: 0, y: 1.52, z: 0}
+  directionAngle: -152
+  forwardDirection: {x: -4.6947155, y: 0, z: -8.829475}
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!1 &2567299971644528834
 GameObject:
   m_ObjectHideFlags: 0
@@ -406,6 +458,7 @@ Transform:
   m_Children:
   - {fileID: 7611459718897308437}
   - {fileID: 8534104358758067237}
+  - {fileID: 3539553526511087865}
   m_Father: {fileID: 4167148832282478695}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!136 &6592992983340961323
@@ -820,6 +873,10 @@ MonoBehaviour:
   <grabCollider>k__BackingField: {fileID: 8652533549081554014}
   foamPrefab: {fileID: 3339871681955947375, guid: 7b836b16a0cccce4bbf69b4fc92c0046, type: 3}
   spawnTransform: {fileID: 8534104358758067237}
+  cone: {fileID: 8162865217901593550}
   minFoamScale: 0.2
-  maxFoamScale: 0.4
+  maxFoamScale: 1.5
   offsetRange: 0.49
+  minForce: 1347
+  maxForce: 2101
+  extinguishRate: -0.3

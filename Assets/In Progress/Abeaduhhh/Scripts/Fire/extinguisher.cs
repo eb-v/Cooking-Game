@@ -11,7 +11,7 @@ public class Extinguisher : MonoBehaviour {
     private void OnTriggerStay(Collider other)
     {
         if (other.TryGetComponent(out Burnable burnable)) {
-            burnable.ReduceBurn(extinguishRate * Time.deltaTime);
+           // burnable.ReduceBurn(extinguishRate * Time.deltaTime);
         }
     }
 }

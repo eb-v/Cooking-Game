@@ -196,3 +196,5 @@ public class AssemblyStationColliderEntered : UnityEvent<GameObject> { }
 public class OnThrowStatusChanged : UnityEvent<bool> { }
 
 public class OnEquipmentUseInput : UnityEvent<bool> { }
+
+public class OnObjectIgnited : UnityEvent { }

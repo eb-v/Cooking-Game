@@ -4,9 +4,11 @@ using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.UI;
 
-public class Stove : MonoBehaviour, IInteractable, IAltInteractable
+public class Stove : BaseStation
 {
-    [field: SerializeField] public Transform objectSnapPoint { get; private set; }
+    [Header("Stove Section")]
+    [SerializeField] private Transform objectSnapPoint;
+    public Transform ObjectSnapPoint => objectSnapPoint;
 
     public CookingRecipe _currentRecipe { get; set; }
 
@@ -55,22 +57,26 @@ public class Stove : MonoBehaviour, IInteractable, IAltInteractable
     }
 
 
-    public void OnAltInteract(GameObject player)
+    public override void OnAltInteract(GameObject player)
     {
+        base.OnAltInteract(player);
         _stateMachine.GetCurrentState<StoveState>().AltInteractLogic(player);
     }
 
-    public void OnInteract(GameObject player)
+    public override void OnInteract(GameObject player)
     {
+        base.OnInteract(player);
         _stateMachine.GetCurrentState<StoveState>().InteractLogic(player, this);
     }
-    private void Update()
+    public override void Update()
     {
+        base.Update();
         _stateMachine.RunUpdateLogic();
     }
 
-    private void FixedUpdate()
+    public override void FixedUpdate()
     {
+        base.FixedUpdate();
         _stateMachine.RunFixedUpdateLogic();
     }
 

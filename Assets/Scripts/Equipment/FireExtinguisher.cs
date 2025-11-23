@@ -1,20 +1,33 @@
+using NUnit.Framework;
 using UnityEngine;
+using System.Collections.Generic;
 
 public class FireExtinguisher : DynamicObjectBase, IEquipment
 {
     [SerializeField] private GameObject foamPrefab;
     [SerializeField] private Transform spawnTransform;
 
-    [Header("Foam Settings")]
+    [Header("References")]
+    [SerializeField] private ConeGizmo cone;
+
+    [Header("Settings")]
     [SerializeField] private float minFoamScale = 0.2f;
     [SerializeField] private float maxFoamScale = 0.4f;
     [SerializeField] private float offsetRange = 0.1f;
+    [SerializeField] private float minForce = 800f;
+    [SerializeField] private float maxForce = 1200f;
+    [SerializeField] private float extinguishRate = -0.3f;
+
+    private int layerMask = 1 << 6; // Layer 6 for Flamable objects
 
     public void UseEquipment()
     {
         SprayFoam();
         SprayFoam();
         SprayFoam();
+
+        ExtinguishFlamablesInRange();
+
     }
 
     private void SprayFoam()
@@ -49,8 +62,6 @@ public class FireExtinguisher : DynamicObjectBase, IEquipment
 
     private void CalculateRandomForce(ref float force)
     {
-        float minForce = 800f; // Minimum force
-        float maxForce = 1200f; // Maximum force
         force = Random.Range(minForce, maxForce);
     }
 
@@ -58,6 +69,27 @@ public class FireExtinguisher : DynamicObjectBase, IEquipment
     {
         float randomScale = Random.Range(minFoamScale, maxFoamScale);
         scale = new Vector3(randomScale, randomScale, randomScale);
+    }
+
+    private void ExtinguishFlamablesInRange()
+    {
+
+        List<GameObject> objectsInSphere = cone.GetObjectsInSphere();
+        foreach (GameObject obj in objectsInSphere)
+        {
+            IFlammable flammable = obj.GetComponentInChildren<IFlammable>();
+            if (flammable != null && flammable.IsOnFire)
+            {
+                flammable.ModifyBurnProgress(extinguishRate * Time.deltaTime);
+            }
+        }
+
+    }
+
+
+    private void ExtinguishFire(IFlammable flammable)
+    {
+        flammable.Extinguish();
     }
 
 }

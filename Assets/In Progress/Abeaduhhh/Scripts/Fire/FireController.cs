@@ -22,7 +22,7 @@ public class FireController : MonoBehaviour {
     }
 
     private void Start() {
-        StartFire();
+        //StartFire();
     }
 
     private void OnDestroy() {

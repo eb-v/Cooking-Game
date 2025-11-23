@@ -33,18 +33,8 @@ public class StoveBurningState : StoveState {
         base.UpdateLogic();
 
         burnTimer += Time.deltaTime;
-        stove._stoveUIBurnFillImage.fillAmount = burnTimer / stove.burnDuration;
 
-        var burnable = stove.GetComponent<Burnable>();
-        if (burnable != null) {
-            if (!burnable.IsOnFire) {
-                burnable.AddBurnProgress(Time.deltaTime / stove.burnDuration);
 
-                if (burnable.burnProgress >= burnable.settings.burnThreshold) {
-                    burnable.Ignite();
-                }
-            }
-        }
     }
     //private void IgniteStove() {
     //    var burnable = stove.GetComponent<Burnable>();
@@ -59,23 +49,6 @@ public class StoveBurningState : StoveState {
 
         burnTimer = 0f;
 
-        stove._stoveUIBurnFillImage.enabled = false;
-        stove._stoveUICanvas.enabled = false;
-
-        var burnable = stove.GetComponent<Burnable>();
-        if (burnable != null) {
-            burnable.Extinguish();
-        }
-
-        if (fireInstance != null) {
-            FireSystem.ExtinguishObject(stove.objectSnapPoint.gameObject);
-            fireInstance = null;
-        }
-    }
-
-    public override void InteractLogic(GameObject player, Stove stove) {
-        stove.RemoveObject(player);
-        stateMachine.ChangeState(stove._idleStateInstance);
     }
 
     //private void BurnIngredient() {
