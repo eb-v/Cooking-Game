@@ -8,7 +8,27 @@ public class PlayerReadyManager : MonoBehaviour
 {
     [SerializeField] private string assignedChannel = "DefaultChannel";
     [ReadOnly]
-    [SerializeField] private static UDictionary<GameObject, bool> playerReadyStatus = new UDictionary<GameObject, bool>();
+    [SerializeField] private UDictionary<GameObject, bool> playerReadyStatus = new UDictionary<GameObject, bool>();
+
+    private static PlayerReadyManager instance;
+
+    [Header("Camera References")]
+    [SerializeField] private GameObject lobbyCam;
+
+    public static PlayerReadyManager Instance
+    {
+        get
+        {
+            if (instance == null)
+            {
+                instance = FindFirstObjectByType<PlayerReadyManager>();
+            }
+            return instance;
+        }
+    }
+
+
+
 
     private void Start()
     {
@@ -28,15 +48,14 @@ public class PlayerReadyManager : MonoBehaviour
         if (AllPlayersReady())
         {
             GenericEvent<OnAllPlayersReadyEvent>.GetEvent(assignedChannel).Invoke();
+            lobbyCam.SetActive(false);
         }
-        Debug.Log(AllPlayersReady());
     }
 
     private bool AllPlayersReady()
     {
         foreach (var status in playerReadyStatus.Values)
         {
-            Debug.Log(status);
             if (!status)
             {
                 return false;
@@ -45,7 +64,7 @@ public class PlayerReadyManager : MonoBehaviour
         return true;
     }
 
-    public static bool IsPlayerReady(GameObject player)
+    public bool IsPlayerReady(GameObject player)
     {
         return playerReadyStatus[player];
     }

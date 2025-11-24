@@ -1,24 +1,26 @@
 using UnityEngine;
 
-public class IngredientCrate : MonoBehaviour
+public class IngredientCrate : MonoBehaviour, IInteractable
 {
-    [SerializeField] private Ingredient ingredientPrefab;
+    [SerializeField] private Ingredient ingredientSO;
     [SerializeField] private Transform spawnTransform;
-    private Vector3 spawnPos;
 
-
-    private void Awake()
+    public void OnInteract(GameObject player)
     {
-        spawnPos = spawnTransform.position;
-        //GenericEvent<Interact>.GetEvent(gameObject.name).AddListener(SpawnIngredient);
+        Debug.Log("Player interacted with Ingredient Crate to spawn: " + ingredientSO.Prefab.name);
+        Transform playerRoot = player.GetComponent<RagdollController>().GetPelvis().transform;
+        Vector3 direction = (spawnTransform.position - playerRoot.position).normalized;
+
+        SpawnIngredientInPlayersHands(player);
     }
 
-    //private void SpawnIngredient()
-    //{
-    //    GameObject ingredient = ObjectPoolManager.SpawnObject(ingredientPrefab, spawnPos, Quaternion.identity);
-    //    Rigidbody rb = ingredient.GetComponent<Rigidbody>();
-    //    rb.isKinematic = false; 
+    private void SpawnIngredientInPlayersHands(GameObject player)
+    {
+        GameObject ingredient = Instantiate(ingredientSO.Prefab, spawnTransform.position, Quaternion.identity);
 
-    //    rb.AddForce(Vector3.up * 8f, ForceMode.Impulse);
-    //}
+        IGrabable grabComponent = ingredient.GetComponent<IGrabable>();
+
+        grabComponent.GrabObject(player);
+
+    }
 }

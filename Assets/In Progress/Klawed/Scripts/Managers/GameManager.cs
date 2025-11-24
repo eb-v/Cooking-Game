@@ -88,10 +88,35 @@ public class GameManager : MonoBehaviour
         _stateMachine.ChangeState(newState);
         _currentState = _stateMachine.GetCurrentState();
     }
-
+    // Switch scene without changing state
     public void SwitchScene(SceneField sceneToUnload, SceneField sceneToLoad)
     {
         StartCoroutine(SwitchScenesCoroutine(sceneToUnload, sceneToLoad));
+    }
+
+    // Switch scene and change state after loading
+    public void SwitchScene(SceneField sceneToUnload, SceneField sceneToLoad, GameState newState)
+    {
+        StartCoroutine(SwitchScenesAndChangeStateCoroutine(sceneToUnload, sceneToLoad, newState));
+    }
+
+
+    public void MoveObjectToScene(GameObject objectToMove, SceneField scene)
+    {
+        SceneManager.MoveGameObjectToScene(objectToMove, SceneManager.GetSceneByName(scene));
+    }
+
+
+    private IEnumerator SwitchScenesAndChangeStateCoroutine(SceneField sceneToUnload, SceneField sceneToLoad, GameState newState)
+    {
+        AsyncOperation loadOp = SceneManager.LoadSceneAsync(sceneToLoad, LoadSceneMode.Additive);
+        AsyncOperation unloadOp = SceneManager.UnloadSceneAsync(sceneToUnload);
+        while (!loadOp.isDone || !unloadOp.isDone)
+        {
+            yield return null;
+        }
+        SceneManager.SetActiveScene(SceneManager.GetSceneByName(sceneToLoad));
+        ChangeState(newState);
     }
 
     private IEnumerator SwitchScenesCoroutine(SceneField sceneToUnload, SceneField sceneToLoad)
@@ -123,5 +148,6 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    
 
 }

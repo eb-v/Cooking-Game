@@ -111,8 +111,8 @@ public class RagdollController : MonoBehaviour
     private JointDrive ReachStiffness;
     private JointDrive DriveOff;
     private JointDrive ZeroDrive;
-
-    private UDictionary<string, Quaternion> originalTargetRotations = new UDictionary<string, Quaternion>();
+    [ReadOnly]
+    [SerializeField] private UDictionary<string, Quaternion> originalTargetRotations;
     private Quaternion HeadTarget;
     private Quaternion BodyTarget;
     private Quaternion UpperRightArmTarget;
@@ -167,15 +167,11 @@ public class RagdollController : MonoBehaviour
         requiredForceToBeKO = playerData.RequiredForceToBeKO;
         _angleMultiplier = playerData.AngleMultiplier;
 
-    }
-
-    void Start()
-    {
-        //cam = Camera.main;
         groundLayer = LayerMask.NameToLayer("Ground");
         SetupJointDrives();
         SetupOriginalPose();
         SaveLocalPosRot();
+
     }
 
     public void EnterLogic()
@@ -220,7 +216,8 @@ public class RagdollController : MonoBehaviour
             originalTargetRotations.Add(kvp.Key, kvp.Value.Joint.targetRotation);
         }
 
-        BodyTarget = GetJointTargetRotation(ROOT);
+        
+        BodyTarget = GetJointTargetRotation(BODY);
         HeadTarget = GetJointTargetRotation(HEAD);
         UpperRightArmTarget = GetJointTargetRotation(UPPER_RIGHT_ARM);
         LowerRightArmTarget = GetJointTargetRotation(LOWER_RIGHT_ARM);
@@ -434,6 +431,7 @@ public class RagdollController : MonoBehaviour
     {
         if (ResetPose)
         {
+
             if (RagdollDict[BODY].isConnected)
                 RagdollDict[BODY].Joint.targetRotation = originalTargetRotations[BODY];
 

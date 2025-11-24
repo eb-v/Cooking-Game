@@ -4,69 +4,85 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using Unity.VisualScripting;
 
 public class PlayerManager : MonoBehaviour
 {
-    public static PlayerManager Instance;
-    public LobbyUIManager lobbyUIManager;
-    public Transform[] SpawnPoints;
-    private static List<GameObject> players = new List<GameObject>();
-    public static List<GameObject> Players => players;
 
-    [ReadOnly] [SerializeField] private static int m_playerCount = 0;
-    public static int PlayerCount => m_playerCount;
+    private static PlayerManager instance;
 
-    [SerializeField] private List<PlayerLobbySpawnInfoSO> lobbySpawnInfoSOs = new List<PlayerLobbySpawnInfoSO>();
-    [SerializeField] private string lobbySceneName = "Pregame Lobby";
+    public static PlayerManager Instance
+    {
+        get
+        {
+            if (instance == null)
+            {
+                instance = FindFirstObjectByType<PlayerManager>();
+            }
+            return instance;
+        }
+    }
+
+    private List<GameObject> players = new List<GameObject>();
+    public List<GameObject> Players => players;
+
+    [ReadOnly] [SerializeField] private int m_playerCount = 0;
+    public int PlayerCount => players.Count;
+
     
     private Dictionary<PlayerInput, InputDevice> playerInputDeviceMappings = new Dictionary<PlayerInput, InputDevice>();
     private HashSet<int> registeredPlayerNumbers = new HashSet<int>();
     
     public Dictionary<PlayerInput, InputDevice> PlayerInputDeviceMappings => playerInputDeviceMappings;
 
-    private void Awake()
-    {
-        m_playerCount = 0;
-        if (Instance == null)
-        {
-            Instance = this;
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
 
+    private void OnEnable()
+    {
         GenericEvent<OnPlayerJoinedEvent>.GetEvent("PlayerJoined").AddListener(OnPlayerJoined);
     }
 
-    private void Start()
+    private void OnDisable()
     {
-        Scene currentScene = SceneManager.GetActiveScene();
-        
-        if (currentScene.name == lobbySceneName && players.Count > 0)
+        GenericEvent<OnPlayerJoinedEvent>.GetEvent("PlayerJoined").RemoveListener(OnPlayerJoined);
+    }
+
+
+    private void OnPlayerJoined(GameObject player)
+    {
+        players.Add(player);
+    }
+
+    public void MovePlayersToSpawnPositions()
+    {
+        List<Transform> SpawnPoints = GetPlayerSpawnPoints();
+        if (SpawnPoints == null)
         {
-            ClearAllPlayers();
+            Debug.LogError("No spawn points found for players!");
+            return;
+        }
+        if (SpawnPoints.Count < players.Count)
+        {
+            Debug.LogError("Not enough spawn points for all players!");
+            return;
+        }
+
+        Debug.Log(PlayerCount + " players to move to spawn points.");
+        for (int i = 0; i < players.Count; i++)
+        {
+            players[i].transform.position = SpawnPoints[i].position;
+            Debug.Log("moved player " + i + " to spawn point " + i);
         }
     }
 
-    public void OnPlayerJoined(GameObject player)
+    private List<Transform> GetPlayerSpawnPoints()
     {
-        players.Add(player);
-        m_playerCount++;
-        //playerInputDeviceMappings[playerInput] = playerInput.devices[0];
-        player.name = "Player " + m_playerCount;
-
-        //if (currentScene.name == lobbySceneName)
-        //{
-        //    Rigidbody rb = playerInput.GetComponent<RagdollController>().GetPelvis().GetComponent<Rigidbody>();
-        //    playerInput.GetComponent<RagdollController>().enabled = false;
-        //    rb.isKinematic = true;
-        //    PlayerLobbySpawnInfoSO spawnInfoSO = lobbySpawnInfoSOs[m_playerCount - 1];
-        //    Quaternion spawnRot = Quaternion.Euler(spawnInfoSO.spawnRot);
-        //    playerInput.transform.SetPositionAndRotation(spawnInfoSO.spawnPos, spawnRot);
-        //    playerInput.transform.parent = gameObject.transform;
-        //}
-        
+        List<Transform> spawnPoints = new List<Transform>();
+        GameObject spawnPosContainer = GameObject.Find("Player Spawn Points");
+        foreach (Transform child in spawnPosContainer.transform)
+        {
+            spawnPoints.Add(child);
+        }
+        return spawnPoints;
     }
 
     public void ClearAllPlayers()
@@ -81,5 +97,16 @@ public class PlayerManager : MonoBehaviour
         playerInputDeviceMappings.Clear();
         registeredPlayerNumbers.Clear();
         m_playerCount = 0;
+    }
+
+    public void SwitchPlayerActionMaps(string actionMapName)
+    {
+        foreach (var player in players)
+        {
+            if (player.TryGetComponent<PlayerInput>(out PlayerInput playerInput))
+            {
+                playerInput.SwitchCurrentActionMap(actionMapName);
+            }
+        }
     }
 }

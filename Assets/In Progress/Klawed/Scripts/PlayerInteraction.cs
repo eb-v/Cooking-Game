@@ -15,13 +15,18 @@ public class PlayerInteraction : MonoBehaviour
     {
         if (lookedAtObj == null) return;
 
-        IInteractable interactable = lookedAtObj.GetComponent<IInteractable>();
-        if (interactable == null) return;
-
         // play interact SFX
         AudioManager.Instance?.PlaySFX("Item Interact");
 
-        interactable.OnInteract(player);
+        if (lookedAtObj.TryGetComponent<IInteractable>(out IInteractable interactable))
+        {
+            interactable.OnInteract(player);
+        }
+        else
+        {
+            Debug.Log("could not interact with " + lookedAtObj.name);   
+        }
+
     }
 
     private void HandleAltInteract(GameObject player)
