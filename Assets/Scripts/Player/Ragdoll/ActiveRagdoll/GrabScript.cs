@@ -5,7 +5,7 @@ using UnityEngine.UI;
 public class GrabScript : MonoBehaviour
 {
     [field:SerializeField] public IGrabable grabbedObject { get; set; }
-     public bool isGrabbing => grabbedObject != null;
+     public bool IsGrabbing => grabbedObject != null;
     
     private void Start()
     {

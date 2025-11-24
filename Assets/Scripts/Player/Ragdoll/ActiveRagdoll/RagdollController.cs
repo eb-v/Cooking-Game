@@ -169,6 +169,8 @@ public class RagdollController : MonoBehaviour
         requiredForceToBeKO = playerData.RequiredForceToBeKO;
         _angleMultiplier = playerData.AngleMultiplier;
 
+
+
         groundLayer = LayerMask.NameToLayer("Ground");
         SetupJointDrives();
         SetupOriginalPose();
@@ -258,6 +260,12 @@ public class RagdollController : MonoBehaviour
 
     public void SetJointToOriginalRot(RagdollJoint rj)
     {
+        if (rj.name == "DEF_Pelvis")
+        {
+            Debug.Log("Skipping Pelvis");
+            return;
+        }
+
         GameObject jointObj = rj.gameObject;
         jointObj.transform.localRotation = originalLocalRotations[rj.GetJointName()];
     }
@@ -333,7 +341,7 @@ public class RagdollController : MonoBehaviour
     }
 
 
-    private void UpdateTargetRotations()
+    public void UpdateTargetRotations()
     {
         foreach (KeyValuePair<string, RagdollJoint> kvp in RagdollDict)
         {
@@ -419,7 +427,7 @@ public class RagdollController : MonoBehaviour
     {
         if (ResetPose)
         {
-
+            Debug.Log("Resetting Pose");
             if (RagdollDict[BODY].isConnected)
                 TargetRotations[BODY] = originalTargetRotations[BODY];
 

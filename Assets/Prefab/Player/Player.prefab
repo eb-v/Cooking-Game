@@ -2451,6 +2451,9 @@ MonoBehaviour:
     - {fileID: 3684027681332472133}
     - {fileID: 1955394627903766296}
     - {fileID: 1844013870751796467}
+  TargetRotations:
+    keys: []
+    values: []
   rightHand: {fileID: 1129633459652427510}
   leftHand: {fileID: 398758036921774367}
   ObjectSnapPoint: {fileID: 5543782872358478468}
@@ -2483,6 +2486,9 @@ MonoBehaviour:
   punchForce: 15
   WalkForward: 0
   WalkBackward: 0
+  originalTargetRotations:
+    keys: []
+    values: []
   _angleMultiplier: 122.5
   isGrabbing: 0
 --- !u!114 &7631047085410713992
@@ -2842,6 +2848,10 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 22a9254e-befb-4cbf-91d8-3e1c91213140
     m_ActionName: 'Player/UseEquipment[/Keyboard/r,/DualSenseGamepadHID/leftTrigger]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: a72f5517-5429-4dba-b47f-941d69ec101a
+    m_ActionName: 'Player/PerformStationAction[/DualSenseGamepadHID/rightShoulder]'
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
@@ -2968,7 +2978,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Player
   _defaultStateBase: {fileID: 11400000, guid: 2c89edb8df63aed468f35ca427f920cb, type: 2}
   _airborneStateBase: {fileID: 11400000, guid: 5410e733b7659664b8d9cf46c2621ee3, type: 2}
-  _cuttingStateBase: {fileID: 11400000, guid: ea09548f0ff867e4082d39a28cb52eaf, type: 2}
+  _lockedStateBase: {fileID: 11400000, guid: ea09548f0ff867e4082d39a28cb52eaf, type: 2}
   _unconsciousStateBase: {fileID: 11400000, guid: fad65e87088d9a1479d3ee4113d074c0, type: 2}
   _currentState: {fileID: 0}
 --- !u!114 &1362008162283589234

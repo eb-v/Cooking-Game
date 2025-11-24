@@ -244,6 +244,15 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""PerformStationAction"",
+                    ""type"": ""Button"",
+                    ""id"": ""a72f5517-5429-4dba-b47f-941d69ec101a"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -634,28 +643,6 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""fecd8d9e-1434-4f78-affd-86f981e9a9b5"",
-                    ""path"": ""<Gamepad>/rightTrigger"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Throw"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""0c7af3fd-7f5d-4714-813d-9bac5758f2ba"",
-                    ""path"": ""<Mouse>/rightButton"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";Keyboard&Mouse"",
-                    ""action"": ""Throw"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""474e984d-18c3-4124-bdd9-5fd07357170a"",
                     ""path"": ""<Keyboard>/r"",
                     ""interactions"": """",
@@ -673,6 +660,39 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": "";Gamepad"",
                     ""action"": ""UseEquipment"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e86b71fb-2e2d-411e-b892-8f7b5e64c6e9"",
+                    ""path"": ""<Gamepad>/rightShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""PerformStationAction"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""9bb53c32-00e6-4039-9e2f-25f53cdb242e"",
+                    ""path"": ""<Gamepad>/rightTrigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Throw"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""489c2466-a061-4aae-9be3-70b94aa4531e"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Throw"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1418,6 +1438,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         m_Player_Respawn = m_Player.FindAction("Respawn", throwIfNotFound: true);
         m_Player_Throw = m_Player.FindAction("Throw", throwIfNotFound: true);
         m_Player_UseEquipment = m_Player.FindAction("UseEquipment", throwIfNotFound: true);
+        m_Player_PerformStationAction = m_Player.FindAction("PerformStationAction", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1536,6 +1557,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Respawn;
     private readonly InputAction m_Player_Throw;
     private readonly InputAction m_Player_UseEquipment;
+    private readonly InputAction m_Player_PerformStationAction;
     /// <summary>
     /// Provides access to input actions defined in input action map "Player".
     /// </summary>
@@ -1616,6 +1638,10 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// </summary>
         public InputAction @UseEquipment => m_Wrapper.m_Player_UseEquipment;
         /// <summary>
+        /// Provides access to the underlying input action "Player/PerformStationAction".
+        /// </summary>
+        public InputAction @PerformStationAction => m_Wrapper.m_Player_PerformStationAction;
+        /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
         public InputActionMap Get() { return m_Wrapper.m_Player; }
@@ -1692,6 +1718,9 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @UseEquipment.started += instance.OnUseEquipment;
             @UseEquipment.performed += instance.OnUseEquipment;
             @UseEquipment.canceled += instance.OnUseEquipment;
+            @PerformStationAction.started += instance.OnPerformStationAction;
+            @PerformStationAction.performed += instance.OnPerformStationAction;
+            @PerformStationAction.canceled += instance.OnPerformStationAction;
         }
 
         /// <summary>
@@ -1754,6 +1783,9 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @UseEquipment.started -= instance.OnUseEquipment;
             @UseEquipment.performed -= instance.OnUseEquipment;
             @UseEquipment.canceled -= instance.OnUseEquipment;
+            @PerformStationAction.started -= instance.OnPerformStationAction;
+            @PerformStationAction.performed -= instance.OnPerformStationAction;
+            @PerformStationAction.canceled -= instance.OnPerformStationAction;
         }
 
         /// <summary>
@@ -2313,6 +2345,13 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnUseEquipment(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "PerformStationAction" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnPerformStationAction(InputAction.CallbackContext context);
     }
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "UI" which allows adding and removing callbacks.

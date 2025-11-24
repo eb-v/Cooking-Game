@@ -42,17 +42,15 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void OnRightTrigger(InputAction.CallbackContext context)
+    public void OnPerformStationAction(InputAction.CallbackContext context)
     {
         if (context.performed) // pressed down
         {
-            GenericEvent<OnRightTriggerInput>.GetEvent(gameObject.name).Invoke();
-            Debug.Log("Right Trigger Pressed");
+            GenericEvent<OnPerformStationAction>.GetEvent(gameObject.name).Invoke();
         }
         else if (context.canceled) // button released
         {
-            GenericEvent<OnRightTriggerCancel>.GetEvent(gameObject.name).Invoke();
-            Debug.Log("Right Trigger Released");
+            GenericEvent<OnPerformStationActionCancel>.GetEvent(gameObject.name).Invoke();
         }
     }
 

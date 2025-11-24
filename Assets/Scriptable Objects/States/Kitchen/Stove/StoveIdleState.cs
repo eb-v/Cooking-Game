@@ -39,7 +39,7 @@ public class StoveIdleState : StoveState
 
 
         GrabScript grabScript = player.GetComponent<GrabScript>();
-        if (grabScript.isGrabbing)
+        if (grabScript.IsGrabbing)
         {
             GameObject grabbedObject = grabScript.grabbedObject.GetGameObject();
             if (stove.IsItemCompatible(grabbedObject))

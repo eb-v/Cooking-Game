@@ -5,10 +5,17 @@ public class PlayerInteraction : MonoBehaviour
     [SerializeField] private Env_Interaction env_Interaction;
     private GameObject lookedAtObj => env_Interaction.currentlyLookingAt;
 
-    private void Start()
+
+    private void OnEnable()
     {
         GenericEvent<OnInteractInput>.GetEvent(gameObject.name).AddListener(HandleInteract);
         GenericEvent<OnAlternateInteractInput>.GetEvent(gameObject.name).AddListener(HandleAltInteract);
+    }
+
+    private void OnDisable()
+    {
+        GenericEvent<OnInteractInput>.GetEvent(gameObject.name).RemoveListener(HandleInteract);
+        GenericEvent<OnAlternateInteractInput>.GetEvent(gameObject.name).RemoveListener(HandleAltInteract);
     }
 
     private void HandleInteract(GameObject player)
