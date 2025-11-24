@@ -1,8 +1,8 @@
 using UnityEditor;
 using UnityEngine;
 
-[CustomEditor(typeof(SavePose))]
-public class SavePoseButtonEditor : Editor
+[CustomEditor(typeof(Burnable))]
+public class BurnableEditor : Editor
 {
     public override void OnInspectorGUI()
     {
@@ -10,18 +10,14 @@ public class SavePoseButtonEditor : Editor
         DrawDefaultInspector();
 
         // 2. Get a reference to the component instance being inspected
-        SavePose myTarget = (SavePose)target;
+        Burnable myTarget = (Burnable)target;
 
         // 3. Create the actual button in the Inspector
-        if (GUILayout.Button("Save Pose Data"))
+        if (GUILayout.Button("Ignite"))
         {
             // 4. Call the function on the target component when the button is pressed
-            myTarget.SavePoseFunction();
+            myTarget.Ignite();
         }
     }
 
 }
-
-
-
-

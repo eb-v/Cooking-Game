@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 using UnityEngine;
 using System.Collections.Generic;
 
-public class CuttingCounter : MonoBehaviour, IInteractable, IAltInteractable
+public class CuttingCounter : BaseStation
 {
     private enum CuttingState
     {
@@ -38,8 +38,21 @@ public class CuttingCounter : MonoBehaviour, IInteractable, IAltInteractable
     private bool hasObject => _currentObject != null;
     private bool notBeingUsed => _currentPlayer == null;
 
-    public void OnInteract(GameObject player)
+    public override void Update()
     {
+        base.Update();
+        if (IsOnFire && !notBeingUsed)
+        {
+            ExitCutState(_currentPlayer.gameObject);
+            Destroy(_currentObject);
+        }
+    }
+
+
+    public override void OnInteract(GameObject player)
+    {
+        if (IsOnFire)
+            return;
         GrabScript gs = player.GetComponent<GrabScript>();
 
         // ingredient placement logic
@@ -95,8 +108,10 @@ public class CuttingCounter : MonoBehaviour, IInteractable, IAltInteractable
 
     }
 
-    public void OnAltInteract(GameObject player)
+    public override void OnAltInteract(GameObject player)
     {
+        if (IsOnFire)
+            return;
         if (!notBeingUsed)
         {
             if (_currentPlayer == player.GetComponent<Player>())

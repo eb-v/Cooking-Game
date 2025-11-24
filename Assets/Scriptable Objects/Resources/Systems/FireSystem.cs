@@ -106,7 +106,7 @@ public class FireSystem : ScriptableObject
 
         foreach (var hit in hits)
         {
-            GameObject rootObj = hit.transform.root.gameObject;
+            GameObject rootObj = hit.gameObject;
             if (rootObj.TryGetComponent(out IFlammable flammableComponent))
             {
                 if (!flammable.Contains(flammableComponent))
