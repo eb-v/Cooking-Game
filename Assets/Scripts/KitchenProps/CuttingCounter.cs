@@ -72,6 +72,9 @@ public class CuttingCounter : MonoBehaviour, IInteractable, IAltInteractable
                     rootTransform.position = _playerSnapPoint.position;
 
                     Player playerScript = player.GetComponent<Player>();
+                    Vector3 newForwardDirection = (_objectSnapPoint.position - _playerSnapPoint.position).normalized;
+                    newForwardDirection.y = 0;
+                    rc.SetForwardDirection(newForwardDirection);
                     playerScript.ChangeState(playerScript._cuttingStateInstance);
                     rootTransform.rotation = _playerSnapPoint.rotation;
 

@@ -15,6 +15,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameState _inLevelState;
     [SerializeField] private GameState _postLevelState;
 
+    [Header("Settings")]
+    [SerializeField] private string _startingState;
+
 
     private static StateMachine<GameState> _stateMachine;
 
@@ -63,7 +66,27 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        _stateMachine.Initialize(_mainMenuStateInstance);
+        switch (_startingState)
+        {
+            case "MainMenu":
+                _stateMachine.Initialize(_mainMenuStateInstance);
+                break;
+            case "Lobby":
+                _stateMachine.Initialize(_lobbyStateInstance);
+                break;
+            case "PreLevel":
+                _stateMachine.Initialize(_preLevelStateInstance);
+                break;
+            case "InLevel":
+                _stateMachine.Initialize(_inLevelStateInstance);
+                break;
+            case "PostLevel":
+                _stateMachine.Initialize(_postLevelStateInstance);
+                break;
+            default:
+                Debug.LogError("Invalid starting state");
+                break;
+        }
         _currentState = _stateMachine.GetCurrentState();
     }
 

@@ -74,7 +74,6 @@ public class SavePoseData : MonoBehaviour
     {
        // rc.UpdateLogic();
         rc.SetArmRotationValues(UpperLeftArm, LowerLeftArm, UpperRightArm, LowerRightArm);
-        rc.UpdateArmRotations();
 
         
 
