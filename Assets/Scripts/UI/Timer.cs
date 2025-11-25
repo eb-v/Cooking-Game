@@ -73,72 +73,110 @@ public class Timer : MonoBehaviour {
         }
     }
 
-private IEnumerator LoadAwardsSceneCoroutine() {
-    // Wait for the delay
-    yield return new WaitForSeconds(sceneTransitionDelay);
-    
-    // Find which level scene is currently loaded
-    Scene levelScene = default;
-    string levelSceneName = "";
-    if (SceneManager.GetSceneByName("Level 1").isLoaded) {
-        levelScene = SceneManager.GetSceneByName("Level 1");
-        levelSceneName = "Level 1";
-    } else if (SceneManager.GetSceneByName("Level 2").isLoaded) {
-        levelScene = SceneManager.GetSceneByName("Level 2");
-        levelSceneName = "Level 2";
-    }
-    
-    if (levelScene.isLoaded) {
-        Debug.Log($"[Timer] Found loaded level scene: {levelSceneName}");
+    private IEnumerator LoadAwardsSceneCoroutine() {
+        // Wait for the delay
+        yield return new WaitForSeconds(sceneTransitionDelay);
         
-        // Reset time scale before loading awards scene
-        Time.timeScale = 1f;
-        
-        // Load AwardsScene additively
-        var awardsLoad = SceneManager.LoadSceneAsync("AwardsScene", LoadSceneMode.Additive);
-        while (!awardsLoad.isDone)
-            yield return null;
-        
-        // Set AwardsScene as the active scene
-        Scene awardsScene = SceneManager.GetSceneByName("AwardsScene");
-        SceneManager.SetActiveScene(awardsScene);
-        
-        // Wait one frame to ensure scene is fully initialized
-        yield return null;
-        
-        // Define spawn positions for each player
-        Vector3[] spawnPositions = new Vector3[] {
-            new Vector3(-15f, 9.5f, 45f),  // First player
-            new Vector3(0f, 9.5f, 45f),    // Second player
-            new Vector3(-20f, 9.5f, 45f),  // Third player
-            new Vector3(5f, 9.5f, 45f)     // Fourth player
-        };
-        
-        // Move players to spawn positions and freeze them
-        var players = PlayerManager.Instance.Players;
-        for (int i = 0; i < players.Count && i < spawnPositions.Length; i++) {
-            if (players[i] != null) {
-                // Set position
-                players[i].transform.position = spawnPositions[i];
-                
-                // Freeze physics
-                if (players[i].TryGetComponent<Rigidbody>(out Rigidbody rb)) {
-                    rb.isKinematic = true;
-                    rb.linearVelocity = Vector3.zero;
-                }
-            }
+        // Find which level scene is currently loaded
+        Scene levelScene = default;
+        string levelSceneName = "";
+        if (SceneManager.GetSceneByName("Level 1").isLoaded) {
+            levelScene = SceneManager.GetSceneByName("Level 1");
+            levelSceneName = "Level 1";
+        } else if (SceneManager.GetSceneByName("Level 2").isLoaded) {
+            levelScene = SceneManager.GetSceneByName("Level 2");
+            levelSceneName = "Level 2";
         }
         
-        Debug.Log("[Timer] Moved players to spawn positions and froze physics in AwardsScene");
-        
-        // Unload the level scene
-        var levelSceneUnload = SceneManager.UnloadSceneAsync(levelScene);
-        while (!levelSceneUnload.isDone)
+        if (levelScene.isLoaded) {
+            Debug.Log($"[Timer] Found loaded level scene: {levelSceneName}");
+            
+            // Reset time scale before loading awards scene
+            Time.timeScale = 1f;
+            
+            // Load AwardsScene additively
+            var awardsLoad = SceneManager.LoadSceneAsync("AwardsScene", LoadSceneMode.Additive);
+            while (!awardsLoad.isDone)
+                yield return null;
+            
+            // Set AwardsScene as the active scene
+            Scene awardsScene = SceneManager.GetSceneByName("AwardsScene");
+            SceneManager.SetActiveScene(awardsScene);
+            
+            // Wait one frame to ensure scene is fully initialized
             yield return null;
-        
-        Debug.Log($"[Timer] Transitioned to AwardsScene and unloaded {levelSceneName}. Persistent scene remains loaded.");
-    } else {
-        Debug.LogError("[Timer] Could not find Level 1 or Level 2 scene loaded!");
+            
+            // Define spawn positions for each player
+            Vector3[] spawnPositions = new Vector3[] {
+                new Vector3(-15f, 10.75f, 45f),  // First player
+                new Vector3(0f, 10.75f, 45f),    // Second player
+                new Vector3(-20f, 10.75f, 45f),  // Third player
+                new Vector3(5f, 10.75f, 45f)     // Fourth player
+            };
+            
+            // Default rotation (facing forward)
+            Quaternion defaultRotation = Quaternion.identity;
+            
+            // Setup players in awards scene
+            var players = PlayerManager.Instance.Players;
+            yield return StartCoroutine(SetupPlayersInAwardsScene(players, spawnPositions, defaultRotation));
+            
+            Debug.Log("[Timer] Moved players to spawn positions, reset rotations, froze physics, and disabled RagdollController in AwardsScene");
+            
+            // Unload the level scene
+            var levelSceneUnload = SceneManager.UnloadSceneAsync(levelScene);
+            while (!levelSceneUnload.isDone)
+                yield return null;
+            
+            Debug.Log($"[Timer] Transitioned to AwardsScene and unloaded {levelSceneName}. Persistent scene remains loaded.");
+        } else {
+            Debug.LogError("[Timer] Could not find Level 1 or Level 2 scene loaded!");
+        }
+    }
+
+private IEnumerator SetupPlayersInAwardsScene(System.Collections.Generic.List<GameObject> players, Vector3[] spawnPositions, Quaternion defaultRotation) {
+    for (int i = 0; i < players.Count && i < spawnPositions.Length; i++) {
+        if (players[i] != null) {
+            // Disable RagdollController first
+            if (players[i].TryGetComponent<RagdollController>(out RagdollController rc)) {
+                rc.enabled = false;
+                Debug.Log($"[Timer] Disabled RagdollController for player {i}");
+            }
+            
+            // Disable CharacterController if present
+            CharacterController cc = null;
+            if (players[i].TryGetComponent<CharacterController>(out cc)) {
+                cc.enabled = false;
+            }
+            
+            // Freeze all physics BEFORE setting position
+            Rigidbody[] allRigidbodies = players[i].GetComponentsInChildren<Rigidbody>();
+            foreach (Rigidbody rb in allRigidbodies) {
+                rb.linearVelocity = Vector3.zero;
+                rb.angularVelocity = Vector3.zero;
+                rb.isKinematic = true;
+            }
+            
+            // Wait a frame for physics to settle
+            yield return null;
+            
+            // NOW set position and rotation
+            players[i].transform.position = spawnPositions[i];
+            players[i].transform.rotation = defaultRotation;
+            
+            // Wait another frame
+            yield return null;
+            
+            // Re-enable CharacterController if it was disabled
+            if (cc != null) {
+                cc.enabled = true;
+            }
+            
+            // Force rotation one more time to be absolutely sure
+            players[i].transform.rotation = defaultRotation;
+            
+            Debug.Log($"[Timer] Reset player {i} to spawn position {spawnPositions[i]} and default rotation");
+        }
     }
 }
 }
