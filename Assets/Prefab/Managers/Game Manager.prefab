@@ -1,0 +1,58 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &9018924621042225420
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7519433135768610612}
+  - component: {fileID: 6454426608631048066}
+  m_Layer: 0
+  m_Name: Game Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7519433135768610612
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9018924621042225420}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1011.7184, y: 0, z: 961.258}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6454426608631048066
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9018924621042225420}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 92f49afb897fb9d40942fd05540dbcdf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameManager
+  _mainMenuState: {fileID: 11400000, guid: 824f61a40ae8c73449911e3c765a994f, type: 2}
+  _lobbyState: {fileID: 11400000, guid: dcf37ef790f370549bf0c9b01992d1d6, type: 2}
+  _preLevelState: {fileID: 11400000, guid: e0bb894ba8916af49a58578f9883d953, type: 2}
+  _inLevelState: {fileID: 11400000, guid: 936e7e4a7fae5ea4ebbe7b9c50e9b00e, type: 2}
+  _postLevelState: {fileID: 11400000, guid: 888210cd13bfbcf4a9c3def79dbe6ced, type: 2}
+  _startingState: InLevel
+  _mainMenuStateInstance: {fileID: 0}
+  _lobbyStateInstance: {fileID: 0}
+  _preLevelStateInstance: {fileID: 0}
+  _inLevelStateInstance: {fileID: 0}
+  _postLevelStateInstance: {fileID: 0}
+  _currentState: {fileID: 0}

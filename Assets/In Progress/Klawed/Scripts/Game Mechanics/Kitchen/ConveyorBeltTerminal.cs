@@ -4,7 +4,7 @@ using System.Collections.Generic;
 public class ConveyorBeltTerminal : MonoBehaviour
 {
     [SerializeField] private List<ConveyorBelt> conveyorBelt;
-    [SerializeField] private ExplosionSettings explodeSettings;
+    [SerializeField] private ExplosionData explodeSettings;
     private float explosionChance = 0.1f; // 10% chance to explode on interaction
 
     private void Start()
@@ -54,6 +54,5 @@ public class ConveyorBeltTerminal : MonoBehaviour
 
     private void Explode()
     {
-        ExplosionSystem.Explode(gameObject);
     }
 }

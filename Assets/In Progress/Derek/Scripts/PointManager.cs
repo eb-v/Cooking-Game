@@ -13,7 +13,6 @@ public class PointManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject);
         }
         else if (Instance != this)
         {
@@ -30,14 +29,17 @@ public class PointManager : MonoBehaviour
     {
         deliveredCount++;
         Debug.Log("Total delivered: " + deliveredCount + " | Ingredients: " + ingredientCount);
-        // Invoke with ingredient count instead of total delivered count
+
+        // play points SFX per successful dish
+        AudioManager.Instance?.PlaySFX("Points");
+
         OnDishDelivered.Invoke(ingredientCount);
     }
 
     public void ResetPoints()
     {
-        deliveredCount = 0; // or whatever your point variable is named
-        OnDishDelivered?.Invoke(0); // This will update all UIs listening to it
+        deliveredCount = 0;
+        OnDishDelivered?.Invoke(0);
     }
 
     public int GetDeliveredCount()

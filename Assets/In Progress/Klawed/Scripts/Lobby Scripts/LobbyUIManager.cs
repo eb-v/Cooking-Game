@@ -8,44 +8,26 @@ public class LobbyUIManager : MonoBehaviour
     [SerializeField] private GameObject mapSelectionUIObject;
 
     [SerializeField] private string assignedChannel = "DefaultChannel";
+    [ReadOnly]
+    [SerializeField] private int currentCanvasIndex = 1;
 
     private void Awake()
     {
         GenericEvent<OnAllPlayersReadyEvent>.GetEvent(assignedChannel).AddListener(OnAllPlayersReady);
+        GenericEvent<OnPlayerJoinedEvent>.GetEvent("PlayerJoined").AddListener(OnPlayerJoined);
     }
 
-
-    public void EnablePlayerCanvas(int index)
+    private void OnPlayerJoined(GameObject player)
     {
-        if (index == 0)
-        {
-            Debug.Log("cannot enable player canvas for index 0");
-            return;
-        }
-
-
-        //GameObject playerUIObj = playerUICanvas[index];
-        //LobbyUIEventHandler uiHandler = playerUIObj.GetComponent<LobbyUIEventHandler>();
-        //foreach (Transform child in playerUIObj.transform)
-        //{
-        //    child.gameObject.SetActive(true);
-        //}
-        playerUICanvas[index].SetActive(true);
+        EnablePlayerCanvas();
     }
-
+    private void EnablePlayerCanvas()
+    {
+        playerUICanvas[currentCanvasIndex].SetActive(true);
+        currentCanvasIndex++;
+    }
     public void DisablePlayerCanvas(int index)
     {
-        if (index == 0)
-        {
-            Debug.Log("cannot disable player canvas for index 0");
-            return;
-        }
-        //GameObject playerUIObj = playerUICanvas[index];
-        //LobbyUIEventHandler uiHandler = playerUIObj.GetComponent<LobbyUIEventHandler>();
-        //foreach (Transform child in playerUIObj.transform)
-        //{
-        //    child.gameObject.SetActive(false);
-        //}
         if (playerUICanvas[index] != null)
         {
             playerUICanvas[index].SetActive(false);

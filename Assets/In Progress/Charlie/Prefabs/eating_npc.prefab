@@ -303,7 +303,7 @@ Transform:
   m_GameObject: {fileID: 1059928257303362132}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 18.74, y: 2.46, z: -15.89}
+  m_LocalPosition: {x: 18.74, y: 5, z: -15.89}
   m_LocalScale: {x: 0.29032427, y: 0.29032427, z: 0.29032427}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -351,8 +351,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08dd4b86e040498488a5953eedc6d0d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NPC
-  animator: {fileID: 7170812900856514564}
-  agent: {fileID: 2285271266827683906}
   npcCanvas: {fileID: 429348174620091200}
 --- !u!114 &5434055776899132203
 MonoBehaviour:
@@ -366,14 +364,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc777c791744882448d4e573a9aefacf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NPCController
-  currentState: 0
-  npc: {fileID: 806953584572983670}
-  manager: {fileID: 0}
   assignedChannel: OrderDisplay
   handHoldPoint: {fileID: 8160035838760950234}
+  agent: {fileID: 0}
+  animator: {fileID: 0}
+  orderImage: {fileID: 0}
+  bubbleImage: {fileID: 0}
+  inLine: {fileID: 0}
+  ordering: {fileID: 0}
+  walkToTable: {fileID: 0}
+  eating: {fileID: 0}
+  leaving: {fileID: 0}
+  _inLineInstance: {fileID: 0}
+  _orderingInstance: {fileID: 0}
+  _walkToTableInstance: {fileID: 0}
+  _eatAtTableInstance: {fileID: 0}
+  _leaveInstance: {fileID: 0}
   targetLine: {fileID: 0}
   tablePositions: {fileID: 0}
   exitPoint: {fileID: 0}
+  _currentState: {fileID: 0}
+  debug_CurrentOrder: {fileID: 0}
 --- !u!195 &2285271266827683906
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -1686,8 +1697,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 8.205361, y: 11.148367, z: 5.628028}
-  m_Center: {x: 0.23598756, y: -2.9703066, z: -0.28573674}
+  m_Size: {x: 8.205361, y: 11.148367, z: 14.557398}
+  m_Center: {x: 0.23598756, y: -2.9703066, z: 4.178955}
 --- !u!1 &8673964299723179662
 GameObject:
   m_ObjectHideFlags: 0

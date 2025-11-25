@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class Cut_Item : MonoBehaviour, IInteractable {
+public class Cut_Item : MonoBehaviour{
     [SerializeField] private SkillCheckManager skillCheckManager;
     [SerializeField] private GameObject finishedItemPrefab;
 
@@ -26,7 +26,7 @@ public class Cut_Item : MonoBehaviour, IInteractable {
                 playerInRange = true;
 
                 CheckInteract ci = root.GetComponent<CheckInteract>();
-                if (ci != null) ci.SetCurrentInteractable(this);
+               // if (ci != null) ci.SetCurrentInteractable(this);
             }
         }
     }
@@ -43,7 +43,7 @@ public class Cut_Item : MonoBehaviour, IInteractable {
                 playerInRange = false;
 
                 CheckInteract ci = root.GetComponent<CheckInteract>();
-                if (ci != null) ci.ClearCurrentInteractable(this);
+               // if (ci != null) ci.ClearCurrentInteractable(this);
             }
         }
     }
@@ -56,7 +56,7 @@ public class Cut_Item : MonoBehaviour, IInteractable {
             skillCheckActive = true;
 
             CheckInteract ci = player.GetComponent<CheckInteract>();
-            if (ci != null) ci.SetCurrentInteractable(skillCheckManager);
+           // if (ci != null) ci.SetCurrentInteractable(skillCheckManager);
 
             skillCheckManager.OnSkillCheckFinished += OnSkillCheckFinished;
             skillCheckManager.StartSkillCheck();

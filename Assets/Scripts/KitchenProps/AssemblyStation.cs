@@ -1,307 +1,113 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
-public class AssemblyStation : MonoBehaviour
+public class AssemblyStation : MonoBehaviour, IInteractable, IAltInteractable
 {
-    //    [SerializeField] private GameObject _boxLid;
-    //    [SerializeField] private float _lowerLimitY = -2.07f;
-    //    [SerializeField] private float _raiseLimitY = 0.88f;
-    //    [SerializeField] private float _assemblyTime = 5.0f;
-    //    [SerializeField] private Transform _productSpawnPoint;
-    //    [SerializeField] private GameObject _finalProductPrefab;
+    [Header("Settings")]
+    [SerializeField] private float timeToAssemble = 7f;
+    [field: SerializeField] public float xOffsetRangeMin { get; private set; } = 0.3f;
+    [field: SerializeField] public float xOffsetRangeMax { get; private set; } = 0.5f;
+    [field: SerializeField] public float zOffsetRangeMin { get; private set; } = 0.3f;
+    [field: SerializeField] public float zOffsetRangeMax { get; private set; } = 0.5f;
+    [field: SerializeField] public float launchForce { get; private set; } = 2f;
+    public float TimeToAssemble => timeToAssemble;
 
-    //    [SerializeField] private List<RecipeSO> _availableRecipes;
-    //    [SerializeField] private RecipeSO _selectedRecipe;
-    //    [SerializeField] private Image _selectedRecipeUIImage;
+    [Header("References")]
+    [SerializeField] private Transform spawnPosition;
+    [SerializeField] private GameObject progressBar;
+    [SerializeField] private Image progressFillImage;
+    public Vector3 SpawnPosition => spawnPosition.position;
+    public GameObject ProgressBar => progressBar;
+    public Image FillImg => progressFillImage;
 
+    [Header("States")]
+    [SerializeField] private AssemblyState idleState;
+    [SerializeField] private AssemblyState assembleState;
 
-    //    private int _currentRecipeIndex = 0;
+    [Header("Storage")]
+    [ReadOnly]
+    public UDictionary<Ingredient, int> ingredientStorage = new UDictionary<Ingredient, int>();
+    public List<Ingredient> availableIngredients = new List<Ingredient>();
+    public List<MenuItem> availableMenuItems = new List<MenuItem>();
 
-    //    public List<GameObject> ingredientsInAssemblyArea;
-
-
-
-
-
-    //    public float verticalSpeed = 0.02f;
-
-    //    public float _assemblyTimer = 0.0f;
-    //    private bool _isOn;
-
-    //    private void Awake()
-    //    {
-    //        ingredientsInAssemblyArea = new List<GameObject>();
-    //        GenericEvent<IngredientEnteredAssemblyArea>.GetEvent(gameObject.name).AddListener(AddIngredientToSet);
-    //        GenericEvent<IngredientExitedAssemblyArea>.GetEvent(gameObject.name).AddListener(RemoveIngredientFromSet);
-    //        GenericEvent<Interact>.GetEvent(gameObject.name).AddListener(ActivateAssembler);
-    //        GenericEvent<AlternateInteractInput>.GetEvent(gameObject.name).AddListener(ChangeSelectedRecipe);
-    //    }
-
-    //    private void Start()
-    //    {
-    //        _selectedRecipe = _availableRecipes[_currentRecipeIndex];
-    //        _finalProductPrefab = _selectedRecipe.finalProductPrefab;
-    //        _selectedRecipeUIImage.sprite = _selectedRecipe.finalProductImageUI;
-    //        //TurnOn();
-    //    }
-
-    //    private void FixedUpdate()
-    //    {
-    //        if (_isOn)
-    //        {
-    //            if (!FinishedLowering())
-    //            {
-    //                LowerBoxLid();
-    //            }
-    //            else
-    //            {
-    //                AssembleProduct();
-    //            }
-    //        }
-    //        else
-    //        {
-    //            if (!FinishedRaising())
-    //            {
-    //                RaiseBoxLid();
-    //            }
-    //        }
-    //    }
-
-    //    private void ActivateAssembler()
-    //    {
-    //        if (!_isOn)
-    //        {
-    //            TurnOn();
-    //        }
-    //        else
-    //        {
-    //            Debug.Log("Assembly Station is already on.");
-    //        }
-    //    }
+    [Header("Debug")]
+    [ReadOnly]
+    public MenuItem selectedMenuItem;
 
 
-    //    private void TurnOn()
-    //    {
-    //        _isOn = true;
-    //    }
+    public int selectedMenuItemIndex { get; set; }
+    public MenuItem SelectedMenuItem => selectedMenuItem;
+
+    public StateMachine<AssemblyState> stateMachine { get; private set; }
+
+    #region State Instances
+    public AssemblyState IdleStateInstance { get; private set; }
+    public AssemblyState AssembleStateInstance { get; private set; }
+    #endregion
 
 
-    //    private void TurnOff()
-    //    {
-    //        _isOn = false;
-    //    }
+    private void Awake()
+    {
+        Initialize();
 
+        stateMachine = new StateMachine<AssemblyState>();
+        IdleStateInstance = Instantiate(idleState);
+        AssembleStateInstance = Instantiate(assembleState);
+    }
 
-    //    private void LowerBoxLid()
-    //    {
-    //        Transform boxlidTransform = _boxLid.transform;
-    //        Vector3 boxLidPos = boxlidTransform.position;
+    private void Initialize()
+    {
 
-    //        boxLidPos.y -= verticalSpeed;
+        foreach (Ingredient ingredient in availableIngredients)
+        {
+            ingredientStorage[ingredient] = 0;
+        }
 
-    //        boxlidTransform.position = boxLidPos;
-    //        Debug.Log(boxLidPos.y);
+        selectedMenuItem = availableMenuItems[0];
+    }
 
-    //    }
+    private void Start()
+    {
+        IdleStateInstance.Initialize(gameObject, stateMachine);
+        AssembleStateInstance.Initialize(gameObject, stateMachine);
+        stateMachine.Initialize(IdleStateInstance);
+    }
 
-    //    private bool FinishedLowering()
-    //    {
-    //        //if (_boxLid.transform.position.y < _lowerLimitY)
-    //        //{
-    //        //    Vector3 boxLidPos = _boxLid.transform.position;
-    //        //    boxLidPos.y = _lowerLimitY;
-    //        //    _boxLid.transform.position = boxLidPos;
-    //        //}
-    //        Debug.Log(_boxLid.transform.position.y <= _lowerLimitY);
-    //        return _boxLid.transform.position.y <= _lowerLimitY;
-    //    }
+    private void Update()
+    {
+        stateMachine.RunUpdateLogic();
+    }
 
-    //    private void AssembleProduct()
-    //    {
-    //        // Logic to assemble the product goes here
-    //        if (_assemblyTimer < _assemblyTime)
-    //        {
-    //            _assemblyTimer += Time.fixedDeltaTime;
-    //        }
-    //        else
-    //        {
-    //            Debug.Log(CheckForRecipeRequirements(_selectedRecipe));
-    //            // check if all required ingredients are present
-    //            if (CheckForRecipeRequirements(_selectedRecipe))
-    //            {
-    //                // All ingredients are present, proceed with assembly
+    private void FixedUpdate()
+    {
+        stateMachine.RunFixedUpdateLogic();
+    }
 
-    //                // Remove used ingredients from the assembly area
-    //                UseIngredients(_selectedRecipe);
+    public void ChangeSelectedMenuItem()
+    {
+        selectedMenuItemIndex++;
+        if (selectedMenuItemIndex >= availableMenuItems.Count)
+        {
+            selectedMenuItemIndex = 0;
+        }
+        selectedMenuItem = availableMenuItems[selectedMenuItemIndex];
+    }
+    
+    public void OnInteract(GameObject player)
+    {
+        stateMachine.GetCurrentState().InteractLogic(player);
+    }
 
-    //                // spawn the final product at the spawn point
-    //                Debug.Log("Product Assembled!");
-    //                ObjectPoolManager.SpawnObject(_finalProductPrefab, _productSpawnPoint.position, Quaternion.identity);
-    //            }
+    public void OnAltInteract(GameObject player)
+    {
+        stateMachine.GetCurrentState().AltInteractLogic(player);
+    }
 
+    public void ChangeState(AssemblyState newState)
+    {
+        stateMachine.ChangeState(newState);
+    }
 
-    //            _assemblyTimer = 0.0f;
-    //            TurnOff(); // Turn off the station after assembling
-
-    //        }
-    //    }
-
-    //    private void RaiseBoxLid()
-    //    {
-    //        Transform boxlidTransform = _boxLid.transform;
-    //        Vector3 boxLidPos = boxlidTransform.position;
-    //        boxLidPos.y += verticalSpeed;
-    //        boxlidTransform.position = boxLidPos;
-    //    }
-
-    //    private bool FinishedRaising()
-    //    {
-    //        //if (_boxLid.transform.position.y > _raiseLimitY)
-    //        //{
-    //        //    Vector3 boxLidPos = _boxLid.transform.position;
-    //        //    boxLidPos.y = _raiseLimitY;
-    //        //    _boxLid.transform.position = boxLidPos;
-    //        //}
-
-    //        return _boxLid.transform.position.y >= _raiseLimitY;
-    //    }
-
-    //    private void AddIngredientToSet(GameObject ingredient)
-    //    {
-    //        ingredientsInAssemblyArea.Add(ingredient);
-    //    }
-
-    //    private void RemoveIngredientFromSet(GameObject ingredient)
-    //    {
-    //        ingredientsInAssemblyArea.Remove(ingredient);
-    //    }
-
-    //    // based on the selected recipe, check if all required ingredients are present in the assembly area
-    //    private bool CheckForRecipeRequirements(RecipeSO recipe)
-    //    {
-    //        foreach (CuttingRecipeSO cuttingRecipe in recipe.CuttingRecipeSOList)
-    //        {
-    //            GameObject requiredIngredientPrefab = cuttingRecipe.output;
-    //            if (!CheckIngredientsInAssemblyArea(requiredIngredientPrefab))
-    //            {
-    //                // if ingredient for this recipe is not found, return false
-    //                return false;
-    //            }
-    //            else
-    //            {
-    //                // if ingredient for this recipe is found, check next recipe
-    //                continue;
-    //            }
-    //        }
-
-    //        foreach (CookingRecipeSO cookingRecipe in recipe.CookingRecipeSOList)
-    //        {
-    //            GameObject requiredIngredientPrefab = cookingRecipe.output;
-    //            if (!CheckIngredientsInAssemblyArea(requiredIngredientPrefab))
-    //            {
-    //                // if ingredient for this recipe is not found, return false
-    //                return false;
-    //            }
-    //            else
-    //            {
-    //                // if ingredient for this recipe is found, check next recipe
-    //                continue;
-    //            }
-    //        }
-    //        // all ingredients for this recipe are present
-    //        return true;
-    //    }
-
-    //    private bool CheckIngredientsInAssemblyArea(GameObject requiredIngredientPrefab)
-    //    {
-    //        foreach (GameObject ingredient in ingredientsInAssemblyArea)
-    //        {
-    //            // take out (clone) from the name of the ingredient
-    //            string ingredientName = ingredient.GetComponent<Ingredient>().IngredientName.Replace("(Clone)", "").Trim();
-    //            if (ingredientName == requiredIngredientPrefab.name)
-    //            {
-    //                return true;
-    //            }
-    //        }
-    //        return false;
-    //    }
-
-    //    // only use after confirming all ingredients are present
-    //    private void UseIngredients(RecipeSO currentRecipe)
-    //    {
-
-    //        foreach (CuttingRecipeSO cuttingRecipe in currentRecipe.CuttingRecipeSOList)
-    //        {
-    //            GameObject requiredIngredientPrefab = cuttingRecipe.output;
-
-    //            foreach (GameObject ingredient in ingredientsInAssemblyArea)
-    //            {
-    //                string ingredientName = ingredient.GetComponent<Ingredient>().IngredientName.Replace("(Clone)", "").Trim();
-    //                if (ingredientName == requiredIngredientPrefab.name)
-    //                {
-    //                    ingredientsInAssemblyArea.Remove(ingredient);
-    //                    ObjectPoolManager.ReturnObjectToPool(ingredient);
-    //                    break;
-    //                }
-    //            }
-    //        }
-
-    //        foreach (CookingRecipeSO cookingRecipe in currentRecipe.CookingRecipeSOList)
-    //        {
-    //            GameObject requiredIngredientPrefab = cookingRecipe.output;
-
-    //            foreach (GameObject ingredient in ingredientsInAssemblyArea)
-    //            {
-    //                string ingredientName = ingredient.GetComponent<Ingredient>().IngredientName.Replace("(Clone)", "").Trim();
-    //                if (ingredientName == requiredIngredientPrefab.name)
-    //                {
-    //                    ingredientsInAssemblyArea.Remove(ingredient);
-    //                    ObjectPoolManager.ReturnObjectToPool(ingredient);
-    //                    break;
-    //                }
-    //            }
-
-    //        }
-
-    //    }
-
-    //    private void CheckCuttingRecipeList(RecipeSO recipe)
-    //    {
-    //        foreach (CuttingRecipeSO cuttingRecipe in recipe.CuttingRecipeSOList)
-    //        {
-    //            GameObject requiredIngredientPrefab = cuttingRecipe.output;
-
-    //            if (CheckIngredientsInAssemblyArea(requiredIngredientPrefab))
-    //            {
-    //                // if ingredient for this recipe is found, check next recipe
-    //                continue;
-    //            }
-
-    //        }
-    //    }
-
-    //    private void ChangeSelectedRecipe(GameObject player)
-    //    {
-    //        if (!_isOn)
-    //        {
-    //            _currentRecipeIndex++;
-    //            if (_currentRecipeIndex >= _availableRecipes.Count)
-    //            {
-    //                _currentRecipeIndex = 0;
-    //            }
-    //            _selectedRecipe = _availableRecipes[_currentRecipeIndex];
-    //            _finalProductPrefab = _selectedRecipe.finalProductPrefab;
-    //            _selectedRecipeUIImage.sprite = _selectedRecipe.finalProductImageUI;
-    //        }
-    //        else
-    //        {
-    //            Debug.Log("Cannot change recipe while assembly station is on.");
-    //        }
-    //    }
-
-
-
-
-    //}
 }

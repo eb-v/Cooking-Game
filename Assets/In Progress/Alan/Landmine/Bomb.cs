@@ -13,7 +13,10 @@ public class Bomb : MonoBehaviour
     public string groundTag = "Floor";
 
     [Header("Player Layer")]
-    public string playerLayerName = "Player"; 
+    public string playerLayerName = "Player";
+
+    [Header("Ignore Layers")]
+    public string trainLayerName = "Train";
 
     [Header("Audio")]
     public AudioClip explosionSfx;
@@ -26,6 +29,7 @@ public class Bomb : MonoBehaviour
     private AudioSource audioSource;
     private Rigidbody rb;
     private int playerLayer;
+    private int trainLayer;
 
     void Awake()
     {
@@ -40,8 +44,9 @@ public class Bomb : MonoBehaviour
 
         // cache the player layer index
         playerLayer = LayerMask.NameToLayer(playerLayerName);
-    }
+        trainLayer = LayerMask.NameToLayer(trainLayerName);
 
+    }
     private void OnEnable()
     {
         ResetValues();
@@ -62,7 +67,7 @@ public class Bomb : MonoBehaviour
             {
                 rb.linearVelocity = Vector3.zero;
                 rb.angularVelocity = Vector3.zero;
-                rb.isKinematic = true; 
+                rb.isKinematic = true;
             }
 
             return;
@@ -96,10 +101,23 @@ public class Bomb : MonoBehaviour
         Collider[] hitColliders = Physics.OverlapSphere(transform.position, explosionRadius);
         foreach (Collider hit in hitColliders)
         {
+            // skip the train layer 
+            if (hit.gameObject.layer == trainLayer)
+                continue;
+
             Rigidbody hitRb = hit.attachedRigidbody;
             if (hitRb != null)
             {
                 hitRb.AddExplosionForce(explosionForce, transform.position, explosionRadius);
+
+                // Track player explosions
+                if (hit.gameObject.layer == playerLayer)
+                {
+                    Debug.Log($"Hit player: {hit.gameObject.name}");
+                    GameObject player = hit.transform.root.gameObject;
+                    PlayerStatsManager.IncrementExplosionsReceived(player);
+
+                }
             }
         }
 

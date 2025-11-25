@@ -2539,6 +2539,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 5272886722481997039, guid: 49abeb7bbc1b6dc40827cfd8b8fb0409, type: 3}
+      propertyPath: m_AdditionalShaderChannelsFlag
+      value: 25
+      objectReference: {fileID: 0}
     - target: {fileID: 6328193211391767985, guid: 49abeb7bbc1b6dc40827cfd8b8fb0409, type: 3}
       propertyPath: m_Enabled
       value: 0
@@ -3964,29 +3968,9 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 312.6, y: -31.6}
+  m_AnchoredPosition: {x: 305.2, y: -25.2}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &301534217029685935
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4186585429706459008}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 978d91e3ece14dc49ac503fe5348eea8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PositionSpringScript
-  yMultiplier: 0
-  xMultiplier: -200
-  zMultiplier: 0
-  _assignedChannel: Text (TMP) 1 (2)
-  nudgeStrength: 1
-  useGameObjectNameAsEventChannel: 1
-  useCustomEventChannelName: 0
-  useGameObjectIDAsEventChannel: 0
 --- !u!1 &459472887550726219
 GameObject:
   m_ObjectHideFlags: 0
@@ -4027,8 +4011,6 @@ GameObject:
   - component: {fileID: 2135224193180135412}
   - component: {fileID: 498601399843728590}
   - component: {fileID: 4615689770074801262}
-  - component: {fileID: 5056500299897736156}
-  - component: {fileID: 5678372777074527879}
   m_Layer: 5
   m_Name: Text (TMP) 1 (1)
   m_TagString: Untagged
@@ -4279,26 +4261,6 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
---- !u!114 &1748938035731319433
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8122728139128586350}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 978d91e3ece14dc49ac503fe5348eea8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PositionSpringScript
-  yMultiplier: 0
-  xMultiplier: -200
-  zMultiplier: 0
-  _assignedChannel: Text (TMP)
-  nudgeStrength: 1
-  useGameObjectNameAsEventChannel: 1
-  useCustomEventChannelName: 0
-  useGameObjectIDAsEventChannel: 0
 --- !u!222 &1866385040649885441
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -4323,7 +4285,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 311.4, y: -57.7}
+  m_AnchoredPosition: {x: 302, y: -38.1}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2515288376846704974
@@ -4516,8 +4478,6 @@ GameObject:
   - component: {fileID: 7290752813217655466}
   - component: {fileID: 5167383351045256518}
   - component: {fileID: 2515288376846704974}
-  - component: {fileID: 4518634546657756232}
-  - component: {fileID: 301534217029685935}
   m_Layer: 5
   m_Name: Text (TMP) 1 (2)
   m_TagString: Untagged
@@ -4690,7 +4650,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 311.6, y: -5.8}
+  m_AnchoredPosition: {x: 303.6, y: -9.5}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &4417231862605433365
@@ -4712,29 +4672,6 @@ RectTransform:
   m_AnchoredPosition: {x: 1.300003, y: 4.7}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &4518634546657756232
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4186585429706459008}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 99c2ce2b3939a114c8b87eca0217dcdb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SpringAPI
-  goalValue: 7
-  angularFrequency: 7
-  dampingRatio: 0.7
-  maxGoal: 1
-  minGoal: 0
-  startAtEndPosition: 0
-  assignedEventChannel: Text (TMP) 1 (2)
-  nudgeStrength: 1
-  useGameObjectNameAsEventChannel: 1
-  useCustomEventChannelName: 0
-  useGameObjectIDAsEventChannel: 0
 --- !u!1 &4527457445066399482
 GameObject:
   m_ObjectHideFlags: 0
@@ -4902,29 +4839,6 @@ RectTransform:
   m_AnchoredPosition: {x: -2.5, y: 75.3}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &5056500299897736156
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 835229936558223917}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 99c2ce2b3939a114c8b87eca0217dcdb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SpringAPI
-  goalValue: 7
-  angularFrequency: 7
-  dampingRatio: 0.7
-  maxGoal: 1
-  minGoal: 0
-  startAtEndPosition: 0
-  assignedEventChannel: DefaultChannel
-  nudgeStrength: 1
-  useGameObjectNameAsEventChannel: 1
-  useCustomEventChannelName: 0
-  useGameObjectIDAsEventChannel: 0
 --- !u!114 &5165405138093807982
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5072,26 +4986,6 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
---- !u!114 &5678372777074527879
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 835229936558223917}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 978d91e3ece14dc49ac503fe5348eea8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PositionSpringScript
-  yMultiplier: 0
-  xMultiplier: -200
-  zMultiplier: 0
-  _assignedChannel: Text (TMP) 1 (1)
-  nudgeStrength: 1
-  useGameObjectNameAsEventChannel: 1
-  useCustomEventChannelName: 0
-  useGameObjectIDAsEventChannel: 0
 --- !u!1 &5879285787133543480
 GameObject:
   m_ObjectHideFlags: 0
@@ -5230,32 +5124,9 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: -18, y: 55}
+  m_AnchoredPosition: {x: -160.5, y: 37}
   m_SizeDelta: {x: 1332, y: 593}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &7075433157808313254
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8122728139128586350}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 99c2ce2b3939a114c8b87eca0217dcdb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SpringAPI
-  goalValue: 7
-  angularFrequency: 7
-  dampingRatio: 0.7
-  maxGoal: 1
-  minGoal: 0
-  startAtEndPosition: 0
-  assignedEventChannel: Text (TMP)
-  nudgeStrength: 1
-  useGameObjectNameAsEventChannel: 1
-  useCustomEventChannelName: 0
-  useGameObjectIDAsEventChannel: 0
 --- !u!224 &7290752813217655466
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5272,7 +5143,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 310.9, y: -85.1}
+  m_AnchoredPosition: {x: 300.7, y: -52.1}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &7408834922425526995
@@ -5394,8 +5265,6 @@ GameObject:
   - component: {fileID: 4386157920516119021}
   - component: {fileID: 8737699007625967029}
   - component: {fileID: 4354361140419887938}
-  - component: {fileID: 7075433157808313254}
-  - component: {fileID: 1748938035731319433}
   m_Layer: 5
   m_Name: Text (TMP)
   m_TagString: Untagged
@@ -5470,26 +5339,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &8712987554741951388
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9037400523025203900}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 978d91e3ece14dc49ac503fe5348eea8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PositionSpringScript
-  yMultiplier: 0
-  xMultiplier: -200
-  zMultiplier: 0
-  _assignedChannel: Text (TMP) 1
-  nudgeStrength: 1
-  useGameObjectNameAsEventChannel: 1
-  useCustomEventChannelName: 0
-  useGameObjectIDAsEventChannel: 0
 --- !u!222 &8737699007625967029
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -5574,9 +5423,8 @@ GameObject:
   m_Component:
   - component: {fileID: 132819675707809867}
   - component: {fileID: 4294910017126148666}
-  - component: {fileID: 1097306869075278124}
   - component: {fileID: 8808911576203295711}
-  - component: {fileID: 8712987554741951388}
+  - component: {fileID: 1097306869075278124}
   m_Layer: 5
   m_Name: Text (TMP) 1
   m_TagString: Untagged

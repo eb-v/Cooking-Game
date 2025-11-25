@@ -1,0 +1,214 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &3311033919556834852
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7586805966005484922}
+  - component: {fileID: 7200038721686209086}
+  - component: {fileID: 4880131851152669424}
+  m_Layer: 0
+  m_Name: AudioManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7586805966005484922
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3311033919556834852}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1236.9908, y: -0.000020131469, z: -3597.0051}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7200038721686209086
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3311033919556834852}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e06ec1bec7c904c6682c713950e3457e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AudioManager
+  sfxSource: {fileID: 4880131851152669424}
+  sfxSounds:
+  - name: Respawn
+    clip: {fileID: 8300000, guid: a1c460d06db4a477d99d0621e59b576b, type: 3}
+    volume: 0.5
+    pitch: 0
+  - name: Pause
+    clip: {fileID: 8300000, guid: a2333ce127db742b79955005196182d5, type: 3}
+    volume: 0.4
+    pitch: 0
+  - name: Unpause
+    clip: {fileID: 8300000, guid: e1f01595eb68d448a873846c7cb67d78, type: 3}
+    volume: 0.4
+    pitch: 0
+  - name: TimerEnd
+    clip: {fileID: 8300000, guid: fdc351db94a1a4364a266ae1896b29d4, type: 3}
+    volume: 0.6
+    pitch: 0
+  - name: Points
+    clip: {fileID: 8300000, guid: 154a560e567104915ac8517621cce767, type: 3}
+    volume: 0.35
+    pitch: 0
+  - name: StartCountdown
+    clip: {fileID: 8300000, guid: da6a45b63263f42a59dc4c6690cb323a, type: 3}
+    volume: 0.4
+    pitch: 0
+  - name: RocketBoost
+    clip: {fileID: 8300000, guid: 69b734b8f2c9f4666af3cdccab82c14f, type: 3}
+    volume: 0.4
+    pitch: 0
+  - name: Explosion
+    clip: {fileID: 8300000, guid: f16194d52b90a4c2387e7b5e3a0caf83, type: 3}
+    volume: 0.4
+    pitch: 0
+  - name: Fire
+    clip: {fileID: 8300000, guid: 0add7f45d8db44eb29154f70a0bc9c37, type: 3}
+    volume: 0.4
+    pitch: 0
+  - name: FireCracking
+    clip: {fileID: 8300000, guid: c51f73bcb796b409da91e59afeb222a4, type: 3}
+    volume: 0.4
+    pitch: 0
+  - name: SprinklerOn
+    clip: {fileID: 8300000, guid: a49cd4ec9495a428abc40332855a3ae0, type: 3}
+    volume: 0.4
+    pitch: 0
+  - name: SprinklerOff
+    clip: {fileID: 8300000, guid: 7b63e9f07646c468ebe66eb4f12b8e46, type: 3}
+    volume: 0.4
+    pitch: 0
+  - name: Item Interact
+    clip: {fileID: 8300000, guid: cdd4916bbab5547d6bf129df31bc4d25, type: 3}
+    volume: 0.4
+    pitch: 0
+  - name: Joint reconnect
+    clip: {fileID: 8300000, guid: 83bb402d575da42849dbe3742072425c, type: 3}
+    volume: 0.4
+    pitch: 0
+  - name: Order complete
+    clip: {fileID: 8300000, guid: 126401a5d38804511a29a0635f135b99, type: 3}
+    volume: 0.4
+    pitch: 0
+  - name: Order failed
+    clip: {fileID: 8300000, guid: 291235908bcd54d248dae9e6fe1b9864, type: 3}
+    volume: 0.4
+    pitch: 0
+  - name: Train
+    clip: {fileID: 8300000, guid: a3dafd530de814f0dbbbaaf08c7d8e78, type: 3}
+    volume: 0.4
+    pitch: 0
+--- !u!82 &4880131851152669424
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3311033919556834852}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 5019881160322353565, guid: 640df3fb8ef4c4f348663b1e2513067f, type: 2}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4

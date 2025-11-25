@@ -1,25 +1,20 @@
+using System.Runtime.CompilerServices;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GrabScript : MonoBehaviour
 {
-    [HideInInspector] public bool isGrabbing = false;
-    public GameObject grabbedObj;
-
-    private void OnTriggerEnter(Collider other)
+    [field:SerializeField] public IGrabable grabbedObject { get; set; }
+     public bool IsGrabbing => grabbedObject != null;
+    
+    private void Start()
     {
-        string layerName = LayerMask.LayerToName(other.gameObject.layer);
-        if (layerName == "Player")
-        {
-            GameObject rootPlayerObj = other.transform.root.gameObject;
-            if (rootPlayerObj == gameObject.transform.root.gameObject) 
-            {
-                return;
-            }
-        }
-
-        if (layerName == LayerMask.LayerToName(LayerMask.NameToLayer("Buttons")))
-            return;
-
-        GrabSystem.GrabObject(this.gameObject, other.gameObject);
+        //GenericEvent<OnThrowReleased>.GetEvent(gameObject.name).AddListener(PerformThrow);
+        GenericEvent<OnObjectGrabbed>.GetEvent(gameObject.name).AddListener(OnObjectGrabbed);
     }
+    private void OnObjectGrabbed(IGrabable grabbedObj)
+    {
+        this.grabbedObject = grabbedObj;
+    }
+
 }

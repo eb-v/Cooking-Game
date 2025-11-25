@@ -2,6 +2,8 @@ using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+using System.Collections;
+using System.Collections.Generic;
 
 public class MapSelectionScript : MonoBehaviour
 {
@@ -11,6 +13,9 @@ public class MapSelectionScript : MonoBehaviour
     [SerializeField] private SpringAPI springAPI;
     [SerializeField] private int currentIndex = 0;
     [SerializeField] private string assignedPlayerName = "Player 1";
+
+    [SerializeField] private SceneField levelToLoad;
+    [SerializeField] private SceneField lobbyScene;
 
     private void Awake()
     {
@@ -34,8 +39,12 @@ public class MapSelectionScript : MonoBehaviour
     private void OnSelect()
     {
         if (gameObject.activeInHierarchy == false) return;
-        SceneManager.LoadScene("Level 2");
+        
+        GameManager.Instance.SwitchScene(lobbyScene, levelToLoad, GameManager.Instance._inLevelStateInstance);
+
     }
+
+    
 
 
 

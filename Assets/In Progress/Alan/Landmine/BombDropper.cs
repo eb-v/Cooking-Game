@@ -18,6 +18,7 @@ public class BombDropper : MonoBehaviour
 
     [Header("Floor Tag")]
     public string floorTag = "Floor";
+    public string groundTag = "Ground";
 
     [Header("Start/Stop")]
     public bool autoStart = false; 
@@ -74,7 +75,7 @@ public class BombDropper : MonoBehaviour
             Vector3 rayOrigin = new Vector3(x, dropHeight + 10f, z);
             if (Physics.Raycast(rayOrigin, Vector3.down, out RaycastHit hit, 100f))
             {
-                if (hit.collider.CompareTag(floorTag))
+                if (hit.collider.CompareTag(floorTag) || hit.collider.CompareTag(groundTag))
                 {
                     Vector3 spawnPos = new Vector3(x, dropHeight, z);
                     Instantiate(bombPrefab, spawnPos, Quaternion.identity);

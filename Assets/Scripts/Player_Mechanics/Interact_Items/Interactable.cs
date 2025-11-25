@@ -1,5 +1,6 @@
 using UnityEngine;
 public interface IInteractable {
-	void Interact();
-	void StopInteract();
+
+	void OnInteract(GameObject player);
+
 }

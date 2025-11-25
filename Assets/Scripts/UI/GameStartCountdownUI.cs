@@ -6,6 +6,10 @@ public class GameStartCountdownUI : MonoBehaviour
     [SerializeField] private TMP_Text countdownText;
     [SerializeField] private float countdownDuration = 3f;
     [SerializeField] private float fadeDuration = 0.3f;
+
+    [SerializeField] private AudioSource audioSource;   
+    [SerializeField] private AudioClip tickSFX;         
+    [SerializeField] private AudioClip finalSFX;       
     
     private float countdownTimer;
     private bool isCountingDown = false;
@@ -13,8 +17,9 @@ public class GameStartCountdownUI : MonoBehaviour
     private bool isFading = false;
     private float fadeTimer;
     private Color textColor;
+
+    private bool usingCombinedCountdownSFX = false;
     
-    // Track if we set the timeScale to 0 (vs pause menu doing it)
     public static bool CountdownIsActive { get; private set; }
     public static bool CountdownIsPaused { get; set; }
 
@@ -27,6 +32,7 @@ public class GameStartCountdownUI : MonoBehaviour
     private void Start()
     {
         if (countdownText == null) countdownText = GetComponent<TMP_Text>();
+        if (audioSource == null) audioSource = GetComponent<AudioSource>();
         
         textColor = countdownText.color;
         countdownTimer = countdownDuration;
@@ -38,6 +44,17 @@ public class GameStartCountdownUI : MonoBehaviour
         // Pause for countdown
         Time.timeScale = 0f;
         CountdownIsActive = true;
+
+        // prefer from AudioManager
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlaySFX("StartCountdown");
+            usingCombinedCountdownSFX = true;
+        }
+        else
+        {
+            usingCombinedCountdownSFX = false; // fallback instead
+        }
     }
 
     private void Update()
@@ -54,6 +71,9 @@ public class GameStartCountdownUI : MonoBehaviour
             {
                 if (!isFading)
                 {
+                    if (!usingCombinedCountdownSFX)
+                        PlayTickSFX();
+
                     isFading = true;
                     fadeTimer = fadeDuration;
                 }
@@ -92,10 +112,14 @@ public class GameStartCountdownUI : MonoBehaviour
             // Countdown finished
             if (countdownTimer <= 0f)
             {
+                // Only play final SFX if we're in fallback mode
+                if (!usingCombinedCountdownSFX)
+                    PlayFinalSFX();
+                
                 Time.timeScale = 1f;
                 isCountingDown = false;
                 CountdownIsActive = false;
-                gameObject.SetActive(false);
+                countdownText.enabled = false;
                 
                 Debug.Log("Countdown finished! Time.timeScale set to 1. Timer starts NOW.");
             }
@@ -106,5 +130,23 @@ public class GameStartCountdownUI : MonoBehaviour
     {
         CountdownIsActive = false;
         CountdownIsPaused = false;
+    }
+
+    private void PlayTickSFX()
+    {
+        // Fallback local tick sound
+        if (audioSource != null && tickSFX != null)
+        {
+            audioSource.PlayOneShot(tickSFX);
+        }
+    }
+
+    private void PlayFinalSFX()
+    {
+        // Fallback local final sound
+        if (audioSource != null && finalSFX != null)
+        {
+            audioSource.PlayOneShot(finalSFX);
+        }
     }
 }
