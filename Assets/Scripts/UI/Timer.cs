@@ -2,7 +2,6 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.SceneManagement;
 using System.Collections;
-using IdyllicFantasyNature;
 
 public class Timer : MonoBehaviour {
     [Header("Timer Settings")]
@@ -138,9 +137,8 @@ public class Timer : MonoBehaviour {
 private IEnumerator SetupPlayersInAwardsScene(System.Collections.Generic.List<GameObject> players, Vector3[] spawnPositions, Quaternion defaultRotation) {
     for (int i = 0; i < players.Count && i < spawnPositions.Length; i++) {
         if (players[i] != null) {
-            // Get RagdollController to access the ROOT rigidbody
-            RagdollController rc = null;
-            if (players[i].TryGetComponent<RagdollController>(out rc)) {
+            // Disable RagdollController first
+            if (players[i].TryGetComponent<RagdollController>(out RagdollController rc)) {
                 rc.enabled = false;
                 Debug.Log($"[Timer] Disabled RagdollController for player {i}");
             }
@@ -162,34 +160,7 @@ private IEnumerator SetupPlayersInAwardsScene(System.Collections.Generic.List<Ga
             // Wait a frame for physics to settle
             yield return null;
             
-            // Reset to initial position to "clean up" the ragdoll state
-            if (rc != null && rc.InitialPosition != Vector3.zero) {
-                // Reset the ROOT rigidbody position (the actual ragdoll body)
-                if (rc.RagdollDict.ContainsKey(RagdollController.ROOT)) {
-                    // Access the transform through the RagdollJoint
-                    Transform rootTransform = rc.RagdollDict[RagdollController.ROOT].Rigidbody.transform;
-                    rootTransform.position = rc.InitialPosition;
-                    rootTransform.rotation = rc.InitialRotation;
-                }
-                
-                // Also reset parent transform
-                players[i].transform.position = rc.InitialPosition;
-                players[i].transform.rotation = rc.InitialRotation;
-                
-                Debug.Log($"[Timer] Reset player {i} ROOT to initial position: {rc.InitialPosition}");
-            }
-            
-            // Wait another frame for reset to take effect
-            yield return null;
-            
-            // NOW move to the awards scene spawn position
-            // Move both the parent AND the ROOT rigidbody
-            if (rc != null && rc.RagdollDict.ContainsKey(RagdollController.ROOT)) {
-                Transform rootTransform = rc.RagdollDict[RagdollController.ROOT].Rigidbody.transform;
-                rootTransform.position = spawnPositions[i];
-                rootTransform.rotation = defaultRotation;
-            }
-            
+            // NOW set position and rotation
             players[i].transform.position = spawnPositions[i];
             players[i].transform.rotation = defaultRotation;
             
@@ -203,11 +174,8 @@ private IEnumerator SetupPlayersInAwardsScene(System.Collections.Generic.List<Ga
             
             // Force rotation one more time to be absolutely sure
             players[i].transform.rotation = defaultRotation;
-            if (rc != null && rc.RagdollDict.ContainsKey(RagdollController.ROOT)) {
-                rc.RagdollDict[RagdollController.ROOT].Rigidbody.transform.rotation = defaultRotation;
-            }
             
-            Debug.Log($"[Timer] Moved player {i} ROOT to awards spawn position: {spawnPositions[i]}");
+            Debug.Log($"[Timer] Reset player {i} to spawn position {spawnPositions[i]} and default rotation");
         }
     }
 }
