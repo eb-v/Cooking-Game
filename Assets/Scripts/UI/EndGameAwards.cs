@@ -21,7 +21,6 @@ public class EndGameAwards : MonoBehaviour {
 
     [Header("Spring Animations")]
     [SerializeField] private float springDelayBetweenTexts = 0f;
-
     private List<PlayerStatsData> players = new List<PlayerStatsData>();
     private bool ceremonyCancelled = false;
 
@@ -36,6 +35,7 @@ public class EndGameAwards : MonoBehaviour {
     {
         Debug.Log("ShowAwards called");
 
+        // Get all player data and store it locally
         players = PlayerStatsManager.GetAllPlayersData();
         Debug.Log($"Retrieved {players?.Count ?? 0} players");
 
@@ -52,6 +52,11 @@ public class EndGameAwards : MonoBehaviour {
         {
             Debug.Log($"{playerStats.player.name}: Points={playerStats.pointsGenerated}, Items={playerStats.itemsGrabbed}, Joints={playerStats.jointsReconnected}, Explosions={playerStats.explosionsReceived}");
         }
+        
+        // Clear the stats manager immediately after retrieving the data
+        // This ensures fresh stats for the next level
+        PlayerStatsManager.ClearAllPlayers();
+        Debug.Log("PlayerStatsManager cleared for next level");
         
         return caller.StartCoroutine(AwardCeremony());
     }   

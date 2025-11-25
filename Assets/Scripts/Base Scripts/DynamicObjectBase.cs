@@ -16,15 +16,9 @@ public class DynamicObjectBase : MonoBehaviour, IInteractable, IGrabable
     public virtual void GrabObject(GameObject player)
     {
         GrabScript gs = player.GetComponent<GrabScript>();
-        if (gs.isGrabbing)
+        if (gs.IsGrabbing || isGrabbed)
             return;
 
-        if (isGrabbed)
-        {
-            GrabScript playerGrabScript = currentPlayer.GetComponent<GrabScript>();
-            playerGrabScript.grabbedObject = null;
-            ReleaseObject(currentPlayer);
-        }
 
         PhysicsTransform physicsTransform = gameObject.GetComponent<PhysicsTransform>();
         GrabSystem.GrabObject(player, physicsTransform.physicsTransform.gameObject, grabData);

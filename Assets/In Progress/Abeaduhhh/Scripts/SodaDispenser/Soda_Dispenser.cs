@@ -70,7 +70,7 @@ public class SodaDispenser : MonoBehaviour, IInteractable, IAltInteractable {
     public void OnInteract(GameObject player) {
         GrabScript gs = player.GetComponent<GrabScript>();
         if (gs == null) return;
-        if (gs.isGrabbing) {
+        if (gs.IsGrabbing) {
             GameObject grabbedObject = gs.grabbedObject.GetGameObject();
             Cup drink = grabbedObject.GetComponent<Cup>();
 

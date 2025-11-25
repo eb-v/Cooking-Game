@@ -31,7 +31,7 @@ public class UseEquipmentScript : MonoBehaviour
     {
         GrabScript gs = GetComponent<GrabScript>();
 
-        if (!gs.isGrabbing)
+        if (!gs.IsGrabbing)
         {
             return false;
         }

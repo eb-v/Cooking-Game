@@ -40,7 +40,7 @@ public class MapSelectionScript : MonoBehaviour
     {
         if (gameObject.activeInHierarchy == false) return;
         
-        GameManager.Instance.SwitchScene(lobbyScene, levelToLoad);
+        GameManager.Instance.SwitchScene(lobbyScene, levelToLoad, GameManager.Instance._inLevelStateInstance);
 
     }
 

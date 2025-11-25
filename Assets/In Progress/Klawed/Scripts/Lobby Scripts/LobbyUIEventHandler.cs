@@ -79,7 +79,7 @@ public class LobbyUIEventHandler : MonoBehaviour
 
     protected virtual void OnNavigate(Vector2 direction)
     {
-        if (PlayerReadyManager.IsPlayerReady(assignedPlayerObj))
+        if (PlayerReadyManager.Instance.IsPlayerReady(assignedPlayerObj))
             return;
 
         if (direction.y > 0)
@@ -100,7 +100,7 @@ public class LobbyUIEventHandler : MonoBehaviour
 
     protected virtual void OnNextOption()
     {
-        if (PlayerReadyManager.IsPlayerReady(assignedPlayerObj))
+        if (PlayerReadyManager.Instance.IsPlayerReady(assignedPlayerObj))
             return;
 
         if (gameObject.activeInHierarchy == false) return;
@@ -131,7 +131,7 @@ public class LobbyUIEventHandler : MonoBehaviour
 
     protected virtual void OnPreviousOption()
     {
-        if (PlayerReadyManager.IsPlayerReady(assignedPlayerObj))
+        if (PlayerReadyManager.Instance.IsPlayerReady(assignedPlayerObj))
             return;
 
         if (gameObject.activeInHierarchy == false) return;

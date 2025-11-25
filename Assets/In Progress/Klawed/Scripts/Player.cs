@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -6,7 +7,7 @@ public class Player : MonoBehaviour
     [Header("Player States")]
     [SerializeField] private BasePlayerState _defaultStateBase;
     [SerializeField] private BasePlayerState _airborneStateBase;
-    [SerializeField] private BasePlayerState _cuttingStateBase;
+    [SerializeField] private BasePlayerState _lockedStateBase;
     [SerializeField] private BasePlayerState _unconsciousStateBase;
     #endregion
 
@@ -16,13 +17,13 @@ public class Player : MonoBehaviour
     #region State Instances
     [HideInInspector] public BasePlayerState _defaultStateInstance { get; private set; }
     [HideInInspector] public BasePlayerState _airborneStateInstance { get; private set; }
-    [HideInInspector] public BasePlayerState _cuttingStateInstance { get; private set; }
+    [HideInInspector] public BasePlayerState _lockedStateInstance { get; private set; }
     [HideInInspector] public BasePlayerState _unconsciousStateInstance { get; private set; }
     #endregion
 
     [Header("Debug")]
     [ReadOnly]
-    [SerializeField] private BasePlayerState _currentState;
+    public BasePlayerState _currentState;
 
     private void Awake()
     {
@@ -30,7 +31,7 @@ public class Player : MonoBehaviour
 
         _defaultStateInstance = Instantiate(_defaultStateBase);
         _airborneStateInstance = Instantiate(_airborneStateBase);
-        _cuttingStateInstance = Instantiate(_cuttingStateBase);
+        _lockedStateInstance = Instantiate(_lockedStateBase);
         _unconsciousStateInstance = Instantiate(_unconsciousStateBase);
     }
 
@@ -43,7 +44,7 @@ public class Player : MonoBehaviour
     {
         _defaultStateInstance.Initialize(gameObject, _stateMachine);
         _airborneStateInstance.Initialize(gameObject, _stateMachine);
-        _cuttingStateInstance.Initialize(gameObject, _stateMachine);
+        _lockedStateInstance.Initialize(gameObject, _stateMachine);
         _unconsciousStateInstance.Initialize(gameObject, _stateMachine);
 
         _stateMachine.Initialize(_defaultStateInstance);
@@ -64,6 +65,34 @@ public class Player : MonoBehaviour
     private void FixedUpdate()
     {
         _stateMachine.FixedUpdate();
+    }
+
+    public void SetToLockedMode(Vector3 pos, Quaternion rot, PoseData poseData)
+    {
+        RagdollController rc = GetComponent<RagdollController>();
+        Transform rootTransform = rc.GetPelvis().gameObject.transform;
+        Rigidbody rootRb = rootTransform.GetComponent<Rigidbody>();
+        rootRb.isKinematic = true;
+        rootTransform.position = pos;
+        rootTransform.rotation = rot;
+        PoseHelper.SetPlayerPoseAndSnap(rc, poseData);
+
+        foreach (KeyValuePair<string, RagdollJoint> pair in rc.RagdollDict)
+        {
+            RagdollJoint joint = pair.Value;
+            rc.SetJointToOriginalRot(joint);
+            if (pair.Key == "LowerRightArm" || pair.Key == "LowerLeftArm")
+            {
+                if (pair.Value.TryGetComponent<Collider>(out Collider col))
+                {
+                    col.enabled = false;
+                }
+            }
+            Rigidbody rbJoint = joint.Joint.GetComponent<Rigidbody>();
+            rbJoint.linearVelocity = Vector3.zero;
+            rbJoint.angularVelocity = Vector3.zero;
+        }
+        ChangeState(_lockedStateInstance);
     }
 
 }

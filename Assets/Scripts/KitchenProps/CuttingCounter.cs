@@ -3,15 +3,33 @@ using System.Runtime.CompilerServices;
 using UnityEngine;
 using System.Collections.Generic;
 
-public class CuttingCounter : MonoBehaviour, IInteractable, IAltInteractable
+public class CuttingCounter : BaseStation
 {
+    private enum CuttingState
+    {
+        Idle,
+        Cutting,
+    }
+
+    [Header("Settings")]
+    [SerializeField] private float _cutsNeeded = 3;
+    [SerializeField] private float _ingredientForceMultiplier = 10f;
+
+    [Header("Player Pose Data")]
+    [SerializeField] private PoseData _preChopPose;
+    [SerializeField] private PoseData _postChopPose;
+
     [Header("Snap Points")]
     [SerializeField] private Transform _playerSnapPoint;
     [SerializeField] private Transform _objectSnapPoint;
 
-
-    private GameObject _currentObject;
-    private GameObject _currentPlayer;
+    [Header("Debug")]
+    [ReadOnly]
+    [SerializeField] private GameObject _currentObject;
+    [ReadOnly]
+    [SerializeField] private Player _currentPlayer;
+    [ReadOnly]
+    [SerializeField] private CuttingState _currentState = CuttingState.Idle;
 
     private CuttingRecipe _currentRecipe;
 
@@ -20,22 +38,31 @@ public class CuttingCounter : MonoBehaviour, IInteractable, IAltInteractable
     private bool hasObject => _currentObject != null;
     private bool notBeingUsed => _currentPlayer == null;
 
-    public void OnInteract(GameObject player)
+    public override void Update()
     {
+        base.Update();
+        if (IsOnFire && !notBeingUsed)
+        {
+            ExitCutState(_currentPlayer.gameObject);
+            Destroy(_currentObject);
+        }
+    }
+
+
+    public override void OnInteract(GameObject player)
+    {
+        if (IsOnFire)
+            return;
         GrabScript gs = player.GetComponent<GrabScript>();
 
         // ingredient placement logic
-        if (gs.isGrabbing)
+        if (gs.IsGrabbing)
         {
             GameObject grabbedObject = gs.grabbedObject.GetGameObject();
             if (grabbedObject.GetComponent<IngredientScript>() == null)
             {
                 Debug.Log("Object is not an ingredient, cannot place on cutting counter.");
                 return;
-            }
-            else
-            {
-
             }
 
             if (hasObject)
@@ -45,9 +72,11 @@ public class CuttingCounter : MonoBehaviour, IInteractable, IAltInteractable
             }
             else
             {
+                // if player is holding an ingredient, check if it's cuttable, if it is, place it on the counter and set current recipe
                 IngredientScript ingredient = grabbedObject.GetComponent<IngredientScript>();
                 if (IsCuttable(ingredient))
                 {
+                    gs.grabbedObject.grabCollider.enabled = false;
                     PlaceObjectOntoCounter(gs.grabbedObject);
                     _currentRecipe = ingredient.recipes.Find(recipe => recipe is CuttingRecipe) as CuttingRecipe;
 
@@ -62,21 +91,12 @@ public class CuttingCounter : MonoBehaviour, IInteractable, IAltInteractable
         // start cutting logic
         else
         {
+            // if player is not holding anything, and counter has an object, snap player to counter and start cutting
             if (hasObject)
             {
                 if (notBeingUsed)
                 {
-                    RagdollController rc = player.GetComponent<RagdollController>();
-                    Transform rootTransform = rc.GetPelvis().gameObject.transform;
-
-                    rootTransform.position = _playerSnapPoint.position;
-
-                    Player playerScript = player.GetComponent<Player>();
-                    playerScript.ChangeState(playerScript._cuttingStateInstance);
-                    rootTransform.rotation = _playerSnapPoint.rotation;
-
-                    _currentPlayer = player;
-                    GenericEvent<OnRightTriggerInput>.GetEvent(player.name).AddListener(CutIngredient);
+                    EnterCutState(player);
                 }
 
             }
@@ -88,35 +108,42 @@ public class CuttingCounter : MonoBehaviour, IInteractable, IAltInteractable
 
     }
 
-    public void OnAltInteract(GameObject player)
+    public override void OnAltInteract(GameObject player)
     {
-        GrabScript gs = player.GetComponent<GrabScript>();
-
-        if (gs.isGrabbing)
+        if (IsOnFire)
             return;
-
-        if (_currentObject == null)
+        if (!notBeingUsed)
         {
-            Debug.Log("no object on cutting counter to remove");
-            return;
+            if (_currentPlayer == player.GetComponent<Player>())
+            {
+                _currentPlayer.ChangeState(_currentPlayer._defaultStateInstance);
+                UnAssignPlayer();
+            }
         }
-
-        GameObject objToGrab = RemoveObjectFromCounter();
-        IGrabable grabable = objToGrab.transform.root.GetComponent<IGrabable>();
-        if (grabable == null)
+        else
         {
-            Debug.LogError("Grabable not found on object when trying to remove it from counter");
-            return;
-        }
+            GrabScript gs = player.GetComponent<GrabScript>();
 
-        grabable.GrabObject(player);
+            if (gs.IsGrabbing)
+                return;
+
+            if (_currentObject == null)
+            {
+                Debug.Log("no object on cutting counter to remove");
+                return;
+            }
+
+            GameObject removedObj = RemoveObjectFromCounter();
+            IGrabable grabable = removedObj.GetComponent<IGrabable>();
+            grabable.GrabObject(player);
+        }
     }
 
     private void PlaceObjectOntoCounter(IGrabable grabbedObj)
     {
         _currentObject = grabbedObj.GetGameObject();
         grabbedObj.ReleaseObject(grabbedObj.currentPlayer);
-
+        grabbedObj.grabCollider.enabled = false;
         Transform physicsObj = grabbedObj.GetGameObject().GetComponent<PhysicsTransform>().physicsTransform;
 
         if (physicsObj == null)
@@ -134,60 +161,66 @@ public class CuttingCounter : MonoBehaviour, IInteractable, IAltInteractable
 
     private GameObject RemoveObjectFromCounter()
     {
-
-        GameObject physicsObj = _currentObject.GetComponent<PhysicsTransform>().physicsTransform.gameObject;
-
-        if (physicsObj == null)
+        Rigidbody rb = _currentObject.GetComponentInChildren<Rigidbody>();
+        if (rb != null)
         {
-            Debug.LogError("Physics obj not found when removing object from counter");
-            return null;
+            rb.isKinematic = false;
+        }
+        if (_currentObject.TryGetComponent<IGrabable>(out IGrabable grabObj))
+        {
+            grabObj.grabCollider.enabled = true;
         }
 
-        Rigidbody rb = physicsObj.GetComponent<Rigidbody>();
-        rb.isKinematic = false;
-
+        GameObject removedObj = _currentObject;
         _currentObject = null;
-
-        return physicsObj;
+        return removedObj;
     }
 
     private void CutIngredient()
     {
         cuttingProgress++;
-        if (cuttingProgress >= 3)
+        RagdollController rc = _currentPlayer.GetComponent<RagdollController>();
+        PoseHelper.SetPlayerPose(rc, _postChopPose);
+
+        if (cuttingProgress >= _cutsNeeded)
         {
-            Debug.Log("Ingredient fully cut!");
-            // Here you can implement logic to change the ingredient state to "cut"
-            cuttingProgress = 0; // Reset for next ingredient
-
-            IngredientScript ingredientScript = _currentObject.GetComponent<IngredientScript>();
-            foreach (Ingredient output in _currentRecipe.output)
-            {
-                GameObject ingredientObj = Instantiate(output.Prefab, _objectSnapPoint.position, Quaternion.identity);
-                Rigidbody rb = ingredientObj.GetComponentInChildren<Rigidbody>();
-                if (rb != null)
-                {
-                    Vector3 direction = (rb.transform.position - _playerSnapPoint.position).normalized;
-
-                    rb.AddForce(direction * 10f, ForceMode.Impulse);
-                }
-            }
-
-
-
-            Destroy(_currentObject);
-            _currentObject = null;
-            _currentRecipe = null;
-
-            Player playerScript = _currentPlayer.GetComponent<Player>();
-            playerScript.ChangeState(playerScript._defaultStateInstance);
-            GenericEvent<OnRightTriggerInput>.GetEvent(_currentPlayer.name).RemoveListener(CutIngredient);
-
+            OnFinishedCut();
         }
         else
         {
             Debug.Log("Cutting progress: " + cuttingProgress);
         }
+    }
+
+    private void OnFinishedCut()
+    {
+        cuttingProgress = 0; // Reset for next ingredient
+
+        IngredientScript ingredientScript = _currentObject.GetComponent<IngredientScript>();
+        foreach (Ingredient output in _currentRecipe.output)
+        {
+            GameObject ingredientObj = Instantiate(output.Prefab, _objectSnapPoint.position, Quaternion.identity);
+            Rigidbody rb = ingredientObj.GetComponentInChildren<Rigidbody>();
+            if (rb != null)
+            {
+                Vector3 forceDirection = (_playerSnapPoint.position - _objectSnapPoint.position).normalized;
+                rb.AddForce(forceDirection * _ingredientForceMultiplier, ForceMode.Impulse);
+                rb.AddForce(Vector3.up * (_ingredientForceMultiplier), ForceMode.Impulse);
+            }
+        }
+
+
+
+        Destroy(_currentObject);
+        _currentObject = null;
+        _currentRecipe = null;
+        ExitCutState(_currentPlayer.gameObject);
+    }
+
+    private void RaiseHand()
+    {
+        RagdollController rc = _currentPlayer.GetComponent<RagdollController>();
+        PoseHelper.SetPlayerPose(rc, _preChopPose);
     }
 
     private bool IsCuttable(IngredientScript ingredient)
@@ -204,6 +237,62 @@ public class CuttingCounter : MonoBehaviour, IInteractable, IAltInteractable
             }
         }
         return false;
+    }
+
+    private void EnterCutState(GameObject player)
+    {
+        if (player.TryGetComponent<PlayerInteraction>(out PlayerInteraction pi))
+        {
+            pi.enabled = false;
+        }
+        GenericEvent<OnAlternateInteractInput>.GetEvent(player.name).AddListener(ExitCutState);
+
+        Player playerScript = player.GetComponent<Player>();
+        _currentPlayer = playerScript;
+        playerScript.SetToLockedMode(_playerSnapPoint.position, _playerSnapPoint.rotation, _preChopPose);
+        GenericEvent<OnPerformStationActionCancel>.GetEvent(player.name).AddListener(RaiseHand);
+
+        GenericEvent<OnPerformStationAction>.GetEvent(player.name).AddListener(CutIngredient);
+        ChangeState(CuttingState.Cutting);
+
+    }
+
+    private void ExitCutState(GameObject player)
+    {
+        RagdollController rc = player.GetComponent<RagdollController>();
+        Transform rootTransform = rc.GetPelvis().gameObject.transform;
+        GenericEvent<OnPerformStationActionCancel>.GetEvent(player.name).RemoveListener(RaiseHand);
+        GenericEvent<OnPerformStationAction>.GetEvent(player.name).RemoveListener(CutIngredient);
+        GenericEvent<OnAlternateInteractInput>.GetEvent(player.name).RemoveListener(ExitCutState);
+        // re-enable player interaction
+        if (player.TryGetComponent<PlayerInteraction>(out PlayerInteraction pi))
+        {
+            pi.enabled = true;
+        }
+
+        foreach (KeyValuePair<string, RagdollJoint> pair in rc.RagdollDict)
+        {
+            RagdollJoint joint = pair.Value;
+            rc.SetJointToOriginalRot(joint);
+        }
+
+
+        Rigidbody rb = rootTransform.GetComponent<Rigidbody>();
+        rb.isKinematic = false;
+        rc.HardResetPose();
+        _currentPlayer.ChangeState(_currentPlayer._defaultStateInstance);
+        UnAssignPlayer();
+        ChangeState(CuttingState.Idle);
+    }
+
+    private void UnAssignPlayer()
+    {
+        _currentPlayer = null;
+    }
+
+    private void ChangeState(CuttingState newState)
+    {
+        _currentState = newState;
     }
 
 

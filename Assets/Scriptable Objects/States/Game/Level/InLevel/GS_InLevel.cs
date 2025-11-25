@@ -8,6 +8,12 @@ public class GS_InLevel : GameState
     public override void Enter()
     {
         base.Enter();
+        PlayerManager.Instance.MovePlayersToSpawnPositions();
+        PlayerManager.Instance.SwitchPlayerActionMaps("Player");
+        foreach (GameObject player in PlayerManager.Instance.Players)
+        {
+            PlayerSystemsManager.TurnOnPlayerMovement(player);
+        }
     }
 
     public override void Exit()
@@ -38,11 +44,6 @@ public class GS_InLevel : GameState
     public override void UpdateLogic()
     {
         base.UpdateLogic();
-    }
-
-    private void InitializeManagers()
-    {
-        
     }
 
 }

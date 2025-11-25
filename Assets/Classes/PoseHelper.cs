@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class PoseHelper
 {
@@ -65,5 +66,21 @@ public class PoseHelper
         //    connected.isKinematic = oldConnectedKin;
     }
 
+    public static void SetPlayerPoseAndSnap(RagdollController rc, PoseData poseData)
+    {
+        foreach (KeyValuePair<string, Quaternion> kvp in poseData.poseJointTargetRotations)
+        {
+            rc.TargetRotations[kvp.Key] = kvp.Value;
+            ConfigurableJoint joint = rc.RagdollDict[kvp.Key].Joint;
+            PoseHelper.SafeSnapToTarget(joint);
+        }
+    }
 
+    public static void SetPlayerPose(RagdollController rc, PoseData poseData)
+    {
+        foreach (KeyValuePair<string, Quaternion> kvp in poseData.poseJointTargetRotations)
+        {
+            rc.TargetRotations[kvp.Key] = kvp.Value;
+        }
+    }
 }

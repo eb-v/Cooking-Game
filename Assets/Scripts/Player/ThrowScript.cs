@@ -26,7 +26,7 @@ public class ThrowScript : MonoBehaviour
 
     private void Update()
     {
-        if (grabScript.isGrabbing)
+        if (grabScript.IsGrabbing)
         {
             if (isCharging)
             {
@@ -82,7 +82,7 @@ public class ThrowScript : MonoBehaviour
         isCharging = status;
         if (!isCharging)
         {
-            if (grabScript.isGrabbing)
+            if (grabScript.IsGrabbing)
             {
                 PerformThrow();
             }

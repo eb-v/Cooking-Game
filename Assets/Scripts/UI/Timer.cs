@@ -1,16 +1,17 @@
 using UnityEngine;
 using TMPro;
 using UnityEngine.SceneManagement;
+using System.Collections;
 
 public class Timer : MonoBehaviour {
     [Header("Timer Settings")]
     [SerializeField] private TextMeshProUGUI timerText;
     [SerializeField] private float startTime = 300f;
+    [SerializeField] private float sceneTransitionDelay = 1f;
 
     private float timeRemaining;
     private bool gameOver = false;
     private bool timerOn = true;
-
     private bool finalThreeSFXStarted = false;
 
     private void Start() {
@@ -25,10 +26,8 @@ public class Timer : MonoBehaviour {
 
         if (timeRemaining > 0) {
             timeRemaining -= Time.deltaTime;
-
             float clamped = Mathf.Max(0f, timeRemaining);
             DisplayTime(clamped);
-
             GenericEvent<GameTimeUpdatedEvent>.GetEvent("Timer").Invoke(clamped);
 
             if (!finalThreeSFXStarted && clamped > 0f && clamped <= 3f) {
@@ -40,19 +39,19 @@ public class Timer : MonoBehaviour {
             DisplayTime(0);
             gameOver = true;
             timerOn = false;
-
             GenericEvent<GameOverEvent>.GetEvent("Timer").Invoke();
             GenericEvent<ShowEndGameUIEvent>.GetEvent("EndGameUI").Invoke();
             Debug.Log("starting end game ui event");
-
             Debug.Log("[Timer] Game over event invoked.");
+            
+            // Load AwardsScene after delay
+            StartCoroutine(LoadAwardsSceneCoroutine());
         }
     }
 
     private void DisplayTime(float timeToDisplay) {
         timeToDisplay = Mathf.Max(0, timeToDisplay);
         timeToDisplay = Mathf.Ceil(timeToDisplay);  // round up
-
         int minutes = Mathf.FloorToInt(timeToDisplay / 60);
         int seconds = Mathf.FloorToInt(timeToDisplay % 60);
         if (timerText != null)
@@ -73,4 +72,115 @@ public class Timer : MonoBehaviour {
             Debug.LogWarning("[Timer] Wanted to play TimerEnd SFX, but AudioManager.Instance is null.");
         }
     }
+
+    private IEnumerator LoadAwardsSceneCoroutine() {
+        // Wait for the delay
+        yield return new WaitForSeconds(sceneTransitionDelay);
+        
+        // Find which level scene is currently loaded
+        Scene levelScene = default;
+        string levelSceneName = "";
+        if (SceneManager.GetSceneByName("Level 1").isLoaded) {
+            levelScene = SceneManager.GetSceneByName("Level 1");
+            levelSceneName = "Level 1";
+        } else if (SceneManager.GetSceneByName("Level 2").isLoaded) {
+            levelScene = SceneManager.GetSceneByName("Level 2");
+            levelSceneName = "Level 2";
+        }
+        
+        if (levelScene.isLoaded) {
+            Debug.Log($"[Timer] Found loaded level scene: {levelSceneName}");
+            
+            // Reset time scale before loading awards scene
+            Time.timeScale = 1f;
+            
+            // Load AwardsScene additively
+            var awardsLoad = SceneManager.LoadSceneAsync("AwardsScene", LoadSceneMode.Additive);
+            while (!awardsLoad.isDone)
+                yield return null;
+            
+            // Set AwardsScene as the active scene
+            Scene awardsScene = SceneManager.GetSceneByName("AwardsScene");
+            SceneManager.SetActiveScene(awardsScene);
+            
+            // Wait one frame to ensure scene is fully initialized
+            yield return null;
+            
+            // Define spawn positions for each player
+            Vector3[] spawnPositions = new Vector3[] {
+                new Vector3(-15f, 12f, 45f),  // First player
+                new Vector3(0f, 12f, 45f),    // Second player
+                new Vector3(-20f, 12f, 45f),  // Third player
+                new Vector3(5f, 12f, 45f)     // Fourth player
+            };
+            
+            // Default rotation (facing forward)
+            Quaternion defaultRotation = Quaternion.identity;
+            
+            // Setup players in awards scene
+            var players = PlayerManager.Instance.Players;
+            yield return StartCoroutine(SetupPlayersInAwardsScene(players, spawnPositions, defaultRotation));
+            
+            Debug.Log("[Timer] Moved players to spawn positions, reset rotations, froze physics, and disabled RagdollController in AwardsScene");
+            
+            // Unload the level scene
+            var levelSceneUnload = SceneManager.UnloadSceneAsync(levelScene);
+            while (!levelSceneUnload.isDone)
+                yield return null;
+            
+            Debug.Log($"[Timer] Transitioned to AwardsScene and unloaded {levelSceneName}. Persistent scene remains loaded.");
+        } else {
+            Debug.LogError("[Timer] Could not find Level 1 or Level 2 scene loaded!");
+        }
+    }
+
+private IEnumerator SetupPlayersInAwardsScene(System.Collections.Generic.List<GameObject> players, Vector3[] spawnPositions, Quaternion defaultRotation) {
+    // Calculate 180-degree rotation
+    Quaternion flippedRotation = defaultRotation * Quaternion.Euler(180, 0, 0);
+    
+    for (int i = 0; i < players.Count && i < spawnPositions.Length; i++) {
+        if (players[i] != null) {
+            // Disable RagdollController first
+            if (players[i].TryGetComponent<RagdollController>(out RagdollController rc)) {
+                rc.enabled = false;
+                
+                // Get the pelvis rigidbody
+                Rigidbody pelvisRb = rc.GetPelvis().GetComponent<Rigidbody>();
+                
+                if (pelvisRb != null) {
+                    // Freeze pelvis physics
+                    pelvisRb.linearVelocity = Vector3.zero;
+                    pelvisRb.angularVelocity = Vector3.zero;
+                    pelvisRb.isKinematic = true;
+                    
+                    // Freeze all other rigidbodies too
+                    Rigidbody[] allRigidbodies = players[i].GetComponentsInChildren<Rigidbody>();
+                    foreach (Rigidbody rb in allRigidbodies) {
+                        rb.linearVelocity = Vector3.zero;
+                        rb.angularVelocity = Vector3.zero;
+                        rb.isKinematic = true;
+                    }
+                    
+                    yield return null;
+                    
+                    // Move the PELVIS to the spawn position with 180-degree rotation
+                    pelvisRb.transform.position = spawnPositions[i];
+                    pelvisRb.transform.rotation = flippedRotation;
+                    
+                    Debug.Log($"[Timer] Moved pelvis of player {i} to {spawnPositions[i]} (flipped 180°)");
+                }
+            }
+            
+            yield return null;
+            
+            // Force rotation again
+            if (players[i].TryGetComponent<RagdollController>(out RagdollController rc2)) {
+                Rigidbody pelvisRb = rc2.GetPelvis().GetComponent<Rigidbody>();
+                if (pelvisRb != null) {
+                    pelvisRb.transform.rotation = flippedRotation;
+                }
+            }
+        }
+    }
+}
 }

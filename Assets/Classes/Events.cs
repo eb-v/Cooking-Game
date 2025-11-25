@@ -183,8 +183,8 @@ public class OnObjectGrabbed : UnityEvent<IGrabable> { }
 
 public class OnCutInput : UnityEvent { }
 
-public class OnRightTriggerInput : UnityEvent { }
-public class OnRightTriggerCancel : UnityEvent { }
+public class OnPerformStationAction : UnityEvent { }
+public class OnPerformStationActionCancel : UnityEvent { }
 
 public class SodaSelectedEvent : UnityEvent<MenuItem> { }
 
