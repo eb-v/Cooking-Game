@@ -4,12 +4,13 @@ using UnityEngine.SceneManagement;
 
 public class PlayerStatsManager : MonoBehaviour
 {
-
     private static Dictionary<GameObject, PlayerStatsData> playerStatsData = new Dictionary<GameObject, PlayerStatsData>();
-
+    
     private void Start()
     {
-        if (SceneManager.GetActiveScene().name == "Pregame Lobby")
+        string currentScene = SceneManager.GetActiveScene().name;
+        
+        if (currentScene == "Pregame Lobby" || currentScene.Contains("Level"))
         {
             if (playerStatsData.Count > 0)
             {
@@ -17,28 +18,27 @@ public class PlayerStatsManager : MonoBehaviour
             }
         }
     }
-
+    
     private void OnEnable()
     {
         GenericEvent<OnPlayerJoinedEvent>.GetEvent("PlayerJoined").AddListener(OnPlayerJoined);
     }
-
+    
     private void OnDisable()
     {
         GenericEvent<OnPlayerJoinedEvent>.GetEvent("PlayerJoined").RemoveListener(OnPlayerJoined);
     }
-
+    
     private static void OnPlayerJoined(GameObject player)
     {
         if (playerStatsData.ContainsKey(player))
         {
             return;
         }
-
         PlayerStatsData newStats = new PlayerStatsData(player);
         playerStatsData[player] = newStats;
     }
-
+    
     public static void AddPoints(GameObject playerNumber, int points)
     {
         if (playerStatsData.ContainsKey(playerNumber))
@@ -46,7 +46,7 @@ public class PlayerStatsManager : MonoBehaviour
             playerStatsData[playerNumber].pointsGenerated += points;
         }
     }
-
+    
     public static void IncrementItemsGrabbed(GameObject player)
     {
         if (playerStatsData.ContainsKey(player))
@@ -54,7 +54,7 @@ public class PlayerStatsManager : MonoBehaviour
             playerStatsData[player].itemsGrabbed++;
         }
     }
-
+    
     public static void IncrementJointsReconnected(GameObject player)
     {
         if (playerStatsData.ContainsKey(player))
@@ -62,7 +62,7 @@ public class PlayerStatsManager : MonoBehaviour
             playerStatsData[player].jointsReconnected++;
         }
     }
-
+    
     public static void IncrementExplosionsReceived(GameObject player)
     {
         if (playerStatsData.ContainsKey(player))
@@ -70,12 +70,12 @@ public class PlayerStatsManager : MonoBehaviour
             playerStatsData[player].explosionsReceived++;
         }
     }
-
+    
     public static List<PlayerStatsData> GetAllPlayersData()
     {
         return new List<PlayerStatsData>(playerStatsData.Values);
     }
-
+    
     public static PlayerStatsData GetPlayerStats(GameObject player)
     {
         if (playerStatsData.ContainsKey(player))
@@ -84,7 +84,7 @@ public class PlayerStatsManager : MonoBehaviour
         }
         return null;
     }
-
+    
     public static void ClearAllPlayers()
     {
         playerStatsData.Clear();
