@@ -108,10 +108,10 @@ public class Timer : MonoBehaviour {
             
             // Define spawn positions for each player
             Vector3[] spawnPositions = new Vector3[] {
-                new Vector3(-15f, 10.75f, 45f),  // First player
-                new Vector3(0f, 10.75f, 45f),    // Second player
-                new Vector3(-20f, 10.75f, 45f),  // Third player
-                new Vector3(5f, 10.75f, 45f)     // Fourth player
+                new Vector3(-15f, 12f, 45f),  // First player
+                new Vector3(0f, 12f, 45f),    // Second player
+                new Vector3(-20f, 12f, 45f),  // Third player
+                new Vector3(5f, 12f, 45f)     // Fourth player
             };
             
             // Default rotation (facing forward)
@@ -135,47 +135,51 @@ public class Timer : MonoBehaviour {
     }
 
 private IEnumerator SetupPlayersInAwardsScene(System.Collections.Generic.List<GameObject> players, Vector3[] spawnPositions, Quaternion defaultRotation) {
+    // Calculate 180-degree rotation
+    Quaternion flippedRotation = defaultRotation * Quaternion.Euler(180, 0, 0);
+    
     for (int i = 0; i < players.Count && i < spawnPositions.Length; i++) {
         if (players[i] != null) {
             // Disable RagdollController first
             if (players[i].TryGetComponent<RagdollController>(out RagdollController rc)) {
                 rc.enabled = false;
-                Debug.Log($"[Timer] Disabled RagdollController for player {i}");
+                
+                // Get the pelvis rigidbody
+                Rigidbody pelvisRb = rc.GetPelvis().GetComponent<Rigidbody>();
+                
+                if (pelvisRb != null) {
+                    // Freeze pelvis physics
+                    pelvisRb.linearVelocity = Vector3.zero;
+                    pelvisRb.angularVelocity = Vector3.zero;
+                    pelvisRb.isKinematic = true;
+                    
+                    // Freeze all other rigidbodies too
+                    Rigidbody[] allRigidbodies = players[i].GetComponentsInChildren<Rigidbody>();
+                    foreach (Rigidbody rb in allRigidbodies) {
+                        rb.linearVelocity = Vector3.zero;
+                        rb.angularVelocity = Vector3.zero;
+                        rb.isKinematic = true;
+                    }
+                    
+                    yield return null;
+                    
+                    // Move the PELVIS to the spawn position with 180-degree rotation
+                    pelvisRb.transform.position = spawnPositions[i];
+                    pelvisRb.transform.rotation = flippedRotation;
+                    
+                    Debug.Log($"[Timer] Moved pelvis of player {i} to {spawnPositions[i]} (flipped 180°)");
+                }
             }
             
-            // Disable CharacterController if present
-            CharacterController cc = null;
-            if (players[i].TryGetComponent<CharacterController>(out cc)) {
-                cc.enabled = false;
-            }
-            
-            // Freeze all physics BEFORE setting position
-            Rigidbody[] allRigidbodies = players[i].GetComponentsInChildren<Rigidbody>();
-            foreach (Rigidbody rb in allRigidbodies) {
-                rb.linearVelocity = Vector3.zero;
-                rb.angularVelocity = Vector3.zero;
-                rb.isKinematic = true;
-            }
-            
-            // Wait a frame for physics to settle
             yield return null;
             
-            // NOW set position and rotation
-            players[i].transform.position = spawnPositions[i];
-            players[i].transform.rotation = defaultRotation;
-            
-            // Wait another frame
-            yield return null;
-            
-            // Re-enable CharacterController if it was disabled
-            if (cc != null) {
-                cc.enabled = true;
+            // Force rotation again
+            if (players[i].TryGetComponent<RagdollController>(out RagdollController rc2)) {
+                Rigidbody pelvisRb = rc2.GetPelvis().GetComponent<Rigidbody>();
+                if (pelvisRb != null) {
+                    pelvisRb.transform.rotation = flippedRotation;
+                }
             }
-            
-            // Force rotation one more time to be absolutely sure
-            players[i].transform.rotation = defaultRotation;
-            
-            Debug.Log($"[Timer] Reset player {i} to spawn position {spawnPositions[i]} and default rotation");
         }
     }
 }
