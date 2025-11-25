@@ -52,28 +52,55 @@ public class PlayerManager : MonoBehaviour
         players.Add(player);
     }
 
-    public void MovePlayersToSpawnPositions()
+  public void MovePlayersToSpawnPositions()
+{
+    List<Transform> SpawnPoints = GetPlayerSpawnPoints();
+    if (SpawnPoints == null)
     {
-        List<Transform> SpawnPoints = GetPlayerSpawnPoints();
-        if (SpawnPoints == null)
+        Debug.LogError("No spawn points found for players!");
+        return;
+    }
+    if (SpawnPoints.Count < players.Count)
+    {
+        Debug.LogError("Not enough spawn points for all players!");
+        return;
+    }
+    
+    Debug.Log(PlayerCount + " players to move to spawn points.");
+    
+    for (int i = 0; i < players.Count; i++)
+    {
+        players[i].transform.position = SpawnPoints[i].position;
+        Debug.Log("moved player " + i + " to spawn point " + i);
+        
+        // CAPTURE the ragdoll ROOT position after spawning
+        if (players[i].TryGetComponent<RagdollController>(out RagdollController rc))
         {
-            Debug.LogError("No spawn points found for players!");
-            return;
-        }
-        if (SpawnPoints.Count < players.Count)
-        {
-            Debug.LogError("Not enough spawn points for all players!");
-            return;
-        }
-
-        Debug.Log(PlayerCount + " players to move to spawn points.");
-        for (int i = 0; i < players.Count; i++)
-        {
-            players[i].transform.position = SpawnPoints[i].position;
-            Debug.Log("moved player " + i + " to spawn point " + i);
+            // Wait a frame for physics to settle, then capture
+            StartCoroutine(CaptureInitialRagdollPosition(rc, SpawnPoints[i]));
         }
     }
+}
 
+private System.Collections.IEnumerator CaptureInitialRagdollPosition(RagdollController rc, Transform spawnPoint)
+{
+    // Wait a frame for the ragdoll to settle at spawn position
+    yield return new WaitForFixedUpdate();
+    
+    // Capture the ROOT rigidbody position
+    if (rc.RagdollDict.ContainsKey(RagdollController.ROOT))
+    {
+        Transform rootTransform = rc.RagdollDict[RagdollController.ROOT].transform;
+        rc.CaptureInitialPosition(rootTransform.position, rootTransform.rotation);
+        Debug.Log($"[PlayerManager] Captured ROOT position: {rootTransform.position}");
+    }
+    else
+    {
+        // Fallback to parent transform
+        rc.CaptureInitialPosition(rc.transform.position, rc.transform.rotation);
+        Debug.Log($"[PlayerManager] Captured parent position: {rc.transform.position}");
+    }
+}
     private List<Transform> GetPlayerSpawnPoints()
     {
         List<Transform> spawnPoints = new List<Transform>();

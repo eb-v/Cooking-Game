@@ -169,8 +169,6 @@ public class RagdollController : MonoBehaviour
         requiredForceToBeKO = playerData.RequiredForceToBeKO;
         _angleMultiplier = playerData.AngleMultiplier;
 
-
-
         groundLayer = LayerMask.NameToLayer("Ground");
         SetupJointDrives();
         SetupOriginalPose();
@@ -260,12 +258,6 @@ public class RagdollController : MonoBehaviour
 
     public void SetJointToOriginalRot(RagdollJoint rj)
     {
-        if (rj.name == "DEF_Pelvis")
-        {
-            Debug.Log("Skipping Pelvis");
-            return;
-        }
-
         GameObject jointObj = rj.gameObject;
         jointObj.transform.localRotation = originalLocalRotations[rj.GetJointName()];
     }
@@ -427,7 +419,7 @@ public class RagdollController : MonoBehaviour
     {
         if (ResetPose)
         {
-            Debug.Log("Resetting Pose");
+
             if (RagdollDict[BODY].isConnected)
                 TargetRotations[BODY] = originalTargetRotations[BODY];
 
@@ -688,6 +680,22 @@ public class RagdollController : MonoBehaviour
             StopWalkingForward();
         }
     }
+
+    // Add these fields at the top of RagdollController class
+private Vector3 _initialPosition;
+private Quaternion _initialRotation;
+
+// Public properties to access initial spawn data
+public Vector3 InitialPosition => _initialPosition;
+public Quaternion InitialRotation => _initialRotation;
+
+// Method to capture initial position (called by PlayerManager)
+public void CaptureInitialPosition(Vector3 position, Quaternion rotation)
+{
+    _initialPosition = position;
+    _initialRotation = rotation;
+    Debug.Log($"[RagdollController] {gameObject.name} captured position: {_initialPosition}, rotation: {_initialRotation.eulerAngles}");
+}
 
     private void StartWalkingForward()
     {
