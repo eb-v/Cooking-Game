@@ -64,7 +64,11 @@ public class StoveIdleState : StoveState
         }
         else
         {
-            stove.RemoveObject(player);
+            if (stove.hasObject)
+            {
+                stove.RemoveObject(player);
+            }
+            
         }
         
 

@@ -336,7 +336,7 @@ MonoBehaviour:
   m_FillMethod: 0
   m_FillAmount: 1
   m_FillClockwise: 1
-  m_FillOrigin: 0
+  m_FillOrigin: 1
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
 --- !u!1 &5022934062058996002
@@ -403,6 +403,7 @@ GameObject:
   - component: {fileID: 997177744510758395}
   - component: {fileID: 5879022160703071518}
   - component: {fileID: 5657542437092111084}
+  - component: {fileID: 8742585759918915019}
   m_Layer: 15
   m_Name: Stove
   m_TagString: Untagged
@@ -418,7 +419,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6260594935653569358}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: 0.7071068, z: -0, w: 0.7071068}
+  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
   m_LocalPosition: {x: -24.079903, y: 1.3291544, z: 90.352715}
   m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 1
@@ -443,14 +444,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5543cefd5f5ee4c49aee08373a82343a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Stove
-  fireEffects:
-  - {fileID: 6648820532244228075}
-  - {fileID: 1396864174945490918}
-  - {fileID: 1608255590353787112}
-  settings: {fileID: 11400000, guid: 1110e4700a6dec14a8e3a02cc8925c27, type: 2}
-  spreadRadius: 4
-  <IsOnFire>k__BackingField: 0
-  burnProgress: 0
   objectSnapPoint: {fileID: 1349680231326610607}
   _stoveUICanvas: {fileID: 3505686451939692872}
   _stoveUICookFillImage: {fileID: 3463099422574981306}
@@ -481,6 +474,26 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1.9999077, y: 1.1639161, z: 2.1170647}
   m_Center: {x: -0.014833808, y: 0.081958115, z: 0.038574338}
+--- !u!114 &8742585759918915019
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6260594935653569358}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f515201e7a51d7f4d8d5b4ea53ba45f3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Burnable
+  fireEffects:
+  - {fileID: 6648820532244228075}
+  - {fileID: 1396864174945490918}
+  - {fileID: 1608255590353787112}
+  spreadRadius: 3.26
+  isOnFire: 0
+  burnTimer: 0
+  burnProgress: 0
 --- !u!1 &6966491624230064586
 GameObject:
   m_ObjectHideFlags: 0
@@ -643,7 +656,7 @@ MonoBehaviour:
   m_FillMethod: 0
   m_FillAmount: 1
   m_FillClockwise: 1
-  m_FillOrigin: 0
+  m_FillOrigin: 1
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
 --- !u!1 &9220497721612117169

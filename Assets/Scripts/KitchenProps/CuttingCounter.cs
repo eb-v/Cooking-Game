@@ -23,9 +23,6 @@ public class CuttingCounter : BaseStation
     [SerializeField] private Transform _playerSnapPoint;
     [SerializeField] private Transform _objectSnapPoint;
 
-    [Header("Cutting VFX")]
-    [SerializeField] private ParticleSystem _cuttingVFX;
-
     [Header("Debug")]
     [ReadOnly]
     [SerializeField] private GameObject _currentObject;
@@ -41,21 +38,14 @@ public class CuttingCounter : BaseStation
     private bool hasObject => _currentObject != null;
     private bool notBeingUsed => _currentPlayer == null;
 
-    public override void Update()
-    {
-        base.Update();
-        if (IsOnFire && !notBeingUsed)
-        {
-            ExitCutState(_currentPlayer.gameObject);
-            Destroy(_currentObject);
-        }
-    }
 
+    private void Start()
+    {
+        GenericEvent<OnObjectIgnited>.GetEvent(gameObject.GetInstanceID().ToString()).AddListener(OnCuttingBoardIgnited);
+    }
 
     public override void OnInteract(GameObject player)
     {
-        if (IsOnFire)
-            return;
         GrabScript gs = player.GetComponent<GrabScript>();
 
         // ingredient placement logic
@@ -113,8 +103,6 @@ public class CuttingCounter : BaseStation
 
     public override void OnAltInteract(GameObject player)
     {
-        if (IsOnFire)
-            return;
         if (!notBeingUsed)
         {
             if (_currentPlayer == player.GetComponent<Player>())
@@ -182,13 +170,6 @@ public class CuttingCounter : BaseStation
     private void CutIngredient()
     {
         cuttingProgress++;
-        //cutting effect
-        if (_cuttingVFX != null)
-        {
-            _cuttingVFX.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
-            _cuttingVFX.Play();
-        }
-
         RagdollController rc = _currentPlayer.GetComponent<RagdollController>();
         PoseHelper.SetPlayerPose(rc, _postChopPose);
 
@@ -303,6 +284,22 @@ public class CuttingCounter : BaseStation
     private void ChangeState(CuttingState newState)
     {
         _currentState = newState;
+    }
+
+    private void OnCuttingBoardIgnited()
+    {
+        if (hasObject)
+        {
+            Destroy(_currentObject);
+            _currentObject = null;
+            _currentRecipe = null;
+            cuttingProgress = 0;
+        }
+
+        if (_currentState == CuttingState.Cutting)
+        {
+            ExitCutState(_currentPlayer.gameObject);
+        }
     }
 
 
