@@ -23,6 +23,9 @@ public class CuttingCounter : BaseStation
     [SerializeField] private Transform _playerSnapPoint;
     [SerializeField] private Transform _objectSnapPoint;
 
+    [Header("Cutting VFX")]
+    [SerializeField] private ParticleSystem _cuttingVFX;
+
     [Header("Debug")]
     [ReadOnly]
     [SerializeField] private GameObject _currentObject;
@@ -179,6 +182,13 @@ public class CuttingCounter : BaseStation
     private void CutIngredient()
     {
         cuttingProgress++;
+        //cutting effect
+        if (_cuttingVFX != null)
+        {
+            _cuttingVFX.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+            _cuttingVFX.Play();
+        }
+
         RagdollController rc = _currentPlayer.GetComponent<RagdollController>();
         PoseHelper.SetPlayerPose(rc, _postChopPose);
 
