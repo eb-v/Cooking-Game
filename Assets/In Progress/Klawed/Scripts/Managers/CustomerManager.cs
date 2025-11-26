@@ -29,6 +29,10 @@ public class CustomerManager : MonoBehaviour
 
     private int numOfCustomers => customerLine.Count;
 
+    [Header("Special NPCs")]
+    [SerializeField] private GameObject robberPrefab;
+
+
     private void Start()
     {
         GenericEvent<OnCustomerServed>.GetEvent("OnCustomerServed").AddListener(OnCustomerServedLogic);
@@ -72,6 +76,22 @@ public class CustomerManager : MonoBehaviour
         else
         {
             Debug.LogWarning("No NavMesh found at spawn position: " + spawnPoint.position);
+        }
+    }
+
+    public void SpawnRobber() {
+        Transform spawnPoint = spawnPositions[Random.Range(0, spawnPositions.Length)];
+
+        if (NavMeshExists(spawnPoint.position)) {
+            GameObject robberObj = Instantiate(robberPrefab, spawnPoint.position, spawnPoint.rotation);
+
+            Customer robberCustomer = robberObj.GetComponent<Customer>();
+            if (robberCustomer != null) {
+                customerLine.Add(robberCustomer);
+                AssignLinePosition(robberCustomer);
+            }
+
+            UpdateSpeechBubbles();
         }
     }
 
