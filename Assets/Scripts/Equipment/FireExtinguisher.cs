@@ -23,7 +23,7 @@ public class FireExtinguisher : DynamicObjectBase, IEquipment
     public void UseEquipment()
     {
         SprayFoam();
-        //SprayFoam();
+        SprayFoam();
         //SprayFoam();
 
         ExtinguishFlamablesInRange();
@@ -77,10 +77,10 @@ public class FireExtinguisher : DynamicObjectBase, IEquipment
         List<GameObject> objectsInSphere = cone.GetObjectsInSphere();
         foreach (GameObject obj in objectsInSphere)
         {
-            IFlammable flammable = obj.GetComponentInChildren<IFlammable>();
+            Burnable flammable = obj.GetComponentInChildren<Burnable>();
             if (flammable != null && flammable.IsOnFire)
             {
-                flammable.ModifyBurnProgress(extinguishRate * Time.deltaTime);
+                flammable.Extinguish();
             }
         }
 

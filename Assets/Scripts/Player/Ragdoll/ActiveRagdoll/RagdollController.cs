@@ -267,6 +267,7 @@ public class RagdollController : MonoBehaviour
         }
 
         GameObject jointObj = rj.gameObject;
+
         jointObj.transform.localRotation = originalLocalRotations[rj.GetJointName()];
     }
 

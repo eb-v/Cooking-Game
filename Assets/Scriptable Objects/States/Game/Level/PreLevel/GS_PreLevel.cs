@@ -13,6 +13,14 @@ public class GS_PreLevel : GameState
     private float _timer;
 
 
+    private void Awake()
+    {
+        
+    }
+
+
+
+
     public override void Enter()
     {
         base.Enter();

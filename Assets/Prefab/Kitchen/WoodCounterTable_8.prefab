@@ -54,8 +54,12 @@ MonoBehaviour:
   - {fileID: 2739621576149900166}
   settings: {fileID: 11400000, guid: 1110e4700a6dec14a8e3a02cc8925c27, type: 2}
   spreadRadius: 4
-  <IsOnFire>k__BackingField: 0
+  isOnFire: 0
   burnProgress: 0
+  burnTimer: 0
+  isIgnitionImmune: 0
+  fireImmuneDuration: 5
+  burnLogicSO: {fileID: 11400000, guid: 6933f22737899b944839dbf38d970861, type: 2}
 --- !u!65 &7624503881683235962
 BoxCollider:
   m_ObjectHideFlags: 0

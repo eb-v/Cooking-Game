@@ -3,76 +3,49 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
-public class Burnable : MonoBehaviour, IFlammable
+public class Burnable : MonoBehaviour
 {
-    [Header("Fire Related Values")]
+    [Header("Fire Settings")]
     [SerializeField] private List<FireController> fireEffects;
-    [SerializeField] public BurnableSettings settings;
     [SerializeField] private float spreadRadius = 2f;
-    [field: SerializeField] public bool IsOnFire { get; set; }
+    //[SerializeField] private float fireImmuneDuration = 5f;
+
+
+    [Header("Debugging")]
+    [ReadOnly]
+    [SerializeField] private bool isOnFire = false;
+    [ReadOnly]
+    [SerializeField] private float burnTimer;
     [ReadOnly]
     [SerializeField] private float burnProgress = 0f;
-    public float BurnProgress => burnProgress;
-    public GameObject FlamableGameObject => gameObject;
-    public List<FireController> FireEffects => fireEffects;
+    //public bool isIgnitionImmune = false;
+    //[ReadOnly]
+    //[SerializeField] bool burnProgressLocked = false;
+
+
+    public bool IsOnFire => isOnFire;
+    //public bool BurnProgressLocked => burnProgressLocked;
 
 
     public void Extinguish()
     {
-        FireSystem.ExtinguishObject(this);
-        burnProgress = 0f;
+        FireManager.Instance.ExtinguishObject(ref isOnFire, ref burnProgress, fireEffects);
+        FireManager.Instance.UnRegisterBurningObject(this);
+        
     }
 
     public void Ignite()
     {
-        burnProgress = 1f;
-        FireSystem.IgniteObject(this);
+        FireManager.Instance.IgniteObject(ref isOnFire, ref burnProgress, fireEffects);
+        FireManager.Instance.RegisterBurningObject(this);
         GenericEvent<OnObjectIgnited>.GetEvent(gameObject.GetInstanceID().ToString()).Invoke();
     }
 
-    public void ModifyBurnProgress(float amount)
+    public void Update()
     {
-        burnProgress += amount;
-        Mathf.Clamp01(burnProgress);
-        if (burnProgress >= 1f && !IsOnFire)
+        if (isOnFire)
         {
-            Ignite();
-        }
-        else if (burnProgress <= 0f && IsOnFire)
-        {
-            Extinguish();
-        }
-    }
-
-    public virtual void Update()
-    {
-        if (IsOnFire)
-        {
-            OnFireLogic();
-
-            return;
-        }
-    }
-
-    public virtual void FixedUpdate()
-    {
-        if (IsOnFire)
-        {
-
-            return;
-        }
-    }
-
-    public virtual void OnFireLogic()
-    {
-        if (settings.allowSpread)
-        {
-            if (FireSystem.Instance == null)
-            {
-                Debug.LogError("FireSystem instance is null!");
-            }
-            FireSystem.Instance.SpreadFire(gameObject.transform.position, spreadRadius);
+            FireManager.Instance.SpreadFire(transform.position, spreadRadius, this);
         }
     }
 
@@ -81,5 +54,27 @@ public class Burnable : MonoBehaviour, IFlammable
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, spreadRadius);
     }
+
+    public void ModifyBurnProgress(float amount)
+    {
+        burnProgress += amount;
+        burnProgress = Mathf.Clamp01(burnProgress);
+        if (burnProgress <= 0f && isOnFire)
+        {
+            Extinguish();
+        }
+        else if (burnProgress >= 1f && !isOnFire)
+        {
+            Ignite();
+        }
+    }
+
+    //public IEnumerator LockBurnProgress(float duration)
+    //{
+    //    burnProgressLocked = true;
+    //    yield return new WaitForSeconds(duration);
+    //    burnProgressLocked = false;
+    //}
+    
 
 }

@@ -65,6 +65,10 @@ public class AssemblyIdle : AssemblyState
             AddToStorage(ingredientScript.Ingredient);
             Destroy(item);
         }
+        else
+        {
+            Debug.Log("Invalid Item for Assembly Station");
+        }
     }
 
     private bool IsItemValid(GameObject item)
@@ -82,6 +86,8 @@ public class AssemblyIdle : AssemblyState
     private void AddToStorage(Ingredient ingredient)
     {
         assemblyStation.ingredientStorage[ingredient]++;
+        int amountStored = assemblyStation.ingredientStorage[ingredient];
+        GenericEvent<IngredientStorageAmountChanged>.GetEvent("AssemblyStation").Invoke(ingredient, amountStored);
     }
 
     private void ChangeSelectedMenuItem()
@@ -118,6 +124,8 @@ public class AssemblyIdle : AssemblyState
         foreach (Ingredient ingredient in menuItem.IngredientsNeeded)
         {
             assemblyStation.ingredientStorage[ingredient]--;
+            int amountStored = assemblyStation.ingredientStorage[ingredient];
+            GenericEvent<IngredientStorageAmountChanged>.GetEvent("AssemblyStation").Invoke(ingredient, amountStored);
         }
     }
 

@@ -60,12 +60,12 @@ public class ConeGizmo : MonoBehaviour
 
         foreach (Collider col in hit)
         {
-            GameObject rootObj = col.transform.root.gameObject;
-            if (objectsInSphere.Contains(rootObj))
+            GameObject hitObject = col.gameObject;
+            if (objectsInSphere.Contains(hitObject))
             {
                 continue;
             }
-            objectsInSphere.Add(rootObj);
+            objectsInSphere.Add(hitObject);
         }
 
         return objectsInSphere;

@@ -103,6 +103,7 @@ public class AssemblyStation : MonoBehaviour, IInteractable, IAltInteractable
     public void OnAltInteract(GameObject player)
     {
         stateMachine.GetCurrentState().AltInteractLogic(player);
+        Debug.Log("Alt Interact with Assembly Station");
     }
 
     public void ChangeState(AssemblyState newState)

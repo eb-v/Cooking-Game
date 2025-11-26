@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using System.Collections;
 
 [CreateAssetMenu(fileName = "Fire System", menuName = "Systems/Fire System")]
 public class FireSystem : ScriptableObject
@@ -25,10 +26,10 @@ public class FireSystem : ScriptableObject
     [SerializeField] private GameObject firePrefab;
 
     [Header("Settings")]
-    [SerializeField] private BurnableSettings settings;
+    [SerializeField] private FireSettings settings;
 
-    // (IFlammable) -> (Fire GameObject)
-    private static Dictionary<IFlammable, List<FireController>> ignitedObjects = new Dictionary<IFlammable, List<FireController>>();
+    // (Burnable) -> (Fire GameObject)
+    private HashSet<Burnable> spreadThisFrame = new HashSet<Burnable>();
 
     public static bool SystemEnabled
     {
@@ -47,34 +48,25 @@ public class FireSystem : ScriptableObject
     }
 
 
-    public static void IgniteObject(IFlammable objToIgnite) {
-        if (!SystemEnabled)
-            return;
-
-        if (objToIgnite.IsOnFire)
-            return;
-
-        foreach (FireController fireEffect in objToIgnite.FireEffects)
-        {
-            fireEffect.StartFire();
-        }
-        objToIgnite.IsOnFire = true;
-    }
-
-
-    public static void ExtinguishObject(IFlammable objToExtinguish)
+    public void IgniteObject(ref bool isOnFire, ref float burnProgress, List<FireController> fireEffects) 
     {
         if (!SystemEnabled)
             return;
+        
+        isOnFire = true;
+        burnProgress = 1f;
 
-        if (!objToExtinguish.IsOnFire)
-            return;
-
-        foreach (FireController fireController in objToExtinguish.FireEffects)
+        foreach (FireController fireEffect in fireEffects)
         {
-            fireController.StopFire();
+            fireEffect.StartFire();
         }
-        objToExtinguish.IsOnFire = false;
+    }
+
+
+    public void ExtinguishObject(Burnable objToExtinguish)
+    {
+        if (!SystemEnabled)
+            return;
     }
 
     public void SpreadFire(Vector3 position, float spreadRadius)
@@ -82,32 +74,28 @@ public class FireSystem : ScriptableObject
         if (!SystemEnabled)
             return;
 
-        List<IFlammable> flammables = GetFlammableObjectsInRange(position, spreadRadius);
-        foreach (IFlammable flammable in flammables)
+        List<Burnable> burnablesInRange = GetFlammableObjectsInRange(position, spreadRadius);
+
+        foreach (Burnable burnable in burnablesInRange)
         {
-            if (!flammable.IsOnFire)
+            if (!spreadThisFrame.Contains(burnable))
             {
-                if (settings == null)
-                {
-                    Debug.LogError("FireSystem SpreadFire: settings is null!");
-                    return;
-                }
-                    
-                flammable.ModifyBurnProgress(settings.spreadMultiplier * Time.deltaTime);
+                burnable.ModifyBurnProgress(Instance.settings.burnMultiplier * Time.deltaTime);
             }
         }
-
     }
 
-    private static List<IFlammable> GetFlammableObjectsInRange(Vector3 pos, float spreadRadius)
+   
+
+    private static List<Burnable> GetFlammableObjectsInRange(Vector3 pos, float spreadRadius)
     {
         Collider[] hits = Physics.OverlapSphere(pos, spreadRadius);
-        List<IFlammable> flammable = new List<IFlammable>();
+        List<Burnable> flammable = new List<Burnable>();
 
         foreach (var hit in hits)
         {
             GameObject rootObj = hit.gameObject;
-            if (rootObj.TryGetComponent(out IFlammable flammableComponent))
+            if (rootObj.TryGetComponent(out Burnable flammableComponent))
             {
                 if (!flammable.Contains(flammableComponent))
                     flammable.Add(flammableComponent);
@@ -115,6 +103,11 @@ public class FireSystem : ScriptableObject
         }
 
         return flammable;
+    }
+
+    public void EndFrame()
+    {
+        spreadThisFrame.Clear();
     }
 
 }

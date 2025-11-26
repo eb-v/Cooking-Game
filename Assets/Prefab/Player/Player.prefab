@@ -2849,7 +2849,19 @@ MonoBehaviour:
     m_ActionId: 22a9254e-befb-4cbf-91d8-3e1c91213140
     m_ActionName: 'Player/UseEquipment[/Keyboard/r,/DualSenseGamepadHID/leftTrigger]'
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 7145388165237822340}
+        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
+        m_MethodName: OnPerformStationAction
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: a72f5517-5429-4dba-b47f-941d69ec101a
     m_ActionName: 'Player/PerformStationAction[/DualSenseGamepadHID/rightShoulder]'
   m_NeverAutoSwitchControlSchemes: 0

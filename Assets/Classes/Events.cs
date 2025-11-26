@@ -198,3 +198,6 @@ public class OnThrowStatusChanged : UnityEvent<bool> { }
 public class OnEquipmentUseInput : UnityEvent<bool> { }
 
 public class OnObjectIgnited : UnityEvent { }
+
+public class IngredientStorageAmountChanged : UnityEvent<Ingredient, int> { }
+
