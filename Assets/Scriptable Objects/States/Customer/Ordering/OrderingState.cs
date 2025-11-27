@@ -76,7 +76,7 @@ public class OrderingState : CustomerState
     {
         MenuItemScript menuItemScript = menuItemObject.GetComponent<MenuItemScript>();
         int price = menuItemScript.MenuItem.Price;
-        ScoreSystem.Instance.ChangeScore(price, player);
+        ScoreManager.Instance.ChangeScore(price, player);
 
         IGrabable grabable = menuItemObject.GetComponent<IGrabable>();
         grabable.ReleaseObject(player);

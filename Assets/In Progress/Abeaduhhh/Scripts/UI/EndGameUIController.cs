@@ -48,7 +48,7 @@ public class EndGameUIController : MonoBehaviour {
     }
 
     private IEnumerator ShowEndGameSequence() {
-        int finalScore = ScoreSystem.Instance.GetCurrentScore();
+        int finalScore = ScoreManager.Instance.GetCurrentScore();
         int starsEarned = CalculateStars(finalScore);
 
         if (background != null) background.SetActive(true);
