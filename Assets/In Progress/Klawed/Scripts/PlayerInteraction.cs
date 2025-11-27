@@ -1,9 +1,11 @@
+using UnityEditor;
 using UnityEngine;
 
 public class PlayerInteraction : MonoBehaviour
 {
-    [SerializeField] private Env_Interaction env_Interaction;
-    private GameObject lookedAtObj => env_Interaction.currentlyLookingAt;
+    [SerializeField] private PlayerData playerSettings;
+    [SerializeField] private Transform pelvis;
+    [SerializeField] private LayerMask interactLayerMask;
 
 
     private void OnEnable()
@@ -20,32 +22,37 @@ public class PlayerInteraction : MonoBehaviour
 
     private void HandleInteract(GameObject player)
     {
-        if (lookedAtObj == null) return;
-
-        // play interact SFX
-        AudioManager.Instance?.PlaySFX("Item Interact");
-
-        if (lookedAtObj.TryGetComponent<IInteractable>(out IInteractable interactable))
+        Interactable interactable = InteractRayCastDetection();
+        if (interactable != null)
         {
-            interactable.OnInteract(player);
+            AudioManager.Instance?.PlaySFX("Item Interact");
+            interactable.Interact(player);
         }
-        else
-        {
-            Debug.Log("could not interact with " + lookedAtObj.name);   
-        }
-
     }
 
     private void HandleAltInteract(GameObject player)
     {
-        if (lookedAtObj == null) return;
+        Interactable interactable = InteractRayCastDetection();
+        if (interactable != null)
+        {
+            AudioManager.Instance?.PlaySFX("Item Interact");
+            interactable.AltInteract(player);
+        }
 
-        IAltInteractable altInteractable = lookedAtObj.GetComponent<IAltInteractable>();
-        if (altInteractable == null) return;
+    }
 
-        // use same SFX
-        AudioManager.Instance?.PlaySFX("Item Interact");
+    private Interactable InteractRayCastDetection()
+    {
+        Ray ray = new Ray(pelvis.position, -pelvis.forward);
 
-        altInteractable.OnAltInteract(player);
+        if (Physics.Raycast(ray, out RaycastHit hit, playerSettings.InteractionRange, interactLayerMask))
+        {
+            Interactable interactable = hit.collider.GetComponentInParent<Interactable>();
+            return interactable;
+        }
+        else
+        {
+            return null;
+        }
     }
 }

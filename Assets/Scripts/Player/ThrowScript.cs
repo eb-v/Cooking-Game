@@ -66,6 +66,7 @@ public class ThrowScript : MonoBehaviour
         //IGrabable objToThrow = grabScript.grabbedObject;
         Grabable objToThrow = grabScript.grabbedObject;
         objToThrow.Throw(gameObject, currentThrowForce, body.forward); // Added the ThrowObject method call
+        grabScript.grabbedObject = null;
         throwMeterFillImage.fillAmount = 0f;
         currentThrowForce = 0f;
         throwMeterObj.SetActive(false);
