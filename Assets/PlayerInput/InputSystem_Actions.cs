@@ -183,15 +183,6 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""RemoveObjectFromKitchenProp"",
-                    ""type"": ""Button"",
-                    ""id"": ""3640bf22-ef67-49b6-9005-bb2c0c70e3b1"",
-                    ""expectedControlType"": """",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
                     ""name"": ""AltInteract"",
                     ""type"": ""Button"",
                     ""id"": ""1122df96-66b1-4a8e-9090-8d91a3cb319b"",
@@ -249,6 +240,15 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""name"": ""PerformStationAction"",
                     ""type"": ""Button"",
                     ""id"": ""a72f5517-5429-4dba-b47f-941d69ec101a"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Grab"",
+                    ""type"": ""Button"",
+                    ""id"": ""41566aed-5651-4ebd-9d93-141b417a7a62"",
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
@@ -544,17 +544,6 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""e594eeb2-03c2-497a-af83-94a5e7a2cb32"",
-                    ""path"": ""<Keyboard>/g"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";Keyboard&Mouse"",
-                    ""action"": ""RemoveObjectFromKitchenProp"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""726382f8-6485-409b-bab7-5f5203c96e9c"",
                     ""path"": ""<Keyboard>/t"",
                     ""interactions"": """",
@@ -693,6 +682,28 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Throw"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b8225958-bd8a-4fa1-9742-fcdffef6ade2"",
+                    ""path"": ""<Keyboard>/g"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Grab"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""491d6475-a9b5-49ab-83be-e220e10c0ee8"",
+                    ""path"": ""<Gamepad>/buttonNorth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Grab"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1431,7 +1442,6 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         m_Player_Interact = m_Player.FindAction("Interact", throwIfNotFound: true);
         m_Player_CounterSnap = m_Player.FindAction("CounterSnap", throwIfNotFound: true);
         m_Player_Pause = m_Player.FindAction("Pause", throwIfNotFound: true);
-        m_Player_RemoveObjectFromKitchenProp = m_Player.FindAction("RemoveObjectFromKitchenProp", throwIfNotFound: true);
         m_Player_AltInteract = m_Player.FindAction("AltInteract", throwIfNotFound: true);
         m_Player_PlaceIngredient = m_Player.FindAction("PlaceIngredient", throwIfNotFound: true);
         m_Player_DpadInteract = m_Player.FindAction("DpadInteract", throwIfNotFound: true);
@@ -1439,6 +1449,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         m_Player_Throw = m_Player.FindAction("Throw", throwIfNotFound: true);
         m_Player_UseEquipment = m_Player.FindAction("UseEquipment", throwIfNotFound: true);
         m_Player_PerformStationAction = m_Player.FindAction("PerformStationAction", throwIfNotFound: true);
+        m_Player_Grab = m_Player.FindAction("Grab", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1550,7 +1561,6 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Interact;
     private readonly InputAction m_Player_CounterSnap;
     private readonly InputAction m_Player_Pause;
-    private readonly InputAction m_Player_RemoveObjectFromKitchenProp;
     private readonly InputAction m_Player_AltInteract;
     private readonly InputAction m_Player_PlaceIngredient;
     private readonly InputAction m_Player_DpadInteract;
@@ -1558,6 +1568,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Throw;
     private readonly InputAction m_Player_UseEquipment;
     private readonly InputAction m_Player_PerformStationAction;
+    private readonly InputAction m_Player_Grab;
     /// <summary>
     /// Provides access to input actions defined in input action map "Player".
     /// </summary>
@@ -1610,10 +1621,6 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// </summary>
         public InputAction @Pause => m_Wrapper.m_Player_Pause;
         /// <summary>
-        /// Provides access to the underlying input action "Player/RemoveObjectFromKitchenProp".
-        /// </summary>
-        public InputAction @RemoveObjectFromKitchenProp => m_Wrapper.m_Player_RemoveObjectFromKitchenProp;
-        /// <summary>
         /// Provides access to the underlying input action "Player/AltInteract".
         /// </summary>
         public InputAction @AltInteract => m_Wrapper.m_Player_AltInteract;
@@ -1641,6 +1648,10 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Player/PerformStationAction".
         /// </summary>
         public InputAction @PerformStationAction => m_Wrapper.m_Player_PerformStationAction;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/Grab".
+        /// </summary>
+        public InputAction @Grab => m_Wrapper.m_Player_Grab;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -1697,9 +1708,6 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @Pause.started += instance.OnPause;
             @Pause.performed += instance.OnPause;
             @Pause.canceled += instance.OnPause;
-            @RemoveObjectFromKitchenProp.started += instance.OnRemoveObjectFromKitchenProp;
-            @RemoveObjectFromKitchenProp.performed += instance.OnRemoveObjectFromKitchenProp;
-            @RemoveObjectFromKitchenProp.canceled += instance.OnRemoveObjectFromKitchenProp;
             @AltInteract.started += instance.OnAltInteract;
             @AltInteract.performed += instance.OnAltInteract;
             @AltInteract.canceled += instance.OnAltInteract;
@@ -1721,6 +1729,9 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @PerformStationAction.started += instance.OnPerformStationAction;
             @PerformStationAction.performed += instance.OnPerformStationAction;
             @PerformStationAction.canceled += instance.OnPerformStationAction;
+            @Grab.started += instance.OnGrab;
+            @Grab.performed += instance.OnGrab;
+            @Grab.canceled += instance.OnGrab;
         }
 
         /// <summary>
@@ -1762,9 +1773,6 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @Pause.started -= instance.OnPause;
             @Pause.performed -= instance.OnPause;
             @Pause.canceled -= instance.OnPause;
-            @RemoveObjectFromKitchenProp.started -= instance.OnRemoveObjectFromKitchenProp;
-            @RemoveObjectFromKitchenProp.performed -= instance.OnRemoveObjectFromKitchenProp;
-            @RemoveObjectFromKitchenProp.canceled -= instance.OnRemoveObjectFromKitchenProp;
             @AltInteract.started -= instance.OnAltInteract;
             @AltInteract.performed -= instance.OnAltInteract;
             @AltInteract.canceled -= instance.OnAltInteract;
@@ -1786,6 +1794,9 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @PerformStationAction.started -= instance.OnPerformStationAction;
             @PerformStationAction.performed -= instance.OnPerformStationAction;
             @PerformStationAction.canceled -= instance.OnPerformStationAction;
+            @Grab.started -= instance.OnGrab;
+            @Grab.performed -= instance.OnGrab;
+            @Grab.canceled -= instance.OnGrab;
         }
 
         /// <summary>
@@ -2297,13 +2308,6 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnPause(InputAction.CallbackContext context);
         /// <summary>
-        /// Method invoked when associated input action "RemoveObjectFromKitchenProp" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
-        /// </summary>
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnRemoveObjectFromKitchenProp(InputAction.CallbackContext context);
-        /// <summary>
         /// Method invoked when associated input action "AltInteract" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
@@ -2352,6 +2356,13 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnPerformStationAction(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Grab" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnGrab(InputAction.CallbackContext context);
     }
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "UI" which allows adding and removing callbacks.

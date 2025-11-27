@@ -2,7 +2,9 @@ using NUnit.Framework;
 using UnityEngine;
 using System.Collections.Generic;
 
-public class FireExtinguisher : DynamicObjectBase, IEquipment
+[RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(Grabable))]
+public class FireExtinguisher : MonoBehaviour
 {
     [SerializeField] private GameObject foamPrefab;
     [SerializeField] private Transform spawnTransform;

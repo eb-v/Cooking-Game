@@ -108,7 +108,7 @@ public class StoveCookingState : StoveState
     {
         GameObject cookedObjVersion = Instantiate(stove._currentRecipe.output[0].Prefab, stove.ObjectSnapPoint.position, Quaternion.identity);
         IngredientScript ingredientScript = cookedObjVersion.GetComponent<IngredientScript>();
-        ingredientScript.grabCollider.enabled = false;
+        //ingredientScript.grabCollider.enabled = false;
 
 
         Transform physicsObj = cookedObjVersion.GetComponent<PhysicsTransform>().physicsTransform;

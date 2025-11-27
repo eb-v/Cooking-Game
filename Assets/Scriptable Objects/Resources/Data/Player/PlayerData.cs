@@ -66,4 +66,9 @@ public class PlayerData : ScriptableObject
     public float ThrowChargeRateMultiplier => throwChargeRateMultiplier;
 
 
+    [Header("Grab Settings")]
+    [SerializeField] private float grabRange = 3.0f;
+    public float GrabRange => grabRange;
+
+
 }

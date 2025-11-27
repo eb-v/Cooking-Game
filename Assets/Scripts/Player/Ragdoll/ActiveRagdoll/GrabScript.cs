@@ -4,17 +4,52 @@ using UnityEngine.UI;
 
 public class GrabScript : MonoBehaviour
 {
-    [field:SerializeField] public IGrabable grabbedObject { get; set; }
-     public bool IsGrabbing => grabbedObject != null;
-    
+    [SerializeField] private Transform pelvis;
+    [SerializeField] private LayerMask grabLayerMask;
+    private PlayerData playerSettings;
+
+    [field: SerializeField] public Grabable grabbedObject { get; set; }
+    public bool IsGrabbing => grabbedObject != null;
+
+
+    private void Awake()
+    {
+        playerSettings = LoadPlayerData.GetPlayerData();
+    }
+
     private void Start()
     {
-        //GenericEvent<OnThrowReleased>.GetEvent(gameObject.name).AddListener(PerformThrow);
-        GenericEvent<OnObjectGrabbed>.GetEvent(gameObject.name).AddListener(OnObjectGrabbed);
+        GenericEvent<OnGrabInputEvent>.GetEvent(gameObject.name).AddListener(OnGrabInput);  
     }
-    private void OnObjectGrabbed(IGrabable grabbedObj)
+
+    private Grabable GrabRayCastDetection()
     {
-        this.grabbedObject = grabbedObj;
+        Ray ray = new Ray(pelvis.position, -pelvis.forward);
+
+        if (Physics.Raycast(ray, out RaycastHit hit, playerSettings.InteractionRange, grabLayerMask))
+        {
+            Grabable grabable = hit.collider.GetComponentInParent<Grabable>();
+            return grabable;
+        }
+        else
+        {
+            return null;
+        }
+    }
+
+    private void OnGrabInput()
+    {
+        if (!IsGrabbing)
+        {
+            Grabable grabable = GrabRayCastDetection();
+            if (grabable != null)
+            {
+                grabable.Grab(gameObject);
+                grabbedObject = grabable;
+            }
+        }
     }
 
 }
+
+

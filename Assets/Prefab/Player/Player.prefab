@@ -2651,22 +2651,6 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 7145388165237822340}
         m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
-        m_MethodName: OnRemoveObjectFromKitchenProp
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_ActionId: 3640bf22-ef67-49b6-9005-bb2c0c70e3b1
-    m_ActionName: 'Player/RemoveObjectFromKitchenProp[/Keyboard/g]'
-  - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 7145388165237822340}
-        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
         m_MethodName: OnAlternateInteract
         m_Mode: 0
         m_Arguments:
@@ -2895,6 +2879,22 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: a72f5517-5429-4dba-b47f-941d69ec101a
     m_ActionName: 'Player/PerformStationAction[/DualSenseGamepadHID/rightShoulder]'
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 7145388165237822340}
+        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
+        m_MethodName: OnGrabInput
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 41566aed-5651-4ebd-9d93-141b417a7a62
+    m_ActionName: 'Player/Grab[/Keyboard/g,/DualSenseGamepadHID/buttonNorth]'
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
@@ -3007,6 +3007,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c64957956423a9d4bbc60209f835e36c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GrabScript
+  pelvis: {fileID: 1122045052025518916}
+  grabLayerMask:
+    serializedVersion: 2
+    m_Bits: 2097152
+  <grabbedObject>k__BackingField: {fileID: 0}
 --- !u!114 &6688558834217459117
 MonoBehaviour:
   m_ObjectHideFlags: 0

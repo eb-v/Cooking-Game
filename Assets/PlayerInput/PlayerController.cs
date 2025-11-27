@@ -97,6 +97,14 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public void OnGrabInput(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            GenericEvent<OnGrabInputEvent>.GetEvent(gameObject.name).Invoke();
+        }
+    }
+
     public void OnThrowInput(InputAction.CallbackContext context)
     {
         if (context.performed)

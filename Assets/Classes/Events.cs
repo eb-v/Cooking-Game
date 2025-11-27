@@ -179,8 +179,6 @@ public class OnInteractInput : UnityEvent<GameObject> { }
 
 public class OnAlternateInteractInput : UnityEvent<GameObject> { }
 
-public class OnObjectGrabbed : UnityEvent<IGrabable> { }
-
 public class OnCutInput : UnityEvent { }
 
 public class OnPerformStationAction : UnityEvent { }
@@ -200,4 +198,6 @@ public class OnEquipmentUseInput : UnityEvent<bool> { }
 public class OnObjectIgnited : UnityEvent { }
 
 public class IngredientStorageAmountChanged : UnityEvent<Ingredient, int> { }
+
+public class  OnGrabInputEvent : UnityEvent { }
 

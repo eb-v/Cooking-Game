@@ -97,15 +97,6 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "RemoveObjectFromKitchenProp",
-                    "type": "Button",
-                    "id": "3640bf22-ef67-49b6-9005-bb2c0c70e3b1",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
                     "name": "AltInteract",
                     "type": "Button",
                     "id": "1122df96-66b1-4a8e-9090-8d91a3cb319b",
@@ -163,6 +154,15 @@
                     "name": "PerformStationAction",
                     "type": "Button",
                     "id": "a72f5517-5429-4dba-b47f-941d69ec101a",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Grab",
+                    "type": "Button",
+                    "id": "41566aed-5651-4ebd-9d93-141b417a7a62",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -458,17 +458,6 @@
                 },
                 {
                     "name": "",
-                    "id": "e594eeb2-03c2-497a-af83-94a5e7a2cb32",
-                    "path": "<Keyboard>/g",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Keyboard&Mouse",
-                    "action": "RemoveObjectFromKitchenProp",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "726382f8-6485-409b-bab7-5f5203c96e9c",
                     "path": "<Keyboard>/t",
                     "interactions": "",
@@ -607,6 +596,28 @@
                     "processors": "",
                     "groups": "",
                     "action": "Throw",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b8225958-bd8a-4fa1-9742-fcdffef6ade2",
+                    "path": "<Keyboard>/g",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Grab",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "491d6475-a9b5-49ab-83be-e220e10c0ee8",
+                    "path": "<Gamepad>/buttonNorth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Grab",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

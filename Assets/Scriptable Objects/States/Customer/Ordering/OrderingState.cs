@@ -42,7 +42,7 @@ public class OrderingState : CustomerState
 
         if (gs.IsGrabbing)
         {
-            GameObject heldObject = gs.grabbedObject.GetGameObject();
+            GameObject heldObject = gs.grabbedObject.gameObject;
             MenuItemScript menuItemScript = heldObject.GetComponent<MenuItemScript>();
 
             if (menuItemScript != null)

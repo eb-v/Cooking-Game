@@ -1,13 +1,19 @@
 using UnityEngine;
 
-[RequireComponent(typeof(PhysicsTransform))]
-public class DynamicObjectBase : MonoBehaviour, IInteractable, IGrabable
+[RequireComponent(typeof(Rigidbody))]
+public class DynamicObjectBase : MonoBehaviour
 {
     public bool isGrabbed { get; set; }
     [field:SerializeField] public GrabData grabData { get; set; }
 
-    public GameObject currentPlayer { get; set; }
     [field:SerializeField] public Collider grabCollider { get; set; }
+
+    private Rigidbody rb;
+
+    private void Awake()
+    {
+        rb = GetComponent<Rigidbody>();
+    }
 
     public GameObject GetGameObject()
     {
@@ -21,12 +27,8 @@ public class DynamicObjectBase : MonoBehaviour, IInteractable, IGrabable
             return;
 
 
-        PhysicsTransform physicsTransform = gameObject.GetComponent<PhysicsTransform>();
-        GrabSystem.GrabObject(player, physicsTransform.physicsTransform.gameObject, grabData);
-        GenericEvent<OnObjectGrabbed>.GetEvent(player.name).Invoke(this);
-
+        GrabSystem.GrabObject(player, rb, grabData);
         isGrabbed = true;
-        currentPlayer = player;
         grabCollider.enabled = false;
     }
 
@@ -39,7 +41,6 @@ public class DynamicObjectBase : MonoBehaviour, IInteractable, IGrabable
     {
         GrabSystem.ReleaseObject(player);
         isGrabbed = false;
-        currentPlayer = null;
         grabCollider.enabled = true;
     }
 

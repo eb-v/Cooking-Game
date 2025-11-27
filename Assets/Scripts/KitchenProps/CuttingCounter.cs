@@ -51,7 +51,7 @@ public class CuttingCounter : BaseStation
         // ingredient placement logic
         if (gs.IsGrabbing)
         {
-            GameObject grabbedObject = gs.grabbedObject.GetGameObject();
+            GameObject grabbedObject = gs.grabbedObject.gameObject;
             if (grabbedObject.GetComponent<IngredientScript>() == null)
             {
                 Debug.Log("Object is not an ingredient, cannot place on cutting counter.");
@@ -69,11 +69,11 @@ public class CuttingCounter : BaseStation
                 IngredientScript ingredient = grabbedObject.GetComponent<IngredientScript>();
                 if (IsCuttable(ingredient))
                 {
-                    gs.grabbedObject.grabCollider.enabled = false;
-                    PlaceObjectOntoCounter(gs.grabbedObject);
-                    _currentRecipe = ingredient.recipes.Find(recipe => recipe is CuttingRecipe) as CuttingRecipe;
+                    //gs.grabbedObject.grabCollider.enabled = false;
+                    //PlaceObjectOntoCounter(gs.grabbedObject);
+                    //_currentRecipe = ingredient.recipes.Find(recipe => recipe is CuttingRecipe) as CuttingRecipe;
 
-                    gs.grabbedObject = null;
+                    //gs.grabbedObject = null;
                 }
                 else
                 {

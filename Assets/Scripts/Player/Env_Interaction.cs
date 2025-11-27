@@ -27,7 +27,7 @@ public class Env_Interaction : MonoBehaviour
     private void FixedUpdate()
     {
 
-        RayCastDetection();
+        //RayCastDetection();
 
 
     }

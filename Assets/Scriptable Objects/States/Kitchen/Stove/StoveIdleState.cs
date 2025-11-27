@@ -41,7 +41,7 @@ public class StoveIdleState : StoveState
         GrabScript grabScript = player.GetComponent<GrabScript>();
         if (grabScript.IsGrabbing)
         {
-            GameObject grabbedObject = grabScript.grabbedObject.GetGameObject();
+            GameObject grabbedObject = grabScript.grabbedObject.gameObject;
             if (stove.IsItemCompatible(grabbedObject))
             {
                 if (stove.hasObject)
@@ -79,16 +79,16 @@ public class StoveIdleState : StoveState
         base.AltInteractLogic(player);
     }
 
-    private void PlaceObjectOntoStove(IGrabable grabbedObj)
+    private void PlaceObjectOntoStove(Grabable grabbedObj)
     {
-        stove._currentObject = grabbedObj.GetGameObject();
+        stove._currentObject = grabbedObj.gameObject;
         IngredientScript ingredient = stove._currentObject.GetComponent<IngredientScript>();
-        ingredient.grabCollider.enabled = false;
+        //ingredient.grabCollider.enabled = false;
 
 
-        grabbedObj.ReleaseObject(grabbedObj.currentPlayer);
+        //grabbedObj.Release(grabbedObj.currentPlayer);
 
-        Transform physicsObj = grabbedObj.GetGameObject().GetComponent<PhysicsTransform>().physicsTransform;
+        Transform physicsObj = grabbedObj.gameObject.GetComponent<PhysicsTransform>().physicsTransform;
 
         if (physicsObj == null)
         {

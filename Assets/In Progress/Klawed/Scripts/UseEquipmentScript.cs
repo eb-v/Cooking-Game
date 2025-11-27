@@ -16,7 +16,7 @@ public class UseEquipmentScript : MonoBehaviour
         {
             if (IsPlayerHoldingEquipment())
             {
-                IEquipment equipment = GetComponent<GrabScript>().grabbedObject.GetGameObject().GetComponent<IEquipment>();
+                IEquipment equipment = GetComponent<GrabScript>().grabbedObject.gameObject.GetComponent<IEquipment>();
                 equipment.UseEquipment();
             }
         }
@@ -36,6 +36,6 @@ public class UseEquipmentScript : MonoBehaviour
             return false;
         }
 
-        return gs.grabbedObject.GetGameObject().GetComponent<IEquipment>() != null;
+        return gs.grabbedObject.gameObject.GetComponent<IEquipment>() != null;
     }
 }
