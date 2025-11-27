@@ -9,8 +9,11 @@ public class MenuItem : ScriptableObject
     [SerializeField] private GameObject orderItemPrefab;
     [SerializeField] private MenuItemType orderType;
     [SerializeField] private List<Ingredient> ingredientsNeeded;
+    [SerializeField] private int price;
     public List<Ingredient> IngredientsNeeded => ingredientsNeeded;
     public GameObject Prefab => orderItemPrefab;
+
+    public int Price => price;
 
 
 

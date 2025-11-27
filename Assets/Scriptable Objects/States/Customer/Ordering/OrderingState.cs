@@ -74,12 +74,16 @@ public class OrderingState : CustomerState
 
     private void ServeCustomer(GameObject menuItemObject, GameObject player)
     {
+        MenuItemScript menuItemScript = menuItemObject.GetComponent<MenuItemScript>();
+        int price = menuItemScript.MenuItem.Price;
+        ScoreSystem.Instance.ChangeScore(price, player);
+
         IGrabable grabable = menuItemObject.GetComponent<IGrabable>();
         grabable.ReleaseObject(player);
         Destroy(menuItemObject);
         GenericEvent<OnCustomerServed>.GetEvent("OnCustomerServed").Invoke(customer);
         customer.ChangeState(customer._walkToTableInstance);
-        // increase score/money here
+        
     }
 
 }

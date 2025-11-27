@@ -3,8 +3,8 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Score System", menuName = "Systems/Score System")]
 public class ScoreSystem : ScriptableObject
 {
-    [SerializeField] private static int currentScore = 0;
-    [SerializeField] private static float multiplier = 1.0f;   
+    [SerializeField] private int currentScore = 0;
+    [SerializeField] private float multiplier = 1.0f;   
     
     private static ScoreSystem instance;
     
@@ -20,7 +20,7 @@ public class ScoreSystem : ScriptableObject
         }
     }
     
-    public static void ChangeScore(int amount, GameObject player)
+    public void ChangeScore(int amount, GameObject player)
     {
         int scoreAdded = Mathf.RoundToInt(amount * multiplier);
         currentScore += scoreAdded;
@@ -33,13 +33,13 @@ public class ScoreSystem : ScriptableObject
         GenericEvent<UpdateScoreDisplayEvent>.GetEvent("UpdateScoreDisplayEvent").Invoke(currentScore);
     }
     
-    public static void ResetScore()
+    public void ResetScore()
     {
         currentScore = 0;
         GenericEvent<UpdateScoreDisplayEvent>.GetEvent("UpdateScoreDisplayEvent").Invoke(currentScore);
     }
     
-    public static int GetCurrentScore()
+    public int GetCurrentScore()
     {
         return currentScore;
     }

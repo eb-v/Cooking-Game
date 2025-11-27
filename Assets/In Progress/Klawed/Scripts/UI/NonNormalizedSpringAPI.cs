@@ -58,6 +58,11 @@ public class NonNormalizedSpringAPI : MonoBehaviour
         springVelValue += nudgeStrength;
     }
 
+    public void SetVelocity(float velocity)
+    {
+        springVelValue = velocity;
+    }
+
     public void ResetPosition()
     {
         springPosValue = 0f;
