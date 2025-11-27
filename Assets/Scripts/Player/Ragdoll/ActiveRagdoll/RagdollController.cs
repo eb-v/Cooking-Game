@@ -781,37 +781,18 @@ public class RagdollController : MonoBehaviour
 
         if (RagdollDict[UPPER_LEFT_ARM].isConnected && RagdollDict[UPPER_RIGHT_ARM].isConnected)
         {
-            //ConfigurableJoint leftUpperArm = RagdollDict[UPPER_LEFT_ARM].Joint;
-            //ConfigurableJoint leftLowerArm = RagdollDict[LOWER_LEFT_ARM].Joint;
-            //ConfigurableJoint rightUpperArm = RagdollDict[UPPER_RIGHT_ARM].Joint;
-            //ConfigurableJoint rightLowerArm = RagdollDict[LOWER_RIGHT_ARM].Joint;
-
-            //leftUpperArm.targetRotation = poseData.leftArmPose.upperArmRot;
-            //leftLowerArm.targetRotation = poseData.leftArmPose.lowerArmRot;
-            //rightUpperArm.targetRotation = poseData.rightArmPose.upperArmRot;
-            //rightLowerArm.targetRotation = poseData.rightArmPose.lowerArmRot;
-            //Debug.Log("Extending Arms Outward");
 
             TargetRotations[UPPER_LEFT_ARM] = grabData.leftArmPose.upperArmRot;
             TargetRotations[LOWER_LEFT_ARM] = grabData.leftArmPose.lowerArmRot;
             TargetRotations[UPPER_RIGHT_ARM] = grabData.rightArmPose.upperArmRot;
             TargetRotations[LOWER_RIGHT_ARM] = grabData.rightArmPose.lowerArmRot;
 
-            //Vector3 newTargetRotEuler = new Vector3(-90f, 0f, 0f);
-            //Quaternion newTargetRotation = Quaternion.Euler(newTargetRotEuler);
-            //leftUpperArm.targetRotation = newTargetRotation;
-            //rightUpperArm.targetRotation = newTargetRotation;
+            //PoseHelper.SnapJointToTarget(RagdollDict[UPPER_LEFT_ARM].Joint, TargetRotations[UPPER_LEFT_ARM]);
+            //PoseHelper.SnapJointToTarget(RagdollDict[LOWER_LEFT_ARM].Joint, TargetRotations[LOWER_LEFT_ARM]);
+            //PoseHelper.SnapJointToTarget(RagdollDict[UPPER_RIGHT_ARM].Joint, TargetRotations[UPPER_RIGHT_ARM]);
+            //PoseHelper.SnapJointToTarget(RagdollDict[LOWER_RIGHT_ARM].Joint, TargetRotations[LOWER_RIGHT_ARM]);
         }
 
-        //leftArmJoint.targetRotation = Quaternion.Lerp(
-        //    leftArmJoint.targetRotation,
-        //    newTargetRotation, // Adjust the multiplier as needed
-        //    Time.deltaTime * armReachStiffness);
-
-        //rightArmJoint.targetRotation = Quaternion.Lerp(
-        //    rightArmJoint.targetRotation,
-        //    newTargetRotation, // Adjust the multiplier as needed
-        //    Time.deltaTime * armReachStiffness);
 
     }
 

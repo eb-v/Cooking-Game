@@ -42,8 +42,8 @@ public class Cup : DynamicObjectBase
             return;
         }
 
-        GrabSystem.GrabObject(player, physicsTransform.physicsTransform.gameObject, grabData);
-        
+        GrabSystem.GrabObject(player, physicsTransform.physicsTransform.gameObject, grabData, armRotationData); 
+
         Debug.Log("The player grabbed: " + grabbedObj.name);
 
         isGrabbed = true;

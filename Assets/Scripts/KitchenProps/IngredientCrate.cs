@@ -17,10 +17,7 @@ public class IngredientCrate : MonoBehaviour, IInteractable
     private void SpawnIngredientInPlayersHands(GameObject player)
     {
         GameObject ingredient = Instantiate(ingredientSO.Prefab, spawnTransform.position, Quaternion.identity);
-
         IGrabable grabComponent = ingredient.GetComponent<IGrabable>();
-
         grabComponent.GrabObject(player);
-
     }
 }

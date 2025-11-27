@@ -40,30 +40,15 @@ public class PoseHelper
         joint.transform.rotation = worldRot;
     }
 
+    public static void SnapJointToRotation(ConfigurableJoint joint, Quaternion targetRotation)
+    {
+        joint.transform.rotation = targetRotation;
+        ZeroJointVelocity(joint);
+    }
     public static void SafeSnapToTarget(ConfigurableJoint joint)
     {
-        Rigidbody rb = joint.GetComponent<Rigidbody>();
-        Rigidbody connected = joint.connectedBody;
-
-        //// Save state
-        //bool oldKinematic = rb.isKinematic;
-        //bool oldConnectedKin = connected != null ? connected.isKinematic : false;
-
-        //// Disable physics briefly
-        //rb.isKinematic = true;
-        //if (connected != null)
-        //    connected.isKinematic = true;
-
-        // Snap the rotation
-        SnapJointToTarget(joint);  // <-- your snapping function here
-
-        // Zero velocities (just in case)
+        SnapJointToTarget(joint);  
         ZeroJointVelocity(joint);
-
-        //// Restore physics state
-        //rb.isKinematic = oldKinematic;
-        //if (connected != null)
-        //    connected.isKinematic = oldConnectedKin;
     }
 
     public static void SetPlayerPoseAndSnap(RagdollController rc, PoseData poseData)
