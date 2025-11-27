@@ -343,9 +343,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Burnable
   fireEffects: []
-  settings: {fileID: 0}
   spreadRadius: 2
-  <IsOnFire>k__BackingField: 0
+  isOnFire: 0
+  burnTimer: 0
   burnProgress: 0
 --- !u!1 &60276041
 GameObject:
@@ -1270,9 +1270,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Burnable
   fireEffects: []
-  settings: {fileID: 0}
   spreadRadius: 2
-  <IsOnFire>k__BackingField: 0
+  isOnFire: 0
+  burnTimer: 0
   burnProgress: 0
 --- !u!1001 &283841038
 PrefabInstance:
@@ -2339,6 +2339,53 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: f5f4a3b68c7e338419a00c9e9ce2a0c6, type: 3}
   m_PrefabInstance: {fileID: 432824558}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &449402796
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 449402798}
+  - component: {fileID: 449402797}
+  m_Layer: 0
+  m_Name: SceneRoot
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &449402797
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 449402796}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4a5f934be4ffff4ab7d2501a7164134, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SceneRoot
+  _persistantScene:
+    _sceneAsset: {fileID: 0}
+    _sceneName: 
+--- !u!4 &449402798
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 449402796}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -16.22985, y: 8.50801, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &455236336 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5130100560213014624, guid: 188c0e0988e14f04294798aac1e7573c, type: 3}
@@ -2673,9 +2720,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Burnable
   fireEffects: []
-  settings: {fileID: 0}
   spreadRadius: 2
-  <IsOnFire>k__BackingField: 0
+  isOnFire: 0
+  burnTimer: 0
   burnProgress: 0
 --- !u!1001 &517236611
 PrefabInstance:
@@ -3026,9 +3073,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Burnable
   fireEffects: []
-  settings: {fileID: 0}
   spreadRadius: 2
-  <IsOnFire>k__BackingField: 0
+  isOnFire: 0
+  burnTimer: 0
   burnProgress: 0
 --- !u!1001 &527588264
 PrefabInstance:
@@ -3804,6 +3851,37 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 8877aa511f6efdf43bcdb700f2e52dbc, type: 3}
   m_PrefabInstance: {fileID: 746749884}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &657682521
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 657682522}
+  m_Layer: 0
+  m_Name: toor
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &657682522
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 657682521}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &665143061 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: be23dfcb825f50441890fc24172578bf, type: 3}
@@ -3863,9 +3941,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Burnable
   fireEffects: []
-  settings: {fileID: 0}
   spreadRadius: 2
-  <IsOnFire>k__BackingField: 0
+  isOnFire: 0
+  burnTimer: 0
   burnProgress: 0
 --- !u!1001 &691043996
 PrefabInstance:
@@ -4361,9 +4439,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Burnable
   fireEffects: []
-  settings: {fileID: 0}
   spreadRadius: 2
-  <IsOnFire>k__BackingField: 0
+  isOnFire: 0
+  burnTimer: 0
   burnProgress: 0
 --- !u!1001 &735862620
 PrefabInstance:
@@ -4460,9 +4538,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Burnable
   fireEffects: []
-  settings: {fileID: 0}
   spreadRadius: 2
-  <IsOnFire>k__BackingField: 0
+  isOnFire: 0
+  burnTimer: 0
   burnProgress: 0
 --- !u!1001 &746749884
 PrefabInstance:
@@ -4554,9 +4632,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Burnable
   fireEffects: []
-  settings: {fileID: 0}
   spreadRadius: 2
-  <IsOnFire>k__BackingField: 0
+  isOnFire: 0
+  burnTimer: 0
   burnProgress: 0
 --- !u!4 &747185304 stripped
 Transform:
@@ -4751,9 +4829,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Burnable
   fireEffects: []
-  settings: {fileID: 0}
   spreadRadius: 2
-  <IsOnFire>k__BackingField: 0
+  isOnFire: 0
+  burnTimer: 0
   burnProgress: 0
 --- !u!1001 &768658543
 PrefabInstance:
@@ -5167,9 +5245,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Burnable
   fireEffects: []
-  settings: {fileID: 0}
   spreadRadius: 2
-  <IsOnFire>k__BackingField: 0
+  isOnFire: 0
+  burnTimer: 0
   burnProgress: 0
 --- !u!1001 &791382724
 PrefabInstance:
@@ -5509,9 +5587,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Burnable
   fireEffects: []
-  settings: {fileID: 0}
   spreadRadius: 2
-  <IsOnFire>k__BackingField: 0
+  isOnFire: 0
+  burnTimer: 0
   burnProgress: 0
 --- !u!1 &832575517
 GameObject:
@@ -5585,9 +5663,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Burnable
   fireEffects: []
-  settings: {fileID: 0}
   spreadRadius: 2
-  <IsOnFire>k__BackingField: 0
+  isOnFire: 0
+  burnTimer: 0
   burnProgress: 0
 --- !u!1001 &846416516
 PrefabInstance:
@@ -6324,9 +6402,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Burnable
   fireEffects: []
-  settings: {fileID: 0}
   spreadRadius: 2
-  <IsOnFire>k__BackingField: 0
+  isOnFire: 0
+  burnTimer: 0
   burnProgress: 0
 --- !u!1001 &932215746
 PrefabInstance:
@@ -6406,9 +6484,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Burnable
   fireEffects: []
-  settings: {fileID: 0}
   spreadRadius: 2
-  <IsOnFire>k__BackingField: 0
+  isOnFire: 0
+  burnTimer: 0
   burnProgress: 0
 --- !u!1 &939622600 stripped
 GameObject:
@@ -6428,9 +6506,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Burnable
   fireEffects: []
-  settings: {fileID: 0}
   spreadRadius: 2
-  <IsOnFire>k__BackingField: 0
+  isOnFire: 0
+  burnTimer: 0
   burnProgress: 0
 --- !u!1 &957222126
 GameObject:
@@ -6725,9 +6803,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Burnable
   fireEffects: []
-  settings: {fileID: 0}
   spreadRadius: 2
-  <IsOnFire>k__BackingField: 0
+  isOnFire: 0
+  burnTimer: 0
   burnProgress: 0
 --- !u!1 &987158920 stripped
 GameObject:
@@ -7246,9 +7324,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Burnable
   fireEffects: []
-  settings: {fileID: 0}
   spreadRadius: 2
-  <IsOnFire>k__BackingField: 0
+  isOnFire: 0
+  burnTimer: 0
   burnProgress: 0
 --- !u!1 &1035315678
 GameObject:
@@ -7634,9 +7712,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Burnable
   fireEffects: []
-  settings: {fileID: 0}
   spreadRadius: 2
-  <IsOnFire>k__BackingField: 0
+  isOnFire: 0
+  burnTimer: 0
   burnProgress: 0
 --- !u!4 &1061039410 stripped
 Transform:
@@ -8032,9 +8110,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Burnable
   fireEffects: []
-  settings: {fileID: 0}
   spreadRadius: 2
-  <IsOnFire>k__BackingField: 0
+  isOnFire: 0
+  burnTimer: 0
   burnProgress: 0
 --- !u!1001 &1124530280
 PrefabInstance:
@@ -9362,9 +9440,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Burnable
   fireEffects: []
-  settings: {fileID: 0}
   spreadRadius: 2
-  <IsOnFire>k__BackingField: 0
+  isOnFire: 0
+  burnTimer: 0
   burnProgress: 0
 --- !u!1001 &1276745535
 PrefabInstance:
@@ -9957,9 +10035,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Burnable
   fireEffects: []
-  settings: {fileID: 0}
   spreadRadius: 2
-  <IsOnFire>k__BackingField: 0
+  isOnFire: 0
+  burnTimer: 0
   burnProgress: 0
 --- !u!1001 &1339374514
 PrefabInstance:
@@ -10255,9 +10333,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Burnable
   fireEffects: []
-  settings: {fileID: 0}
   spreadRadius: 2
-  <IsOnFire>k__BackingField: 0
+  isOnFire: 0
+  burnTimer: 0
   burnProgress: 0
 --- !u!1001 &1371948876
 PrefabInstance:
@@ -10442,9 +10520,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Burnable
   fireEffects: []
-  settings: {fileID: 0}
   spreadRadius: 2
-  <IsOnFire>k__BackingField: 0
+  isOnFire: 0
+  burnTimer: 0
   burnProgress: 0
 --- !u!1001 &1378156878
 PrefabInstance:
@@ -10536,9 +10614,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Burnable
   fireEffects: []
-  settings: {fileID: 0}
   spreadRadius: 2
-  <IsOnFire>k__BackingField: 0
+  isOnFire: 0
+  burnTimer: 0
   burnProgress: 0
 --- !u!4 &1386388592 stripped
 Transform:
@@ -10771,9 +10849,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Burnable
   fireEffects: []
-  settings: {fileID: 0}
   spreadRadius: 2
-  <IsOnFire>k__BackingField: 0
+  isOnFire: 0
+  burnTimer: 0
   burnProgress: 0
 --- !u!1 &1465684287
 GameObject:
@@ -11240,9 +11318,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Burnable
   fireEffects: []
-  settings: {fileID: 0}
   spreadRadius: 2
-  <IsOnFire>k__BackingField: 0
+  isOnFire: 0
+  burnTimer: 0
   burnProgress: 0
 --- !u!1001 &1518571028
 PrefabInstance:
@@ -11509,9 +11587,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Burnable
   fireEffects: []
-  settings: {fileID: 0}
   spreadRadius: 2
-  <IsOnFire>k__BackingField: 0
+  isOnFire: 0
+  burnTimer: 0
   burnProgress: 0
 --- !u!4 &1558664743 stripped
 Transform:
@@ -11633,9 +11711,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Burnable
   fireEffects: []
-  settings: {fileID: 0}
   spreadRadius: 2
-  <IsOnFire>k__BackingField: 0
+  isOnFire: 0
+  burnTimer: 0
   burnProgress: 0
 --- !u!1 &1593798593
 GameObject:
@@ -11831,9 +11909,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Burnable
   fireEffects: []
-  settings: {fileID: 0}
   spreadRadius: 2
-  <IsOnFire>k__BackingField: 0
+  isOnFire: 0
+  burnTimer: 0
   burnProgress: 0
 --- !u!1 &1629870075
 GameObject:
@@ -12347,9 +12425,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Burnable
   fireEffects: []
-  settings: {fileID: 0}
   spreadRadius: 2
-  <IsOnFire>k__BackingField: 0
+  isOnFire: 0
+  burnTimer: 0
   burnProgress: 0
 --- !u!1001 &1709519998
 PrefabInstance:
@@ -13122,9 +13200,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Burnable
   fireEffects: []
-  settings: {fileID: 0}
   spreadRadius: 2
-  <IsOnFire>k__BackingField: 0
+  isOnFire: 0
+  burnTimer: 0
   burnProgress: 0
 --- !u!1001 &1850425564
 PrefabInstance:
@@ -13884,9 +13962,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Burnable
   fireEffects: []
-  settings: {fileID: 0}
   spreadRadius: 2
-  <IsOnFire>k__BackingField: 0
+  isOnFire: 0
+  burnTimer: 0
   burnProgress: 0
 --- !u!1001 &1912237792
 PrefabInstance:
@@ -14254,9 +14332,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Burnable
   fireEffects: []
-  settings: {fileID: 0}
   spreadRadius: 2
-  <IsOnFire>k__BackingField: 0
+  isOnFire: 0
+  burnTimer: 0
   burnProgress: 0
 --- !u!4 &1935352804 stripped
 Transform:
@@ -14276,9 +14354,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Burnable
   fireEffects: []
-  settings: {fileID: 0}
   spreadRadius: 2
-  <IsOnFire>k__BackingField: 0
+  isOnFire: 0
+  burnTimer: 0
   burnProgress: 0
 --- !u!1 &1936230601 stripped
 GameObject:
@@ -14298,9 +14376,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Burnable
   fireEffects: []
-  settings: {fileID: 0}
   spreadRadius: 2
-  <IsOnFire>k__BackingField: 0
+  isOnFire: 0
+  burnTimer: 0
   burnProgress: 0
 --- !u!4 &1938931250 stripped
 Transform:
@@ -14320,9 +14398,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Burnable
   fireEffects: []
-  settings: {fileID: 0}
   spreadRadius: 2
-  <IsOnFire>k__BackingField: 0
+  isOnFire: 0
+  burnTimer: 0
   burnProgress: 0
 --- !u!1001 &1939118114
 PrefabInstance:
@@ -14701,9 +14779,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Burnable
   fireEffects: []
-  settings: {fileID: 0}
   spreadRadius: 2
-  <IsOnFire>k__BackingField: 0
+  isOnFire: 0
+  burnTimer: 0
   burnProgress: 0
 --- !u!1 &2032443334 stripped
 GameObject:
@@ -14723,9 +14801,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Burnable
   fireEffects: []
-  settings: {fileID: 0}
   spreadRadius: 2
-  <IsOnFire>k__BackingField: 0
+  isOnFire: 0
+  burnTimer: 0
   burnProgress: 0
 --- !u!1001 &2033825180
 PrefabInstance:
@@ -16036,9 +16114,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Burnable
   fireEffects: []
-  settings: {fileID: 0}
   spreadRadius: 2
-  <IsOnFire>k__BackingField: 0
+  isOnFire: 0
+  burnTimer: 0
   burnProgress: 0
 --- !u!1 &2086482996
 GameObject:
@@ -16196,9 +16274,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Burnable
   fireEffects: []
-  settings: {fileID: 0}
   spreadRadius: 2
-  <IsOnFire>k__BackingField: 0
+  isOnFire: 0
+  burnTimer: 0
   burnProgress: 0
 --- !u!4 &2122622092 stripped
 Transform:
@@ -16223,9 +16301,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Burnable
   fireEffects: []
-  settings: {fileID: 0}
   spreadRadius: 2
-  <IsOnFire>k__BackingField: 0
+  isOnFire: 0
+  burnTimer: 0
   burnProgress: 0
 --- !u!4 &2144221444 stripped
 Transform:
@@ -16642,6 +16720,11 @@ MonoBehaviour:
   - {fileID: 1539622230581328049}
   - {fileID: 650168404918893536}
   - {fileID: 7940306532244273735}
+  spinDuration: 2
+  isSpinning: 0
+  angularFrequency: 7
+  dampingRatio: 0.7
+  goalValueDuringSpin: 9.5
 --- !u!1 &408826920428973151
 GameObject:
   m_ObjectHideFlags: 0
@@ -18315,9 +18398,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Burnable
   fireEffects: []
-  settings: {fileID: 0}
   spreadRadius: 2
-  <IsOnFire>k__BackingField: 0
+  isOnFire: 0
+  burnTimer: 0
   burnProgress: 0
 --- !u!1 &1562442914498519281
 GameObject:
@@ -26957,9 +27040,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Burnable
   fireEffects: []
-  settings: {fileID: 0}
   spreadRadius: 2
-  <IsOnFire>k__BackingField: 0
+  isOnFire: 0
+  burnTimer: 0
   burnProgress: 0
 --- !u!224 &7680177660695999680
 RectTransform:
@@ -28629,9 +28712,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Burnable
   fireEffects: []
-  settings: {fileID: 0}
   spreadRadius: 2
-  <IsOnFire>k__BackingField: 0
+  isOnFire: 0
+  burnTimer: 0
   burnProgress: 0
 --- !u!1 &9183105911527780739
 GameObject:
@@ -28768,3 +28851,5 @@ SceneRoots:
   - {fileID: 1247672250}
   - {fileID: 4907241670908117326}
   - {fileID: 790688255}
+  - {fileID: 657682522}
+  - {fileID: 449402798}
