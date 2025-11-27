@@ -6,7 +6,6 @@ public class DynamicObjectBase : MonoBehaviour, IInteractable, IGrabable
     public bool isGrabbed { get; set; }
     [field:SerializeField] public GrabData grabData { get; set; }
 
-    [field:SerializeField] public ArmRotationData armRotationData { get; set; }
     public GameObject currentPlayer { get; set; }
     [field:SerializeField] public Collider grabCollider { get; set; }
 
@@ -23,7 +22,7 @@ public class DynamicObjectBase : MonoBehaviour, IInteractable, IGrabable
 
 
         PhysicsTransform physicsTransform = gameObject.GetComponent<PhysicsTransform>();
-        GrabSystem.GrabObject(player, physicsTransform.physicsTransform.gameObject, grabData, armRotationData);
+        GrabSystem.GrabObject(player, physicsTransform.physicsTransform.gameObject, grabData);
         GenericEvent<OnObjectGrabbed>.GetEvent(player.name).Invoke(this);
 
         isGrabbed = true;

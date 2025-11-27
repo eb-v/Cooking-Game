@@ -16,7 +16,7 @@ public class RagdollController : MonoBehaviour
     public Rigidbody rightHand;
     public Rigidbody leftHand;
 
-
+    [Header("Object Snap Point")]
     public Transform ObjectSnapPoint;
 
     public Transform centerOfMass;

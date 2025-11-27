@@ -40,49 +40,38 @@ public class GrabSystem : ScriptableObject
 
 
     // attach object to hand
-    public static void GrabObject(GameObject player, GameObject physicsObj, GrabData grabData, ArmRotationData armRotationData)
+    public static void GrabObject(GameObject player, GameObject physicsObj, GrabData grabData)
     {
         if (!SystemEnabled)
             return;
+        GrabScript gs = player.GetComponent<GrabScript>();
+        IGrabable grabable = physicsObj.GetComponent<IGrabable>();
+        gs.grabbedObject = grabable;
         Rigidbody rb = physicsObj.GetComponent<Rigidbody>();
         rb.linearVelocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
         RagdollController rc = player.GetComponent<RagdollController>();
-        CoroutineRunner.Instance.StartCoroutine(GrabObjectCoroutine(rc, physicsObj, grabData, armRotationData));
-        IGrabable grabable = physicsObj.GetComponent<IGrabable>();
-        GrabScript gs = player.GetComponent<GrabScript>();
-        gs.grabbedObject = grabable;
+        CoroutineRunner.Instance.StartCoroutine(GrabObjectCoroutine(rc, physicsObj, grabData));
     }
 
-    private static IEnumerator GrabObjectCoroutine(RagdollController rc, GameObject physicsObj, GrabData grabData, ArmRotationData armRotationData)
+    private static IEnumerator GrabObjectCoroutine(RagdollController rc, GameObject physicsObj, GrabData grabData)
     {
         rc.ExtendArmsOutward(grabData);
-        
-        ConfigurableJoint upperRightArm = rc.RagdollDict["UpperRightArm"].Joint;
-        ConfigurableJoint upperLeftArm = rc.RagdollDict["UpperLeftArm"].Joint;
-        ConfigurableJoint lowerRightArm = rc.RagdollDict["LowerRightArm"].Joint;
-        ConfigurableJoint lowerLeftArm = rc.RagdollDict["LowerLeftArm"].Joint;
+        yield return new WaitForSeconds(0.1f);
+        Rigidbody rb = physicsObj.GetComponent<Rigidbody>();
+        rb.linearVelocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
 
-        PoseHelper.SnapJointToRotation(upperRightArm, Quaternion.Euler(armRotationData.UpperRightArmRotation));
-        PoseHelper.SnapJointToRotation(lowerRightArm, Quaternion.Euler(armRotationData.LowerRightArmRotation));
-        PoseHelper.SnapJointToRotation(upperLeftArm, Quaternion.Euler(armRotationData.UpperLeftArmRotation));
-        PoseHelper.SnapJointToRotation(lowerLeftArm, Quaternion.Euler(armRotationData.LowerLeftArmRotation));
-        yield return null;
-        Debug.LogError("Snapped Joints");
-        //Rigidbody rb = physicsObj.GetComponent<Rigidbody>();
-        //rb.linearVelocity = Vector3.zero;
-        //rb.angularVelocity = Vector3.zero;
-
-        //GameObject lowerRightArm = rc.RagdollDict["LowerRightArm"].gameObject;
-        //GameObject lowerLeftArm = rc.RagdollDict["LowerLeftArm"].gameObject;
-        //GameObject body = rc.RagdollDict["Body"].gameObject;
-        //physicsObj.GetComponent<Collider>().enabled = false;
-        //physicsObj.transform.position = body.transform.TransformPoint(grabData.position);
+        GameObject lowerRightArm = rc.RagdollDict["LowerRightArm"].gameObject;
+        GameObject lowerLeftArm = rc.RagdollDict["LowerLeftArm"].gameObject;
+        GameObject body = rc.RagdollDict["Body"].gameObject;
+        physicsObj.GetComponent<Collider>().enabled = false;
+        physicsObj.transform.position = body.transform.TransformPoint(grabData.position);
         //physicsObj.transform.rotation = body.transform.rotation * grabData.rotation;
-        //lowerRightArm.AddComponent<FixedJoint>().connectedBody = physicsObj.GetComponent<Rigidbody>();
-        //lowerLeftArm.AddComponent<FixedJoint>().connectedBody = physicsObj.GetComponent<Rigidbody>();
-        //yield return new WaitForSeconds(0.5f);
-        //physicsObj.GetComponent<Collider>().enabled = true;
+        lowerRightArm.AddComponent<FixedJoint>().connectedBody = physicsObj.GetComponent<Rigidbody>();
+        lowerLeftArm.AddComponent<FixedJoint>().connectedBody = physicsObj.GetComponent<Rigidbody>();
+        yield return new WaitForSeconds(0.5f);
+        physicsObj.GetComponent<Collider>().enabled = true;
         yield return null;
     }
 
