@@ -6,17 +6,17 @@ public class ThrowScript : MonoBehaviour
     [Header("References")]
     [SerializeField] private GameObject throwMeterObj;
     [SerializeField] private Image throwMeterFillImage;
-    [SerializeField] private PlayerData playerData;
     [SerializeField] private GrabScript grabScript;
-    private float MinThrowForce;
-    private float MaxThrowForce;
-    private float ThrowChargeRateMultiplier;
+    [SerializeField] private Transform body;
     private float currentThrowForce;
     private bool isCharging = false;
 
+    private PlayerData playerData;
+
+
     private void Awake()
     {
-        Initialize();
+        playerData = LoadPlayerData.GetPlayerData();
     }
 
     private void Start()
@@ -35,14 +35,7 @@ public class ThrowScript : MonoBehaviour
         }
     }
 
-    private void Initialize()
-    {
-        playerData = LoadPlayerData.GetPlayerData();
-
-        MinThrowForce = playerData.MinThrowForce;
-        MaxThrowForce = playerData.MaxThrowForce;
-        ThrowChargeRateMultiplier = playerData.ThrowChargeRateMultiplier;
-    }
+    
 
     public void ChargeThrow()
     {
@@ -51,27 +44,28 @@ public class ThrowScript : MonoBehaviour
             throwMeterObj.SetActive(true);
         }
 
-        if (currentThrowForce < MaxThrowForce)
+        if (currentThrowForce < playerData.MaxThrowForce)
         {
-            currentThrowForce += Time.deltaTime * ThrowChargeRateMultiplier;
+            currentThrowForce += Time.deltaTime * playerData.ThrowChargeRateMultiplier;
         }
         else
         {
-            currentThrowForce = MaxThrowForce;
+            currentThrowForce = playerData.MaxThrowForce;
         }
-        throwMeterFillImage.fillAmount = currentThrowForce / MaxThrowForce;
+        throwMeterFillImage.fillAmount = currentThrowForce / playerData.MaxThrowForce;
         Debug.Log("Charging throw: " + currentThrowForce);
     }
 
     public void PerformThrow()
     {
-        if (currentThrowForce < MinThrowForce)
+        if (currentThrowForce < playerData.MinThrowForce)
         {
-            currentThrowForce = MinThrowForce;
+            currentThrowForce = playerData.MinThrowForce;
         }
 
         //IGrabable objToThrow = grabScript.grabbedObject;
-        //objToThrow.ThrowObject(gameObject, currentThrowForce);
+        Grabable objToThrow = grabScript.grabbedObject;
+        objToThrow.Throw(gameObject, currentThrowForce, body.forward); // Added the ThrowObject method call
         throwMeterFillImage.fillAmount = 0f;
         currentThrowForce = 0f;
         throwMeterObj.SetActive(false);
@@ -88,6 +82,5 @@ public class ThrowScript : MonoBehaviour
             }
         }
     }
-
 
 }

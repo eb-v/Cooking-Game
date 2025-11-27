@@ -6,17 +6,12 @@ public class Grabable : MonoBehaviour
     [SerializeField] private GrabData grabData;
     Collider grabCollider;
     private Rigidbody rb;
+    [ReadOnly]
+    [SerializeField] private GameObject currentPlayer;  
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
-
-        if (rb == null)
-        {
-            Debug.LogError("Rigidbody component missing from Grabable object: " + gameObject.name);
-        }
-
         grabCollider = transform.Find("GrabCollider").GetComponent<Collider>();
-
         if (grabCollider == null)
         {
             Debug.LogError("GrabCollider container missing from Grabable object: " + gameObject.name);
@@ -27,6 +22,7 @@ public class Grabable : MonoBehaviour
     {
         GrabSystem.GrabObject(player, rb, grabData);
         grabCollider.enabled = false;
+        currentPlayer = player;
     }
 
     public void Throw(GameObject player, float force, Vector3 direction)
@@ -39,5 +35,6 @@ public class Grabable : MonoBehaviour
     {
         GrabSystem.ReleaseObject(player);
         grabCollider.enabled = true;
+        currentPlayer = null;
     }
 }
