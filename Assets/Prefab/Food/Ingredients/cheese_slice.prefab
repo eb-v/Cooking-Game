@@ -10,7 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 801486342919097633}
   - component: {fileID: -3936367803663793381}
-  - component: {fileID: 5959483982565615308}
+  - component: {fileID: 4782890173890272855}
+  - component: {fileID: 8278814367417172812}
   m_Layer: 11
   m_Name: cheese_slice
   m_TagString: Untagged
@@ -31,8 +32,10 @@ Transform:
   m_LocalScale: {x: 2, y: 3, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 8744461117305690799}
   - {fileID: 6568402996026511446}
+  - {fileID: 3601361682810759359}
+  - {fileID: 4601468507948434298}
+  - {fileID: 8744461117305690799}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &-3936367803663793381
@@ -47,11 +50,36 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ac151529a61e55498a677d55072f190, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::IngredientScript
-  <grabData>k__BackingField: {fileID: 11400000, guid: 35165a11edc313547b65a23245b811ed, type: 2}
-  <grabCollider>k__BackingField: {fileID: 3629801727598208596}
   ingredient: {fileID: 11400000, guid: 9df1deaffc240f041baca1d7ae36550a, type: 2}
   <recipes>k__BackingField: []
---- !u!114 &5959483982565615308
+--- !u!54 &4782890173890272855
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4082072950274657597}
+  serializedVersion: 5
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!114 &8278814367417172812
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -60,10 +88,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 4082072950274657597}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 13449cab6cae50644b6c697cefe5bf63, type: 3}
+  m_Script: {fileID: 11500000, guid: 41130a3ebf6a0df4bb5cd4e7c0527b68, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PhysicsTransform
-  physicsTransform: {fileID: 8744461117305690799}
+  m_EditorClassIdentifier: Assembly-CSharp::Grabable
+  grabData: {fileID: 11400000, guid: 35165a11edc313547b65a23245b811ed, type: 2}
+  currentPlayer: {fileID: 0}
 --- !u!1 &4106069678592421138
 GameObject:
   m_ObjectHideFlags: 0
@@ -74,7 +103,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6568402996026511446}
   - component: {fileID: 3629801727598208596}
-  - component: {fileID: 8388871092774053931}
+  - component: {fileID: 421279408340368777}
   m_Layer: 21
   m_Name: GrabCollider
   m_TagString: Untagged
@@ -118,7 +147,7 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1.2705355, z: 1}
   m_Center: {x: 0, y: 0.52683747, z: 1.1300533e-15}
---- !u!114 &8388871092774053931
+--- !u!114 &421279408340368777
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -127,12 +156,77 @@ MonoBehaviour:
   m_GameObject: {fileID: 4106069678592421138}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f7a392fdafc837541840dc10b0ea3749, type: 3}
+  m_Script: {fileID: 11500000, guid: f7385aed2dfa2934294381bf8b9bf8ce, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::FollowPhysicsBody
-  physicsTransform: {fileID: 8744461117305690799}
-  followPosition: 1
-  followRotation: 0
+  m_EditorClassIdentifier: Assembly-CSharp::UprightCollider
+  colliders: []
+--- !u!1 &5704217638652851548
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3601361682810759359}
+  - component: {fileID: 2851759054212492091}
+  - component: {fileID: 5085589155762522777}
+  m_Layer: 21
+  m_Name: InteractCollider
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3601361682810759359
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5704217638652851548}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 801486342919097633}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &2851759054212492091
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5704217638652851548}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1.2705355, z: 1}
+  m_Center: {x: 0, y: 0.52683747, z: 1.1300533e-15}
+--- !u!114 &5085589155762522777
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5704217638652851548}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f7385aed2dfa2934294381bf8b9bf8ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UprightCollider
+  colliders: []
 --- !u!1 &7718304576266342794
 GameObject:
   m_ObjectHideFlags: 0
@@ -164,7 +258,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 8744461117305690799}
+  m_Father: {fileID: 801486342919097633}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &8759963983165871789
 MeshFilter:
@@ -232,9 +326,8 @@ GameObject:
   m_Component:
   - component: {fileID: 8744461117305690799}
   - component: {fileID: 5335735476891289145}
-  - component: {fileID: 6841314898530610996}
   m_Layer: 0
-  m_Name: Physics
+  m_Name: PhysicsCollider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -252,8 +345,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 4601468507948434298}
+  m_Children: []
   m_Father: {fileID: 801486342919097633}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &5335735476891289145
@@ -277,30 +369,3 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.6220708, y: 0.07571726, z: 0.6332016}
   m_Center: {x: -0.013317585, y: -0.025959482, z: 0.015762806}
---- !u!54 &6841314898530610996
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9164122980339815358}
-  serializedVersion: 5
-  m_Mass: 1
-  m_LinearDamping: 0
-  m_AngularDamping: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 1
-  m_Constraints: 0
-  m_CollisionDetection: 0

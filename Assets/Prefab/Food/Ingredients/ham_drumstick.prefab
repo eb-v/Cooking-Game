@@ -28,10 +28,10 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0.000000021855694, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 36894241616165194}
+  m_Father: {fileID: 2842339563543232887}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &2089765771991637078
 MeshFilter:
@@ -89,6 +89,73 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &2465836103835973445
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2700678926032373804}
+  - component: {fileID: 5158014320565286618}
+  - component: {fileID: 5424796164660401267}
+  m_Layer: 3
+  m_Name: InteractCollider
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2700678926032373804
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2465836103835973445}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 2, y: 2, z: 2}
+  m_ConstrainProportionsScale: 1
+  m_Children: []
+  m_Father: {fileID: 2842339563543232887}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &5158014320565286618
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2465836103835973445}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.1658261, y: 2.5855608, z: 1.1545544}
+  m_Center: {x: -0.018162131, y: 1.2927804, z: 0.008405209}
+--- !u!114 &5424796164660401267
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2465836103835973445}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f7385aed2dfa2934294381bf8b9bf8ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UprightCollider
+  colliders: []
 --- !u!1 &3551248415325113741
 GameObject:
   m_ObjectHideFlags: 0
@@ -99,7 +166,7 @@ GameObject:
   m_Component:
   - component: {fileID: 403235109810638669}
   - component: {fileID: 6668475994389803692}
-  - component: {fileID: 4011248492178006047}
+  - component: {fileID: 3146900413226142008}
   m_Layer: 3
   m_Name: GrabCollider
   m_TagString: Untagged
@@ -143,7 +210,7 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1.1658261, y: 2.5855608, z: 1.1545544}
   m_Center: {x: -0.018162131, y: 1.2927804, z: 0.008405209}
---- !u!114 &4011248492178006047
+--- !u!114 &3146900413226142008
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -152,12 +219,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 3551248415325113741}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f7a392fdafc837541840dc10b0ea3749, type: 3}
+  m_Script: {fileID: 11500000, guid: f7385aed2dfa2934294381bf8b9bf8ce, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::FollowPhysicsBody
-  physicsTransform: {fileID: 36894241616165194}
-  followPosition: 1
-  followRotation: 0
+  m_EditorClassIdentifier: Assembly-CSharp::UprightCollider
+  colliders: []
 --- !u!1 &4463348467893298927
 GameObject:
   m_ObjectHideFlags: 0
@@ -168,9 +233,8 @@ GameObject:
   m_Component:
   - component: {fileID: 36894241616165194}
   - component: {fileID: 4610921325764605578}
-  - component: {fileID: 1084779200766129681}
   m_Layer: 0
-  m_Name: Physics
+  m_Name: PhysicsCollider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -188,8 +252,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
   m_ConstrainProportionsScale: 1
-  m_Children:
-  - {fileID: 1936125209631790825}
+  m_Children: []
   m_Father: {fileID: 2842339563543232887}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &4610921325764605578
@@ -213,33 +276,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.82430255, y: 0.6120817, z: 0.56548285}
   m_Center: {x: -0.010486603, y: 0.064109646, z: -0.008951962}
---- !u!54 &1084779200766129681
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4463348467893298927}
-  serializedVersion: 5
-  m_Mass: 1
-  m_LinearDamping: 0
-  m_AngularDamping: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
 --- !u!1 &8546929715871639401
 GameObject:
   m_ObjectHideFlags: 0
@@ -250,7 +286,8 @@ GameObject:
   m_Component:
   - component: {fileID: 2842339563543232887}
   - component: {fileID: 2301911853976443047}
-  - component: {fileID: 6318219945362898289}
+  - component: {fileID: 1358385890748405314}
+  - component: {fileID: 709715272977323246}
   m_Layer: 11
   m_Name: ham_drumstick
   m_TagString: Untagged
@@ -271,8 +308,10 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 36894241616165194}
   - {fileID: 403235109810638669}
+  - {fileID: 2700678926032373804}
+  - {fileID: 1936125209631790825}
+  - {fileID: 36894241616165194}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2301911853976443047
@@ -287,13 +326,38 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ac151529a61e55498a677d55072f190, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::IngredientScript
-  <grabData>k__BackingField: {fileID: 11400000, guid: 562c472b6bf971e4b984d6aaf5be7ed3, type: 2}
-  <grabCollider>k__BackingField: {fileID: 6668475994389803692}
   ingredient: {fileID: 11400000, guid: 94140d0db5c655748b3d30d94b0a0cce, type: 2}
   <recipes>k__BackingField:
   - {fileID: 11400000, guid: 0fe1bc973d4b73949b3d491f4a934231, type: 2}
   - {fileID: 11400000, guid: 21c2d7a020fe1ad458f169cee6c98ef0, type: 2}
---- !u!114 &6318219945362898289
+--- !u!54 &1358385890748405314
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8546929715871639401}
+  serializedVersion: 5
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!114 &709715272977323246
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -302,7 +366,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 8546929715871639401}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 13449cab6cae50644b6c697cefe5bf63, type: 3}
+  m_Script: {fileID: 11500000, guid: 41130a3ebf6a0df4bb5cd4e7c0527b68, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PhysicsTransform
-  physicsTransform: {fileID: 36894241616165194}
+  m_EditorClassIdentifier: Assembly-CSharp::Grabable
+  grabData: {fileID: 11400000, guid: 562c472b6bf971e4b984d6aaf5be7ed3, type: 2}
+  currentPlayer: {fileID: 0}

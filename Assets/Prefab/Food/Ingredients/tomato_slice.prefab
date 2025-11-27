@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6259996120604489627}
   - component: {fileID: 3751861181041074016}
-  - component: {fileID: 521105253707674084}
+  - component: {fileID: 2595330894564219309}
   m_Layer: 21
   m_Name: GrabCollider
   m_TagString: Untagged
@@ -54,7 +54,7 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1.1658261, y: 2.5855608, z: 1.1545544}
   m_Center: {x: -0.018162131, y: 1.2927804, z: 0.008405209}
---- !u!114 &521105253707674084
+--- !u!114 &2595330894564219309
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -63,12 +63,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 186380487360087203}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f7a392fdafc837541840dc10b0ea3749, type: 3}
+  m_Script: {fileID: 11500000, guid: f7385aed2dfa2934294381bf8b9bf8ce, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::FollowPhysicsBody
-  physicsTransform: {fileID: 5948635641886100989}
-  followPosition: 1
-  followRotation: 0
+  m_EditorClassIdentifier: Assembly-CSharp::UprightCollider
+  colliders: []
 --- !u!1 &1705183704889190645
 GameObject:
   m_ObjectHideFlags: 0
@@ -79,7 +77,8 @@ GameObject:
   m_Component:
   - component: {fileID: 4675626923034429741}
   - component: {fileID: -2032202759275277464}
-  - component: {fileID: 9133257408847494832}
+  - component: {fileID: 2309616508625735785}
+  - component: {fileID: 1702910423462330545}
   m_Layer: 11
   m_Name: tomato_slice
   m_TagString: Untagged
@@ -101,6 +100,8 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6259996120604489627}
+  - {fileID: 3491007968303137707}
+  - {fileID: 1045828568277678030}
   - {fileID: 5948635641886100989}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -116,11 +117,36 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ac151529a61e55498a677d55072f190, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::IngredientScript
-  <grabData>k__BackingField: {fileID: 11400000, guid: d94d473cc2cc8814e86122ea35c96495, type: 2}
-  <grabCollider>k__BackingField: {fileID: 3751861181041074016}
   ingredient: {fileID: 11400000, guid: e9b9c37f7647fdf4792c3c7c9a7875a4, type: 2}
   <recipes>k__BackingField: []
---- !u!114 &9133257408847494832
+--- !u!54 &2309616508625735785
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1705183704889190645}
+  serializedVersion: 5
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!114 &1702910423462330545
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -129,10 +155,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1705183704889190645}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 13449cab6cae50644b6c697cefe5bf63, type: 3}
+  m_Script: {fileID: 11500000, guid: 41130a3ebf6a0df4bb5cd4e7c0527b68, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PhysicsTransform
-  physicsTransform: {fileID: 5948635641886100989}
+  m_EditorClassIdentifier: Assembly-CSharp::Grabable
+  grabData: {fileID: 11400000, guid: d94d473cc2cc8814e86122ea35c96495, type: 2}
+  currentPlayer: {fileID: 0}
 --- !u!1 &2089758240150424678
 GameObject:
   m_ObjectHideFlags: 0
@@ -159,12 +186,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2089758240150424678}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0.000000021855694, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 2.56, y: 3.9480002, z: 2.65}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 5948635641886100989}
+  m_Father: {fileID: 4675626923034429741}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &3115032400992901067
 MeshFilter:
@@ -232,9 +259,8 @@ GameObject:
   m_Component:
   - component: {fileID: 5948635641886100989}
   - component: {fileID: 7174133943237794854}
-  - component: {fileID: 1519723544374093177}
   m_Layer: 11
-  m_Name: Physics
+  m_Name: PhysicsCollider
   m_TagString: Prepared
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -252,8 +278,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 2.56, y: 3.9480002, z: 2.65}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 1045828568277678030}
+  m_Children: []
   m_Father: {fileID: 4675626923034429741}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &7174133943237794854
@@ -277,30 +302,70 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.65, y: 0.099969625, z: 0.65}
   m_Center: {x: 0, y: 0.050015256, z: 0.000000014901161}
---- !u!54 &1519723544374093177
-Rigidbody:
+--- !u!1 &9167007280927468364
+GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2248452498976717819}
-  serializedVersion: 5
-  m_Mass: 1
-  m_LinearDamping: 0
-  m_AngularDamping: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3491007968303137707}
+  - component: {fileID: 231602051973580919}
+  - component: {fileID: 8151382415926254477}
+  m_Layer: 21
+  m_Name: InteractCollider
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3491007968303137707
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9167007280927468364}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 2, y: 2, z: 2}
+  m_ConstrainProportionsScale: 1
+  m_Children: []
+  m_Father: {fileID: 4675626923034429741}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &231602051973580919
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9167007280927468364}
+  m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.1658261, y: 2.5855608, z: 1.1545544}
+  m_Center: {x: -0.018162131, y: 1.2927804, z: 0.008405209}
+--- !u!114 &8151382415926254477
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9167007280927468364}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f7385aed2dfa2934294381bf8b9bf8ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UprightCollider
+  colliders: []
