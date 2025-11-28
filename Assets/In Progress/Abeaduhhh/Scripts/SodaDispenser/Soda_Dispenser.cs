@@ -1,7 +1,8 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class SodaDispenser : MonoBehaviour, IInteractable, IAltInteractable {
+public class SodaDispenser : MonoBehaviour, IInteractable, IAltInteractable
+{
     [Header("Snap Point for the Cup")]
     [SerializeField] private Transform _cupSnapPoint;
 
@@ -9,12 +10,15 @@ public class SodaDispenser : MonoBehaviour, IInteractable, IAltInteractable {
     [SerializeField] private float dispenseTime = 2f;
     [SerializeField] private Image progressBar;
     [SerializeField] public GameObject CompleteText;
-
     [SerializeField] public GameObject SodaMenu;
-
 
     [SerializeField] private Color progressColor = Color.green;
     [SerializeField] private Color completeColor = Color.yellow;
+
+    [Header("Shake Settings")]
+    [SerializeField] private Transform shakeTarget;
+    [SerializeField] private float shakeMagnitude = 0.03f;
+    [SerializeField] private float shakeFrequency = 25f;
 
     private Cup _currentCup;
     private bool hasCup => _currentCup != null;
@@ -26,77 +30,107 @@ public class SodaDispenser : MonoBehaviour, IInteractable, IAltInteractable {
 
     private MenuItem selectedDrink;
 
-    private void OnDrinkSelected(MenuItem drink) {
+    // shake state
+    private Vector3 baseShakeLocalPos;
+    private bool isShaking = false;
+    private float shakeTime = 0f;
+
+    private void Awake()
+    {
+        if (shakeTarget == null)
+            shakeTarget = transform;
+
+        baseShakeLocalPos = shakeTarget.localPosition;
+    }
+
+    private void OnDrinkSelected(MenuItem drink)
+    {
         selectedDrink = drink;
         Debug.Log("Dispenser received drink selection: " + drink.name);
 
-        if (hasCup) {
+        if (hasCup)
+        {
             Debug.Log("Cup present. Dispensing now...");
 
-            if (drink.name == "Coke") {
+            if (drink.name == "Coke")
                 drinkColor = Color.black;
-            }
-            if (drink.name == "Fanta") {
+            if (drink.name == "Fanta")
                 drinkColor = Color.orange;
-            }
-            if (drink.name == "Sprite") {
+            if (drink.name == "Sprite")
                 drinkColor = Color.green;
-            }
-            if (drink.name == "Pepsi") {
+            if (drink.name == "Pepsi")
                 drinkColor = Color.blue;
-            }
+
             Dispense(drink.name, drinkColor);
-        } else {
+        }
+        else
+        {
             Debug.Log("No cup. Waiting for cup placement...");
         }
     }
 
-    private void Update() {
-        if (isDispensing && _currentCup != null) {
+    private void Update()
+    {
+        if (isDispensing && _currentCup != null)
+        {
             dispenseTimer += Time.deltaTime;
             float progress = Mathf.Clamp01(dispenseTimer / dispenseTime);
 
-            if (progressBar != null) {
+            if (progressBar != null)
+            {
                 progressBar.fillAmount = progress;
                 progressBar.color = Color.Lerp(progressColor, completeColor, progress);
             }
 
-            if (dispenseTimer >= dispenseTime) {
+            if (dispenseTimer >= dispenseTime)
+            {
                 FinishDispensing();
             }
         }
+
+        if (isShaking)
+            UpdateShake();
     }
 
-    public void OnInteract(GameObject player) {
-        GrabScript gs = player.GetComponent<GrabScript>();
-        if (gs == null) return;
-        if (gs.IsGrabbing) {
-            GameObject grabbedObject = gs.grabbedObject.gameObject;
-            Cup drink = grabbedObject.GetComponent<Cup>();
+    public void OnInteract(GameObject player)
+{
+    GrabScript gs = player.GetComponent<GrabScript>();
+    if (gs == null) return;
 
-            if (drink == null || drink.isFilled || hasCup) return;
+    if (gs.IsGrabbing)
+    {
+        // Use the IGrabable interface (this is what grabbedObject already is)
+        IGrabable grabbed = gs.grabbedObject as IGrabable;
+        if (grabbed == null) return;
 
-            PlaceCupOnDispenser(drink);
+        GameObject grabbedObject = grabbed.GetGameObject();
+        Cup drink = grabbedObject.GetComponent<Cup>();
 
-            //drink.ReleaseObject(player);
-        }
-        if(SodaMenu != null) {
-            SodaMenu.SetActive(true);
-        }
+        if (drink == null || drink.isFilled || hasCup) return;
 
+        PlaceCupOnDispenser(drink);
 
-        GenericEvent<InteractEvent>.GetEvent("SodaDispenser").Invoke(player);
-
+        // Release through the grab interface
+        grabbed.ReleaseObject(player);
     }
 
-    public void OnAltInteract(GameObject player) {
+    if (SodaMenu != null)
+        SodaMenu.SetActive(true);
+
+    GenericEvent<InteractEvent>.GetEvent("SodaDispenser").Invoke(player);
+}
+
+
+    public void OnAltInteract(GameObject player)
+    {
         if (!hasCup) return;
 
         GameObject cupObj = RemoveCupFromDispenser(player);
         if (cupObj == null) return;
     }
 
-    private void PlaceCupOnDispenser(Cup cup) {
+    private void PlaceCupOnDispenser(Cup cup)
+    {
         _currentCup = cup;
 
         Rigidbody rb = cup.GetComponent<Rigidbody>();
@@ -111,7 +145,8 @@ public class SodaDispenser : MonoBehaviour, IInteractable, IAltInteractable {
         GenericEvent<SodaSelectedEvent>.GetEvent("SodaDispenser").AddListener(OnDrinkSelected);
     }
 
-    private GameObject RemoveCupFromDispenser(GameObject player) {
+    private GameObject RemoveCupFromDispenser(GameObject player)
+    {
         if (_currentCup == null) return null;
 
         GameObject cupObj = _currentCup.gameObject;
@@ -124,15 +159,20 @@ public class SodaDispenser : MonoBehaviour, IInteractable, IAltInteractable {
 
         _currentCup = null;
 
+        isDispensing = false;
+        StopShake();
+
         if (progressBar != null) progressBar.fillAmount = 0f;
         if (SodaMenu != null) SodaMenu.SetActive(false);
         if (CompleteText != null) CompleteText.SetActive(false);
 
+        GenericEvent<SodaSelectedEvent>.GetEvent("SodaDispenser").RemoveListener(OnDrinkSelected);
+
         return cupObj;
     }
 
-
-    public void Dispense(string drinkName, Color color) {
+    public void Dispense(string drinkName, Color color)
+    {
         if (!hasCup || isDispensing) return;
 
         drinkToDispense = drinkName;
@@ -140,22 +180,57 @@ public class SodaDispenser : MonoBehaviour, IInteractable, IAltInteractable {
         isDispensing = true;
         dispenseTimer = 0f;
 
-        if (progressBar != null) {
+        if (progressBar != null)
+        {
             progressBar.fillAmount = 0f;
             progressBar.color = progressColor;
         }
 
+        StartShake();
         Debug.Log("Started dispensing " + drinkName);
     }
 
-    private void FinishDispensing() {
+    private void FinishDispensing()
+    {
         _currentCup.FillCup(drinkToDispense, drinkColor);
 
         isDispensing = false;
         dispenseTimer = 0f;
 
+        StopShake();
+
         if (progressBar != null) progressBar.fillAmount = 1f;
-        if(CompleteText != null) CompleteText.SetActive(true);
+        if (CompleteText != null) CompleteText.SetActive(true);
+
         Debug.Log("Cup filled with " + drinkToDispense);
+    }
+
+    private void StartShake()
+    {
+        if (shakeTarget == null) return;
+
+        baseShakeLocalPos = shakeTarget.localPosition;
+        shakeTime = 0f;
+        isShaking = true;
+    }
+
+    private void StopShake()
+    {
+        if (shakeTarget == null) return;
+
+        isShaking = false;
+        shakeTarget.localPosition = baseShakeLocalPos;
+    }
+
+    private void UpdateShake()
+    {
+        if (shakeTarget == null) return;
+
+        shakeTime += Time.deltaTime * shakeFrequency;
+
+        float offsetX = (Mathf.PerlinNoise(shakeTime, 0f) - 0.5f) * 2f * shakeMagnitude;
+        float offsetY = (Mathf.PerlinNoise(0f, shakeTime) - 0.5f) * 2f * shakeMagnitude;
+
+        shakeTarget.localPosition = baseShakeLocalPos + new Vector3(offsetX, offsetY, 0f);
     }
 }
