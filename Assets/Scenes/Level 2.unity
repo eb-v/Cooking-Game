@@ -3057,6 +3057,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: Working_SodaDispenser
       objectReference: {fileID: 0}
+    - target: {fileID: 4340018287461339515, guid: bfa0eb0ecf5810146a8696429a36152d, type: 3}
+      propertyPath: shakeTarget
+      value: 
+      objectReference: {fileID: 584403020}
+    - target: {fileID: 4340018287461339515, guid: bfa0eb0ecf5810146a8696429a36152d, type: 3}
+      propertyPath: shakeFrequency
+      value: 35
+      objectReference: {fileID: 0}
+    - target: {fileID: 4340018287461339515, guid: bfa0eb0ecf5810146a8696429a36152d, type: 3}
+      propertyPath: shakeMagnitude
+      value: 0.05
+      objectReference: {fileID: 0}
     - target: {fileID: 9080563388006458277, guid: bfa0eb0ecf5810146a8696429a36152d, type: 3}
       propertyPath: m_LocalScale.x
       value: 1.4999999
@@ -15776,6 +15788,11 @@ MonoBehaviour:
   - {fileID: 1539622230581328049}
   - {fileID: 650168404918893536}
   - {fileID: 7940306532244273735}
+  spinDuration: 2
+  isSpinning: 0
+  angularFrequency: 7
+  dampingRatio: 0.7
+  goalValueDuringSpin: 9.5
 --- !u!1 &408826920428973151
 GameObject:
   m_ObjectHideFlags: 0
