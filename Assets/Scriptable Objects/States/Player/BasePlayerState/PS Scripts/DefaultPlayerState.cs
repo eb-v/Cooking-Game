@@ -9,10 +9,6 @@ public class DefaultPlayerState : BasePlayerState
     {
         base.Initialize(gameObject, stateMachine);
         _rc = gameObject.GetComponent<RagdollController>();
-        if (_rc == null)
-        {
-            Debug.LogError("RagdollController component not found on Player GameObject.");
-        }
     }
 
 

@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(RagdollController))]
+[RequireComponent(typeof(Animator))]
 public class Player : MonoBehaviour
 {
     #region State Bases
@@ -9,6 +11,7 @@ public class Player : MonoBehaviour
     [SerializeField] private BasePlayerState _airborneStateBase;
     [SerializeField] private BasePlayerState _lockedStateBase;
     [SerializeField] private BasePlayerState _unconsciousStateBase;
+    [SerializeField] private BasePlayerState _animationState;
     #endregion
 
 
@@ -19,6 +22,7 @@ public class Player : MonoBehaviour
     [HideInInspector] public BasePlayerState _airborneStateInstance { get; private set; }
     [HideInInspector] public BasePlayerState _lockedStateInstance { get; private set; }
     [HideInInspector] public BasePlayerState _unconsciousStateInstance { get; private set; }
+    [HideInInspector] public BasePlayerState _animationStateInstance { get; private set; }
     #endregion
 
     [Header("Debug")]
@@ -33,6 +37,7 @@ public class Player : MonoBehaviour
         _airborneStateInstance = Instantiate(_airborneStateBase);
         _lockedStateInstance = Instantiate(_lockedStateBase);
         _unconsciousStateInstance = Instantiate(_unconsciousStateBase);
+        _animationStateInstance = Instantiate(_animationState);
     }
 
     private void Start()
@@ -46,6 +51,7 @@ public class Player : MonoBehaviour
         _airborneStateInstance.Initialize(gameObject, _stateMachine);
         _lockedStateInstance.Initialize(gameObject, _stateMachine);
         _unconsciousStateInstance.Initialize(gameObject, _stateMachine);
+        _animationStateInstance.Initialize(gameObject, _stateMachine);
 
         _stateMachine.Initialize(_defaultStateInstance);
         _currentState = _defaultStateInstance;
@@ -93,6 +99,13 @@ public class Player : MonoBehaviour
             rbJoint.angularVelocity = Vector3.zero;
         }
         ChangeState(_lockedStateInstance);
+    }
+
+    public void SwitchToAnimationMode(RuntimeAnimatorController animController)
+    {
+        Animator animator = GetComponent<Animator>();
+        animator.runtimeAnimatorController = animController;
+        ChangeState(_animationStateInstance);
     }
 
 }

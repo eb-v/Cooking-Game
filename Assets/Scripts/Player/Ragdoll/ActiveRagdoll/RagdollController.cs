@@ -1226,6 +1226,21 @@ public class RagdollController : MonoBehaviour
         lowerLeftArmTargetRot = Quaternion.Euler(LowerLeftArmRot);
     }
 
+    public void DisablePhysics()
+    {
+        foreach (KeyValuePair<string, RagdollJoint> kvp in RagdollDict)
+        {
+            kvp.Value.Rigidbody.isKinematic = true;
+        }
+    }
+
+    public void EnablePhysics()
+    {
+        foreach (KeyValuePair<string, RagdollJoint> kvp in RagdollDict)
+        {
+            kvp.Value.Rigidbody.isKinematic = false;
+        }
+    }
 
 
 

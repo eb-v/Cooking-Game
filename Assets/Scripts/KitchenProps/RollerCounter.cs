@@ -11,13 +11,15 @@ public class RollerCounter : MonoBehaviour
     [SerializeField] private Transform _playerSnapPoint;
     [SerializeField] private GameObject _currentObject;
     [SerializeField] private Player _currentPlayer;
+    [SerializeField] private RuntimeAnimatorController _rollingAnimator;
+    private RollCounterState _currentState = RollCounterState.Idle;
     public bool counterHasDough => _currentObject != null;
     public bool notInUse => _currentPlayer == null;
 
     private enum RollCounterState
     {
         Idle,
-        Rolling
+        InUse
     }
 
 
@@ -48,7 +50,7 @@ public class RollerCounter : MonoBehaviour
         }
         else if (counterHasDough && notInUse)
         {
-            
+            EnterInUseState(player);
         }
     }
 
@@ -78,6 +80,7 @@ public class RollerCounter : MonoBehaviour
 
     private void PlaceDoughOntoCounter(Grabable grabComponent)
     {
+        _currentObject = grabComponent.gameObject;
         grabComponent.Release();
         grabComponent.grabCollider.enabled = false;
         _currentObject.transform.position = _objectSnapPoint.position;
@@ -100,39 +103,44 @@ public class RollerCounter : MonoBehaviour
     }
 
 
-    private void SnapPlayerToCounter(GameObject player)
+   
+
+    private void EnterInUseState(GameObject player)
     {
-        Transform rootTransform = player.GetComponent<RagdollController>().GetPelvis().gameObject.transform;
+        _currentPlayer = player.GetComponent<Player>();
+        _currentPlayer.GetComponent<PlayerInteraction>().enabled = false;
+        GenericEvent<OnAlternateInteractInput>.GetEvent(_currentPlayer.name).AddListener(ExitInUseState);
+        GenericEvent<OnPerformStationAction>.GetEvent(_currentPlayer.name).AddListener(RollPizzaDough);
+        
+        Transform rootTransform = _currentPlayer.GetComponent<RagdollController>().GetPelvis().gameObject.transform;
         rootTransform.position = _playerSnapPoint.position;
         rootTransform.rotation = _playerSnapPoint.rotation;
-        rootTransform.GetComponent<Rigidbody>().isKinematic = true;
+
+        _currentPlayer.SwitchToAnimationMode(_rollingAnimator);       
+        ChangeState(RollCounterState.InUse);
+
     }
 
-    private void EnterRollingState(GameObject player)
+    private void ExitInUseState()
     {
-        //if (player.TryGetComponent<PlayerInteraction>(out PlayerInteraction pi))
-        //{
-        //    pi.enabled = false;
-        //}
-        //GenericEvent<OnAlternateInteractInput>.GetEvent(player.name).AddListener(ExitCutState);
+        _currentPlayer.ChangeState(_currentPlayer._defaultStateInstance);
 
-        //Player playerScript = player.GetComponent<Player>();
-        //_currentPlayer = playerScript;
-        //playerScript.SetToLockedMode(_playerSnapPoint.position, _playerSnapPoint.rotation, _preChopPose);
-        //GenericEvent<OnPerformStationActionCancel>.GetEvent(player.name).AddListener(RaiseHand);
+        GenericEvent<OnAlternateInteractInput>.GetEvent(_currentPlayer.name).RemoveListener(ExitInUseState);
+        GenericEvent<OnPerformStationAction>.GetEvent(_currentPlayer.name).RemoveListener(RollPizzaDough);
+        _currentPlayer.GetComponent<PlayerInteraction>().enabled = true;
+        _currentPlayer = null;
+        ChangeState(RollCounterState.Idle);
+    }
 
-        //GenericEvent<OnPerformStationAction>.GetEvent(player.name).AddListener(CutIngredient);
-        //ChangeState(RollCounterState.Rolling);
+    
 
+    private void RollPizzaDough()
+    {
     }
 
     private void ChangeState(RollCounterState newState)
     {
-
+        _currentState = newState;
     }
 
-    private void ExitRollState()
-    {
-
-    }
 }
