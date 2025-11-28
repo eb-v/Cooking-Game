@@ -12,6 +12,9 @@ public class RollerCounter : MonoBehaviour
     [SerializeField] private GameObject _currentObject;
     [SerializeField] private Player _currentPlayer;
     [SerializeField] private RuntimeAnimatorController _rollingAnimator;
+    [SerializeField] private int _rollsNeeded = 5;
+    [SerializeField] private RollingRecipe _currentRecipe;
+    private int _currentRolls = 0;
     private RollCounterState _currentState = RollCounterState.Idle;
     public bool counterHasDough => _currentObject != null;
     public bool notInUse => _currentPlayer == null;
@@ -136,6 +139,24 @@ public class RollerCounter : MonoBehaviour
 
     private void RollPizzaDough()
     {
+        _currentRolls++;
+        if (_currentRolls >= _rollsNeeded)
+        {
+            CompleteRolling();
+        }
+    }
+
+    private void CompleteRolling()
+    {
+        IngredientScript ingredientScript = _currentObject.GetComponent<IngredientScript>();
+        foreach (Ingredient output in _currentRecipe.output)
+        {
+            GameObject ingredientObj = Instantiate(output.Prefab, _objectSnapPoint.position, Quaternion.identity);
+        }
+
+        Destroy(_currentObject);
+        _currentObject = null;
+        ExitInUseState();
     }
 
     private void ChangeState(RollCounterState newState)
