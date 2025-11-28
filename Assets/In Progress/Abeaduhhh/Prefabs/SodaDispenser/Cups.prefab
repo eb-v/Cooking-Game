@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 6906734770940274468}
   - component: {fileID: 6842161810110437418}
   - component: {fileID: 2962916922707949054}
+  - component: {fileID: 4878531190076291853}
   m_Layer: 0
   m_Name: Cups
   m_TagString: Untagged
@@ -52,8 +53,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Cup
   isFilled: 0
   drinkType: 
-  <grabData>k__BackingField: {fileID: 11400000, guid: 3a47881c153755d4fa4b294233da9c53, type: 2}
-  <currentPlayer>k__BackingField: {fileID: 0}
   LidObject: {fileID: 6905970134538412541}
 --- !u!114 &6906734770940274468
 MonoBehaviour:
@@ -116,6 +115,21 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &4878531190076291853
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2535420422307592133}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 41130a3ebf6a0df4bb5cd4e7c0527b68, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Grabable
+  grabData: {fileID: 0}
+  grabCollider: {fileID: 0}
+  currentPlayer: {fileID: 0}
 --- !u!1 &4354866321722055525
 GameObject:
   m_ObjectHideFlags: 0
