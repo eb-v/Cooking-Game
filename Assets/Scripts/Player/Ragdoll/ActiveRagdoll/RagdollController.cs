@@ -10,7 +10,6 @@ public class RagdollController : MonoBehaviour
 {
 
     public UDictionary<string, RagdollJoint> RagdollDict = new UDictionary<string, RagdollJoint>();
-    [ReadOnly]
     public UDictionary<string, Quaternion> TargetRotations = new UDictionary<string, Quaternion>();
 
     public Rigidbody rightHand;
