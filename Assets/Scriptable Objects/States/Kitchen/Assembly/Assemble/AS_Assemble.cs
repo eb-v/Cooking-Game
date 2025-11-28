@@ -59,7 +59,8 @@ public class AS_Assemble : AssemblyState
                 Rigidbody rb = physTrans.physicsTransform.GetComponent<Rigidbody>();
                 Vector3 direction = GetDirection();
                 rb.AddForce(direction * assemblyStation.launchForce, ForceMode.Impulse);
-                assemblyStation.ChangeState(assemblyStation.IdleStateInstance);
+                //assemblyStation.ChangeState(assemblyStation.IdleStateInstance);
+                assemblyTimer = 0f;
             }
 
         }

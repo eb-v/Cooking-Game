@@ -83,23 +83,12 @@ public class StoveIdleState : StoveState
     {
         stove._currentObject = grabbedObj.gameObject;
         IngredientScript ingredient = stove._currentObject.GetComponent<IngredientScript>();
-        //ingredient.grabCollider.enabled = false;
+        grabbedObj.Release();
+        grabbedObj.grabCollider.enabled = false;
+        stove._currentObject.transform.position = stove.ObjectSnapPoint.position;
+        stove._currentObject.transform.rotation = Quaternion.identity;
 
-
-        //grabbedObj.Release(grabbedObj.currentPlayer);
-
-        Transform physicsObj = grabbedObj.gameObject.GetComponent<PhysicsTransform>().physicsTransform;
-
-        if (physicsObj == null)
-        {
-            Debug.LogError("The grabbed object does not have a PhysicsTransform component.");
-            return;
-        }
-
-        physicsObj.transform.position = stove.ObjectSnapPoint.position;
-        physicsObj.transform.rotation = Quaternion.identity;
-
-        Rigidbody rb = physicsObj.GetComponent<Rigidbody>();
+        Rigidbody rb = stove._currentObject.GetComponent<Rigidbody>();
         rb.isKinematic = true;
     }
 

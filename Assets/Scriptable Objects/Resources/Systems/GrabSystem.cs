@@ -79,6 +79,10 @@ public class GrabSystem : ScriptableObject
         GameObject lowerLeftArm = rc.RagdollDict["LowerLeftArm"].gameObject;
         Destroy(lowerRightArm.GetComponent<FixedJoint>());
         Destroy(lowerLeftArm.GetComponent<FixedJoint>());
+        GrabScript gs = player.GetComponent<GrabScript>();
+        gs.grabbedObject = null;
+
+
         rc.LowerArms();
     }
 }

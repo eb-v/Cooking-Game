@@ -46,8 +46,19 @@ public class StoveCookingState : StoveState
     public override void InteractLogic(GameObject player, Stove stove)
     {
         base.InteractLogic(player, stove);
-        stove.RemoveObject(player);
-        stateMachine.ChangeState(stove._idleStateInstance);
+
+        GrabScript playerGrabScript = player.GetComponent<GrabScript>();
+        if (!playerGrabScript.IsGrabbing)
+        {
+            GameObject currentObj = stove._currentObject;
+            Rigidbody rb = currentObj.GetComponent<Rigidbody>();
+            Grabable grabable = currentObj.GetComponent<Grabable>();
+            rb.isKinematic = false;
+            grabable.grabCollider.enabled = true;
+            playerGrabScript.MakePlayerGrabObject(grabable);
+            stove._currentObject = null;
+            stateMachine.ChangeState(stove._idleStateInstance);
+        }
     }
 
     public override void UpdateLogic()
@@ -95,7 +106,9 @@ public class StoveCookingState : StoveState
             {
                 CookIngredient();
                 Debug.Log("Ingredient has burned. Going into the burning state.");
-                stateMachine.ChangeState(stove._burningStateInstance);
+                Burnable burnable = stove.GetComponent<Burnable>();
+                burnable.Ignite();
+                stove.ChangeState(stove._idleStateInstance);
 
             }
 
@@ -108,23 +121,10 @@ public class StoveCookingState : StoveState
     {
         GameObject cookedObjVersion = Instantiate(stove._currentRecipe.output[0].Prefab, stove.ObjectSnapPoint.position, Quaternion.identity);
         IngredientScript ingredientScript = cookedObjVersion.GetComponent<IngredientScript>();
-        //ingredientScript.grabCollider.enabled = false;
-
-
-        Transform physicsObj = cookedObjVersion.GetComponent<PhysicsTransform>().physicsTransform;
-        if (physicsObj == null)
-        {
-            Debug.LogError("The cooked object does not have a PhysicsTransform component.");
-            return null;
-        }
-
-        physicsObj.transform.position = stove.ObjectSnapPoint.position;
-        physicsObj.transform.rotation = Quaternion.identity;
-        Rigidbody rb = physicsObj.GetComponent<Rigidbody>();
+        cookedObjVersion.transform.position = stove.ObjectSnapPoint.position;
+        cookedObjVersion.transform.rotation = Quaternion.identity;
+        Rigidbody rb = cookedObjVersion.GetComponent<Rigidbody>();
         rb.isKinematic = true;
-
-
-
         Destroy(stove._currentObject);
         stove._currentObject = cookedObjVersion;
         return cookedObjVersion;

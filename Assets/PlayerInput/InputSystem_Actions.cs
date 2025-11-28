@@ -665,6 +665,17 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
+                    ""id"": ""af6bbab9-c0f2-4933-a133-ad38a1b7858b"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""PerformStationAction"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""9bb53c32-00e6-4039-9e2f-25f53cdb242e"",
                     ""path"": ""<Gamepad>/rightTrigger"",
                     ""interactions"": """",

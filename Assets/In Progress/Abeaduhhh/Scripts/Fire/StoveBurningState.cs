@@ -13,12 +13,8 @@ public class StoveBurningState : StoveState {
         base.Enter();
 
         burnTimer = 0f;
-        stove._stoveUICanvas.enabled = true;
-        stove._stoveUIBurnFillImage.enabled = true;
-        stove._stoveUICookFillImage.enabled = false;
-
-        Debug.Log("Entered Stove Burning State");
-
+        Burnable burnable = stove.GetComponent<Burnable>();
+        burnable.Ignite();
         //if (FireSystem.SystemEnabled) {
         //    var burnable = stove.GetComponent<Burnable>();
         //    if (burnable != null) {
@@ -29,13 +25,7 @@ public class StoveBurningState : StoveState {
 
         //}
     }
-    public override void UpdateLogic() {
-        base.UpdateLogic();
-
-        burnTimer += Time.deltaTime;
-
-
-    }
+    
     //private void IgniteStove() {
     //    var burnable = stove.GetComponent<Burnable>();
     //    if (burnable != null && !burnable.IsOnFire) {
@@ -44,12 +34,7 @@ public class StoveBurningState : StoveState {
     //    }
     //}
 
-    public override void Exit() {
-        base.Exit();
-
-        burnTimer = 0f;
-
-    }
+    
 
     //private void BurnIngredient() {
     //    if (stove._currentRecipe == null) {

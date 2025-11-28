@@ -6,13 +6,12 @@ using UnityEngine.InputSystem;
 public class PlayerController : MonoBehaviour
 {
 
-    private Env_Interaction env_Interaction;
-    private GameObject lookedAtObj => env_Interaction.currentlyLookingAt;
+    //private Env_Interaction env_Interaction;
+    //private GameObject lookedAtObj => env_Interaction.currentlyLookingAt;
 
 
     private void Awake()
     {
-        env_Interaction = GetComponent<Env_Interaction>();
         
     }
 
@@ -84,8 +83,7 @@ public class PlayerController : MonoBehaviour
     {
         if (context.started)
         {
-            if (lookedAtObj == null) return;
-            GenericEvent<OnInteractInput>.GetEvent(gameObject.name).Invoke(gameObject);
+            GenericEvent<OnInteractInput>.GetEvent(gameObject.name).Invoke();
         }
     }
 
@@ -93,7 +91,7 @@ public class PlayerController : MonoBehaviour
     {
         if (context.started)
         {
-            GenericEvent<OnAlternateInteractInput>.GetEvent(gameObject.name).Invoke(gameObject);
+            GenericEvent<OnAlternateInteractInput>.GetEvent(gameObject.name).Invoke();
         }
     }
 
@@ -122,23 +120,13 @@ public class PlayerController : MonoBehaviour
     {
         if (context.performed)
         {
-            if (env_Interaction.currentlyLookingAt == null) return;
             Vector2 dpadInput = context.ReadValue<Vector2>();
             if (dpadInput == Vector2.zero) return;
-            GenericEvent<DPadInteractEvent>.GetEvent(env_Interaction.currentlyLookingAt.name).Invoke(dpadInput);
+            GenericEvent<DPadInteractEvent>.GetEvent(gameObject.name).Invoke(dpadInput);
         }
     }
 
-    public void OnRemoveObjectFromKitchenProp(InputAction.CallbackContext context)
-    {
-        if (context.started)
-        {
-            if (env_Interaction.currentlyLookingAt != null)
-            {
-                GenericEvent<RemovePlacedObject>.GetEvent(env_Interaction.currentlyLookingAt.name).Invoke(gameObject);
-            }
-        }
-    }
+   
 
     public void OnDetachBodyInput(InputAction.CallbackContext context)
     {

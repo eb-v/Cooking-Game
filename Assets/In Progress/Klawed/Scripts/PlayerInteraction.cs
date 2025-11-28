@@ -20,23 +20,25 @@ public class PlayerInteraction : MonoBehaviour
         GenericEvent<OnAlternateInteractInput>.GetEvent(gameObject.name).RemoveListener(HandleAltInteract);
     }
 
-    private void HandleInteract(GameObject player)
+    private void HandleInteract()
     {
+
         Interactable interactable = InteractRayCastDetection();
         if (interactable != null)
         {
             AudioManager.Instance?.PlaySFX("Item Interact");
-            interactable.Interact(player);
+            interactable.Interact(gameObject);
         }
     }
 
-    private void HandleAltInteract(GameObject player)
+    private void HandleAltInteract()
     {
+
         Interactable interactable = InteractRayCastDetection();
         if (interactable != null)
         {
             AudioManager.Instance?.PlaySFX("Item Interact");
-            interactable.AltInteract(player);
+            interactable.AltInteract(gameObject);
         }
 
     }

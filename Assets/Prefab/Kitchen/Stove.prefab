@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2237995563261841457}
   - component: {fileID: 3433660794591597150}
   m_Layer: 3
-  m_Name: InteractDetectionCollider
+  m_Name: InteractCollider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -404,6 +404,7 @@ GameObject:
   - component: {fileID: 5879022160703071518}
   - component: {fileID: 5657542437092111084}
   - component: {fileID: 8742585759918915019}
+  - component: {fileID: 282056594360871456}
   m_Layer: 15
   m_Name: Stove
   m_TagString: Untagged
@@ -494,6 +495,18 @@ MonoBehaviour:
   isOnFire: 0
   burnTimer: 0
   burnProgress: 0
+--- !u!114 &282056594360871456
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6260594935653569358}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f71df800528f7dc43b16731f6a2c7905, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Interactable
 --- !u!1 &6966491624230064586
 GameObject:
   m_ObjectHideFlags: 0

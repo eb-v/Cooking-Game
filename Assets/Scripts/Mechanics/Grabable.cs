@@ -4,10 +4,10 @@ using UnityEngine;
 public class Grabable : MonoBehaviour
 {
     [SerializeField] private GrabData grabData;
-    Collider grabCollider;
+    public Collider grabCollider;
     private Rigidbody rb;
     [ReadOnly]
-    [SerializeField] private GameObject currentPlayer;  
+    [SerializeField] private GameObject currentPlayer;
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
@@ -20,6 +20,8 @@ public class Grabable : MonoBehaviour
 
     public void Grab(GameObject player)
     {
+        GrabScript gs = player.GetComponent<GrabScript>();
+        gs.grabbedObject = this;
         GrabSystem.GrabObject(player, rb, grabData);
         grabCollider.enabled = false;
         currentPlayer = player;
@@ -27,14 +29,17 @@ public class Grabable : MonoBehaviour
 
     public void Throw(GameObject player, float force, Vector3 direction)
     {
-        Release(player);
+
+        Release();
         rb.AddForce(direction * force, ForceMode.Impulse);
     }
 
-    public void Release(GameObject player)
+    public void Release()
     {
-        GrabSystem.ReleaseObject(player);
+
+        GrabSystem.ReleaseObject(currentPlayer);
         grabCollider.enabled = true;
         currentPlayer = null;
     }
+
 }

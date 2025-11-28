@@ -45,8 +45,15 @@ public class GrabScript : MonoBehaviour
             if (grabable != null)
             {
                 grabable.Grab(gameObject);
-                grabbedObject = grabable;
             }
+        }
+    }
+    // Called by outside scripts to force the player to grab the input object
+    public void MakePlayerGrabObject(Grabable grabable)
+    {
+        if (!IsGrabbing)
+        {
+            grabable.Grab(gameObject);
         }
     }
 

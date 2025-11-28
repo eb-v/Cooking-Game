@@ -175,9 +175,9 @@ public class OnSlotMachineAnimationCompleteEvent : UnityEvent { }
 
 public class OnGrabStatusChanged : UnityEvent<bool> { }
 
-public class OnInteractInput : UnityEvent<GameObject> { }
+public class OnInteractInput : UnityEvent { }
 
-public class OnAlternateInteractInput : UnityEvent<GameObject> { }
+public class OnAlternateInteractInput : UnityEvent { }
 
 public class OnCutInput : UnityEvent { }
 
@@ -200,4 +200,7 @@ public class OnObjectIgnited : UnityEvent { }
 public class IngredientStorageAmountChanged : UnityEvent<Ingredient, int> { }
 
 public class  OnGrabInputEvent : UnityEvent { }
+
+public class OnInteractableInteracted : UnityEvent<GameObject> { }
+public class OnInteractableAltInteracted : UnityEvent<GameObject> { }
 

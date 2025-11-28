@@ -4,7 +4,9 @@ using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.UI;
 
-public class Stove : BaseStation
+[RequireComponent(typeof(Interactable))]
+[RequireComponent(typeof(Burnable))]
+public class Stove : MonoBehaviour
 {
     [Header("Stove Section")]
     [SerializeField] private Transform objectSnapPoint;
@@ -32,14 +34,20 @@ public class Stove : BaseStation
     [field: SerializeField] public float cookingDuration { get; private set; } = 5f;
     [field: SerializeField] public float burnDuration { get; private set; } = 8f;
 
+    [Header("Removal Settings")]
+    [SerializeField] private float forceMultiplier = 10f;
+
     public StoveState _idleStateInstance { get; private set; }
     public StoveState _cookingStateInstance { get; private set; }
     public StoveState _burningStateInstance { get; private set; }
 
+    private Burnable burnable;
 
 
     private void Awake()
     {
+        burnable = GetComponent<Burnable>();
+
         _stateMachine = new StateMachine<StoveState>();
 
         _idleStateInstance = Instantiate(_idleStateBase);
@@ -56,27 +64,43 @@ public class Stove : BaseStation
         _stateMachine.Initialize(_idleStateInstance);
     }
 
-
-    public override void OnAltInteract(GameObject player)
+    private void OnEnable()
     {
-        base.OnAltInteract(player);
-        _stateMachine.GetCurrentState<StoveState>().AltInteractLogic(player);
+        GenericEvent<OnInteractableInteracted>.GetEvent(gameObject.GetInstanceID().ToString()).AddListener(OnInteract);
+        GenericEvent<OnInteractableAltInteracted>.GetEvent(gameObject.GetInstanceID().ToString()).AddListener(OnAltInteract);
     }
 
-    public override void OnInteract(GameObject player)
+    private void OnDisable()
     {
-        base.OnInteract(player);
+        GenericEvent<OnInteractableInteracted>.GetEvent(gameObject.GetInstanceID().ToString()).RemoveListener(OnInteract);
+        GenericEvent<OnInteractableAltInteracted>.GetEvent(gameObject.GetInstanceID().ToString()).RemoveListener(OnAltInteract);
+    }
+
+
+
+    public void OnAltInteract(GameObject player)
+    {
+        if (burnable.IsOnFire)
+            return;
+    }
+
+    public void OnInteract(GameObject player)
+    {
+        if (burnable.IsOnFire)
+            return;
         _stateMachine.GetCurrentState<StoveState>().InteractLogic(player, this);
     }
-    public override void Update()
+    public void Update()
     {
-        base.Update();
+        if (burnable.IsOnFire)
+            return;
         _stateMachine.RunUpdateLogic();
     }
 
-    public override void FixedUpdate()
+    public void FixedUpdate()
     {
-        base.FixedUpdate();
+        if (burnable.IsOnFire)
+            return;
         _stateMachine.RunFixedUpdateLogic();
     }
 
@@ -101,29 +125,8 @@ public class Stove : BaseStation
         return true;
     }
 
-    public GameObject RemoveObject(GameObject player)
+    public void RemoveObject(GameObject player)
     {
-        IngredientScript ingredient = _currentObject.GetComponent<IngredientScript>();
-
-        GameObject physicsObj = _currentObject.GetComponent<PhysicsTransform>().physicsTransform.gameObject;
-
-        if (physicsObj == null)
-        {
-            Debug.LogError("Physics obj not found when removing object from counter");
-            return null;
-        }
-
-
-        Rigidbody rb = physicsObj.GetComponent<Rigidbody>();
-        rb.isKinematic = false;
-
-        IGrabable grabable = _currentObject.GetComponent<IGrabable>();
-        grabable.GrabObject(player);
-
-
-        _currentObject = null;
-        _currentRecipe = null;
-        return physicsObj;
     }
 
 }

@@ -53,7 +53,6 @@ public class ThrowScript : MonoBehaviour
             currentThrowForce = playerData.MaxThrowForce;
         }
         throwMeterFillImage.fillAmount = currentThrowForce / playerData.MaxThrowForce;
-        Debug.Log("Charging throw: " + currentThrowForce);
     }
 
     public void PerformThrow()
@@ -66,7 +65,6 @@ public class ThrowScript : MonoBehaviour
         //IGrabable objToThrow = grabScript.grabbedObject;
         Grabable objToThrow = grabScript.grabbedObject;
         objToThrow.Throw(gameObject, currentThrowForce, body.forward); // Added the ThrowObject method call
-        grabScript.grabbedObject = null;
         throwMeterFillImage.fillAmount = 0f;
         currentThrowForce = 0f;
         throwMeterObj.SetActive(false);

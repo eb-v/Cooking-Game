@@ -3,7 +3,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
-public class AssemblyStation : MonoBehaviour, IInteractable, IAltInteractable
+[RequireComponent(typeof(Interactable))]
+public class AssemblyStation : MonoBehaviour
 {
     [Header("Settings")]
     [SerializeField] private float timeToAssemble = 7f;
@@ -55,6 +56,18 @@ public class AssemblyStation : MonoBehaviour, IInteractable, IAltInteractable
         stateMachine = new StateMachine<AssemblyState>();
         IdleStateInstance = Instantiate(idleState);
         AssembleStateInstance = Instantiate(assembleState);
+    }
+
+    private void OnEnable()
+    {
+        GenericEvent<OnInteractableInteracted>.GetEvent(gameObject.GetInstanceID().ToString()).AddListener(OnInteract);
+        GenericEvent<OnInteractableAltInteracted>.GetEvent(gameObject.GetInstanceID().ToString()).AddListener(OnAltInteract);
+    }
+
+    private void OnDisable()
+    {
+        GenericEvent<OnInteractableInteracted>.GetEvent(gameObject.GetInstanceID().ToString()).RemoveListener(OnInteract);
+        GenericEvent<OnInteractableAltInteracted>.GetEvent(gameObject.GetInstanceID().ToString()).RemoveListener(OnAltInteract);
     }
 
     private void Initialize()
