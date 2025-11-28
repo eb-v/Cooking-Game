@@ -19,6 +19,9 @@ public class StoveCookingState : StoveState
         stove._stoveUICanvas.enabled = true;
         stove._stoveUICookFillImage.enabled = true;
         Debug.Log("Entered Stove Cooking State");
+
+        // Start Sizzle when the item starts cooking
+        stove.StartSizzle();
     }
 
     public override void Exit()
@@ -30,6 +33,9 @@ public class StoveCookingState : StoveState
         stove._stoveUIBurnFillImage.enabled = false;
         stove._stoveUICanvas.enabled = false;
         GenericEvent<OnObjectIgnited>.GetEvent(gameObject.GetInstanceID().ToString()).RemoveListener(OnObjectIgnitedLogic);
+
+        // Ensure sizzle always stops when we leave this state
+        stove.StopSizzle();
     }
 
     public override void FixedUpdateLogic()
@@ -57,6 +63,8 @@ public class StoveCookingState : StoveState
             grabable.grabCollider.enabled = true;
             playerGrabScript.MakePlayerGrabObject(grabable);
             stove._currentObject = null;
+
+            // Leaving cooking state -> Exit() will also StopSizzle
             stateMachine.ChangeState(stove._idleStateInstance);
         }
     }
@@ -66,7 +74,6 @@ public class StoveCookingState : StoveState
         base.UpdateLogic();
 
         cookingTimer += Time.deltaTime;
-        
 
         if (!isCooked)
         {
@@ -90,11 +97,10 @@ public class StoveCookingState : StoveState
                     stove._currentRecipe = cookingRecipe;
                     Debug.Log("Ingredient cooked. Continuing in Cooking State for next stage.");
                     cookingTimer = 0f; // Reset timer for next cooking stage
-                    isCooked = true; // Mark as cooked to start burn timer
+                    isCooked = true;   // Mark as cooked to start burn timer
                     stove._stoveUICookFillImage.enabled = false;
                     stove._stoveUIBurnFillImage.enabled = true;
                 }
-
             }
         }
         else
@@ -106,14 +112,15 @@ public class StoveCookingState : StoveState
             {
                 CookIngredient();
                 Debug.Log("Ingredient has burned. Going into the burning state.");
+
+                // Stop the sizzle as soon as it burns
+                stove.StopSizzle();
+
                 Burnable burnable = stove.GetComponent<Burnable>();
                 burnable.Ignite();
-                stove.ChangeState(stove._idleStateInstance);
-
+                stateMachine.ChangeState(stove._idleStateInstance);
             }
-
         }
-
     }
 
     // Replace the current ingredient on the stove with its cooked version
@@ -132,6 +139,8 @@ public class StoveCookingState : StoveState
 
     private void OnObjectIgnitedLogic()
     {
+        // Fire event -> kill sizzle, clear object, go idle
+        stove.StopSizzle();
         Destroy(stove._currentObject);
         stove._currentObject = null;
         stateMachine.ChangeState(stove._idleStateInstance);

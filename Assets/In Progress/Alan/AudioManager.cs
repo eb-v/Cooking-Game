@@ -38,7 +38,9 @@ public class AudioManager : MonoBehaviour
             sfxSource = GetComponent<AudioSource>();
 
         if (sfxSource == null)
+        {
             Debug.LogError("[AudioManager] No AudioSource assigned or found!");
+        }
         else
         {
             sfxSource.playOnAwake = false;
@@ -73,23 +75,19 @@ public class AudioManager : MonoBehaviour
     }
 
     public void PlaySFX(string name)
-{
-    if (!sfxLookup.TryGetValue(name, out var sound) || sound.clip == null)
     {
-        Debug.LogWarning("[AudioManager] No SFX found with name '" + name + "'.");
-        return;
+        if (!sfxLookup.TryGetValue(name, out var sound) || sound.clip == null)
+        {
+            Debug.LogWarning("[AudioManager] No SFX found with name '" + name + "'.");
+            return;
+        }
+
+        Vector3 pos = Vector3.zero;
+        if (Camera.main != null)
+            pos = Camera.main.transform.position;
+
+        AudioSource.PlayClipAtPoint(sound.clip, pos, sound.volume);
+
+        Debug.Log("[AudioManager] PlayClipAtPoint SFX '" + name + "'.");
     }
-
-    // Position = at listener (camera); if no camera, just at origin
-    Vector3 pos = Vector3.zero;
-    if (Camera.main != null)
-        pos = Camera.main.transform.position;
-
-    // EXACTLY like RawAudioTest: create a one-shot AudioSource at that position
-    AudioSource.PlayClipAtPoint(sound.clip, pos, sound.volume);
-
-    Debug.Log("[AudioManager] PlayClipAtPoint SFX '" + name + "'.");
-}
-
-
 }
