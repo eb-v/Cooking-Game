@@ -16,8 +16,8 @@ public class SodaDispenser : MonoBehaviour, IInteractable, IAltInteractable
     [SerializeField] private Color completeColor = Color.yellow;
 
     [Header("Shake Settings")]
-    [SerializeField] private Transform shakeTarget;     
-    [SerializeField] private float shakeMagnitude = 0.03f; 
+    [SerializeField] private Transform shakeTarget;
+    [SerializeField] private float shakeMagnitude = 0.03f;
     [SerializeField] private float shakeFrequency = 25f;
 
     private Cup _currentCup;
@@ -88,31 +88,38 @@ public class SodaDispenser : MonoBehaviour, IInteractable, IAltInteractable
             }
         }
 
-        // handle shaking each frame
         if (isShaking)
             UpdateShake();
     }
 
     public void OnInteract(GameObject player)
+{
+    GrabScript gs = player.GetComponent<GrabScript>();
+    if (gs == null) return;
+
+    if (gs.IsGrabbing)
     {
-        GrabScript gs = player.GetComponent<GrabScript>();
-        if (gs == null) return;
-        if (gs.IsGrabbing) {
-            GameObject grabbedObject = gs.grabbedObject.GetGameObject();
-            Cup drink = grabbedObject.GetComponent<Cup>();
+        // Use the IGrabable interface (this is what grabbedObject already is)
+        IGrabable grabbed = gs.grabbedObject as IGrabable;
+        if (grabbed == null) return;
 
-            if (drink == null || drink.isFilled || hasCup) return;
+        GameObject grabbedObject = grabbed.GetGameObject();
+        Cup drink = grabbedObject.GetComponent<Cup>();
 
-            PlaceCupOnDispenser(drink);
+        if (drink == null || drink.isFilled || hasCup) return;
 
-            drink.ReleaseObject(player);
-        }
+        PlaceCupOnDispenser(drink);
 
-        if (SodaMenu != null)
-            SodaMenu.SetActive(true);
-
-        GenericEvent<InteractEvent>.GetEvent("SodaDispenser").Invoke(player);
+        // Release through the grab interface
+        grabbed.ReleaseObject(player);
     }
+
+    if (SodaMenu != null)
+        SodaMenu.SetActive(true);
+
+    GenericEvent<InteractEvent>.GetEvent("SodaDispenser").Invoke(player);
+}
+
 
     public void OnAltInteract(GameObject player)
     {
@@ -159,6 +166,8 @@ public class SodaDispenser : MonoBehaviour, IInteractable, IAltInteractable
         if (SodaMenu != null) SodaMenu.SetActive(false);
         if (CompleteText != null) CompleteText.SetActive(false);
 
+        GenericEvent<SodaSelectedEvent>.GetEvent("SodaDispenser").RemoveListener(OnDrinkSelected);
+
         return cupObj;
     }
 
@@ -195,8 +204,6 @@ public class SodaDispenser : MonoBehaviour, IInteractable, IAltInteractable
 
         Debug.Log("Cup filled with " + drinkToDispense);
     }
-
-    //shake helpers
 
     private void StartShake()
     {

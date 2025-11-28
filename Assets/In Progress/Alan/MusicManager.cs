@@ -6,7 +6,9 @@ public enum MusicTrack
     MainMenu,
     Pregame,
     Level1,
-    Level2
+    Level2,
+
+    AwardsScene
 }
 
 [RequireComponent(typeof(AudioSource))]
@@ -22,6 +24,8 @@ public class MusicManager : MonoBehaviour
     [SerializeField] private AudioClip pregameMusic;   // music3
     [SerializeField] private AudioClip level1Music;    // music2
     [SerializeField] private AudioClip level2Music;    // music4
+    [SerializeField] private AudioClip awardSceneMusic;    // music4
+
 
     private AudioSource audioSource;
 
@@ -57,6 +61,8 @@ public class MusicManager : MonoBehaviour
             case MusicTrack.Pregame:  clip = pregameMusic;  break;
             case MusicTrack.Level1:   clip = level1Music;   break;
             case MusicTrack.Level2:   clip = level2Music;   break;
+            case MusicTrack.AwardsScene:   clip = awardSceneMusic;   break;
+
         }
 
         if (clip == null)
