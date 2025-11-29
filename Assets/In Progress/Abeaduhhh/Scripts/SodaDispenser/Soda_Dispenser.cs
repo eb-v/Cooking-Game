@@ -1,7 +1,8 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class SodaDispenser : MonoBehaviour, IInteractable, IAltInteractable
+[RequireComponent(typeof(Interactable))]
+public class SodaDispenser : MonoBehaviour
 {
     [Header("Snap Point for the Cup")]
     [SerializeField] private Transform _cupSnapPoint;
@@ -41,6 +42,18 @@ public class SodaDispenser : MonoBehaviour, IInteractable, IAltInteractable
             shakeTarget = transform;
 
         baseShakeLocalPos = shakeTarget.localPosition;
+    }
+
+    private void OnEnable()
+    {
+        GenericEvent<OnInteractableInteracted>.GetEvent(gameObject.GetInstanceID().ToString()).AddListener(OnInteract);
+        GenericEvent<OnInteractableAltInteracted>.GetEvent(gameObject.GetInstanceID().ToString()).AddListener(OnAltInteract);
+    }
+
+    private void OnDisable()
+    {
+        GenericEvent<OnInteractableInteracted>.GetEvent(gameObject.GetInstanceID().ToString()).RemoveListener(OnInteract);
+        GenericEvent<OnInteractableAltInteracted>.GetEvent(gameObject.GetInstanceID().ToString()).RemoveListener(OnAltInteract);
     }
 
     private void OnDrinkSelected(MenuItem drink)
@@ -100,10 +113,9 @@ public class SodaDispenser : MonoBehaviour, IInteractable, IAltInteractable
     if (gs.IsGrabbing)
     {
         // Use the IGrabable interface (this is what grabbedObject already is)
-        IGrabable grabbed = gs.grabbedObject as IGrabable;
-        if (grabbed == null) return;
+        Grabable grabbed = gs.grabbedObject;
 
-        GameObject grabbedObject = grabbed.GetGameObject();
+            GameObject grabbedObject = grabbed.gameObject;
         Cup drink = grabbedObject.GetComponent<Cup>();
 
         if (drink == null || drink.isFilled || hasCup) return;
@@ -111,7 +123,7 @@ public class SodaDispenser : MonoBehaviour, IInteractable, IAltInteractable
         PlaceCupOnDispenser(drink);
 
         // Release through the grab interface
-        grabbed.ReleaseObject(player);
+        grabbed.Release();
     }
 
     if (SodaMenu != null)
@@ -138,7 +150,7 @@ public class SodaDispenser : MonoBehaviour, IInteractable, IAltInteractable
 
         cup.transform.SetParent(_cupSnapPoint);
         cup.transform.position = _cupSnapPoint.position;
-        cup.transform.localRotation = Quaternion.Euler(-90f, 90f, 0f);
+        cup.transform.rotation = _cupSnapPoint.rotation;
 
         Debug.Log("Cup placed. Waiting for drink selection...");
 
