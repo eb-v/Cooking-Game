@@ -15,9 +15,8 @@ public class CuttingCounter : MonoBehaviour
     [SerializeField] private float _cutsNeeded = 3;
     [SerializeField] private float _ingredientForceMultiplier = 10f;
 
-    [Header("Player Pose Data")]
-    [SerializeField] private PoseData _preChopPose;
-    [SerializeField] private PoseData _postChopPose;
+    [Header("Designated Animation Controller")]
+    [SerializeField] private RuntimeAnimatorController _cuttingAnimator;
 
     [Header("Snap Points")]
     [SerializeField] private Transform _playerSnapPoint;
@@ -173,7 +172,6 @@ public class CuttingCounter : MonoBehaviour
         }
 
         RagdollController rc = _currentPlayer.GetComponent<RagdollController>();
-        PoseHelper.SetPlayerPose(rc, _postChopPose);
 
         if (cuttingProgress >= _cutsNeeded)
         {
@@ -208,12 +206,6 @@ public class CuttingCounter : MonoBehaviour
         ExitCutState();
     }
 
-    private void RaiseHand()
-    {
-        RagdollController rc = _currentPlayer.GetComponent<RagdollController>();
-        PoseHelper.SetPlayerPose(rc, _preChopPose);
-    }
-
     private bool IsCuttable(IngredientScript ingredient)
     {
         foreach (var recipe in ingredient.recipes)
@@ -228,45 +220,30 @@ public class CuttingCounter : MonoBehaviour
 
     private void EnterCutState(GameObject player)
     {
-        if (player.TryGetComponent<PlayerInteraction>(out PlayerInteraction pi))
-        {
-            pi.enabled = false;
-        }
-        GenericEvent<OnAlternateInteractInput>.GetEvent(player.name).AddListener(ExitCutState);
-
+        PlayerInteraction pi = player.GetComponent<PlayerInteraction>();
+        pi.enabled = false;
         Player playerScript = player.GetComponent<Player>();
         _currentPlayer = playerScript;
-        playerScript.SetToLockedMode(_playerSnapPoint.position, _playerSnapPoint.rotation, _preChopPose);
-        GenericEvent<OnPerformStationActionCancel>.GetEvent(player.name).AddListener(RaiseHand);
+        RagdollController rc = _currentPlayer.GetComponent<RagdollController>();
+        Transform rootTransform = rc.GetPelvis().gameObject.transform;
+        rootTransform.position = _playerSnapPoint.position;
+        rootTransform.rotation = _playerSnapPoint.rotation;
+        playerScript.SwitchToAnimationMode(_cuttingAnimator);
 
         GenericEvent<OnPerformStationAction>.GetEvent(player.name).AddListener(CutIngredient);
+        GenericEvent<OnAlternateInteractInput>.GetEvent(player.name).AddListener(ExitCutState);
         ChangeState(CuttingState.Cutting);
     }
 
     private void ExitCutState()
     {
-        GameObject player = _currentPlayer.gameObject;
-        RagdollController rc = player.GetComponent<RagdollController>();
-        Transform rootTransform = rc.GetPelvis().gameObject.transform;
-        GenericEvent<OnPerformStationActionCancel>.GetEvent(player.name).RemoveListener(RaiseHand);
-        GenericEvent<OnPerformStationAction>.GetEvent(player.name).RemoveListener(CutIngredient);
-        GenericEvent<OnAlternateInteractInput>.GetEvent(player.name).RemoveListener(ExitCutState);
-
-        if (player.TryGetComponent<PlayerInteraction>(out PlayerInteraction pi))
-        {
-            pi.enabled = true;
-        }
-
-        foreach (KeyValuePair<string, RagdollJoint> pair in rc.RagdollDict)
-        {
-            RagdollJoint joint = pair.Value;
-            rc.SetJointToOriginalRot(joint);
-        }
-
-        Rigidbody rb = rootTransform.GetComponent<Rigidbody>();
-        rb.isKinematic = false;
-        rc.HardResetPose();
+        PlayerInteraction pi = _currentPlayer.GetComponent<PlayerInteraction>();
+        pi.enabled = true;
         _currentPlayer.ChangeState(_currentPlayer._defaultStateInstance);
+
+
+        GenericEvent<OnPerformStationAction>.GetEvent(_currentPlayer.name).RemoveListener(CutIngredient);
+        GenericEvent<OnAlternateInteractInput>.GetEvent(_currentPlayer.name).RemoveListener(ExitCutState);
         UnAssignPlayer();
         ChangeState(CuttingState.Idle);
     }
