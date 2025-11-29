@@ -25,11 +25,12 @@ public class Grabable : MonoBehaviour
         GrabSystem.GrabObject(player, rb, grabData);
         grabCollider.enabled = false;
         currentPlayer = player;
+        GenericEvent<OnObjectGrabbed>.GetEvent(gameObject.GetInstanceID().ToString()).Invoke();
     }
 
     public void Throw(GameObject player, float force, Vector3 direction)
     {
-
+        GenericEvent<OnObjectThrown>.GetEvent(gameObject.GetInstanceID().ToString()).Invoke();
         Release();
         rb.AddForce(direction * force, ForceMode.Impulse);
     }

@@ -204,3 +204,7 @@ public class  OnGrabInputEvent : UnityEvent { }
 public class OnInteractableInteracted : UnityEvent<GameObject> { }
 public class OnInteractableAltInteracted : UnityEvent<GameObject> { }
 
+public class OnObjectGrabbed : UnityEvent { }
+
+public class OnObjectThrown : UnityEvent { }
+
