@@ -18,6 +18,9 @@ public class CookingPot : MonoBehaviour
     [SerializeField] private Ingredient currentProduct;
     [ReadOnly]
     [SerializeField] private bool hasProduct = false;
+    public bool HasProduct => hasProduct;
+
+    public Ingredient CurrentProduct => currentProduct;
 
 
 
@@ -139,6 +142,13 @@ public class CookingPot : MonoBehaviour
         EnableFillVisual();
         currentProduct = product;
         hasProduct = true;
+    }
+
+    public void RemoveProduct()
+    {
+        DisableFillVisual();
+        hasProduct = false;
+        currentProduct = null;
     }
 
     public GameObject GetCurrentObject()
