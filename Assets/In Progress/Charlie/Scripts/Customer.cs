@@ -59,6 +59,11 @@ public class Customer : MonoBehaviour, IInteractable, IOrder
     [ReadOnly]
     [SerializeField] private MenuItem debug_CurrentOrder;
 
+
+    // FOR THE ROBBER D:
+    [Header("Special NPC Settings")]
+    public bool isRobber = false;
+
     private void Awake()
     {
         if (animator == null) animator = GetComponentInChildren<Animator>();
@@ -137,15 +142,17 @@ public class Customer : MonoBehaviour, IInteractable, IOrder
         _currentState = newState;
     }
 
-    public void SetOrder(MenuItem orderItem)
-    {
+    public void SetOrder(MenuItem orderItem) {
+        if (isRobber) return;
+
         currentOrder = orderItem;
-        OrderImage.sprite = orderItem.GetFoodSprite();
+        if (orderItem != null && OrderImage != null)
+            OrderImage.sprite = orderItem.GetFoodSprite();
         debug_CurrentOrder = currentOrder;
     }
 
-    public void DisplayImage(bool status)
-    {
+    public void DisplayImage(bool status) {
+        if (isRobber) return;
         bubbleImage.enabled = status;
         orderImage.enabled = status;
     }
@@ -154,4 +161,23 @@ public class Customer : MonoBehaviour, IInteractable, IOrder
     {
         return linePosition == 0;
     }
+
+    public bool IsInLine() {
+        return _currentState == _inLineInstance;
+    }
+
+
+    public void LeaveImmediately() {
+        Agent.isStopped = false;
+
+        Transform leavePoint = CustomerManager.Instance.GetLeavePosition();
+        exitPoint = leavePoint;
+
+        ChangeState(_leaveInstance);
+
+        DisplayImage(false);
+    }
+
+
+
 }
