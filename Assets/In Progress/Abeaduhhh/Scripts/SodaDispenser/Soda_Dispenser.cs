@@ -56,29 +56,17 @@ public class SodaDispenser : MonoBehaviour
         GenericEvent<OnInteractableAltInteracted>.GetEvent(gameObject.GetInstanceID().ToString()).RemoveListener(OnAltInteract);
     }
 
-    private void OnDrinkSelected(MenuItem drink)
-    {
+    private void OnDrinkSelected(MenuItem drink) {
         selectedDrink = drink;
-        Debug.Log("Dispenser received drink selection: " + drink.name);
+        Debug.Log("Dispenser received drink: " + drink.drinkName);
 
-        if (hasCup)
-        {
-            Debug.Log("Cup present. Dispensing now...");
+        if (hasCup) {
+            Debug.Log("Cup present. Dispensing...");
 
-            if (drink.name == "Coke")
-                drinkColor = Color.black;
-            if (drink.name == "Fanta")
-                drinkColor = Color.orange;
-            if (drink.name == "Sprite")
-                drinkColor = Color.green;
-            if (drink.name == "Pepsi")
-                drinkColor = Color.blue;
-
-            Dispense(drink.name, drinkColor);
-        }
-        else
-        {
-            Debug.Log("No cup. Waiting for cup placement...");
+            drinkColor = drink.drinkColor;
+            Dispense(drink.drinkName, drinkColor);
+        } else {
+            Debug.Log("No cup yet...");
         }
     }
 
@@ -112,7 +100,6 @@ public class SodaDispenser : MonoBehaviour
 
     if (gs.IsGrabbing)
     {
-        // Use the IGrabable interface (this is what grabbedObject already is)
         Grabable grabbed = gs.grabbedObject;
 
             GameObject grabbedObject = grabbed.gameObject;
@@ -122,14 +109,15 @@ public class SodaDispenser : MonoBehaviour
 
         PlaceCupOnDispenser(drink);
 
-        // Release through the grab interface
         grabbed.Release();
     }
 
     if (SodaMenu != null)
         SodaMenu.SetActive(true);
 
-    GenericEvent<InteractEvent>.GetEvent("SodaDispenser").Invoke(player);
+        Soda_menu menu = SodaMenu.GetComponent<Soda_menu>();
+        menu.ListenToPlayer(player.name);
+        GenericEvent<InteractEvent>.GetEvent("SodaDispenser").Invoke(player);
 }
 
 

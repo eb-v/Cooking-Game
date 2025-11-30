@@ -9,6 +9,7 @@ public class Soda_menu : MonoBehaviour {
 
     [Header("Available Drinks")]
     [SerializeField] private List<MenuItem> drinkCatalog;
+    private string playerEventChannel;
 
     public int currentDrinkIndex = 0;
 
@@ -16,12 +17,14 @@ public class Soda_menu : MonoBehaviour {
         GenericEvent<DPadInteractEvent>.GetEvent(transform.parent.name).AddListener(OnDpadInteract);
         GenericEvent<InteractEvent>.GetEvent(transform.parent.name).AddListener(SelectDrink);
 
-        Debug.Log(transform.parent.name);
+        Debug.Log("Got to menu, "+ transform.parent.name);
 
         UpdateDisplay(currentDrinkIndex);
     }
 
     private void OnDpadInteract(Vector2 input) {
+
+        Debug.Log("Dpad interactions@@@@@");
         if (input.x > 0)
             NextDrink();
         else if (input.x < 0)
@@ -75,4 +78,24 @@ public class Soda_menu : MonoBehaviour {
             Debug.Log("No drink selected.");
         }
     }
+    public void ListenToPlayer(string playerChannel) {
+        if (!string.IsNullOrEmpty(playerEventChannel)) {
+            GenericEvent<DPadInteractEvent>.GetEvent(playerEventChannel)
+                .RemoveListener(OnDpadInteract);
+        }
+
+        playerEventChannel = playerChannel;
+
+        GenericEvent<DPadInteractEvent>.GetEvent(playerChannel)
+            .AddListener(OnDpadInteract);
+
+        Debug.Log("Soda menu listening to player channel: " + playerChannel);
+    }
+    private void OnDisable() {
+        if (!string.IsNullOrEmpty(playerEventChannel)) {
+            GenericEvent<DPadInteractEvent>.GetEvent(playerEventChannel)
+                .RemoveListener(OnDpadInteract);
+        }
+    }
+
 }

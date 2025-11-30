@@ -10,6 +10,11 @@ public class MenuItem : ScriptableObject
     [SerializeField] private MenuItemType orderType;
     [SerializeField] private List<Ingredient> ingredientsNeeded;
     [SerializeField] private int price;
+
+
+    [Header("Drink Settings")]
+    [SerializeField] public Color drinkColor;
+    [SerializeField] public string drinkName;
     public List<Ingredient> IngredientsNeeded => ingredientsNeeded;
     public GameObject Prefab => orderItemPrefab;
 

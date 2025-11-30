@@ -7,6 +7,8 @@ public class Cup : MonoBehaviour
     public string drinkType = "";
 
     [SerializeField] public GameObject LidObject;
+    public MenuItem drinkItem;
+
 
     public void FillCup(string drinkName, Color drinkColor) {
         if (isFilled) return;
