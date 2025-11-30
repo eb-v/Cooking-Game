@@ -1,8 +1,8 @@
 using UnityEngine;
 
 public class EarthquakeModifier : MonoBehaviour {
+    [Header("Modifier Settings")]
     public bool enabledInThisLevel = false;
-
     public EarthquakeController earthquake;
 
     [Header("Timing")]
@@ -12,29 +12,38 @@ public class EarthquakeModifier : MonoBehaviour {
     private float timer;
 
     void Start() {
-
-        enabledInThisLevel = true;
-
-        earthquake.ActivateEarthquake();
-        ResetTimer();
-    }
-
-    void Update() {
-        if (!enabledInThisLevel) return;
-
-        timer -= Time.deltaTime;
-        if (timer <= 0f) {
-            earthquake.ActivateEarthquake();
+        if (enabledInThisLevel && earthquake != null) {
             ResetTimer();
         }
     }
 
-    void ResetTimer() {
+    void Update() {
+        if (!enabledInThisLevel || earthquake == null) return;
+
+        timer -= Time.deltaTime;
+
+        if (timer <= 0f) {
+            StartEarthquake();
+            ResetTimer();
+        }
+    }
+
+    public void StartEarthquake() {
+        if (earthquake != null) {
+            earthquake.ActivateEarthquake();
+        }
+    }
+
+    private void ResetTimer() {
         timer = Random.Range(minInterval, maxInterval);
     }
 
     public void EnableModifier() {
         enabledInThisLevel = true;
         ResetTimer();
+    }
+
+    public void DisableModifier() {
+        enabledInThisLevel = false;
     }
 }

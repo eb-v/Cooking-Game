@@ -19,7 +19,7 @@ public class RobberModifier : MonoBehaviour {
         }
     }
 
-    private void SpawnRobber() {
+    public void SpawnRobber() {
         if (customerManager == null) {
             Debug.LogWarning("CustomerManager not assigned!");
             return;

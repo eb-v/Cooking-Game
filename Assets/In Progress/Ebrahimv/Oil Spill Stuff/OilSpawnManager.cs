@@ -34,14 +34,6 @@ public class OilSpawnManager : MonoBehaviour
     private List<GameObject> activeOils = new List<GameObject>();
     private bool isSpawning = false;
 
-    private void Start()
-    {
-        if (autoStart)
-        {
-            StartSpawning();
-        }
-    }
-
     public void StartSpawning()
     {
         if (!isSpawning)
@@ -76,7 +68,7 @@ public class OilSpawnManager : MonoBehaviour
         }
     }
 
-    private void SpawnOil()
+    public void SpawnOil()
     {
         // Validate spawn settings
         if (oilPrefab == null)

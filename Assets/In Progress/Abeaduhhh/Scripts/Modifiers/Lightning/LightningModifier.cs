@@ -21,7 +21,7 @@ public class LightningModifier : MonoBehaviour {
         }
     }
 
-    private void SpawnLightning() {
+    public void SpawnLightning() {
         Vector3 spawnPos = GetRandomPointInRect();
         Quaternion rot = Quaternion.Euler(90f, 0f, 0f);
         Instantiate(lightningPrefab, spawnPos, rot);
