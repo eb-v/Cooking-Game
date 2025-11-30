@@ -190,9 +190,18 @@ public class SodaDispenser : MonoBehaviour
         Debug.Log("Started dispensing " + drinkName);
     }
 
-    private void FinishDispensing()
-    {
-        _currentCup.FillCup(drinkToDispense, drinkColor);
+    private void FinishDispensing() {
+        if (_currentCup != null && selectedDrink != null) {
+            GameObject drinkPrefab = selectedDrink.Prefab;
+
+            if (drinkPrefab != null) {
+                GameObject spawnedDrink = Instantiate(drinkPrefab, _currentCup.transform);
+                spawnedDrink.transform.localPosition = Vector3.zero;
+                spawnedDrink.transform.localRotation = Quaternion.identity;
+                spawnedDrink.transform.localScale = Vector3.one;
+            }
+            _currentCup.FillCup(selectedDrink.drinkName, selectedDrink.drinkColor);
+        }
 
         isDispensing = false;
         dispenseTimer = 0f;
@@ -204,6 +213,7 @@ public class SodaDispenser : MonoBehaviour
 
         Debug.Log("Cup filled with " + drinkToDispense);
     }
+
 
     private void StartShake()
     {
