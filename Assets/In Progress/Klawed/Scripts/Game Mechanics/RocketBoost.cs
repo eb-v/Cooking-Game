@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.Collections;
 
 public class RocketBoost : MonoBehaviour
 {
@@ -9,6 +10,8 @@ public class RocketBoost : MonoBehaviour
     [SerializeField] private Transform centerOfMass;
     [SerializeField] private GameObject boostParticlesPrefab;
     [SerializeField] private GameObject rocketBoosterObj;
+    [SerializeField] private float cooldownDuration = 2f;
+    private bool isOnCooldown = false;
 
     private void Awake()
     {
@@ -24,12 +27,21 @@ public class RocketBoost : MonoBehaviour
     private void PerformRocketBoost()
     {
         //Play rocket boost SFX
+        if (isOnCooldown) return;
+
         AudioManager.Instance?.PlaySFX("RocketBoost");
 
         // Implement rocket boost logic here
         rootRb.AddForce(Vector3.up * verticalBoostForce, ForceMode.Impulse);
         rootRb.AddForce(centerOfMass.forward * forwardBoostForce, ForceMode.Impulse);
-        
+        StartCoroutine(ResetCooldown());
+    }
+
+    private IEnumerator ResetCooldown()
+    {
+        isOnCooldown = true;
+        yield return new WaitForSeconds(cooldownDuration);
+        isOnCooldown = false;
     }
 
     private void Update()

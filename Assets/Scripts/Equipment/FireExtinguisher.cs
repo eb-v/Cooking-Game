@@ -26,7 +26,7 @@ public class FireExtinguisher : MonoBehaviour
     {
         SprayFoam();
         SprayFoam();
-        //SprayFoam();
+        SprayFoam();
 
         ExtinguishFlamablesInRange();
 

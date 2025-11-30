@@ -29,6 +29,11 @@ public class TrainManager : MonoBehaviour
         }
     }
 
+    private void Start()
+    {
+        Initialize();
+    }
+
     public void Initialize()
     {
         trainScript = FindFirstObjectByType<TrainScript>();

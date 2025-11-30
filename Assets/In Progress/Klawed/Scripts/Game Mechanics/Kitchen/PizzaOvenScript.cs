@@ -7,6 +7,8 @@ using System.Runtime.CompilerServices;
 [RequireComponent(typeof(Interactable))]
 public class PizzaOvenScript : MonoBehaviour
 {
+    [Header("Reference")]
+    [SerializeField] private HingeJoint ovenDoorHinge;
 
     [Header("Pizza Oven Settings")]
     [SerializeField] private float cookingDuration = 5f;
@@ -42,6 +44,8 @@ public class PizzaOvenScript : MonoBehaviour
         {
             possiblePizzas.Add(recipe.resultingPizza, recipe.requiredToppings);
         }
+
+        OpenDoor();
     }
 
     private void OnEnable()
@@ -187,6 +191,7 @@ public class PizzaOvenScript : MonoBehaviour
         isCooking = true;
         this.pizzaToMake = pizzaToMake;
         EnableProgressBar();
+        CloseDoor();
     }
 
     private void RunCookingLogic()
@@ -243,6 +248,23 @@ public class PizzaOvenScript : MonoBehaviour
         isCooking = false;
         currentCookingProgress = 0f;
         DisableProgressBar();
+        OpenDoor();
+    }
+
+    private void OpenDoor()
+    {
+        float openAngle = -90f;
+        JointSpring hingeSpring = ovenDoorHinge.spring;
+        hingeSpring.targetPosition = openAngle;
+        ovenDoorHinge.spring = hingeSpring;
+    }
+
+    private void CloseDoor()
+    {
+        float closedAngle = 0f;
+        JointSpring hingeSpring = ovenDoorHinge.spring;
+        hingeSpring.targetPosition = closedAngle;
+        ovenDoorHinge.spring = hingeSpring;
     }
 
 }

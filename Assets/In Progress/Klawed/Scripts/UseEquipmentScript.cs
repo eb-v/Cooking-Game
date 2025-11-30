@@ -3,6 +3,7 @@ using UnityEngine;
 public class UseEquipmentScript : MonoBehaviour
 {
     private bool isUsingEquipment = false;
+    private GameObject currentEquipment;
 
     void Start()
     {

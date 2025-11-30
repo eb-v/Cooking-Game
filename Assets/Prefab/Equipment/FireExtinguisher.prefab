@@ -99,9 +99,9 @@ GameObject:
   m_Component:
   - component: {fileID: 3002131713100846119}
   - component: {fileID: 8652533549081554014}
-  - component: {fileID: 2079909965330842119}
-  m_Layer: 3
-  m_Name: InteractCollider
+  - component: {fileID: 2792456323591260414}
+  m_Layer: 21
+  m_Name: GrabCollider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -143,7 +143,7 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 3.526125, y: 9.227675, z: 3.6463857}
   m_Center: {x: -0.28742918, y: 4.113838, z: -0.14909993}
---- !u!114 &2079909965330842119
+--- !u!114 &2792456323591260414
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -152,12 +152,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 535059840910026265}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f7a392fdafc837541840dc10b0ea3749, type: 3}
+  m_Script: {fileID: 11500000, guid: f7385aed2dfa2934294381bf8b9bf8ce, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::FollowPhysicsBody
-  physicsTransform: {fileID: 5723749386816978444}
-  followPosition: 1
-  followRotation: 0
+  m_EditorClassIdentifier: Assembly-CSharp::UprightCollider
+  colliders: []
 --- !u!1 &552650688953098519
 GameObject:
   m_ObjectHideFlags: 0
@@ -820,6 +818,8 @@ GameObject:
   - component: {fileID: 4167148832282478695}
   - component: {fileID: 1000839711402891382}
   - component: {fileID: 3454361218608581648}
+  - component: {fileID: 4184293964615902825}
+  - component: {fileID: 7072461553392828596}
   m_Layer: 0
   m_Name: FireExtinguisher
   m_TagString: Untagged
@@ -869,8 +869,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f9d7eb93179c4cb4a9ba7ffcd21d8fcd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FireExtinguisher
-  <grabData>k__BackingField: {fileID: 11400000, guid: 94ebf1aea017ffc4eb2161ba3590ea03, type: 2}
-  <grabCollider>k__BackingField: {fileID: 8652533549081554014}
   foamPrefab: {fileID: 3339871681955947375, guid: 7b836b16a0cccce4bbf69b4fc92c0046, type: 3}
   spawnTransform: {fileID: 8534104358758067237}
   cone: {fileID: 8162865217901593550}
@@ -880,3 +878,45 @@ MonoBehaviour:
   minForce: 1347
   maxForce: 2101
   extinguishRate: -0.3
+--- !u!54 &4184293964615902825
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8913922446770286736}
+  serializedVersion: 5
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!114 &7072461553392828596
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8913922446770286736}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 41130a3ebf6a0df4bb5cd4e7c0527b68, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Grabable
+  grabData: {fileID: 11400000, guid: 94ebf1aea017ffc4eb2161ba3590ea03, type: 2}
+  grabCollider: {fileID: 8652533549081554014}
+  currentPlayer: {fileID: 0}
