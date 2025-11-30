@@ -14,6 +14,8 @@ public class PizzaDoughBase : MonoBehaviour
     private HashSet<Ingredient> currentToppings = new HashSet<Ingredient>();
     private HashSet<Ingredient> validToppings = new HashSet<Ingredient>();
 
+    public HashSet<Ingredient> CurrentToppings => currentToppings;
+
     private void Awake()
     {
         foreach (Ingredient topping in toppingVisuals.Keys)
@@ -25,11 +27,15 @@ public class PizzaDoughBase : MonoBehaviour
     private void OnEnable()
     {
         GenericEvent<OnInteractableInteracted>.GetEvent(gameObject.GetInstanceID().ToString()).AddListener(OnInteract);
+        GenericEvent<OnObjectGrabbed>.GetEvent(gameObject.GetInstanceID().ToString()).AddListener(OnObjectGrabbed);
+        GenericEvent<OnObjectThrown>.GetEvent(gameObject.GetInstanceID().ToString()).AddListener(OnObjectThrown);
     }
 
     private void OnDisable()
     {
         GenericEvent<OnInteractableInteracted>.GetEvent(gameObject.GetInstanceID().ToString()).RemoveListener(OnInteract);
+        GenericEvent<OnObjectGrabbed>.GetEvent(gameObject.GetInstanceID().ToString()).RemoveListener(OnObjectGrabbed);
+        GenericEvent<OnObjectThrown>.GetEvent(gameObject.GetInstanceID().ToString()).RemoveListener(OnObjectThrown);
     }
 
     private void OnInteract(GameObject player)
@@ -115,6 +121,26 @@ public class PizzaDoughBase : MonoBehaviour
     }
 
     #endregion
+
+    private void OnObjectGrabbed()
+    {
+        DisableInteraction();
+    }
+
+    private void OnObjectThrown()
+    {
+        EnableInteraction();
+    }
+
+    private void DisableInteraction()
+    {
+        gameObject.GetComponent<Interactable>().enabled = false;
+    }
+
+    private void EnableInteraction()
+    {
+        gameObject.GetComponent<Interactable>().enabled = true;
+    }
 
 
 }
