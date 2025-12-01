@@ -192,27 +192,30 @@ public class SodaDispenser : MonoBehaviour
 
     private void FinishDispensing() {
         if (_currentCup != null && selectedDrink != null) {
-            GameObject drinkPrefab = selectedDrink.Prefab;
+            GameObject finalPrefab = selectedDrink.Prefab;
 
-            if (drinkPrefab != null) {
-                GameObject spawnedDrink = Instantiate(drinkPrefab, _currentCup.transform);
-                spawnedDrink.transform.localPosition = Vector3.zero;
-                spawnedDrink.transform.localRotation = Quaternion.identity;
-                spawnedDrink.transform.localScale = Vector3.one;
+            if (finalPrefab != null) {
+                Vector3 oldPos = _currentCup.transform.position;
+                Quaternion oldRot = _currentCup.transform.rotation;
+
+                Destroy(_currentCup.gameObject);
+
+                GameObject newCup = Instantiate(finalPrefab, oldPos, oldRot);
+
+                Debug.Log("Spawned final drink cup: " + newCup.name);
             }
-            _currentCup.FillCup(selectedDrink.drinkName, selectedDrink.drinkColor);
         }
 
         isDispensing = false;
         dispenseTimer = 0f;
-
         StopShake();
 
         if (progressBar != null) progressBar.fillAmount = 1f;
         if (CompleteText != null) CompleteText.SetActive(true);
 
-        Debug.Log("Cup filled with " + drinkToDispense);
+        Debug.Log("Finished dispensing " + drinkToDispense);
     }
+
 
 
     private void StartShake()
