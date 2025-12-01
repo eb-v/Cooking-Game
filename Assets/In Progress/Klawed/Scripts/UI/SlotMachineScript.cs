@@ -6,20 +6,28 @@ using JetBrains.Annotations;
 
 public enum LevelModifiers
 {
-    Jetpack,
-    OilSpill,
-    LandMines,
-    Lightning,
-    Earthquake,
-    Robber,
-    LowGravity,
-    SpeedBoost,
-    ReverseControls,
-    test
+    Jetpack,         // 0
+    OilSpill,        // 1
+    LandMines,       // 2
+    Lightning,       // 3
+    Earthquake,      // 4
+    Robber,          // 5
+    LowGravity,      // 6
+    CloseProximity,  // 7
+    SpeedBoost,      // 8
+    ReverseControls, // 9
+    test             // 10
 }
 
 public class SlotMachineScript : MonoBehaviour
 {
+    private const int MaxVisibleModifierIndex = 7;           
+    private const int MaxRandomExclusive = MaxVisibleModifierIndex + 1;
+
+    [SerializeField] private bool debugForceModifiers = false;
+    [SerializeField] private LevelModifiers[] debugModifiers = new LevelModifiers[3];
+
+
     private class SlotStruct
     {
         public NonNormalizedSpringAPI springSlot;
@@ -46,10 +54,6 @@ public class SlotMachineScript : MonoBehaviour
     [ReadOnly]
     [SerializeField] private List<LevelModifiers> _activeModifiers = new List<LevelModifiers>();
 
-    // -------------------------
-    // MINIMAL ADDITION #1:
-    // Allow springs to update using unscaled time
-    // -------------------------
     private void Update()
     {
         if (FreezeManager.PauseMenuOverride)
@@ -60,16 +64,30 @@ public class SlotMachineScript : MonoBehaviour
         RunSpinCheckLogic(slot3);
     }
 
-
     public void StartSlotMachine()
     {
-        // Freeze the rest of the game
         FreezeManager.FreezeGameplay();
 
         int num1, num2, num3;
-        num1 = Random.Range(0, 6);
-        do { num2 = Random.Range(0, 6); } while (num2 == num1);
-        do { num3 = Random.Range(0, 6); } while (num3 == num1 || num3 == num2);
+        num1 = Random.Range(0, MaxRandomExclusive);                     
+        do { num2 = Random.Range(0, MaxRandomExclusive); } while (num2 == num1);
+        do { num3 = Random.Range(0, MaxRandomExclusive); } while (num3 == num1 || num3 == num2);
+
+        //testing modifiers
+        // if (debugForceModifiers)
+        // {
+        //     num1 = (int)debugModifiers[0];
+        //     num2 = (int)debugModifiers[1];
+        //     num3 = (int)debugModifiers[2];
+        // }
+        // else
+        // {
+        //     num1 = Random.Range(0, MaxRandomExclusive);
+        //     do { num2 = Random.Range(0, MaxRandomExclusive); } while (num2 == num1);
+        //     do { num3 = Random.Range(0, MaxRandomExclusive); } while (num3 == num1 || num3 == num2);
+        // }
+
+
 
         _activeModifiers.Clear();
         _activeModifiers.Add((LevelModifiers)num1);
@@ -114,7 +132,9 @@ public class SlotMachineScript : MonoBehaviour
     private void StartSlotSpin(SlotStruct slot)
     {
         NonNormalizedSpringAPI springAPI = slot.springSlot;
-        float spinGoalValue = 7f;
+
+        // spin a little past the last visible index
+        float spinGoalValue = MaxRandomExclusive; // 8f
         springAPI.SetGoalValue(spinGoalValue);
         slot.shouldSpin = true;
     }
@@ -132,12 +152,15 @@ public class SlotMachineScript : MonoBehaviour
 
     private void CheckIfAllSlotsDone()
     {
-        if (slot1.isDone && slot2.isDone && slot3.isDone)
+        if (slot1 != null && slot2 != null && slot3 != null &&
+            slot1.isDone && slot2.isDone && slot3.isDone)
         {
             // Unfreeze gameplay when slot finishes
             FreezeManager.UnfreezeGameplay();
 
-            GenericEvent<OnModifiersChoosenEvent>.GetEvent("OnModifiersChoosenEvent").Invoke(_activeModifiers);
+            GenericEvent<OnModifiersChoosenEvent>
+                .GetEvent("OnModifiersChoosenEvent")
+                .Invoke(_activeModifiers);
         }
     }
 
@@ -152,7 +175,6 @@ public class SlotMachineScript : MonoBehaviour
             springAPI.ResetPosition();
         }
 
-        // MINIMAL ADDITION #2:
         // Ensure spring updates during freeze
         springAPI.SetGoalValue(springAPI.goalValue);
     }
@@ -196,7 +218,6 @@ public class SlotMachineScript : MonoBehaviour
         float elapsedTime = 0f;
         while (elapsedTime < slot.spinDuration)
         {
-            // Only increment time when NOT paused
             if (!FreezeManager.PauseMenuOverride)
             {
                 elapsedTime += Time.unscaledDeltaTime;
@@ -228,14 +249,33 @@ public class SlotMachineScript : MonoBehaviour
 
         int num1, num2, num3;
 
-        num1 = Random.Range(0, 6);
-        do { num2 = Random.Range(0, 6); } while (num2 == num1);
-        do { num3 = Random.Range(0, 6); } while (num3 == num1 || num3 == num2);
+        num1 = Random.Range(0, MaxRandomExclusive);
+        do { num2 = Random.Range(0, MaxRandomExclusive); } while (num2 == num1);
+        do { num3 = Random.Range(0, MaxRandomExclusive); } while (num3 == num1 || num3 == num2);
 
         randomInts.Add(num1);
         randomInts.Add(num2);
         randomInts.Add(num3);
 
         return randomInts;
+    }
+
+    //testing visual art
+    [ContextMenu("Test Reel1 Art 0..7")]
+    private void TestReel1Art()
+    {
+        StartCoroutine(TestReelArtCoroutine(springSlot1));
+    }
+    
+    private IEnumerator TestReelArtCoroutine(NonNormalizedSpringAPI spring)
+    {
+        if (spring == null) yield break;
+
+        for (int i = 0; i <= MaxVisibleModifierIndex; i++)
+        {
+            spring.SetGoalValue(i);
+            Debug.Log($"[SlotMachine] Showing symbol index {i} ({(LevelModifiers)i})");
+            yield return new WaitForSecondsRealtime(1f);
+        }
     }
 }
