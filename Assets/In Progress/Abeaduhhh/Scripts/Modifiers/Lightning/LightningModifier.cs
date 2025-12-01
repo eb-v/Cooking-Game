@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 public class LightningModifier : MonoBehaviour {
     [Header("Lightning Settings")]
@@ -12,15 +13,13 @@ public class LightningModifier : MonoBehaviour {
     private float timer = 0f;
 
     private void Update() {
-        if (strikesSpawned >= maxStrikes) return;
 
-        timer += Time.deltaTime;
-        if (timer >= strikeInterval) {
-            SpawnLightning();
-            timer = 0f;
-        }
     }
-    public void SpawnLightning() {
+
+    public void TriggerLightning() {
+        StartCoroutine(LightningRoutine());
+    }
+    private void SpawnLightning() {
         Vector3 spawnPos = GetRandomPointInRect();
         Quaternion rot = Quaternion.Euler(90f, 0f, 0f);
         Instantiate(lightningPrefab, spawnPos, rot);
@@ -34,6 +33,14 @@ public class LightningModifier : MonoBehaviour {
         float z = Random.Range(areaCenter.z - areaSize.z / 2f, areaCenter.z + areaSize.z / 2f);
 
         return new Vector3(x, y, z);
+    }
+
+    private IEnumerator LightningRoutine() {
+        strikesSpawned = 0;
+        while (strikesSpawned < maxStrikes) {
+            SpawnLightning();
+            yield return new WaitForSeconds(strikeInterval);
+        }
     }
 
     private void OnDrawGizmos() {

@@ -8,6 +8,10 @@ public class ModifierManager : MonoBehaviour {
     [SerializeField] private LightningModifier lightningSystem;
     [SerializeField] private EarthquakeModifier earthquakeSystem;
     [SerializeField] private RobberModifier robberSystem;
+    [SerializeField] private RocketBoost jetpackSystem;
+    [SerializeField] private CloseProximityManager closeProximitySystem;
+
+
 
 
 
@@ -37,7 +41,7 @@ public class ModifierManager : MonoBehaviour {
                 break;
 
             case LevelModifiers.Lightning:
-                lightningSystem.SpawnLightning();
+                lightningSystem.TriggerLightning();
                 break;
 
             case LevelModifiers.Earthquake:
@@ -48,23 +52,13 @@ public class ModifierManager : MonoBehaviour {
                 robberSystem.SpawnRobber();
                 break;
 
-                //case LevelModifiers.Jetpack:
-                //    jetpackSystem.EnableJetpacks();
-                //    break;
+            case LevelModifiers.Jetpack:
+                jetpackSystem.PerformRocketBoost();
+                break;
 
-                //case LevelModifiers.LowGravity:
-                //    Physics.gravity *= 0.5f;
-                //    break;
-
-                //case LevelModifiers.ReverseControls:
-                //    PlayerController.Instance.EnableReverseControls();
-                //    break;
-
-                //case LevelModifiers.SpeedBoost:
-                //    PlayerController.Instance.ModifySpeed(1.5f);
-                //    break;
-
-                // Add more here
+            case LevelModifiers.CloseProximity:
+                closeProximitySystem.ActivateModifier();
+                break;
         }
     }
 }
