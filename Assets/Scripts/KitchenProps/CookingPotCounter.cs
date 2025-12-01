@@ -53,7 +53,7 @@ public class CookingPotCounter : MonoBehaviour
 
         if (!grabScript.IsGrabbing)
         {
-            if (hasCookingPot)
+            if (hasCookingPot && !isCooking)
             {
                 cookingPot.EnableInteractCollider();
                 Grabable potGrabableComponent = cookingPot.GetComponent<Grabable>();

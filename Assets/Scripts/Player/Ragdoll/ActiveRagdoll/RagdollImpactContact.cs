@@ -16,7 +16,7 @@ public class RagdollImpactContact : MonoBehaviour
         
         if (ragdollController.canBeKnockoutByImpact && col.relativeVelocity.magnitude > playerData.RequiredForceToBeKO)
         {
-            Debug.Log("Ragdoll Impact Contact - Collision detected with force: " + col.relativeVelocity.magnitude);
+            //Debug.Log("Ragdoll Impact Contact - Collision detected with force: " + col.relativeVelocity.magnitude);
             ragdollController.ActivateRagdoll();
         }
     }
