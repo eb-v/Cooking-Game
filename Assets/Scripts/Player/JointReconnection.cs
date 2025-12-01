@@ -2,126 +2,112 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
 
+[RequireComponent(typeof(Interactable))]
 // script to handle players reconnecting joints of other players
 public class JointReconnection : MonoBehaviour
 {
     [SerializeField] private RagdollController ragdollController;
     [SerializeField] private GameObject pelvis;
-    private Dictionary<GameObject, JointBackup> storedJointData;
-    
+    //private Dictionary<GameObject, JointBackup> storedJointData;
+
     private void Awake()
     {
-        GenericEvent<InteractEvent>.GetEvent(gameObject.name).AddListener(HandleJointReconnection);
+        GenericEvent<OnInteractableInteracted>.GetEvent(gameObject.GetInstanceID().ToString()).AddListener(OnInteract);
         GenericEvent<JointRemoved>.GetEvent(gameObject.name).AddListener(StoreJointData);
-        storedJointData = new Dictionary<GameObject, JointBackup>();
     }
 
-    private void HandleJointReconnection(GameObject otherPlayer)
+    private void OnInteract(GameObject player)
     {
-        //// is player missing any joints?
-        //if (PlayerIsMissingParts())
-        //{
-        //    // get the objects the other player is holding
-        //    GrabScript leftHandGD = otherPlayer.GetComponent<RagdollController>().leftHand.GetComponent<GrabScript>();
-        //    GrabScript rightHandGD = otherPlayer.GetComponent<RagdollController>().rightHand.GetComponent<GrabScript>();
-
-            
-        //    if (leftHandGD.grabbedObj != null)
-        //    {
-        //        // check if left hand is holding one of the missing joints
-        //        GameObject rootGrabbedObj = leftHandGD.grabbedObj.transform.root.gameObject;
-        //        if (CheckForJointObjMatch(rootGrabbedObj))
-        //        {
-        //            // if other player is holding a missing joint, disconnect it from their hand
-        //            //GenericEvent<ReleaseHeldJoint>.GetEvent("GrabSystem").Invoke(leftHandGD.gameObject);
-        //           // GrabSystem.ReleaseObject(leftHandGD.gameObject);
-
-        //            // reconnect the joint to this player
-        //            ConnectJoint(rootGrabbedObj, storedJointData[rootGrabbedObj], otherPlayer);
-        //        }
-        //        else
-        //        {
-        //            Debug.Log("Left hand is not holding a missing joint.");
-        //        }
-        //    }
-
-        //    if (rightHandGD.grabbedObj != null)
-        //    {
-        //        // check if right hand is holding one of the missing joints
-        //        GameObject rootGrabbedObj = rightHandGD.grabbedObj.transform.root.gameObject;
-        //        if (CheckForJointObjMatch(rootGrabbedObj))
-        //        {
-        //            // if other player is holding a missing joint, disconnect it from their hand
-        //            //GenericEvent<ReleaseHeldJoint>.GetEvent("GrabSystem").Invoke(rightHandGD.gameObject);
-        //           // GrabSystem.ReleaseObject(rightHandGD.gameObject);
-
-        //            // reconnect the joint to this player
-        //            ConnectJoint(rootGrabbedObj, storedJointData[rootGrabbedObj], otherPlayer);
-        //        }
-        //        else
-        //        {
-        //            Debug.Log("Right hand is not holding a missing joint.");
-        //        }
-        //    }
-        //}
-        //else
-        //{
-        //    Debug.Log("Player has all parts, no need to reconnect joints.");
-        //}
+        Debug.Log("Attempting to reconnect joint...");
+        TryToReconnectJoint(player);
     }
 
-    private bool CheckForJointObjMatch(GameObject grabbedObj)
+    private bool TryToReconnectJoint(GameObject otherPlayer)
     {
-        foreach (KeyValuePair<GameObject, JointBackup> entry in storedJointData)
+        GrabScript grabScript = otherPlayer.GetComponent<GrabScript>();
+        if (grabScript.IsGrabbing)
         {
-            if (grabbedObj == entry.Key)
+            Grabable grabable = grabScript.grabbedObject;
+            GameObject grabbedObj = grabable.gameObject;
+            if (grabbedObj.TryGetComponent<RagdollJoint>(out RagdollJoint ragdollJoint))
             {
-                return true;
+                if (CheckForJointObjMatch(ragdollJoint))
+                {
+                    
+                    grabable.Release();
+                    ConnectJoint(grabbedObj, otherPlayer);
+                    return true;
+                }
+                else
+                {
+                    Debug.Log("CheckforJointObjMatch failed");
+                }
             }
         }
+
         return false;
+    }
+
+    private bool CheckForJointObjMatch(RagdollJoint ragdollJoint)
+    {
+        //foreach (KeyValuePair<GameObject, JointBackup> entry in storedJointData)
+        //{
+        //    if (grabbedObj == entry.Key)
+        //    {
+        //        return true;
+        //    }
+        //}
+        //return false;
+        RagdollController rc = gameObject.GetComponent<RagdollController>();
+        return rc.disconnectedJoints.Contains(ragdollJoint.gameObject);
     }
 
     private void StoreJointData(GameObject jointObj, JointBackup jointBackup)
     {
-        if (!storedJointData.ContainsKey(jointObj))
-        {
-            storedJointData.Add(jointObj, jointBackup);
-        }
+        //if (!storedJointData.ContainsKey(jointObj))
+        //{
+        //    storedJointData.Add(jointObj, jointBackup);
+        //}
     }
 
     private void RemoveJointData(GameObject jointObj)
     {
-        if (storedJointData.ContainsKey(jointObj))
-        {
-            storedJointData.Remove(jointObj);
-        }
+        //if (storedJointData.ContainsKey(jointObj))
+        //{
+        //    storedJointData.Remove(jointObj);
+        //}
     }
 
     private bool PlayerIsMissingParts()
     {
-        return storedJointData.Count > 0;
+        //return storedJointData.Count > 0;
+        return false;
     }
 
-    private void ConnectJoint(GameObject jointObjToAttach, JointBackup jointBackup, GameObject playerWhoReconnected)
+    private void ConnectJoint(GameObject jointObjToAttach, GameObject playerWhoReconnected)
     {
-        SetTagRecursively(jointObjToAttach, "Player");
         RagdollController rc = gameObject.GetComponent<RagdollController>();
+        string jointName = jointObjToAttach.GetComponent<RagdollJoint>().GetJointName();
 
-        jointObjToAttach.transform.parent = jointBackup.parent;
-        
+        ConfigurableJoint joint = jointObjToAttach.AddComponent<ConfigurableJoint>();
+
+        rc.RestoreJointData(joint, jointName);
+
         foreach (RagdollJoint rj in jointObjToAttach.GetComponentsInChildren<RagdollJoint>())
         {
             rc.SetJointToOriginalLocalPosRot(rj);
         }
 
-        ConfigurableJoint joint = jointObjToAttach.GetComponent<ConfigurableJoint>();
-        joint.connectedBody = jointBackup.connectedBody;
-        joint.connectedAnchor = jointBackup.connectedAnchor;
-        joint.xMotion = ConfigurableJointMotion.Locked;
-        joint.yMotion = ConfigurableJointMotion.Locked;
-        joint.zMotion = ConfigurableJointMotion.Locked;
-        RagdollJoint ragdollJoint = jointObjToAttach.GetComponent<RagdollJoint>();
+
+        SetTagRecursively(jointObjToAttach, "Player");
+
+        //ConfigurableJoint joint = jointObjToAttach.GetComponent<ConfigurableJoint>();
+        //joint.connectedBody = jointBackup.connectedBody;
+        //joint.connectedAnchor = jointBackup.connectedAnchor;
+        //joint.xMotion = ConfigurableJointMotion.Locked;
+        //joint.yMotion = ConfigurableJointMotion.Locked;
+        //joint.zMotion = ConfigurableJointMotion.Locked;
+        //RagdollJoint ragdollJoint = jointObjToAttach.GetComponent<RagdollJoint>();
 
         Vector3 pelvisPos = pelvis.transform.position;
         pelvisPos.y += 1.3f;
@@ -134,10 +120,12 @@ public class JointReconnection : MonoBehaviour
         }
 
         // if reconnecting a leg, reset the step values to avoid weirdness
-        if (ragdollJoint.GetJointName() == "UpperRightLeg" || ragdollJoint.GetJointName() == "UpperLeftLeg")
+        if (jointName == "UpperRightLeg" || jointName == "UpperLeftLeg")
         {
             rc.ResetStepValues();
         }
+
+
         rc.HardResetPose();
         RemoveJointData(jointObjToAttach);
 
@@ -153,10 +141,10 @@ public class JointReconnection : MonoBehaviour
             Debug.LogWarning($"[JOINT RECONNECTION] {playerWhoReconnected.name} has no PlayerStats component!");
         }
 
-         // play joint reconnect SFX
+        // play joint reconnect SFX
         AudioManager.Instance?.PlaySFX("Joint reconnect");
     }
-    
+
 
     private void SetTagRecursively(GameObject obj, string newTag)
     {

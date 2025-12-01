@@ -37,6 +37,7 @@ public class OilHazard : MonoBehaviour
 
             // Apply the knockback and stun effect
             ApplyOilEffect(ragdollController, knockbackDirection);
+            Destroy(gameObject); // Destroy oil hazard after hitting a player
         }
     }
 

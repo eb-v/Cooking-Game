@@ -17,6 +17,14 @@ public class EarthquakeModifier : MonoBehaviour {
         }
     }
 
+    private void OnEnable()
+    {
+        if (enabledInThisLevel && earthquake != null)
+        {
+            ResetTimer();
+        }
+    }
+
     void Update() {
         if (!enabledInThisLevel || earthquake == null) return;
 

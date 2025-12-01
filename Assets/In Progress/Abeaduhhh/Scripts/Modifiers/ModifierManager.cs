@@ -5,7 +5,6 @@ public class ModifierManager : MonoBehaviour {
     [Header("Gameplay Systems")]
     [SerializeField] private BombDropper bombSystem;
     [SerializeField] private OilSpawnManager oilSystem;
-    [SerializeField] private RocketBoost jetpackSystem;
     [SerializeField] private LightningModifier lightningSystem;
     [SerializeField] private EarthquakeModifier earthquakeSystem;
     [SerializeField] private RobberModifier robberSystem;
@@ -19,6 +18,7 @@ public class ModifierManager : MonoBehaviour {
             .GetEvent("OnModifiersChoosenEvent")
             .AddListener(OnModifiersChosen);
     }
+
 
     private void OnModifiersChosen(List<LevelModifiers> mods) {
         foreach (var mod in mods) {

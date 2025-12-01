@@ -11,6 +11,8 @@ public class RagdollController : MonoBehaviour
 
     public UDictionary<string, RagdollJoint> RagdollDict = new UDictionary<string, RagdollJoint>();
     public UDictionary<string, Quaternion> TargetRotations = new UDictionary<string, Quaternion>();
+    private Dictionary<string, JointSettingsData> jointSettings = new Dictionary<string, JointSettingsData>();
+    public HashSet<GameObject> disconnectedJoints = new HashSet<GameObject>();
 
     public Rigidbody rightHand;
     public Rigidbody leftHand;
@@ -185,6 +187,19 @@ public class RagdollController : MonoBehaviour
 
     public void EnterLogic()
     {
+        //GenericEvent<OnMoveInput>.GetEvent(gameObject.name).AddListener(SetDirection);
+
+        //GenericEvent<OnLeanForwardInput>.GetEvent(gameObject.name).AddListener(() => { _leanForward = true; });
+        //GenericEvent<OnLeanForwardCancel>.GetEvent(gameObject.name).AddListener(() => { _leanForward = false; });
+        //GenericEvent<OnLeanBackwardInput>.GetEvent(gameObject.name).AddListener(() => { _leanBackward = true; });
+        //GenericEvent<OnLeanBackwardCancel>.GetEvent(gameObject.name).AddListener(() => { _leanBackward = false; });
+        //GenericEvent<OnRemoveJoint>.GetEvent(gameObject.name).AddListener(DisconnectJoint);
+
+        //GenericEvent<OnGrabStatusChanged>.GetEvent(gameObject.name).AddListener(ChangeGrabStatus);
+    }
+
+    private void OnEnable()
+    {
         GenericEvent<OnMoveInput>.GetEvent(gameObject.name).AddListener(SetDirection);
 
         GenericEvent<OnLeanForwardInput>.GetEvent(gameObject.name).AddListener(() => { _leanForward = true; });
@@ -196,7 +211,7 @@ public class RagdollController : MonoBehaviour
         GenericEvent<OnGrabStatusChanged>.GetEvent(gameObject.name).AddListener(ChangeGrabStatus);
     }
 
-    public void ExitLogic()
+    private void OnDisable()
     {
         GenericEvent<OnMoveInput>.GetEvent(gameObject.name).RemoveListener(SetDirection);
         GenericEvent<OnLeanForwardInput>.GetEvent(gameObject.name).RemoveListener(() => { _leanForward = true; });
@@ -205,6 +220,19 @@ public class RagdollController : MonoBehaviour
         GenericEvent<OnLeanBackwardCancel>.GetEvent(gameObject.name).RemoveListener(() => { _leanBackward = false; });
         GenericEvent<OnRemoveJoint>.GetEvent(gameObject.name).RemoveListener(DisconnectJoint);
         GenericEvent<OnGrabStatusChanged>.GetEvent(gameObject.name).RemoveListener(ChangeGrabStatus);
+    }
+
+
+
+    public void ExitLogic()
+    {
+        //GenericEvent<OnMoveInput>.GetEvent(gameObject.name).RemoveListener(SetDirection);
+        //GenericEvent<OnLeanForwardInput>.GetEvent(gameObject.name).RemoveListener(() => { _leanForward = true; });
+        //GenericEvent<OnLeanForwardCancel>.GetEvent(gameObject.name).RemoveListener(() => { _leanForward = false; });
+        //GenericEvent<OnLeanBackwardInput>.GetEvent(gameObject.name).RemoveListener(() => { _leanBackward = true; });
+        //GenericEvent<OnLeanBackwardCancel>.GetEvent(gameObject.name).RemoveListener(() => { _leanBackward = false; });
+        //GenericEvent<OnRemoveJoint>.GetEvent(gameObject.name).RemoveListener(DisconnectJoint);
+        //GenericEvent<OnGrabStatusChanged>.GetEvent(gameObject.name).RemoveListener(ChangeGrabStatus);
     }
 
 
@@ -290,7 +318,11 @@ public class RagdollController : MonoBehaviour
         {
             if (IsMovementOn() && !isRagdoll)
             {
-                PlayerMovement();
+                if (!MissingLeg)
+                    
+                {
+                    PlayerMovement();
+                }
             }
         }
 
@@ -312,7 +344,7 @@ public class RagdollController : MonoBehaviour
 
 
         UpdateBalanceValue();
-        SetDisconnectedJointDrives();
+        //SetDisconnectedJointDrives();
 
 
         UpdateCenterOfMass();
@@ -320,8 +352,10 @@ public class RagdollController : MonoBehaviour
 
     public void FixedUpdateLogic()
     {
-
-        PerformWalking();
+        if (balanced)
+        {
+            PerformWalking();
+        }
 
         if (IsMovementOn())
         {
@@ -585,7 +619,7 @@ public class RagdollController : MonoBehaviour
         return isHittingGround;
     }
 
-    private bool MissingLeg => !RagdollDict[UPPER_LEFT_LEG].isConnected || !RagdollDict[UPPER_RIGHT_LEG].isConnected;
+    private bool MissingLeg => !RagdollDict.ContainsKey(UPPER_LEFT_LEG) || !RagdollDict.ContainsKey(UPPER_RIGHT_LEG);
 
     private bool InAir => !GroundCheck();
 
@@ -848,8 +882,8 @@ public class RagdollController : MonoBehaviour
 
     private void PerformWalking()
     {
-        if (RagdollDict[UPPER_RIGHT_LEG].isConnected == false ||
-            RagdollDict[UPPER_LEFT_LEG].isConnected == false)
+        if (!RagdollDict.ContainsKey(UPPER_RIGHT_LEG) ||
+            !RagdollDict.ContainsKey(UPPER_LEFT_LEG))
             return;
         if (InAir)
             return;
@@ -1108,43 +1142,161 @@ public class RagdollController : MonoBehaviour
         return centerOfMass.position;
     }
     // this function "disconnects" a joint by unlocking its xyz motions and setting connected body to null
-    private void DisconnectJoint(string jointName)
+    public void DisconnectJoint(string jointName)
     {
         ConfigurableJoint joint = RagdollDict[jointName].Joint;
         GameObject jointObj = joint.gameObject;
 
-        foreach (ConfigurableJoint cj in jointObj.GetComponentsInChildren<ConfigurableJoint>())
-        {
-            cj.targetRotation = Quaternion.identity;
-        }
+        JointSettingsData savedData = SaveJointData(joint);
+        jointSettings[jointName] = savedData;
+
+        Rigidbody rb = jointObj.GetComponent<Rigidbody>();
 
 
-        JointBackup jointBackupData = new JointBackup
-        {
-            parent = joint.transform.parent,
-            connectedBody = joint.connectedBody,
-            localPosition = joint.transform.localPosition,
-            localRotation = joint.transform.localRotation,
-            connectedAnchor = joint.connectedAnchor
-        };
-
-        joint.transform.parent = null;
+        RagdollDict.Remove(jointName);
+        TargetRotations.Remove(jointName);
 
 
-        joint.xMotion = ConfigurableJointMotion.Free;
-        joint.yMotion = ConfigurableJointMotion.Free;
-        joint.zMotion = ConfigurableJointMotion.Free;
-
-        joint.connectedBody = null;
 
 
-        foreach (RagdollJoint ragdollJoint in jointObj.GetComponentsInChildren<RagdollJoint>())
-        {
-            ragdollJoint.isConnected = false;
-        }
+
+        rb.WakeUp();
+
+        jointObj.transform.SetParent(null);
 
 
-        GenericEvent<JointRemoved>.GetEvent(gameObject.name).Invoke(joint.gameObject, jointBackupData);
+        jointObj.transform.position = rb.position;
+        jointObj.transform.rotation = rb.rotation;
+
+        //foreach (ConfigurableJoint cj in jointObj.GetComponentsInChildren<ConfigurableJoint>())
+        //{
+        //    cj.targetRotation = Quaternion.identity;
+        //}
+
+
+        //JointBackup jointBackupData = new JointBackup
+        //{
+        //    parent = joint.transform.parent,
+        //    connectedBody = joint.connectedBody,
+        //    localPosition = joint.transform.localPosition,
+        //    localRotation = joint.transform.localRotation,
+        //    connectedAnchor = joint.connectedAnchor
+        //};
+
+        //joint.transform.parent = null;
+
+
+        //joint.xMotion = ConfigurableJointMotion.Free;
+        //joint.yMotion = ConfigurableJointMotion.Free;
+        //joint.zMotion = ConfigurableJointMotion.Free;
+
+        //joint.connectedBody = null;
+
+        //SetJointAngularDrives(jointName, in ZeroDrive);
+
+
+        //foreach (RagdollJoint ragdollJoint in jointObj.GetComponentsInChildren<RagdollJoint>())
+        //{
+        //    ragdollJoint.isConnected = false;
+        //}
+
+
+        // Enable Joints Grab Collider
+        Grabable grabable = jointObj.GetComponent<Grabable>();
+        grabable.grabCollider.enabled = true;
+        disconnectedJoints.Add(jointObj);
+
+
+
+
+
+        Destroy(joint);
+        // GenericEvent<JointRemoved>.GetEvent(gameObject.name).Invoke(joint.gameObject, jointBackupData);
+    }
+
+    private JointSettingsData SaveJointData(ConfigurableJoint joint)
+    {
+        JointSettingsData data = new JointSettingsData();
+
+        // Copy all properties
+        data.parent = joint.transform.parent;
+        data.connectedBody = joint.connectedBody;
+        data.anchor = joint.anchor;
+        data.connectedAnchor = joint.connectedAnchor;
+        data.autoConfigureConnectedAnchor = joint.autoConfigureConnectedAnchor;
+
+        data.xMotion = joint.xMotion;
+        data.yMotion = joint.yMotion;
+        data.zMotion = joint.zMotion;
+        data.angularXMotion = joint.angularXMotion;
+        data.angularYMotion = joint.angularYMotion;
+        data.angularZMotion = joint.angularZMotion;
+
+        // Note: Copying structs like SoftJointLimit and JointDrive is fine, 
+        // even though they aren't marked [Serializable] themselves, because 
+        // Unity allows setting and getting them as whole copies on the joint component.
+        data.linearLimit = joint.linearLimit;
+        data.linearLimitSpring = joint.linearLimitSpring;
+        data.lowAngularXLimit = joint.lowAngularXLimit;
+        data.highAngularXLimit = joint.highAngularXLimit;
+        data.angularYLimit = joint.angularYLimit;
+        data.angularZLimit = joint.angularZLimit;
+        data.angularXLimitSpring = joint.angularXLimitSpring;
+        data.angularYZLimitSpring = joint.angularYZLimitSpring;
+
+        data.xDrive = joint.xDrive;
+        data.yDrive = joint.yDrive;
+        data.zDrive = joint.zDrive;
+        data.angularXDrive = joint.angularXDrive;
+        data.angularYZDrive = joint.angularYZDrive;
+        data.slerpDrive = joint.slerpDrive;
+
+        data.configuredInWorldSpace = joint.configuredInWorldSpace;
+        data.swapBodies = joint.swapBodies;
+        data.breakForce = joint.breakForce;
+        data.breakTorque = joint.breakTorque;
+        data.enableCollision = joint.enableCollision;
+        data.enablePreprocessing = joint.enablePreprocessing;
+
+        return data;
+    }
+
+    public void RestoreJointData(ConfigurableJoint joint, string jointName)
+    {
+        JointSettingsData data = jointSettings[jointName];
+
+        // Restore all properties
+        joint.transform.parent = data.parent;
+        joint.connectedBody = data.connectedBody;
+        joint.anchor = data.anchor;
+        joint.connectedAnchor = data.connectedAnchor;
+        joint.autoConfigureConnectedAnchor = data.autoConfigureConnectedAnchor;
+        joint.xMotion = data.xMotion;
+        joint.yMotion = data.yMotion;
+        joint.zMotion = data.zMotion;
+        joint.angularXMotion = data.angularXMotion;
+        joint.angularYMotion = data.angularYMotion;
+        joint.angularZMotion = data.angularZMotion;
+        joint.linearLimit = data.linearLimit;
+        joint.linearLimitSpring = data.linearLimitSpring;
+        joint.lowAngularXLimit = data.lowAngularXLimit;
+        joint.highAngularXLimit = data.highAngularXLimit;
+        joint.angularYLimit = data.angularYLimit;
+        joint.angularZLimit = data.angularZLimit;
+        joint.angularXLimitSpring = data.angularXLimitSpring;
+        joint.angularYZLimitSpring = data.angularYZLimitSpring;
+        joint.xDrive = data.xDrive;
+        joint.yDrive = data.yDrive;
+        joint.zDrive = data.zDrive;
+        joint.angularXDrive = data.angularXDrive;
+        joint.angularYZDrive = data.angularYZDrive;
+        joint.slerpDrive = data.slerpDrive;
+        joint.configuredInWorldSpace = data.configuredInWorldSpace;
+        joint.swapBodies = data.swapBodies;
+        joint.breakForce = data.breakForce;
+        joint.breakTorque = data.breakTorque;
+        joint.enableCollision = data.enableCollision;
+        joint.enablePreprocessing = data.enablePreprocessing;
     }
 
     //public void ConnectJoint(string jointName, GameObject jointObjToConnect)

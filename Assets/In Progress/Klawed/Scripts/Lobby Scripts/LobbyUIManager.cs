@@ -8,7 +8,7 @@ public class LobbyUIManager : MonoBehaviour
     [SerializeField] private GameObject mapSelectionUIObject;
 
     [SerializeField] private string assignedChannel = "DefaultChannel";
-    [ReadOnly]
+    
     [SerializeField] private int currentCanvasIndex = 1;
 
     private void Awake()

@@ -64,6 +64,14 @@ public class CookingPotCounter : MonoBehaviour
                 hasCookingPot = false;
                 cookingPot = null;
             }
+            else
+            {
+                Debug.Log("has cooking pot false");
+            }
+        }
+        else
+        {
+            Debug.Log("player is already grabbing something");
         }
     }
 

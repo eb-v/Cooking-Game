@@ -42,12 +42,17 @@ public class TrainManager : MonoBehaviour
             Debug.LogError("TrainScript not found in the scene!");
         }
         trainScript.Initialize(trainData);
-        StartTrainLoop();
+       // StartTrainLoop();
     }
 
     private void StartTrainLoop()
     {
         trainScript.RunTrainLoop();
+    }
+
+    public void LaunchTrain()
+    {
+        trainScript.LaunchTrain();
     }
 
     public void RunUpdateLogic()

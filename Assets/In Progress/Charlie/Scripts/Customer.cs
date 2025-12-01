@@ -4,7 +4,8 @@ using UnityEngine.UI;
 
 [RequireComponent(typeof(NavMeshAgent))]
 [RequireComponent(typeof(Animator))]
-public class Customer : MonoBehaviour, IInteractable, IOrder
+[RequireComponent(typeof(Interactable))]
+public class Customer : MonoBehaviour, IOrder
 {
 
     [Header("Order Settings")]
@@ -89,7 +90,17 @@ public class Customer : MonoBehaviour, IInteractable, IOrder
         _stateMachine.Initialize(_inLineInstance);
         _currentState = _stateMachine.GetCurrentState();
     }
-    
+
+    private void OnEnable()
+    {
+        GenericEvent<OnInteractableInteracted>.GetEvent(gameObject.GetInstanceID().ToString()).AddListener(OnInteract);
+    }
+
+    private void OnDisable()
+    {
+        GenericEvent<OnInteractableInteracted>.GetEvent(gameObject.GetInstanceID().ToString()).RemoveListener(OnInteract);
+    }
+
     void Update()
     {
         _stateMachine.RunUpdateLogic();
@@ -100,7 +111,7 @@ public class Customer : MonoBehaviour, IInteractable, IOrder
         _stateMachine.RunFixedUpdateLogic();
     }
 
-    public void OnInteract(GameObject player)
+    private void OnInteract(GameObject player)
     {
         _stateMachine.GetCurrentState().InteractLogic(player);
     }

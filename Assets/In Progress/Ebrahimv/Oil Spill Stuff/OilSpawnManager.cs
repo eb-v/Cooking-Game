@@ -43,6 +43,16 @@ public class OilSpawnManager : MonoBehaviour
         }
     }
 
+    private void OnEnable()
+    {
+        StartSpawning();
+    }
+
+    private void OnDisable()
+    {
+        StopSpawning();
+    }
+
     public void StopSpawning()
     {
         isSpawning = false;

@@ -78,8 +78,8 @@ public class OrderingState : CustomerState
         int price = menuItemScript.MenuItem.Price;
         ScoreManager.Instance.ChangeScore(price, player);
 
-        IGrabable grabable = menuItemObject.GetComponent<IGrabable>();
-        grabable.ReleaseObject(player);
+        Grabable grabable = menuItemObject.GetComponent<Grabable>();
+        grabable.Release();
         Destroy(menuItemObject);
         GenericEvent<OnCustomerServed>.GetEvent("OnCustomerServed").Invoke(customer);
         customer.ChangeState(customer._walkToTableInstance);

@@ -6,8 +6,8 @@ public class TrainScript : MonoBehaviour
     [SerializeField] private TrafficLightController trafficLight; // Reference to traffic light
     private TrainData trainData;
     private Rigidbody trainRb;
-    private bool hasLaunched = false;
-    private bool isResetting = false;
+    public bool hasLaunched = false;
+    public bool isResetting = false;
     private Vector3 initialPosition;
     private Quaternion initialRotation;
     
@@ -136,14 +136,14 @@ public class TrainScript : MonoBehaviour
         LaunchTrain();
     }
     
-        private void LaunchTrain()
+    public void LaunchTrain()
     {
         hasLaunched = true;
 
         if (CameraShake.Instance != null)
             CameraShake.Instance.Shake();
 
-        AudioManager.Instance?.PlaySFX("Train");
+        //AudioManager.Instance?.PlaySFX("Train");
     }
     
     public void StopTrain()

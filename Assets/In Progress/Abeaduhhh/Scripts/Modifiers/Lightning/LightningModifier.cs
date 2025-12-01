@@ -20,7 +20,6 @@ public class LightningModifier : MonoBehaviour {
             timer = 0f;
         }
     }
-
     public void SpawnLightning() {
         Vector3 spawnPos = GetRandomPointInRect();
         Quaternion rot = Quaternion.Euler(90f, 0f, 0f);
