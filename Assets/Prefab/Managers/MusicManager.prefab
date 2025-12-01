@@ -9,7 +9,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8440382811251522000}
-  - component: {fileID: 3591192983652750650}
+  - component: {fileID: 537748848278093124}
+  - component: {fileID: 1390313479383403303}
   m_Layer: 0
   m_Name: MusicManager
   m_TagString: Untagged
@@ -32,7 +33,25 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!82 &3591192983652750650
+--- !u!114 &537748848278093124
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8330627790902587138}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c7e801aa5e31846cd8f1d491251731c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MusicManager
+  musicMixerGroup: {fileID: 0}
+  mainMenuMusic: {fileID: 8300000, guid: 76059cb6d79104f219c7538a8d53cbf9, type: 3}
+  pregameMusic: {fileID: 8300000, guid: 38094e88f46df4dc680d2fde73203ec0, type: 3}
+  level1Music: {fileID: 8300000, guid: 9fe7975c34bd449d5b93b2e5023a112c, type: 3}
+  level2Music: {fileID: 8300000, guid: 5e20debc58f9a40bb84169f0d36e7916, type: 3}
+  awardSceneMusic: {fileID: 8300000, guid: 497af6a2febec4e878b063da4842ca77, type: 3}
+--- !u!82 &1390313479383403303
 AudioSource:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -41,17 +60,17 @@ AudioSource:
   m_GameObject: {fileID: 8330627790902587138}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: -1500728671849190182, guid: 640df3fb8ef4c4f348663b1e2513067f, type: 2}
   m_audioClip: {fileID: 0}
-  m_Resource: {fileID: 8300000, guid: 9fe7975c34bd449d5b93b2e5023a112c, type: 3}
+  m_Resource: {fileID: 0}
   m_PlayOnAwake: 1
-  m_Volume: 0.25
+  m_Volume: 0.745
   m_Pitch: 1
   Loop: 1
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
-  Priority: 0
+  Priority: 128
   DopplerLevel: 1
   MinDistance: 1
   MaxDistance: 500
