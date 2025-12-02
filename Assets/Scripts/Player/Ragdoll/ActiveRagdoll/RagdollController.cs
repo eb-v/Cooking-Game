@@ -699,10 +699,6 @@ public class RagdollController : MonoBehaviour
         // Disable movement if player is missing legs
         //if (!RagdollDict.ContainsKey(UPPER_RIGHT_LEG) || !RagdollDict.ContainsKey(UPPER_LEFT_LEG))
         //    return;
-        if (!RagdollDict.ContainsKey(HEAD))
-        {
-            return;
-        }
 
         float newMoveSpeed;
         if (!RagdollDict[UPPER_RIGHT_LEG].isConnected || !RagdollDict[UPPER_LEFT_LEG].isConnected)
@@ -719,7 +715,7 @@ public class RagdollController : MonoBehaviour
         Direction.y = 0f;
         Rigidbody rootRigidbody = RagdollDict[ROOT].Rigidbody;
         var velocity = rootRigidbody.linearVelocity;
-        if (RagdollDict[HEAD].isConnected)
+        if (RagdollDict.ContainsKey(HEAD))
         {
             rootRigidbody.linearVelocity = Vector3.Lerp(velocity,
             (Direction * newMoveSpeed) + new Vector3(0, velocity.y, 0), 0.8f);
