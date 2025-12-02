@@ -88,8 +88,14 @@ public class JointReconnection : MonoBehaviour
     {
         RagdollController rc = gameObject.GetComponent<RagdollController>();
         string jointName = jointObjToAttach.GetComponent<RagdollJoint>().GetJointName();
+        Rigidbody jointRb = jointObjToAttach.GetComponent<Rigidbody>();
 
         ConfigurableJoint joint = jointObjToAttach.AddComponent<ConfigurableJoint>();
+
+        if (jointObjToAttach.TryGetComponent<RagdollJoint>(out RagdollJoint ragdollJoint))
+        {
+            ragdollJoint.SetConfigurableJoint(joint);
+        }
 
         rc.RestoreJointData(joint, jointName);
 
@@ -97,6 +103,32 @@ public class JointReconnection : MonoBehaviour
         {
             rc.SetJointToOriginalLocalPosRot(rj);
         }
+
+        jointRb.isKinematic = true;
+
+        JointSettingsData backupData = rc.GetJointBackUpData(jointName);
+        // Calculate the target position in world space
+        Vector3 targetWorldPosition = backupData.connectedBody.transform.TransformPoint(backupData.connectedAnchor);
+
+        // Calculate the correction needed to align the detached limb's local anchor 
+        // to the parent's connected anchor position.
+        // The joint's anchor is the point *on the detached limb* that connects.
+
+        // 1. Position Alignment
+        // Move the limb's pivot (Transform.position) so that its *local anchor* // lands exactly on the *targetWorldPosition*.
+        joint.autoConfigureConnectedAnchor = false;
+        joint.connectedAnchor = backupData.connectedAnchor; // This must be set before anchor to avoid issues
+        joint.anchor = backupData.anchor;
+
+        Vector3 anchorWorldPosition = jointObjToAttach.transform.TransformPoint(joint.anchor);
+        Vector3 correctionVector = targetWorldPosition - anchorWorldPosition;
+
+
+        jointObjToAttach.transform.position += correctionVector;
+        foreach (RagdollJoint rj in jointObjToAttach.GetComponentsInChildren<RagdollJoint>())
+        {
+            rc.originalLocalRotations[rj.GetJointName()] = rj.transform.localRotation;
+        }   
 
 
         SetTagRecursively(jointObjToAttach, "Player");
@@ -125,10 +157,6 @@ public class JointReconnection : MonoBehaviour
             rc.ResetStepValues();
         }
 
-
-        rc.HardResetPose();
-        RemoveJointData(jointObjToAttach);
-
         // Track the joint reconnection stat for the player who helped
         PlayerStats helperStats = playerWhoReconnected.GetComponent<PlayerStats>();
         if (helperStats != null)
@@ -143,6 +171,11 @@ public class JointReconnection : MonoBehaviour
 
         // play joint reconnect SFX
         AudioManager.Instance?.PlaySFX("Joint reconnect");
+
+        jointRb.isKinematic = false;
+        // update the dictionaries in RagdollController
+        rc.UpdateJointDictionaries(jointObjToAttach);
+        rc.HardResetPose();
     }
 
 

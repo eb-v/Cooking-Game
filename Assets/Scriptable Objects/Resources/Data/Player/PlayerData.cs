@@ -35,11 +35,8 @@ public class PlayerData : ScriptableObject
 
 
     [Header("Knock Out Settings")]
-    [SerializeField] private float minKnockOutRecoveryTime = 3.0f;
-    public float MinKnockOutRecoveryTime => minKnockOutRecoveryTime;
-
-    [SerializeField] private float maxKnockOutRecoveryTime = 6.0f;
-    public float MaxKnockOutRecoveryTime => maxKnockOutRecoveryTime;
+    [SerializeField] private float unconsciousDuration = 3.0f;
+    public float UnconsciousDuration => unconsciousDuration;
 
     [SerializeField] private float requiredForceToBeKO = 100.0f;
     public float RequiredForceToBeKO => requiredForceToBeKO;

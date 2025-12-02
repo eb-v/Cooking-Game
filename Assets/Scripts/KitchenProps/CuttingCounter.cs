@@ -129,8 +129,8 @@ public class CuttingCounter : MonoBehaviour
             }
 
             GameObject removedObj = RemoveObjectFromCounter();
-            IGrabable grabable = removedObj.GetComponent<IGrabable>();
-            grabable.GrabObject(player);
+            Grabable grabable = removedObj.GetComponent<Grabable>();
+            grabable.Grab(player);
         }
     }
 

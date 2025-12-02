@@ -6,6 +6,7 @@ public struct JointSettingsData
     // Connections
     public Transform parent;
     public Rigidbody connectedBody; // Store a reference!
+    public Quaternion localRotation;
     public Vector3 anchor;
     public Vector3 connectedAnchor;
     public bool autoConfigureConnectedAnchor;
