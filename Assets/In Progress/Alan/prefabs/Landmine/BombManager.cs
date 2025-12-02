@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class BombDropper : MonoBehaviour
+public class BombManager : MonoBehaviour
 {
     [Header("Bomb Settings")]
     public GameObject bombPrefab;
@@ -31,27 +31,6 @@ public class BombDropper : MonoBehaviour
         {
             StartDropping();
         }
-    }
-
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.yellow;
-
-        Vector3 p1 = new Vector3(minX, 0f, minZ);
-        Vector3 p2 = new Vector3(minX, 0f, maxZ);
-        Vector3 p3 = new Vector3(maxX, 0f, maxZ);
-        Vector3 p4 = new Vector3(maxX, 0f, minZ);
-
-        Gizmos.DrawLine(p1, p2);
-        // Line 2: p2 -> p3 (Top side)
-        Gizmos.DrawLine(p2, p3);
-        // Line 3: p3 -> p4 (Right side)
-        Gizmos.DrawLine(p3, p4);
-        // Line 4: p4 -> p1 (Bottom side)
-        Gizmos.DrawLine(p4, p1);
-
-        Vector3 center = new Vector3((minX + maxX) / 2f, 0f, (minZ + maxZ) / 2f);
-        Gizmos.DrawWireSphere(center, 0.5f);
     }
 
     public void StartDropping()
