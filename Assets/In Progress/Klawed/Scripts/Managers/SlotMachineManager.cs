@@ -52,17 +52,23 @@ public class SlotMachineManager : MonoBehaviour
         StartCoroutine(EndSlotMachineAnimation(slotMachine, endDelay));
     }
 
-    private IEnumerator EndSlotMachineAnimation(GameObject slotMachine, float endDelay)
-    {
+    private IEnumerator EndSlotMachineAnimation(GameObject slotMachine, float endDelay) {
         SpringAPI slotMachineSpring = slotMachine.GetComponentInChildren<SpringAPI>();
+
+
+        if (!slotMachineSpring) {
+            Debug.Log("Slot machine has no API");
+        }
 
         yield return new WaitForSecondsRealtime(endDelay);
 
         slotMachineSpring.SetGoalValue(0f);
+        Debug.Log("springing out?");
+
+    
 
         yield return new WaitForSecondsRealtime(1.5f);
 
-        // Unfreeze game again after slot finishes
         FreezeManager.UnfreezeGameplay();
 
         GenericEvent<OnSlotMachineAnimationCompleteEvent>
