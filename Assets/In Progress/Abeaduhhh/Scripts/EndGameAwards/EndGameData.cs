@@ -8,7 +8,7 @@ public static class EndGameData {
     // from the previous scene, which the EndGameAwards script can clone.
     public static GameObject[] playerObjects;
 
-    public static int[] ingredientsHandled;
+    public static int[] itemsGrabbed;
     public static int[] pointsGenerated;
     public static int[] jointsReconnected;
     public static int[] explosionsReceived;
@@ -18,14 +18,14 @@ public static class EndGameData {
 
         if (!skipObjects) playerObjects = new GameObject[playerCount];
 
-        ingredientsHandled = new int[playerCount];
+        itemsGrabbed = new int[playerCount];
         pointsGenerated = new int[playerCount];
         jointsReconnected = new int[playerCount];
         explosionsReceived = new int[playerCount];
 
         for (int i = 0; i < playerCount; i++) {
             if (!skipObjects) playerObjects[i] = players[i].gameObject; // only if real players exist
-            ingredientsHandled[i] = players[i].ingredientsHandled;
+            itemsGrabbed[i] = players[i].itemsGrabbed;
             pointsGenerated[i] = players[i].pointsGenerated;
             jointsReconnected[i] = players[i].jointsReconnected;
             explosionsReceived[i] = players[i].explosionsReceived;

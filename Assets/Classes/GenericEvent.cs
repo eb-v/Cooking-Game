@@ -10,4 +10,9 @@ public static class GenericEvent<T> where T : class, new()
         _eventMap.TryAdd(channel, new T());
         return _eventMap[channel];
     }
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    private static void ResetEvents()
+    {
+        _eventMap.Clear();
+    }
 }

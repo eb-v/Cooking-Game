@@ -118,43 +118,43 @@ public class Dispenser : MonoBehaviour
 
     private void RunDispensingLogic()
     {
-        Ray ray = new Ray(raycastTransform.position, Vector3.down);
-        bool dispensedIngredient = false;
+        //Ray ray = new Ray(raycastTransform.position, Vector3.down);
+        //bool dispensedIngredient = false;
 
-        if (Physics.Raycast(ray, out RaycastHit hit, interactionRange, layerMask))
-        {
-            PizzaDoughBase pizzaBase = hit.collider.gameObject.GetComponent<PizzaDoughBase>();
-            if (pizzaBase != null)
-            {
-                // only try to dispense if we still have supply
-                if (!isEmpty && !pizzaBase.CheckForIngredient(ingredient))
-                {
-                    pizzaBase.AddIngredient(ingredient);
-                    dispensedIngredient = true;
+        //if (Physics.Raycast(ray, out RaycastHit hit, interactionRange, layerMask))
+        //{
+        //    PizzaDoughBase pizzaBase = hit.collider.gameObject.GetComponent<PizzaDoughBase>();
+        //    if (pizzaBase != null)
+        //    {
+        //        // only try to dispense if we still have supply
+        //        if (!isEmpty && !pizzaBase.CheckForIngredient(ingredient))
+        //        {
+        //            pizzaBase.AddIngredient(ingredient);
+        //            dispensedIngredient = true;
 
-                    // use one charge
-                    currentUses = Mathf.Max(0, currentUses - 1);
-                    if (currentUses <= 0)
-                    {
-                        isEmpty = true;
-                        // hook "!" indicator off this flag
-                    }
-                }
+        //            // use one charge
+        //            currentUses = Mathf.Max(0, currentUses - 1);
+        //            if (currentUses <= 0)
+        //            {
+        //                isEmpty = true;
+        //                // hook "!" indicator off this flag
+        //            }
+        //        }
 
-                Debug.DrawRay(ray.origin, ray.direction * interactionRange, Color.green);
-            }
-        }
-        else
-        {
-            Debug.DrawRay(ray.origin, ray.direction * interactionRange, Color.red);
-        }
+        //        Debug.DrawRay(ray.origin, ray.direction * interactionRange, Color.green);
+        //    }
+        //}
+        //else
+        //{
+        //    Debug.DrawRay(ray.origin, ray.direction * interactionRange, Color.red);
+        //}
 
-        dispenseTimer += Time.deltaTime;
-        if (dispenseTimer >= dispenseDuration || dispensedIngredient)
-        {
-            dispenseTimer = 0f;
-            ChangeState(DispenserState.Raising);
-        }
+        //dispenseTimer += Time.deltaTime;
+        //if (dispenseTimer >= dispenseDuration || dispensedIngredient)
+        //{
+        //    dispenseTimer = 0f;
+        //    ChangeState(DispenserState.Raising);
+        //}
     }
 
     private void RunRaisingLogic()

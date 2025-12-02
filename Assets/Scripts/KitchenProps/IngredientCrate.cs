@@ -1,24 +1,39 @@
 using UnityEngine;
 
+[RequireComponent(typeof(Interactable))]
 public class IngredientCrate : MonoBehaviour
 {
-    [SerializeField] private GameObject ingredientPrefab;
+    [SerializeField] private Ingredient ingredientSO;
     [SerializeField] private Transform spawnTransform;
-    private Vector3 spawnPos;
 
-
-    private void Awake()
+    private void OnEnable()
     {
-        spawnPos = spawnTransform.position;
-        GenericEvent<Interact>.GetEvent(gameObject.name).AddListener(SpawnIngredient);
+        GenericEvent<OnInteractableInteracted>.GetEvent(gameObject.GetInstanceID().ToString()).AddListener(OnInteract);
     }
 
-    private void SpawnIngredient()
+    private void OnDisable()
     {
-        GameObject ingredient = ObjectPoolManager.SpawnObject(ingredientPrefab, spawnPos, Quaternion.identity);
-        Rigidbody rb = ingredient.GetComponent<Rigidbody>();
-        rb.isKinematic = false; 
+        GenericEvent<OnInteractableInteracted>.GetEvent(gameObject.GetInstanceID().ToString()).RemoveListener(OnInteract);
+    }
 
-        rb.AddForce(Vector3.up * 8f, ForceMode.Impulse);
+    public void OnInteract(GameObject player)
+    {
+        GrabScript grabScript = player.GetComponent<GrabScript>();
+        if (grabScript.IsGrabbing)
+            return;
+
+
+        Transform playerRoot = player.GetComponent<RagdollController>().GetPelvis().transform;
+        Vector3 direction = (spawnTransform.position - playerRoot.position).normalized;
+
+        SpawnIngredientInPlayersHands(player);
+    }
+
+    private void SpawnIngredientInPlayersHands(GameObject player)
+    {
+        GameObject ingredient = Instantiate(ingredientSO.Prefab, spawnTransform.position, Quaternion.identity);
+        Grabable grabComponent = ingredient.GetComponent<Grabable>();
+        GrabScript grabScript = player.GetComponent<GrabScript>();
+        grabScript.MakePlayerGrabObject(grabComponent);
     }
 }

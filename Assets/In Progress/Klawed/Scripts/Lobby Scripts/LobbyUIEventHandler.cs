@@ -32,23 +32,14 @@ public class LobbyUIEventHandler : MonoBehaviour
     [SerializeField] private GameObject _previousSelectedObj;
 
 
-    public virtual void Awake()
-    {
-        //GenericEvent<OnPlayerJoinedEvent>.GetEvent(_assignedPlayerName).AddListener(AssignPlayerInputValues);
-        GenericEvent<OnNextOptionInput>.GetEvent(_assignedPlayerName).AddListener(OnNextOption);
-        GenericEvent<OnPreviousOptionInput>.GetEvent(_assignedPlayerName).AddListener(OnPreviousOption);
-        GenericEvent<OnNavigateInput>.GetEvent(_assignedPlayerName).AddListener(OnNavigate);
-        GenericEvent<PlayerReadyInputEvent>.GetEvent(_assignedPlayerName).AddListener(OnReady);
-    }
-
-
-
-
     public virtual void OnEnable()
     {
         _uiIndex = 0;
         SetSelectedUIObj(_uiIndex);
         assignedPlayerObj = GameObject.Find(_assignedPlayerName);
+        GenericEvent<OnNextOptionInput>.GetEvent(_assignedPlayerName).AddListener(OnNextOption);
+        GenericEvent<OnPreviousOptionInput>.GetEvent(_assignedPlayerName).AddListener(OnPreviousOption);
+        GenericEvent<OnNavigateInput>.GetEvent(_assignedPlayerName).AddListener(OnNavigate);
         //    navigateAction.performed += OnNavigate;
         //    nextOptionAction.performed += OnNextOption;
         //    previousOptionAction.performed += OnPreviousOption;
@@ -63,6 +54,10 @@ public class LobbyUIEventHandler : MonoBehaviour
     public virtual void OnDisable()
     {
         if (_playerInput == null) return;
+
+        GenericEvent<OnNextOptionInput>.GetEvent(_assignedPlayerName).RemoveListener(OnNextOption);
+        GenericEvent<OnPreviousOptionInput>.GetEvent(_assignedPlayerName).RemoveListener(OnPreviousOption);
+        GenericEvent<OnNavigateInput>.GetEvent(_assignedPlayerName).RemoveListener(OnNavigate);
 
         //navigateAction.performed -= OnNavigate;
         //nextOptionAction.performed -= OnNextOption;
@@ -84,7 +79,8 @@ public class LobbyUIEventHandler : MonoBehaviour
 
     protected virtual void OnNavigate(Vector2 direction)
     {
-        if (gameObject.activeInHierarchy == false) return;
+        if (PlayerReadyManager.Instance.IsPlayerReady(assignedPlayerObj))
+            return;
 
         if (direction.y > 0)
         {
@@ -104,6 +100,9 @@ public class LobbyUIEventHandler : MonoBehaviour
 
     protected virtual void OnNextOption()
     {
+        if (PlayerReadyManager.Instance.IsPlayerReady(assignedPlayerObj))
+            return;
+
         if (gameObject.activeInHierarchy == false) return;
 
         // handle visuals for next option button press
@@ -132,6 +131,8 @@ public class LobbyUIEventHandler : MonoBehaviour
 
     protected virtual void OnPreviousOption()
     {
+        if (PlayerReadyManager.Instance.IsPlayerReady(assignedPlayerObj))
+            return;
 
         if (gameObject.activeInHierarchy == false) return;
         // handle visuals for previous option button press
@@ -151,19 +152,6 @@ public class LobbyUIEventHandler : MonoBehaviour
             _cosmeticChanger.ChangeRobotFace(assignedPlayerObj);
         }
     }
-
-    protected virtual void OnReady()
-    {
-        if (gameObject.activeInHierarchy == false) return;
-
-        if (readyAction == null)
-        {
-            Debug.LogWarning("Ready action is not assigned.");
-            return;
-        }
-    }
-
-
 
     public void SetSelectedUIObj(int index)
     {

@@ -3,12 +3,13 @@ using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using TMPro;
 using System.Collections.Generic;
+using UnityEngine.Audio;
 
 public class PauseMenu : MonoBehaviour
 {
     public GameObject container;
     public GameObject settingsPanel;
-    public GameObject pauseMenuContent; // The main pause menu buttons/content
+    public GameObject pauseMenuContent;
 
     [Header("Settings UI Elements")]
     public Slider volumeSlider;
@@ -32,29 +33,23 @@ public class PauseMenu : MonoBehaviour
             playerInput.actions["Pause"].performed += OnPause;
         }
 
-        // Initialize settings panel as hidden
         if (settingsPanel != null)
         {
             settingsPanel.SetActive(false);
         }
 
-        // Setup resolution dropdown
         SetupResolutionDropdown();
 
-        // Setup volume slider
         if (volumeSlider != null)
         {
-            // Set default volume to 0.5 (50%)
             AudioListener.volume = 0.5f;
-            volumeSlider.value = 50f;  // Slider goes 0-100, so 50 is middle
+            volumeSlider.value = 50f;
             volumeSlider.onValueChanged.AddListener(OnVolumeChanged);
         }
 
-        // Setup controller dropdown
         if (controllerTypeDropdown != null)
         {
             controllerTypeDropdown.onValueChanged.AddListener(OnControllerTypeChanged);
-            // Set initial controller image
             OnControllerTypeChanged(controllerTypeDropdown.value);
         }
     }
@@ -71,7 +66,8 @@ public class PauseMenu : MonoBehaviour
 
         for (int i = 0; i < resolutions.Length; i++)
         {
-            string option = resolutions[i].width + " x " + resolutions[i].height + " @ " + resolutions[i].refreshRateRatio.value.ToString("F0") + "Hz";
+            string option = resolutions[i].width + " x " + resolutions[i].height + " @ " +
+                            resolutions[i].refreshRateRatio.value.ToString("F0") + "Hz";
             options.Add(option);
 
             if (resolutions[i].width == Screen.currentResolution.width &&
@@ -89,7 +85,6 @@ public class PauseMenu : MonoBehaviour
 
     void Update()
     {
-        // Check for Escape key press every frame
         if (Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame)
         {
             TogglePause();
@@ -110,15 +105,12 @@ public class PauseMenu : MonoBehaviour
         {
             playerInput.actions["Pause"].performed -= OnPause;
         }
-        
-        // If disabled while paused by menu, unpause
+
         if (isPausedByMenu)
         {
-            // Only unpause if countdown isn't active
-            if (!GameStartCountdownUI.CountdownIsActive)
-            {
-                Time.timeScale = 1;
-            }
+            FreezeManager.PauseMenuOverride = false;
+            FreezeManager.ApplyState();
+
             GameStartCountdownUI.CountdownIsPaused = false;
             isPausedByMenu = false;
         }
@@ -131,21 +123,18 @@ public class PauseMenu : MonoBehaviour
 
     private void TogglePause()
     {
-        // Check if the container GameObject still exists
         if (container == null)
         {
             Debug.LogWarning("Pause menu container is missing!");
             return;
         }
 
-        // If settings panel is open, close it and return to pause menu
         if (settingsPanel != null && settingsPanel.activeSelf)
         {
             CloseSettings();
             return;
         }
 
-        // Otherwise toggle the pause menu
         if (container.activeSelf)
         {
             ResumeGame();
@@ -159,80 +148,76 @@ public class PauseMenu : MonoBehaviour
     public void PauseGame()
     {
         container.SetActive(true);
-        Time.timeScale = 0;
+
+        FreezeManager.PauseMenuOverride = true;
+        FreezeManager.ApplyState();
+
         isPausedByMenu = true;
-        
-        // If countdown is active, pause it too
+
         if (GameStartCountdownUI.CountdownIsActive)
         {
             GameStartCountdownUI.CountdownIsPaused = true;
-            Debug.Log("Countdown paused by pause menu");
         }
-        
+
+        // Pause SFX
+        AudioManager.Instance?.PlaySFX("Pause");
+
         Debug.Log("Game paused by pause menu");
     }
 
     public void ResumeGame()
     {
         container.SetActive(false);
-        
-        // Resume countdown if it was paused
+
+        FreezeManager.PauseMenuOverride = false;
+        FreezeManager.ApplyState();
+
         if (GameStartCountdownUI.CountdownIsActive)
         {
             GameStartCountdownUI.CountdownIsPaused = false;
-            Debug.Log("Countdown resumed from pause menu");
         }
-        
-        // Only unpause if countdown isn't active
-        // (If countdown is active, it will handle unpausing when done)
-        if (!GameStartCountdownUI.CountdownIsActive)
-        {
-            Time.timeScale = 1;
-        }
-        
+
         isPausedByMenu = false;
+
+        // Unpause SFX
+        AudioManager.Instance?.PlaySFX("Unpause");
+
         Debug.Log("Game resumed from pause menu");
     }
 
     public void MainMenuButton()
     {
-        Time.timeScale = 1;
+        FreezeManager.PauseMenuOverride = false;
+        FreezeManager.ApplyState();
+
         isPausedByMenu = false;
         GameStartCountdownUI.CountdownIsPaused = false;
+
+        PlayerStatsManager.ClearAllPlayers();
+        PlayerManager.Instance.ClearAllPlayers();
         UnityEngine.SceneManagement.SceneManager.LoadScene("MainMenuScene");
     }
 
     public void OpenSettings()
     {
         if (settingsPanel != null)
-        {
             settingsPanel.SetActive(true);
-        }
 
-        // Hide the pause menu content when settings opens
         if (pauseMenuContent != null)
-        {
             pauseMenuContent.SetActive(false);
-        }
     }
 
     public void CloseSettings()
     {
         if (settingsPanel != null)
-        {
             settingsPanel.SetActive(false);
-        }
 
-        // Show the pause menu content when settings closes
         if (pauseMenuContent != null)
-        {
             pauseMenuContent.SetActive(true);
-        }
     }
 
     void OnVolumeChanged(float value)
     {
-        // Convert slider value (0-100) to audio volume (0-1)
         AudioListener.volume = value / 100f;
     }
 
@@ -248,17 +233,13 @@ public class PauseMenu : MonoBehaviour
 
         switch (index)
         {
-            case 0: // PS5
+            case 0:
                 if (ps5ControllerSprite != null)
-                {
                     controllerImage.sprite = ps5ControllerSprite;
-                }
                 break;
-            case 1: // Xbox
+            case 1:
                 if (xboxControllerSprite != null)
-                {
                     controllerImage.sprite = xboxControllerSprite;
-                }
                 break;
         }
     }

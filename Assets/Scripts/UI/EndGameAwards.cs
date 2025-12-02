@@ -8,7 +8,6 @@ using UnityEngine.SceneManagement;
 public class EndGameAwards : MonoBehaviour {
     [Header("Award Display")]
     [SerializeField] private GameObject awardDisplayPanel;
-    //[SerializeField] private Transform podiumParent;
     [SerializeField] private TextMeshProUGUI awardTitleText;
     [SerializeField] private TextMeshProUGUI awardDescriptionText;
     [SerializeField] private TextMeshProUGUI playerNamesText;
@@ -18,20 +17,11 @@ public class EndGameAwards : MonoBehaviour {
 
     [Header("Camera")]
     [SerializeField] private Camera awardCamera;
-    [SerializeField] private float rotationSpeed = 30f;
-
-    //[Header("Podium Settings")]
-    //[SerializeField] private GameObject podiumPrefab;
-    //[SerializeField] private float podiumSpacing = 100f;
-    //[SerializeField] private float podiumMaxHeight = 3f;
-    //[SerializeField] private float podiumRiseSpeed = 2f;
+   // [SerializeField] private float rotationSpeed = 30f;
 
     [Header("Spring Animations")]
     [SerializeField] private float springDelayBetweenTexts = 0f;
-
-
-    private List<PlayerStats> players = new List<PlayerStats>();
-    //private List<GameObject> podiums = new List<GameObject>();
+    private List<PlayerStatsData> players = new List<PlayerStatsData>();
     private bool ceremonyCancelled = false;
 
     public static EndGameAwards Instance { get; private set; }
@@ -39,35 +29,37 @@ public class EndGameAwards : MonoBehaviour {
     private void Awake() {
         if (Instance == null) Instance = this;
         else Destroy(gameObject);
-
-        awardDisplayPanel.SetActive(false);
     }
 
-    public Coroutine ShowAwards(MonoBehaviour caller) {
+    public Coroutine ShowAwards(MonoBehaviour caller)
+    {
+        Debug.Log("ShowAwards called");
 
-        if (EndGameData.playerCount == 0) {
-            Debug.LogWarning("No players found. Cannot show awards.");
+        // Get all player data and store it locally
+        players = PlayerStatsManager.GetAllPlayersData();
+        Debug.Log($"Retrieved {players?.Count ?? 0} players");
+
+        if (players == null || players.Count == 0)
+        {
+            Debug.LogWarning("No players found in PlayerStatsManager. Cannot show awards.");
             return null;
         }
 
-        // Build a temporary list of PlayerStats using the static data
-        players = new List<PlayerStats>();
-        for (int i = 0; i < EndGameData.playerCount; i++) {
-            PlayerStats p = EndGameData.playerObjects[i].GetComponent<PlayerStats>();
-            players.Add(p);
+        Debug.Log($"Starting awards ceremony with {players.Count} players");
+        
+        // Debug log each player's stats
+        foreach (PlayerStatsData playerStats in players)
+        {
+            Debug.Log($"{playerStats.player.name}: Points={playerStats.pointsGenerated}, Items={playerStats.itemsGrabbed}, Joints={playerStats.jointsReconnected}, Explosions={playerStats.explosionsReceived}");
         }
-        for (int i = 0; i < EndGameData.playerCount; i++) {
-            PlayerStats temp = new PlayerStats();
-            temp.playerNumber = i + 1;
-            temp.ingredientsHandled = EndGameData.ingredientsHandled[i];
-            temp.pointsGenerated = EndGameData.pointsGenerated[i];
-            temp.jointsReconnected = EndGameData.jointsReconnected[i];
-            temp.explosionsReceived = EndGameData.explosionsReceived[i];
-            players.Add(temp);
-        }
-
+        
+        // Clear the stats manager immediately after retrieving the data
+        // This ensures fresh stats for the next level
+        PlayerStatsManager.ClearAllPlayers();
+        Debug.Log("PlayerStatsManager cleared for next level");
+        
         return caller.StartCoroutine(AwardCeremony());
-    }
+    }   
 
     public void CancelCeremony() {
         ceremonyCancelled = true;
@@ -79,12 +71,10 @@ public class EndGameAwards : MonoBehaviour {
         ceremonyCancelled = false;
         awardDisplayPanel.SetActive(true);
 
-        //yield return SetupPodiumsAndPlayers();
-
         // Awards
-        yield return ShowAward("Hot Hands", "Most Ingredients Handled",
-            GetMaxStatWinners(p => p.ingredientsHandled),
-            p => $"Ingredients: {p.ingredientsHandled}");
+        yield return ShowAward("Hot Hands", "Most Items Grabbed",
+            GetMaxStatWinners(p => p.itemsGrabbed),
+            p => $"Items: {p.itemsGrabbed}");
         if (ceremonyCancelled) yield break;
 
         yield return ShowAward("MVP", "Most Points Generated",
@@ -96,87 +86,37 @@ public class EndGameAwards : MonoBehaviour {
         if (guardianWinners.Count > 0)
             yield return ShowAward("Guardian Angel", "Most Joints Reconnected",
                 guardianWinners, p => $"Joints: {p.jointsReconnected}");
-
-        buttonsController?.ShowButtons();
-
         if (ceremonyCancelled) yield break;
 
         yield return ShowAward("Noob", "Worst Performance (Low Points + High Explosions)",
             GetNoobWinners(),
             p => $"Points: {p.pointsGenerated} | Explosions: {p.explosionsReceived}");
 
+        buttonsController?.ShowButtons();
+
         yield return new WaitForSecondsRealtime(1f);
         awardDisplayPanel.SetActive(false);
     }
 
-    //private IEnumerator SetupPodiumsAndPlayers() {
-    //    ClearPodiums();
-
-    //    int count = players.Count;
-    //    float maxPoints = Mathf.Max(1, players.Max(p => p.pointsGenerated));
-
-    //    float startX = -(count - 1) * podiumSpacing * 0.5f;
-
-    //    for (int i = 0; i < count; i++) {
-    //        var p = players[i];
-    //        Vector3 localPos = new Vector3(startX + i * podiumSpacing, 0, 0);
-
-    //        GameObject podium = Instantiate(podiumPrefab, podiumParent);
-    //        podium.transform.localPosition = localPos;
-    //        podiums.Add(podium);
-
-    //        float normalized = (float)p.pointsGenerated / maxPoints;
-    //        float targetHeight = Mathf.Lerp(0.5f, podiumMaxHeight, normalized);
-
-    //        GameObject playerObj = p.GetPlayerPrefab();
-    //        StartCoroutine(RaisePodiumWithPlayer(podium.transform, playerObj.transform, targetHeight));
-
-    //        yield return new WaitForSecondsRealtime(0.1f);
-    //    }
-
-    //    yield return new WaitForSecondsRealtime(1.5f);
-    //}
-
-    //private IEnumerator RaisePodiumWithPlayer(Transform podium, Transform player, float targetHeight) {
-    //    if (podium == null) yield break;
-
-    //    Vector3 originalScale = podium.localScale;
-    //    podium.localScale = new Vector3(originalScale.x, 0.01f, originalScale.z);
-
-    //    player.SetParent(podium, false);
-    //    player.localPosition = Vector3.zero;
-    //    player.localRotation = Quaternion.identity;
-    //    player.localScale = Vector3.one;
-
-    //    float t = 0f;
-    //    while (t < 1f) {
-    //        t += Time.unscaledDeltaTime * podiumRiseSpeed;
-    //        float newYScale = Mathf.Lerp(0.01f, targetHeight, t);
-    //        podium.localScale = new Vector3(originalScale.x, newYScale, originalScale.z);
-    //        player.localPosition = new Vector3(0, newYScale * 0.5f, 0);
-    //        yield return null;
-    //    }
-    //}
-
     private IEnumerator ShowAward(
       string title,
       string description,
-      List<PlayerStats> winners,
-      System.Func<PlayerStats, string> getStatText) {
+      List<PlayerStatsData> winners,
+      System.Func<PlayerStatsData, string> getStatText) {
         if (winners == null || winners.Count == 0) yield break;
 
         awardTitleText.text = title + (winners.Count > 1 && title != "Hot Hands" ? "s" : "");
         awardDescriptionText.text = description;
-        playerNamesText.text = string.Join(" & ", winners.Select(p => $"Player {p.playerNumber}"));
+        playerNamesText.text = string.Join(" & ", winners.Select(p => $"{p.player.name}"));
         statsText.text = string.Join(" | ", winners.Select(getStatText));
 
         SpringAPI[] springs =
         {
-        awardTitleText?.GetComponent<SpringAPI>(),
-        awardDescriptionText?.GetComponent<SpringAPI>(),
-        playerNamesText?.GetComponent<SpringAPI>(),
-        statsText?.GetComponent<SpringAPI>()
-    };
+            awardTitleText?.GetComponent<SpringAPI>(),
+            awardDescriptionText?.GetComponent<SpringAPI>(),
+            playerNamesText?.GetComponent<SpringAPI>(),
+            statsText?.GetComponent<SpringAPI>()
+        };
 
         foreach (var spring in springs) {
             if (spring != null)
@@ -202,14 +142,19 @@ public class EndGameAwards : MonoBehaviour {
 
         yield return new WaitForSecondsRealtime(0.5f);
     }
+
     #region Stat Calculations
-    private List<PlayerStats> GetMaxStatWinners(System.Func<PlayerStats, int> selector, bool requireNonZero = false) {
+    private List<PlayerStatsData> GetMaxStatWinners(System.Func<PlayerStatsData, int> selector, bool requireNonZero = false) {
+        if (players.Count == 0) return new List<PlayerStatsData>();
+        
         int max = players.Max(selector);
-        if (requireNonZero && max <= 0) return new List<PlayerStats>();
+        if (requireNonZero && max <= 0) return new List<PlayerStatsData>();
         return players.Where(p => selector(p) == max).ToList();
     }
 
-    private List<PlayerStats> GetNoobWinners() {
+    private List<PlayerStatsData> GetNoobWinners() {
+        if (players.Count == 0) return new List<PlayerStatsData>();
+        
         int weight = 10;
         float worst = players.Min(p => p.pointsGenerated - p.explosionsReceived * weight);
         return players.Where(p => Mathf.Approximately(p.pointsGenerated - p.explosionsReceived * weight, worst)).ToList();

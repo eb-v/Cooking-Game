@@ -1,88 +1,92 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class PlayerStatsManager : MonoBehaviour
 {
-    public static PlayerStatsManager Instance;
+    private static Dictionary<GameObject, PlayerStatsData> playerStatsData = new Dictionary<GameObject, PlayerStatsData>();
     
-    private List<PlayerStats> allPlayers = new List<PlayerStats>();
-    
-    private void Awake()
+    private void Start()
     {
-        if (Instance == null)
+        string currentScene = SceneManager.GetActiveScene().name;
+        
+        if (currentScene == "Pregame Lobby" || currentScene.Contains("Level"))
         {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            Destroy(gameObject);
+            if (playerStatsData.Count > 0)
+            {
+                ClearAllPlayers();
+            }
         }
     }
     
     private void OnEnable()
     {
-        // Subscribe to player joined event
         GenericEvent<OnPlayerJoinedEvent>.GetEvent("PlayerJoined").AddListener(OnPlayerJoined);
     }
     
     private void OnDisable()
     {
-        // Unsubscribe from player joined event
         GenericEvent<OnPlayerJoinedEvent>.GetEvent("PlayerJoined").RemoveListener(OnPlayerJoined);
     }
     
-    private void OnPlayerJoined(int playerNumber)
+    private static void OnPlayerJoined(GameObject player)
     {
-        // Get the player GameObject from PlayerManager
-        GameObject playerObj = PlayerManager.Instance.players[playerNumber - 1];
-        
-        // Check if PlayerStats already exists
-        PlayerStats existingStats = playerObj.GetComponent<PlayerStats>();
-        if (existingStats != null && allPlayers.Contains(existingStats))
+        if (playerStatsData.ContainsKey(player))
         {
-            Debug.LogWarning($"Player {playerNumber} already registered for stats tracking, skipping duplicate");
             return;
         }
-        
-        // Get or add PlayerStats component
-        PlayerStats stats = playerObj.GetComponent<PlayerStats>();
-        if (stats == null)
+        PlayerStatsData newStats = new PlayerStatsData(player);
+        playerStatsData[player] = newStats;
+    }
+    
+    public static void AddPoints(GameObject playerNumber, int points)
+    {
+        if (playerStatsData.ContainsKey(playerNumber))
         {
-            stats = playerObj.AddComponent<PlayerStats>();
-            Debug.Log($"Added new PlayerStats component to Player {playerNumber}");
-        }
-        
-        // Set player number
-        stats.playerNumber = playerNumber;
-        
-        // Add to allPlayers list if not already there
-        if (!allPlayers.Contains(stats))
-        {
-            allPlayers.Add(stats);
-            Debug.Log($"Player {playerNumber} registered for stats tracking");
+            playerStatsData[playerNumber].pointsGenerated += points;
         }
     }
     
-    // Method for EndGameAwards or other scripts to get all players
-    public List<PlayerStats> GetAllPlayers()
+    public static void IncrementItemsGrabbed(GameObject player)
     {
-        // Remove any null references (in case players were destroyed)
-        allPlayers.RemoveAll(player => player == null);
-        return allPlayers;
+        if (playerStatsData.ContainsKey(player))
+        {
+            playerStatsData[player].itemsGrabbed++;
+        }
     }
     
-    // Get a specific player's stats by player number
-    public PlayerStats GetPlayerStats(int playerNumber)
+    public static void IncrementJointsReconnected(GameObject player)
     {
-        return allPlayers.Find(stats => stats.playerNumber == playerNumber);
+        if (playerStatsData.ContainsKey(player))
+        {
+            playerStatsData[player].jointsReconnected++;
+        }
     }
     
-    // Completely clear all tracked players (for returning to main menu, etc.)
-    public void ClearAllPlayers()
+    public static void IncrementExplosionsReceived(GameObject player)
     {
-        allPlayers.Clear();
-        Debug.Log("All player stats cleared");
+        if (playerStatsData.ContainsKey(player))
+        {
+            playerStatsData[player].explosionsReceived++;
+        }
+    }
+    
+    public static List<PlayerStatsData> GetAllPlayersData()
+    {
+        return new List<PlayerStatsData>(playerStatsData.Values);
+    }
+    
+    public static PlayerStatsData GetPlayerStats(GameObject player)
+    {
+        if (playerStatsData.ContainsKey(player))
+        {
+            return playerStatsData[player];
+        }
+        return null;
+    }
+    
+    public static void ClearAllPlayers()
+    {
+        playerStatsData.Clear();
     }
 }

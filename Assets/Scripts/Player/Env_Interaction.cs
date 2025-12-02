@@ -7,34 +7,27 @@ using UnityEngine;
 public class Env_Interaction : MonoBehaviour
 {
     [SerializeField] private Transform pelvis;
-    [SerializeField] private float interactionRange = 5f;
+    private float interactionRange;
     private int layerMask;
     private GameObject lastLookedAt;
     public GameObject currentlyLookingAt;
     [SerializeField] private float glowIntensity = 0.5f;
-    //private GameObject heldObject;
-    //private Dictionary<string, FixedJoint> grabJoints;
+
+    private void Awake()
+    {
+        PlayerData playerData = LoadPlayerData.GetPlayerData();
+        interactionRange = playerData.InteractionRange; 
+    }
 
     private void Start()
     {
         layerMask = (1 << LayerMask.NameToLayer("InteractDetectionCollider")) | (1 << LayerMask.NameToLayer("P2PInteractDetectionCollider"));
-
-        //GenericEvent<ObjectGrabbed>.GetEvent(gameObject.name).AddListener(AssignHeldObj);
-        //GenericEvent<ObjectReleased>.GetEvent(gameObject.name).AddListener(UnAssignHeldObj);
-
-        //GenericEvent<Interact>.GetEvent(gameObject.name).AddListener(PlaceObject);
-        //GenericEvent<RemovePlacedObject>.GetEvent(gameObject.name).AddListener(RemovePlacedObject);
-
-        //GenericEvent<SetUser>.GetEvent(gameObject.name).AddListener(SetCurrentUserForKitchenProp);
-
-
-        //grabJoints = gameObject.GetComponent<RagdollController>().grabJoints;
     }
 
     private void FixedUpdate()
     {
 
-        RayCastDetection();
+        //RayCastDetection();
 
 
     }
@@ -60,35 +53,37 @@ public class Env_Interaction : MonoBehaviour
             // assign new hit object to variable
             if (hit.collider.gameObject.layer == LayerMask.NameToLayer("InteractDetectionCollider"))
             {
-                currentlyLookingAt = hit.collider.transform.parent.gameObject;
-                // highlight the currently hit object
-                Renderer rend = currentlyLookingAt.GetComponent<Renderer>();
-                if (rend != null)
-                {
-                    Material mat = rend.material;
-                    mat.EnableKeyword("_EMISSION");
-                    mat.SetColor("_EmissionColor", Color.white * glowIntensity);
-                }
+                currentlyLookingAt = hit.collider.transform.root.gameObject;
+
+                //// highlight the currently hit object
+                //Renderer rend = currentlyLookingAt.GetComponent<Renderer>();
+                //if (rend != null)
+                //{
+                //    Material mat = rend.material;
+                //    mat.EnableKeyword("_EMISSION");
+                //    mat.SetColor("_EmissionColor", Color.white * glowIntensity);
+                //}
+
+                //if (currentlyLookingAt.GetComponent<DisplayTerminalUI>() != null)
+                //{
+                //    GenericEvent<PlayerLookingAtObject>.GetEvent(currentlyLookingAt.name).Invoke();
+                //}
             }
             else
             {
                 // player is looking at another player
-                currentlyLookingAt = hit.collider.transform.root.gameObject;
+                //currentlyLookingAt = hit.collider.transform.root.gameObject;
             }
 
             if (lastLookedAt != null)
             {
                 if (lastLookedAt != currentlyLookingAt)
                 {
-                    GenericEvent<InteractableLookedAtChanged>.GetEvent(lastLookedAt.name).Invoke(gameObject);
-                    ResetHighlight(lastLookedAt);
+                    //GenericEvent<InteractableLookedAtChanged>.GetEvent(lastLookedAt.name).Invoke(gameObject);
+                    //ResetHighlight(lastLookedAt);
                 }
             }
             lastLookedAt = currentlyLookingAt;
-
-
-            
-            
 
             Debug.DrawRay(ray.origin, ray.direction * interactionRange, Color.green);
 
@@ -106,9 +101,10 @@ public class Env_Interaction : MonoBehaviour
             currentlyLookingAt = null;
             if (lastLookedAt != null)
             {
-                GenericEvent<InteractableLookedAtChanged>.GetEvent(gameObject.name).Invoke(null);
-                GenericEvent<PlayerStoppedLookingAtInteractable>.GetEvent(lastLookedAt.name).Invoke(gameObject);
-                ResetHighlight(lastLookedAt);
+                //GenericEvent<InteractableLookedAtChanged>.GetEvent(gameObject.name).Invoke(null);
+                //GenericEvent<PlayerStoppedLookingAtInteractable>.GetEvent(lastLookedAt.name).Invoke(gameObject);
+                //GenericEvent<PlayerStoppedLookingAtObject>.GetEvent(lastLookedAt.name).Invoke();
+                //ResetHighlight(lastLookedAt);
                 lastLookedAt = null;
             }
             Debug.DrawRay(ray.origin, ray.direction * interactionRange, Color.red);

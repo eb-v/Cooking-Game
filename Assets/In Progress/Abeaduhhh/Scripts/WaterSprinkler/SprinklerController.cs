@@ -5,7 +5,10 @@ using System.Collections;
 public class SprinklerController : MonoBehaviour {
     [Header("Button Reference")]
     public SprinklerButton buttonA;
-    //public SprinklerButton buttonB;
+    public SprinklerButton buttonB;
+
+    private bool buttonAPressed = false;
+    private bool buttonBPressed = false;
 
     [Header("Pooling Settings")]
     public GameObject waterEffectPrefab;
@@ -46,8 +49,8 @@ public class SprinklerController : MonoBehaviour {
         if (buttonA != null)
             buttonA.OnButtonStateChanged.AddListener(OnButtonAChanged);
 
-        //if(buttonB != null)
-        //    buttonB.OnButtonStateChanged.AddListener(OnButtonBChanged);
+        if (buttonB != null)
+            buttonB.OnButtonStateChanged.AddListener(OnButtonBChanged);
 
         if (waterEffectPrefab != null) {
             if (ObjectPoolManager.IsPooledObject(waterEffectPrefab)) {
@@ -59,40 +62,51 @@ public class SprinklerController : MonoBehaviour {
             sprinklerEffect = sprinklerEffectInstance.GetComponent<ParticleSystem>();
 
             if (sprinklerEffectInstance != null)
-                sprinklerEffectInstance.SetActive(false); // disable initially
+                sprinklerEffectInstance.SetActive(false);
         }
     }
 
     private void OnButtonAChanged(bool pressed) {
-        if (pressed)
-            GenericEvent<StartSprinklerEvent>.GetEvent("SprinklerController").Invoke();
+        buttonAPressed = pressed;
+        CheckButtons();
     }
 
-    //private void OnButtonBChanged(bool pressed) {
-    //    if (pressed)
-    //        GenericEvent<StartSprinklerEvent>.GetEvent("SprinklerController").Invoke();
-    //}
+    private void OnButtonBChanged(bool pressed) {
+        buttonBPressed = pressed;
+        CheckButtons();
+    }
 
     private void OnStartSprinklerEvent() => StartSprinkler();
     private void OnStopSprinklerEvent() => StopSprinkler();
-
-    public void StartSprinkler() {
-        if (sprinklerActive) return;
-        sprinklerActive = true;
-
-        if (sprinklerEffectInstance != null) {
-            sprinklerEffectInstance.SetActive(true);
-            if (!sprinklerEffect.isPlaying)
-                sprinklerEffect.Play();
+    private void CheckButtons() {
+        if (buttonAPressed && buttonBPressed) {
+            GenericEvent<StartSprinklerEvent>.GetEvent("SprinklerController").Invoke();
         }
-
-        InvokeRepeating(nameof(CheckForFires), extinguishDelay, extinguishCheckInterval);
-
-        if (sprinklerDuration > 0)
-            StartCoroutine(AutoStopSprinkler());
-
-        Debug.Log($"{name}: Sprinkler Activated for {sprinklerDuration} seconds (fires extinguish after {extinguishDelay}s)");
+        else {
+            GenericEvent<StopSprinklerEvent>.GetEvent("SprinklerController").Invoke();
+        }
     }
+    public void StartSprinkler() {
+    if (sprinklerActive) return;
+    sprinklerActive = true;
+
+    // sprinkler SFX
+    AudioManager.Instance?.PlaySFX("SprinklerOn");
+
+    if (sprinklerEffectInstance != null) {
+        sprinklerEffectInstance.SetActive(true);
+        if (!sprinklerEffect.isPlaying)
+            sprinklerEffect.Play();
+    }
+
+    InvokeRepeating(nameof(CheckForFires), extinguishDelay, extinguishCheckInterval);
+
+    if (sprinklerDuration > 0)
+        StartCoroutine(AutoStopSprinkler());
+
+    Debug.Log($"{name}: Sprinkler Activated for {sprinklerDuration} seconds (fires extinguish after {extinguishDelay}s)");
+}
+
 
     private IEnumerator AutoStopSprinkler() {
         yield return new WaitForSeconds(sprinklerDuration);
@@ -102,7 +116,8 @@ public class SprinklerController : MonoBehaviour {
     private void CheckForFires() {
         int count = Physics.OverlapSphereNonAlloc(transform.position, extinguishRadius, overlapResults);
         for (int i = 0; i < count; i++) {
-            FireController fire = overlapResults[i].GetComponentInParent<FireController>();
+            //FireController fire = overlapResults[i].GetComponentInParent<FireController>();
+            FireController fire = overlapResults[i].GetComponent<FireController>();
             if (fire != null) {
                 fire.StopFireImmediate();
             }
@@ -110,24 +125,28 @@ public class SprinklerController : MonoBehaviour {
     }
 
     public void StopSprinkler() {
-        if (!sprinklerActive) return;
-        sprinklerActive = false;
+    if (!sprinklerActive) return;
+    sprinklerActive = false;
 
-        CancelInvoke(nameof(CheckForFires));
-        CancelInvoke(nameof(StopSprinkler));
+    // sprinkler stop SFX
+    AudioManager.Instance?.PlaySFX("SprinklerOff");
 
-        if (sprinklerEffect != null) {
-            sprinklerEffect.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+    CancelInvoke(nameof(CheckForFires));
+    CancelInvoke(nameof(StopSprinkler));
 
-            if (ObjectPoolManager.IsPooledObject(sprinklerEffectInstance)) {
-                StartCoroutine(ReturnEffectNextFrame(sprinklerEffectInstance.GetComponent<ParticleSystem>()));
-            } else {
-                sprinklerEffectInstance.SetActive(false);
-            }
+    if (sprinklerEffect != null) {
+        sprinklerEffect.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+
+        if (ObjectPoolManager.IsPooledObject(sprinklerEffectInstance)) {
+            StartCoroutine(ReturnEffectNextFrame(sprinklerEffectInstance.GetComponent<ParticleSystem>()));
+        } else {
+            sprinklerEffectInstance.SetActive(false);
         }
-
-        Debug.Log($"{name}: Sprinkler Deactivated");
     }
+
+    Debug.Log($"{name}: Sprinkler Deactivated");
+}
+
 
     private IEnumerator ReturnEffectNextFrame(ParticleSystem ps) {
         yield return null;
@@ -138,7 +157,7 @@ public class SprinklerController : MonoBehaviour {
                 Debug.Log($"{name}: Sprinkler Effect Returned to Pool");
             } else {
                 ps.gameObject.SetActive(false);
-                Debug.LogWarning($"{name}: Sprinkler Effect was not pooled — just disabled instead.");
+                Debug.LogWarning($"{name}: Sprinkler Effect was not pooled ï¿½ just disabled instead.");
             }
         }
     }

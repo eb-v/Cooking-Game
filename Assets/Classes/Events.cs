@@ -1,10 +1,11 @@
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
+using System.Collections.Generic;
 
 public class OnMoveInput : UnityEvent<Vector2> { }
 public class OnJumpInput : UnityEvent { }
-
+public class OnBoostInput : UnityEvent { }
 public class Move : UnityEvent { }
 public class Idle : UnityEvent { }
 public class HasLanded : UnityEvent { }
@@ -85,11 +86,6 @@ public class ReleaseHeldJoint : UnityEvent<GameObject> { }
 
 public class LimbDamaged : UnityEvent<float> { }
 
-public class IngredientEnteredAssemblyArea : UnityEvent<GameObject> { }
-
-public class IngredientExitedAssemblyArea : UnityEvent<GameObject> { }
-
-
 public class MoveImageEvent : UnityEvent<bool> { }
 
 public class UpdateGoalValueEvent : UnityEvent<float> { }
@@ -98,13 +94,13 @@ public class SpringUpdateEvent : UnityEvent<float> { }
 
 public class OnButtonPressedEvent : UnityEvent { }
 
-public class OnPlayerJoinedEvent : UnityEvent<int> { }
+public class OnPlayerJoinedEvent : UnityEvent<GameObject> { }
 
 public class OnChangeColorEvent : UnityEvent<GameObject> { }
 
 public class OnChangeHatEvent : UnityEvent<GameObject> { }
 
-public class PlayerReadyInputEvent : UnityEvent { }
+public class PlayerReadyInputEvent : UnityEvent<GameObject> { }
 
 public class CrateLandedEvent : UnityEvent { }
 
@@ -167,3 +163,48 @@ public class DroneDeliveryCalled : UnityEvent<Ingredient> { }
 public class InitiateDespawnTimerEvent : UnityEvent { }
 
 public class OnGameStartEvent : UnityEvent { }
+
+public class PlayerLookingAtObject : UnityEvent { }
+public class PlayerStoppedLookingAtObject : UnityEvent { }
+
+public class OnRespawnInput : UnityEvent<GameObject> { }
+
+public class OnModifiersChoosenEvent : UnityEvent<List<LevelModifiers>> { }
+
+public class OnSlotMachineAnimationCompleteEvent : UnityEvent { }
+
+public class OnGrabStatusChanged : UnityEvent<bool> { }
+
+public class OnInteractInput : UnityEvent { }
+
+public class OnAlternateInteractInput : UnityEvent { }
+
+public class OnCutInput : UnityEvent { }
+
+public class OnPerformStationAction : UnityEvent { }
+public class OnPerformStationActionCancel : UnityEvent { }
+
+public class SodaSelectedEvent : UnityEvent<MenuItem> { }
+
+public class OnCustomerServed : UnityEvent<Customer> { }
+public class CustomerFinishedEating : UnityEvent<Customer> { }
+
+public class AssemblyStationColliderEntered : UnityEvent<GameObject> { }
+
+public class OnThrowStatusChanged : UnityEvent<bool> { }
+
+public class OnEquipmentUseInput : UnityEvent<bool> { }
+
+public class OnObjectIgnited : UnityEvent { }
+
+public class IngredientStorageAmountChanged : UnityEvent<Ingredient, int> { }
+
+public class  OnGrabInputEvent : UnityEvent { }
+
+public class OnInteractableInteracted : UnityEvent<GameObject> { }
+public class OnInteractableAltInteracted : UnityEvent<GameObject> { }
+
+public class OnObjectGrabbed : UnityEvent { }
+
+public class OnObjectThrown : UnityEvent { }
+

@@ -1,6 +1,8 @@
-using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using TMPro;
+using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class EndGameUIController : MonoBehaviour {
     [Header("UI References")]
@@ -10,6 +12,9 @@ public class EndGameUIController : MonoBehaviour {
     [SerializeField] private GameObject starGroup;
     [SerializeField] private TextMeshProUGUI scoreAmountText;
     //[SerializeField] private GameObject gameOverButtons;
+    [SerializeField] private SceneField _playScene;
+    private readonly List<AsyncOperation> _scenesToLoad = new List<AsyncOperation>();
+
 
     [Header("Awards")]
     [SerializeField] private float starPopDelay = 0.3f;
@@ -43,7 +48,7 @@ public class EndGameUIController : MonoBehaviour {
     }
 
     private IEnumerator ShowEndGameSequence() {
-        int finalScore = ScoreSystem.GetCurrentScore();
+        int finalScore = ScoreManager.Instance.GetCurrentScore();
         int starsEarned = CalculateStars(finalScore);
 
         if (background != null) background.SetActive(true);
@@ -68,13 +73,16 @@ public class EndGameUIController : MonoBehaviour {
 
         //if (gameOverButtons != null)
         //    gameOverButtons.SetActive(true);
+
+        _scenesToLoad.Add(SceneManager.LoadSceneAsync(_playScene));
+
     }
 
     private int CalculateStars(int score) {
-        if (score >= 0) return 3;
-        //if (score >= 2500) return 3;
-        //if (score >= 2000) return 2;
-        //if (score >= 1500) return 1;
+        //if (score >= 0) return 3;
+            if (score >= 2500) return 3;
+            if (score >= 2000) return 2;
+            if (score >= 1500) return 1;
         return 0;
     }
     private IEnumerator SpringOutGameOverCanvas() {
@@ -100,6 +108,9 @@ public class EndGameUIController : MonoBehaviour {
         gameOverCanvas.SetActive(false);
         if (background != null)
             background.SetActive(false);
+
+        
+
     }
 
     private IEnumerator ShowStars(int starsEarned) {

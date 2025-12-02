@@ -3,16 +3,24 @@ using UnityEngine.AI;
 
 public class NPC : MonoBehaviour
 {
-    public Animator animator;
-    public NavMeshAgent agent;
+    private Animator animator;
+    private NavMeshAgent agent;
 
     [SerializeField] private GameObject npcCanvas; // speech bubble
 
+    private void Awake()
+    {
+        agent = GetComponent<NavMeshAgent>();
+        animator = GetComponent<Animator>();
+        if (animator == null)
+            Debug.LogError("Animator component not found on NPC GameObject.");
+
+        if (agent == null)
+            Debug.LogError("NavMeshAgent component not found on NPC GameObject.");
+    }
+
     void Start()
     {
-        if (animator == null) animator = GetComponentInChildren<Animator>();
-        if (animator == null) animator = GetComponent<Animator>();
-
         agent.updateRotation = true;
     }
 
@@ -21,18 +29,5 @@ public class NPC : MonoBehaviour
         bool walking = agent.pathPending || agent.remainingDistance > agent.stoppingDistance;
         animator.SetBool("isWalking", walking);
 
-        
-    }
-
-    public void MoveTo(Vector3 destination)
-    {
-        agent.SetDestination(destination);
-    }
-
-    //speech bubble visibility
-    public void SetSpeechBubbleActive(bool active)
-    {
-        if (npcCanvas != null)
-            npcCanvas.SetActive(active);
     }
 }

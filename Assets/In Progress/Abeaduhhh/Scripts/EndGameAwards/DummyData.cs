@@ -15,7 +15,7 @@ public class DummyAwardsData : MonoBehaviour {
             // Add PlayerStats component to the GameObject
             PlayerStats p = playerGO.AddComponent<PlayerStats>();
             p.playerNumber = i + 1;
-            p.ingredientsHandled = Random.Range(5, 20);
+            // p.ingredientsHandled = Random.Range(5, 20);
             p.pointsGenerated = Random.Range(50, 200);
             p.jointsReconnected = Random.Range(0, 10);
             p.explosionsReceived = Random.Range(0, 5);

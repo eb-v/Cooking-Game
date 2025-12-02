@@ -40,39 +40,7 @@ public class GrabVisualScript : MonoBehaviour
 
     private void Update()
     {
-        if (grabDetection.grabbedObj != null)
-        {
-            targetTransform = grabDetection.grabbedObj.transform;
-        }
-        else
-        {
-            targetTransform = null;
-        }
-
-        if (grabDetection.isGrabbing && targetTransform != null)
-        {
-            lineRenderer.enabled = true;
-
-            Vector3 start = handTransform.position;
-            Vector3 end = targetTransform.position;
-
-            // Animate extension
-            currentLength = Mathf.MoveTowards(currentLength, 1f, grabSpeed * Time.deltaTime);
-            Vector3 currentEnd = Vector3.Lerp(start, end, currentLength);
-
-            lineRenderer.SetPosition(0, start);
-            lineRenderer.SetPosition(1, currentEnd);
-
-            // Once fully extended
-            if (currentLength >= 1f)
-            {
-                // Optionally: attach the object or show grab complete
-            }
-        }
-        else
-        {
-            lineRenderer.enabled = false;
-        }
+        
     }
 
 

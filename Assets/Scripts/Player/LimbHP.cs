@@ -5,6 +5,7 @@ public class LimbHP : MonoBehaviour
 {
     public float maxHP = 100f;
     public float currentHP;
+    public RagdollController rc;
 
 
     private void Start()
@@ -14,7 +15,7 @@ public class LimbHP : MonoBehaviour
         currentHP = maxHP;
     }
 
-    private void ApplyDamage(float damageAmount)
+    public void ApplyDamage(float damageAmount)
     {
         currentHP -= damageAmount;
         if (currentHP <= 0)
@@ -24,7 +25,8 @@ public class LimbHP : MonoBehaviour
 
             // Limb is disconnected
             RagdollJoint ragdollJoint = gameObject.GetComponent<RagdollJoint>();
-            GenericEvent<OnRemoveJoint>.GetEvent(gameObject.transform.root.name).Invoke(ragdollJoint.GetJointName());
+            rc.DisconnectJoint(ragdollJoint.GetJointName());
+            //GenericEvent<OnRemoveJoint>.GetEvent(gameObject.transform.root.name).Invoke(ragdollJoint.GetJointName());
         }
     }
 

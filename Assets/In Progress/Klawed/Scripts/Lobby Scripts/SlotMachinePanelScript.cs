@@ -8,10 +8,6 @@ public class SlotMachinePanelScript : MonoBehaviour
     [SerializeField] private float slotMachineSpinDelay = 1f;
     [SerializeField] private float resumeTimeDelay = 9f;
     [SerializeField] private SlotMachineScript slotMachineScript;
-    [SerializeField] private Timer timer;
-    [SerializeField] private GameObject musicManager;
-    [SerializeField] private GameObject BombManager;
-    [SerializeField] private BombDropper bombDropper;
 
     // reference to existing audio script
     [SerializeField] private SlotMachineAudio slotMachineAudio;
@@ -20,16 +16,11 @@ public class SlotMachinePanelScript : MonoBehaviour
     {
         GenericEvent<SlotsFinishedEvent>.GetEvent("SlotMachinePanelScript").AddListener(OnSlotsFinished);
 
-        if (bombDropper == null && BombManager != null)
-        {
-            bombDropper = BombManager.GetComponent<BombDropper>();
-        }
     }
 
     private void Start()
     {
         //Time.timeScale = 0f;
-        timer.StopTimer();
         StartCoroutine(SlotMachinePosAnimation());
     }
 
@@ -65,20 +56,6 @@ public class SlotMachinePanelScript : MonoBehaviour
         yield return new WaitForSecondsRealtime(resumeTimeDelay);
         //Time.timeScale = 1f;
         springAPI.SetGoalValue(0f);
-        StartCoroutine(DisableObject());
     }
 
-    private IEnumerator DisableObject()
-    {
-        yield return new WaitForSecondsRealtime(2f);
-        gameObject.SetActive(false);
-        timer.StartTimer();
-        musicManager.SetActive(true);
-        BombManager.SetActive(true);
-
-        if (bombDropper != null)
-        {
-            bombDropper.StartDropping();
-        }
-    }
 }

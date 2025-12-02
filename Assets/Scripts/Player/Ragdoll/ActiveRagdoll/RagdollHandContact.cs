@@ -37,10 +37,10 @@ public class RagdollHandContact : MonoBehaviour
     {
         if (CanGrab(col))
         {
-            if (CanPerformGrabAction())
-            {
-                PerformGrabAction(col.gameObject.GetComponent<Rigidbody>());
-            }
+            //if (CanPerformGrabAction())
+            //{
+            //    PerformGrabAction(col.gameObject.GetComponent<Rigidbody>());
+            //}
         }
     }
 
@@ -49,17 +49,17 @@ public class RagdollHandContact : MonoBehaviour
         return col.gameObject.CompareTag(CAN_BE_GRABBED) && !hasJoint;
     }
 
-    private bool CanPerformGrabAction()
-    {
-        if (Left)
-        {
-            return ragdollController.GrabLeftValue != 0 && !ragdollController.punchingLeft;
-        }
-        else
-        {
-            return ragdollController.GrabRightValue != 0 && !ragdollController.punchingRight;
-        }
-    }
+    //private bool CanPerformGrabAction()
+    //{
+    //    //if (Left)
+    //    //{
+    //    //    return ragdollController.GrabLeftValue != 0 && !ragdollController.punchingLeft;
+    //    //}
+    //    //else
+    //    //{
+    //    //    return ragdollController.GrabRightValue != 0 && !ragdollController.punchingRight;
+    //    //}
+    //}
 
     private void PerformGrabAction(Rigidbody connectedBody)
     {

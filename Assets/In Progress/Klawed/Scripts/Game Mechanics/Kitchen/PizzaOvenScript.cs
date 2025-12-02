@@ -1,118 +1,270 @@
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
-
+[RequireComponent(typeof(Interactable))]
 public class PizzaOvenScript : MonoBehaviour
 {
-    [SerializeField] private string _assignedChannel = "DefaultChannel";
-    [SerializeField] private HingeJoint _ovenDoorHinge;
+    [Header("Reference")]
+    [SerializeField] private HingeJoint ovenDoorHinge;
 
-    [SerializeField] private float _openAngle = 90f;
-    [SerializeField] private float _closeAngle = 0f;
+    [Header("Pizza Oven Settings")]
+    [SerializeField] private float cookingDuration = 5f;
 
-    [SerializeField] private bool _useCustomChannel = false;
+    [Header("Visual Indicators")]
+    [SerializeField] private Image progressFiller;
+    [SerializeField] private Image progressBackgroundBar;
 
-    public PizzaDoughBase pizzaInOven;
+    [ReadOnly]
+    [SerializeField] private float currentCookingProgress = 0f;
 
-    [Header("State Machine States")]
-    [SerializeField] private BaseStateSO _idleStateBase;
-    [SerializeField] private BaseStateSO _cookingStateBase;
+    [SerializeField] private Transform pizzaPlacePoint;
+    [ReadOnly]
+    [SerializeField] private bool hasPizzaInside = false;
+    [ReadOnly]
+    [SerializeField] private GameObject currentPizzaInside = null;
+    [ReadOnly]
+    [SerializeField] private GameObject currentFinishedPizzaInside = null;
+    [ReadOnly]
+    [SerializeField] private bool isCooking = false;
 
-    private StateMachine _stateMachine;
+    [Header("Possible Pizzas")]
+    [SerializeField] private List<PizzaRecipe> pizzaRecipes;
 
-    public BaseStateSO _idleStateInstance;
-    public BaseStateSO _cookingStateInstance;
+    private Dictionary<MenuItem, List<Ingredient>> possiblePizzas = new Dictionary<MenuItem, List<Ingredient>>();
 
-    private bool isClosed = true;
+    [ReadOnly]
+    [SerializeField] private MenuItem pizzaToMake = null;
 
     private void Awake()
     {
-        if (_useCustomChannel)
+        foreach (PizzaRecipe recipe in pizzaRecipes)
         {
-            GenericEvent<InteractEvent>.GetEvent(_assignedChannel).AddListener(OnInteract);
-            GenericEvent<PizzaDoughEnteredOvenEvent>.GetEvent(_assignedChannel).AddListener(AddPizza);
-            GenericEvent<PizzaDoughExitedOvenEvent>.GetEvent(_assignedChannel).AddListener(RemovePizza);
-        }
-        else
-        {
-            GenericEvent<InteractEvent>.GetEvent(gameObject.name).AddListener(OnInteract);
-            GenericEvent<PizzaDoughEnteredOvenEvent>.GetEvent(gameObject.name).AddListener(AddPizza);
-            GenericEvent<PizzaDoughExitedOvenEvent>.GetEvent(gameObject.name).AddListener(RemovePizza);
+            possiblePizzas.Add(recipe.resultingPizza, recipe.requiredToppings);
         }
 
-
-        _idleStateInstance = Instantiate(_idleStateBase);
-        _cookingStateInstance = Instantiate(_cookingStateBase);
-
-        _stateMachine = new StateMachine();
+        OpenDoor();
     }
 
-
-    private void Start()
+    private void OnEnable()
     {
-        _stateMachine.Initialize(_idleStateInstance);
-
-        _idleStateInstance.Initialize(gameObject, _stateMachine);
-        _cookingStateInstance.Initialize(gameObject, _stateMachine);
+        GenericEvent<OnInteractableInteracted>.GetEvent(gameObject.GetInstanceID().ToString()).AddListener(OnInteract);
+        GenericEvent<OnInteractableAltInteracted>.GetEvent(gameObject.GetInstanceID().ToString()).AddListener(OnAltInteract);
     }
 
-    private void Update()
+    private void OnDisable()
     {
-        _stateMachine.RunCurrentStateLogic();
+        GenericEvent<OnInteractableInteracted>.GetEvent(gameObject.GetInstanceID().ToString()).RemoveListener(OnInteract);
+        GenericEvent<OnInteractableAltInteracted>.GetEvent(gameObject.GetInstanceID().ToString()).RemoveListener(OnAltInteract);
     }
-
-
 
     private void OnInteract(GameObject player)
     {
-        // Close or open pizza oven
-        JointSpring spring = _ovenDoorHinge.spring;
-        float targetPos = spring.targetPosition;
-
-        if (targetPos == _openAngle)
+        GrabScript grabScript = player.GetComponent<GrabScript>();
+        if (grabScript.IsGrabbing)
         {
-            CloseDoor();
+            if (!hasPizzaInside)
+            {
+                if (PlayerIsHoldingPizzaDoughBase(grabScript, out PizzaDoughBase pizzaDough))
+                {
+                    PlacePizzaInOven(pizzaDough);
+                }
+            }
+        }
+    }
+
+    private void OnAltInteract(GameObject player)
+    {
+        GrabScript grabScript = player.GetComponent<GrabScript>();
+
+        if (!grabScript.IsGrabbing)
+        {
+            if (hasPizzaInside && !isCooking)
+            {
+                RemovePizzaFromOven(grabScript);
+            }
+        }
+    }
+
+
+    private void Update()
+    {
+        if (!isCooking)
+        {
+            if (hasPizzaInside)
+            {
+                if (currentPizzaInside.GetComponent<PizzaDoughBase>() != null)
+                {
+                    if (PizzaDoughHasCorrectToppings(out MenuItem pizzaToMake))
+                    {
+                        StartCooking(pizzaToMake);
+                    }
+                }
+            }
         }
         else
         {
-            OpenDoor();
+            RunCookingLogic();
         }
     }
 
-    public bool IsClosed()
-    {
-        return isClosed;
-    }
 
-    public void OpenDoor()
-    {
-        JointSpring spring = _ovenDoorHinge.spring;
-        spring.targetPosition = _openAngle;
-        _ovenDoorHinge.spring = spring;
-        isClosed = false;
-    }
 
-    public void CloseDoor()
-    {
-        JointSpring spring = _ovenDoorHinge.spring;
-        spring.targetPosition = _closeAngle;
-        _ovenDoorHinge.spring = spring;
-        isClosed = true;
-    }
 
-    public void RemovePizza(GameObject pizzaObj)
+    #region Placement Logic
+    private bool PlayerIsHoldingPizzaDoughBase(GrabScript grabScript, out PizzaDoughBase pizzaDough)
     {
-        if (pizzaObj.GetInstanceID() == pizzaInOven.gameObject.GetInstanceID())
+        if (grabScript.grabbedObject.TryGetComponent<PizzaDoughBase>(out pizzaDough))
         {
-            pizzaInOven = null;
+            return true;
+        }
+        pizzaDough = null;
+        return false;
+    }
+
+    private void PlacePizzaInOven(PizzaDoughBase pizzaDough)
+    {
+        Grabable grabable = pizzaDough.GetComponent<Grabable>();
+        grabable.Release();
+        grabable.grabCollider.enabled = false;
+
+        Interactable interactable = pizzaDough.GetComponent<Interactable>();
+        interactable.enabled = false;
+
+
+        Rigidbody rb = grabable.GetComponent<Rigidbody>();
+        rb.isKinematic = true;
+
+        pizzaDough.transform.position = pizzaPlacePoint.position;
+        pizzaDough.transform.rotation = pizzaPlacePoint.rotation;
+
+        hasPizzaInside = true;
+        currentPizzaInside = pizzaDough.gameObject;
+    }
+
+    private void RemovePizzaFromOven(GrabScript grabScript)
+    {
+        Rigidbody rb = currentPizzaInside.GetComponent<Rigidbody>();
+        rb.isKinematic = false;
+        Grabable grabable = currentPizzaInside.GetComponent<Grabable>();
+        grabScript.MakePlayerGrabObject(grabable);
+        currentPizzaInside = null;
+        hasPizzaInside = false;
+    }
+    #endregion
+
+    #region Topping Checking Logic
+    private bool PizzaDoughHasCorrectToppings(out MenuItem pizzaToMake)
+    {
+        foreach (KeyValuePair<MenuItem, List<Ingredient>> kvp in possiblePizzas)
+        {
+            MenuItem pizza = kvp.Key;
+            List<Ingredient> requiredToppings = kvp.Value;
+            if (CheckPizzaToppingsMatch(requiredToppings))
+            {
+                pizzaToMake = pizza;
+                return true;
+            }
+        }
+
+        pizzaToMake = null;
+        return false;
+    }
+
+    private bool CheckPizzaToppingsMatch(List<Ingredient> requiredToppings)
+    {
+        foreach (Ingredient topping in requiredToppings)
+        {
+            if (!currentPizzaInside.GetComponent<PizzaDoughBase>().CurrentToppings.Contains(topping))
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+    #endregion
+
+    private void StartCooking(MenuItem pizzaToMake)
+    {
+        isCooking = true;
+        this.pizzaToMake = pizzaToMake;
+        EnableProgressBar();
+        CloseDoor();
+    }
+
+    private void RunCookingLogic()
+    {
+        currentCookingProgress += Time.deltaTime;
+        UpdateProgressVisual();
+
+        if (currentCookingProgress >= cookingDuration)
+        {
+            DestroyPizzaDoughBase();
+            SpawnFinishedPizza();
+            StopCooking();
         }
     }
 
-    private void AddPizza(GameObject pizzaObj)
+    private void UpdateProgressVisual()
     {
-        PizzaDoughBase pizza = pizzaObj.GetComponent<PizzaDoughBase>();
-        pizzaInOven = pizza;
+        float progress = currentCookingProgress / cookingDuration;
+        progressFiller.fillAmount = progress;
+    }
+
+    private void EnableProgressBar()
+    {
+        progressBackgroundBar.enabled = true;
+        progressFiller.enabled = true;
+    }
+
+    private void DisableProgressBar()
+    {
+        progressBackgroundBar.enabled = false;
+        progressFiller.enabled = false;
+    }
+
+    private void SpawnFinishedPizza()
+    {
+        GameObject finishedPizzaPrefab = pizzaToMake.Prefab;
+        GameObject finishedPizza = Instantiate(finishedPizzaPrefab, pizzaPlacePoint.position, pizzaPlacePoint.rotation);
+        currentPizzaInside = finishedPizza;
+        hasPizzaInside = true;
+    }
+
+    private void DestroyPizzaDoughBase()
+    {
+        if (currentPizzaInside != null)
+        {
+            Destroy(currentPizzaInside.gameObject);
+            currentPizzaInside = null;
+            hasPizzaInside = false;
+        }
+    }
+
+    private void StopCooking()
+    {
+        isCooking = false;
+        currentCookingProgress = 0f;
+        DisableProgressBar();
+        OpenDoor();
+    }
+
+    private void OpenDoor()
+    {
+        float openAngle = -90f;
+        JointSpring hingeSpring = ovenDoorHinge.spring;
+        hingeSpring.targetPosition = openAngle;
+        ovenDoorHinge.spring = hingeSpring;
+    }
+
+    private void CloseDoor()
+    {
+        float closedAngle = 0f;
+        JointSpring hingeSpring = ovenDoorHinge.spring;
+        hingeSpring.targetPosition = closedAngle;
+        ovenDoorHinge.spring = hingeSpring;
     }
 
 }
