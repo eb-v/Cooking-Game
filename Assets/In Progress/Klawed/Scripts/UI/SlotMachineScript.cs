@@ -4,32 +4,27 @@ using UnityEngine;
 using System.Collections.Generic;
 using JetBrains.Annotations;
 
-public enum LevelModifiers
-{
-    Jetpack,         // 0
-    OilSpill,        // 1
-    LandMines,       // 2
-    Lightning,       // 3
-    Earthquake,      // 4
-    Robber,          // 5
-    LowGravity,      // 6
-    CloseProximity,  // 7
-    SpeedBoost,      // 8
-    ReverseControls, // 9
-    test             // 10
+public enum LevelModifiers {
+    None = 0,
+
+    Earthquake = 1,
+    Lightning = 2,
+    Robber = 3,
+    LandMines = 4,
+    OilSpill = 5,
+    Jetpack = 6,
+    CloseProximity = 7
 }
 
-public class SlotMachineScript : MonoBehaviour
-{
-    private const int MaxVisibleModifierIndex = 7;           
+public class SlotMachineScript : MonoBehaviour {
+    private const int MaxVisibleModifierIndex = 6;
     private const int MaxRandomExclusive = MaxVisibleModifierIndex + 1;
 
     [SerializeField] private bool debugForceModifiers = false;
     [SerializeField] private LevelModifiers[] debugModifiers = new LevelModifiers[3];
 
 
-    private class SlotStruct
-    {
+    private class SlotStruct {
         public NonNormalizedSpringAPI springSlot;
         public bool shouldSpin;
         public float spinDuration;
@@ -54,8 +49,7 @@ public class SlotMachineScript : MonoBehaviour
     [ReadOnly]
     [SerializeField] private List<LevelModifiers> _activeModifiers = new List<LevelModifiers>();
 
-    private void Update()
-    {
+    private void Update() {
         if (FreezeManager.PauseMenuOverride)
             return;
 
@@ -64,56 +58,47 @@ public class SlotMachineScript : MonoBehaviour
         RunSpinCheckLogic(slot3);
     }
 
-    public void StartSlotMachine()
-    {
+    //private void Start() {
+    //    StartSlotMachine();
+    //}
+
+    public void StartSlotMachine() {
         FreezeManager.FreezeGameplay();
 
         int num1, num2, num3;
-        num1 = Random.Range(0, MaxRandomExclusive);                     
-        do { num2 = Random.Range(0, MaxRandomExclusive); } while (num2 == num1);
-        do { num3 = Random.Range(0, MaxRandomExclusive); } while (num3 == num1 || num3 == num2);
 
-        //testing modifiers
-        // if (debugForceModifiers)
-        // {
-        //     num1 = (int)debugModifiers[0];
-        //     num2 = (int)debugModifiers[1];
-        //     num3 = (int)debugModifiers[2];
-        // }
-        // else
-        // {
-        //     num1 = Random.Range(0, MaxRandomExclusive);
-        //     do { num2 = Random.Range(0, MaxRandomExclusive); } while (num2 == num1);
-        //     do { num3 = Random.Range(0, MaxRandomExclusive); } while (num3 == num1 || num3 == num2);
-        // }
+        num1 = Random.Range(1, 8);
+        do { num2 = Random.Range(1, 8); } while (num2 == num1);
+        do { num3 = Random.Range(1, 8); } while (num3 == num1 || num3 == num2);
 
-
+        LevelModifiers mod1 = (LevelModifiers)num1;
+        LevelModifiers mod2 = (LevelModifiers)num2;
+        LevelModifiers mod3 = (LevelModifiers)num3;
 
         _activeModifiers.Clear();
-        _activeModifiers.Add((LevelModifiers)num1);
-        _activeModifiers.Add((LevelModifiers)num2);
-        _activeModifiers.Add((LevelModifiers)num3);
+        _activeModifiers.Add(mod1);
+        _activeModifiers.Add(mod2);
+        _activeModifiers.Add(mod3);
 
-        slot1 = new SlotStruct
-        {
+        Debug.Log($"[SlotMachine] Chosen Modifiers: {mod1}, {mod2}, {mod3}");
+
+        slot1 = new SlotStruct {
             springSlot = springSlot1,
             shouldSpin = false,
             spinDuration = spinDuration1,
-            finalGoal = num1
+            finalGoal = (int)mod1
         };
-        slot2 = new SlotStruct
-        {
+        slot2 = new SlotStruct {
             springSlot = springSlot2,
             shouldSpin = false,
             spinDuration = spinDuration2,
-            finalGoal = num2
+            finalGoal = (int)mod2
         };
-        slot3 = new SlotStruct
-        {
+        slot3 = new SlotStruct {
             springSlot = springSlot3,
             shouldSpin = false,
             spinDuration = spinDuration3,
-            finalGoal = num3
+            finalGoal = (int)mod3
         };
 
         StartSpinningAll();
@@ -145,8 +130,13 @@ public class SlotMachineScript : MonoBehaviour
 
         NonNormalizedSpringAPI springAPI = slot.springSlot;
         float newGoal = slot.finalGoal;
+
+        Debug.Log($"[SlotMachine] Slot stopping at index {newGoal} ({(LevelModifiers)newGoal})");
         springAPI.SetGoalValue(newGoal);
         slot.isDone = true;
+
+        //Debug.Log($"Slot {slot} landed on: {((LevelModifiers)newGoal).ToString()} (Index {newGoal})");
+
         CheckIfAllSlotsDone();
     }
 
@@ -196,14 +186,14 @@ public class SlotMachineScript : MonoBehaviour
 
     public void StartSpinningAll()
     {
-        if (usePresetGoals)
-        {
-            UsePresetSlotGoals();
-        }
-        else
-        {
-            RandomizeSlotGoals();
-        }
+        //if (usePresetGoals)
+        //{
+        //    UsePresetSlotGoals();
+        //}
+        //else
+        //{
+        //    RandomizeSlotGoals();
+        //}
 
         StartCoroutine(StartSlotCoroutine(slot1));
         StartCoroutine(StartSlotCoroutine(slot2));
@@ -261,21 +251,18 @@ public class SlotMachineScript : MonoBehaviour
     }
 
     //testing visual art
-    [ContextMenu("Test Reel1 Art 0..7")]
-    private void TestReel1Art()
-    {
-        StartCoroutine(TestReelArtCoroutine(springSlot1));
-    }
-    
-    private IEnumerator TestReelArtCoroutine(NonNormalizedSpringAPI spring)
-    {
-        if (spring == null) yield break;
+    //[ContextMenu("Test Reel1 Art 0..6")]
+    //private void TestReel1Art() {
+    //    StartCoroutine(TestReelArtCoroutine(springSlot1));
+    //}
 
-        for (int i = 0; i <= MaxVisibleModifierIndex; i++)
-        {
-            spring.SetGoalValue(i);
-            Debug.Log($"[SlotMachine] Showing symbol index {i} ({(LevelModifiers)i})");
-            yield return new WaitForSecondsRealtime(1f);
-        }
-    }
+    //private IEnumerator TestReelArtCoroutine(NonNormalizedSpringAPI spring) {
+    //    if (spring == null) yield break;
+
+    //    for (int i = 0; i <= MaxVisibleModifierIndex; i++) {
+    //        spring.SetGoalValue(i);
+    //        Debug.Log($"[SlotMachine] Showing symbol index {i} ({(LevelModifiers)i})");
+    //        yield return new WaitForSecondsRealtime(1f);
+    //    }
+    //}
 }

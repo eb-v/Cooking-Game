@@ -36,7 +36,7 @@ public class EarthquakeModifier : MonoBehaviour {
         }
     }
 
-    public void StartEarthquake() {
+    private void StartEarthquake() {
         if (earthquake != null) {
             earthquake.ActivateEarthquake();
         }

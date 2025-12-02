@@ -56,6 +56,7 @@ public class BombDropper : MonoBehaviour
 
     public void StartDropping()
     {
+        Debug.Log("Bomb system activated!");
         if (dropRoutine == null)
         {
             dropRoutine = StartCoroutine(DropBombsLoop());
@@ -73,8 +74,10 @@ public class BombDropper : MonoBehaviour
 
     private IEnumerator DropBombsLoop()
     {
+        Debug.Log("BombDropper: Starting bomb drop loop...");
         while (true)
         {
+            Debug.Log("BombDropper: Attempting to spawn bomb...");
             TrySpawnBombAboveFloor();
             yield return new WaitForSeconds(timeBetweenDrops);
         }
@@ -104,5 +107,29 @@ public class BombDropper : MonoBehaviour
                 }
             }
         }
+    }
+    private void OnDrawGizmos() {
+        Gizmos.color = Color.red;
+
+        // Center of the drop area
+        Vector3 center = new Vector3(
+            (minX + maxX) / 2f,
+            dropHeight,
+            (minZ + maxZ) / 2f
+        );
+
+        // Size of the drop area
+        Vector3 size = new Vector3(
+            Mathf.Abs(maxX - minX),
+            0.1f,
+            Mathf.Abs(maxZ - minZ)
+        );
+
+        // Draw the drop area at the drop height
+        Gizmos.DrawWireCube(center, size);
+
+        // Optional: draw a filled transparent box
+        Gizmos.color = new Color(1f, 0f, 0f, 0.1f);
+        Gizmos.DrawCube(center, size);
     }
 }
