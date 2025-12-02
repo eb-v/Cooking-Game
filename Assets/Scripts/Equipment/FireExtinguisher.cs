@@ -82,6 +82,7 @@ public class FireExtinguisher : Equipment
             if (flammable != null && flammable.IsOnFire)
             {
                 flammable.Extinguish();
+                Debug.Log($"[FIRE EXTINGUISHER] Extinguished fire on object: {obj.name}");
             }
         }
 
