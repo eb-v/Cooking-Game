@@ -26,17 +26,11 @@ public class FireManager : MonoBehaviour
 
     [SerializeField] private bool systemEnabled = true;
 
-    private HashSet<Burnable> spreadThisFrame = new HashSet<Burnable>();
     private List<Burnable> objectsBurning = new List<Burnable>();
 
-    // this is used to target a single object to spread fire to for each burning object
-    private Dictionary<Burnable, Burnable> objectToSpreadFireTo = new Dictionary<Burnable, Burnable>();
-    private HashSet<Burnable> removeFromObjectToSpreadFireTo = new HashSet<Burnable>();
-    private bool fireLimitReached = false;
 
 
-
-    public void IgniteObject(ref bool isOnFire, ref float burnProgress, List<FireController> fireEffects)
+    public void IgniteObject(ref bool isOnFire, ref float burnProgress, List<FireController> fireEffects, in float spreadRadius, in Vector3 position, bool shouldSpread = true)
     {
         if (!SystemEnabled)
             return;
@@ -48,8 +42,13 @@ public class FireManager : MonoBehaviour
         {
             fireEffect.StartFire();
         }
+        if (shouldSpread)
+        {
+            // Ignite other objects within spread radius
+            SpreadFire(position, spreadRadius);
+        }
+        
     }
-
 
     public void ExtinguishObject(ref bool isOnFire, ref float burnProgress, List<FireController> fireEffects)
     {
@@ -65,42 +64,7 @@ public class FireManager : MonoBehaviour
 
     }
 
-    public void SpreadFire(Vector3 position, float spreadRadius, Burnable fireOrigin)
-    {
-        if (!SystemEnabled)
-            return;
-
-        if (fireLimitReached)
-            return;
-
-        List<Burnable> burnablesInRange = GetFlammableObjectsInRange(position, spreadRadius);
-        // no burnable objects in range, exit function
-        if (burnablesInRange.Count == 0)
-            return;
-
-        // does fire origin already have a target to spread fire to?
-        if (!objectToSpreadFireTo.ContainsKey(fireOrigin))
-        {
-            // choose a single random burnable in range to spread fire to
-            int burnablesCount = burnablesInRange.Count;
-            int randomIndex = Random.Range(0, burnablesCount);
-            objectToSpreadFireTo.Add(fireOrigin, burnablesInRange[randomIndex]);
-        }
-        else
-        {
-            // fire origin already has a target to spread fire to
-            // spread fire to that target
-            Burnable targetBurnable = objectToSpreadFireTo[fireOrigin];
-
-            // has this target burnAmount already been modified this frame?
-            if (!spreadThisFrame.Contains(targetBurnable))
-            {
-                float value = Random.Range(0f, settings.burnMultiplier);
-                targetBurnable.ModifyBurnProgress(value * Time.deltaTime);
-                spreadThisFrame.Add(targetBurnable);
-            }
-        }
-    }
+    
 
 
     public void RegisterBurningObject(Burnable burningObject)
@@ -124,32 +88,17 @@ public class FireManager : MonoBehaviour
         if (!SystemEnabled)
             return;
 
-        if (objectsBurning.Count > settings.maxSimultaneousFires)
-        {
-            fireLimitReached = true;
-        }
-        else
-        {
-            fireLimitReached = false;
-        }
-
-        foreach (KeyValuePair<Burnable, Burnable> kvp in objectToSpreadFireTo)
-        {
-            if (kvp.Value.IsOnFire)
-            {
-                removeFromObjectToSpreadFireTo.Add(kvp.Key);
-            }
-        }
-
-        foreach (Burnable obj in removeFromObjectToSpreadFireTo)
-        {
-            objectToSpreadFireTo.Remove(obj);
-        }
-
-        removeFromObjectToSpreadFireTo.Clear();
+       
     }
 
-    
+    private static void SpreadFire(Vector3 pos, float spreadRadius)
+    {
+        List<Burnable> flammableObjects = GetFlammableObjectsInRange(pos, spreadRadius);
+        foreach (var flammable in flammableObjects)
+        {
+            flammable.IgniteWithoutSpread();
+        }
+    }
 
 
     private static List<Burnable> GetFlammableObjectsInRange(Vector3 pos, float spreadRadius)
@@ -176,8 +125,4 @@ public class FireManager : MonoBehaviour
         return flammable;
     }
 
-    private void LateUpdate()
-    {
-        spreadThisFrame.Clear();
-    }
 }

@@ -8,6 +8,7 @@ public class Bomb : MonoBehaviour
     public float explosionForce = 500f;
     public GameObject explosionVFX;
     public float lifeAfterExplosion = 1f;
+    [SerializeField] private Collider physicsCollider;
 
     [Header("Ground Settings")]
     public string groundTag = "Floor";
@@ -46,39 +47,47 @@ public class Bomb : MonoBehaviour
         playerLayer = LayerMask.NameToLayer(playerLayerName);
         trainLayer = LayerMask.NameToLayer(trainLayerName);
 
+        physicsCollider.enabled = true;
+
     }
     private void OnEnable()
     {
+        GenericEvent<BombCollidedWithPlayer>.GetEvent(transform.GetInstanceID().ToString()).AddListener(Explode);
         ResetValues();
     }
 
-    void OnCollisionEnter(Collision collision)
+    private void OnDisable()
     {
-        if (hasExploded) return;
-
-        Collider other = collision.collider;
-
-        // land on floor
-        if (other.CompareTag(groundTag) && !hasLanded)
-        {
-            hasLanded = true;
-
-            if (rb != null)
-            {
-                rb.linearVelocity = Vector3.zero;
-                rb.angularVelocity = Vector3.zero;
-                rb.isKinematic = true;
-            }
-
-            return;
-        }
-
-        // any bodypart on the Player layer touches bomb
-        if (other.gameObject.layer == playerLayer)
-        {
-            Explode();
-        }
+        GenericEvent<BombCollidedWithPlayer>.GetEvent(transform.GetInstanceID().ToString()).RemoveListener(Explode);
     }
+
+    //void OnCollisionEnter(Collision collision)
+    //{
+    //    if (hasExploded) return;
+
+    //    Collider other = collision.collider;
+
+    //    // land on floor
+    //    if (other.CompareTag(groundTag) && !hasLanded)
+    //    {
+    //        hasLanded = true;
+
+    //        if (rb != null)
+    //        {
+    //            rb.linearVelocity = Vector3.zero;
+    //            rb.angularVelocity = Vector3.zero;
+    //            rb.isKinematic = true;
+    //        }
+
+    //        return;
+    //    }
+
+    //    // any bodypart on the Player layer touches bomb
+    //    if (other.gameObject.layer == playerLayer)
+    //    {
+    //        Explode();
+    //    }
+    //}
 
     private void Explode()
     {
@@ -105,6 +114,12 @@ public class Bomb : MonoBehaviour
             if (hit.gameObject.layer == trainLayer)
                 continue;
 
+            Transform rootTransform = hit.transform.root;
+            if (rootTransform.TryGetComponent<Player>(out Player player))
+            {
+                player.ChangeState(player._unconsciousStateInstance);
+            }
+
             Rigidbody hitRb = hit.attachedRigidbody;
             if (hitRb != null)
             {
@@ -113,10 +128,8 @@ public class Bomb : MonoBehaviour
                 // Track player explosions
                 if (hit.gameObject.layer == playerLayer)
                 {
-                    Debug.Log($"Hit player: {hit.gameObject.name}");
-                    GameObject player = hit.transform.root.gameObject;
-                    PlayerStatsManager.IncrementExplosionsReceived(player);
-
+                    GameObject playerObj = hit.transform.root.gameObject;
+                    PlayerStatsManager.IncrementExplosionsReceived(playerObj);
                 }
             }
         }

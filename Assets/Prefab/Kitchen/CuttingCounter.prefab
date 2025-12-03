@@ -133,6 +133,7 @@ GameObject:
   - component: {fileID: 4152079645270037006}
   - component: {fileID: 3939982742474033460}
   - component: {fileID: 1904847431232904619}
+  - component: {fileID: 5546279111682921650}
   m_Layer: 0
   m_Name: CuttingCounter
   m_TagString: Untagged
@@ -214,6 +215,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f71df800528f7dc43b16731f6a2c7905, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Interactable
+--- !u!114 &5546279111682921650
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5306684461265963428}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f515201e7a51d7f4d8d5b4ea53ba45f3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Burnable
+  fireEffects:
+  - {fileID: 452002951830509197}
+  - {fileID: 5287830516927358592}
+  - {fileID: 5499219185167133070}
+  spreadRadius: 4.31
+  isOnFire: 0
+  burnTimer: 0
+  burnProgress: 0
 --- !u!1 &6039062166947692089
 GameObject:
   m_ObjectHideFlags: 0
@@ -476,6 +497,39 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f5be5a8b8de8e5745842f75ae27b68b2, type: 3}
+--- !u!114 &452002951830509197 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3667434871905127031, guid: f5be5a8b8de8e5745842f75ae27b68b2, type: 3}
+  m_PrefabInstance: {fileID: 3792187978927840506}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 28698469165af1c4abd49f4e4be35212, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FireController
+--- !u!114 &5287830516927358592 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 9061993456245471866, guid: f5be5a8b8de8e5745842f75ae27b68b2, type: 3}
+  m_PrefabInstance: {fileID: 3792187978927840506}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 28698469165af1c4abd49f4e4be35212, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FireController
+--- !u!114 &5499219185167133070 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8714931925084960116, guid: f5be5a8b8de8e5745842f75ae27b68b2, type: 3}
+  m_PrefabInstance: {fileID: 3792187978927840506}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 28698469165af1c4abd49f4e4be35212, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FireController
 --- !u!4 &7224721832492336342 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5828732026982176812, guid: f5be5a8b8de8e5745842f75ae27b68b2, type: 3}

@@ -208,3 +208,5 @@ public class OnObjectGrabbed : UnityEvent { }
 
 public class OnObjectThrown : UnityEvent { }
 
+public class BombCollidedWithPlayer : UnityEvent { }
+

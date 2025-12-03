@@ -32,6 +32,7 @@ public class TrainManager : MonoBehaviour
     private void Start()
     {
         Initialize();
+        StartTrainLoop();
     }
 
     public void Initialize()
@@ -42,7 +43,6 @@ public class TrainManager : MonoBehaviour
             Debug.LogError("TrainScript not found in the scene!");
         }
         trainScript.Initialize(trainData);
-       // StartTrainLoop();
     }
 
     private void StartTrainLoop()

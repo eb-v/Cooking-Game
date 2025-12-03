@@ -33,6 +33,8 @@ public class BombDropper : MonoBehaviour
         }
     }
 
+   
+
     public void StartDropping()
     {
         Debug.Log("Bomb system activated!");

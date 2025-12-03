@@ -80,7 +80,7 @@ public class FireSystem : ScriptableObject
         {
             if (!spreadThisFrame.Contains(burnable))
             {
-                burnable.ModifyBurnProgress(Instance.settings.burnMultiplier * Time.deltaTime);
+                //burnable.ModifyBurnProgress(Instance.settings.burnMultiplier * Time.deltaTime);
             }
         }
     }
