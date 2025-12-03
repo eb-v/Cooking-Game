@@ -25,8 +25,8 @@ public class LimbHP : MonoBehaviour
 
             // Limb is disconnected
             RagdollJoint ragdollJoint = gameObject.GetComponent<RagdollJoint>();
+            GenericEvent<OnJointRemoved>.GetEvent(gameObject.transform.root.GetInstanceID().ToString()).Invoke();
             rc.DisconnectJoint(ragdollJoint.GetJointName());
-            //GenericEvent<OnRemoveJoint>.GetEvent(gameObject.transform.root.name).Invoke(ragdollJoint.GetJointName());
         }
     }
 

@@ -76,7 +76,7 @@ public class SkillCheckAttemptFailed : UnityEvent<float> { }
 
 public class OnExplodeInput : UnityEvent { }
 
-public class OnRemoveJoint : UnityEvent<string> { }
+public class OnJointRemoved : UnityEvent { }
 
 public class OnPlayerJointReconnect : UnityEvent { }
 

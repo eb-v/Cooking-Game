@@ -62,47 +62,62 @@ public class SlotMachineScript : MonoBehaviour {
         StartSlotMachine();
     }
 
-    public void StartSlotMachine() {
-        FreezeManager.FreezeGameplay();
+    public void StartSlotMachine()
+{
+    FreezeManager.FreezeGameplay();
 
+    LevelModifiers mod1, mod2, mod3;
+
+    // use forced debug modifiers if enabled (testing)
+    if (debugForceModifiers && debugModifiers != null && debugModifiers.Length >= 3)
+    {
+        mod1 = debugModifiers[0];
+        mod2 = debugModifiers[1];
+        mod3 = debugModifiers[2];
+    }
+    else
+    {
+        // or random modifiers
         int num1, num2, num3;
 
         num1 = Random.Range(1, 7);
         do { num2 = Random.Range(1, 7); } while (num2 == num1);
         do { num3 = Random.Range(1, 7); } while (num3 == num1 || num3 == num2);
 
-        LevelModifiers mod1 = (LevelModifiers)num1;
-        LevelModifiers mod2 = (LevelModifiers)num2;
-        LevelModifiers mod3 = (LevelModifiers)num3;
-
-        _activeModifiers.Clear();
-        _activeModifiers.Add(mod1);
-        _activeModifiers.Add(mod2);
-        _activeModifiers.Add(mod3);
-
-        Debug.Log($"[SlotMachine] Chosen Modifiers: {mod1}, {mod2}, {mod3}");
-
-        slot1 = new SlotStruct {
-            springSlot = springSlot1,
-            shouldSpin = false,
-            spinDuration = spinDuration1,
-            finalGoal = (int)mod1
-        };
-        slot2 = new SlotStruct {
-            springSlot = springSlot2,
-            shouldSpin = false,
-            spinDuration = spinDuration2,
-            finalGoal = (int)mod2
-        };
-        slot3 = new SlotStruct {
-            springSlot = springSlot3,
-            shouldSpin = false,
-            spinDuration = spinDuration3,
-            finalGoal = (int)mod3
-        };
-
-        StartSpinningAll();
+        mod1 = (LevelModifiers)num1;
+        mod2 = (LevelModifiers)num2;
+        mod3 = (LevelModifiers)num3;
     }
+
+    _activeModifiers.Clear();
+    _activeModifiers.Add(mod1);
+    _activeModifiers.Add(mod2);
+    _activeModifiers.Add(mod3);
+
+    Debug.Log($"[SlotMachine] Chosen Modifiers: {mod1}, {mod2}, {mod3}");
+
+    slot1 = new SlotStruct {
+        springSlot = springSlot1,
+        shouldSpin = false,
+        spinDuration = spinDuration1,
+        finalGoal = (int)mod1
+    };
+    slot2 = new SlotStruct {
+        springSlot = springSlot2,
+        shouldSpin = false,
+        spinDuration = spinDuration2,
+        finalGoal = (int)mod2
+    };
+    slot3 = new SlotStruct {
+        springSlot = springSlot3,
+        shouldSpin = false,
+        spinDuration = spinDuration3,
+        finalGoal = (int)mod3
+    };
+
+    StartSpinningAll();
+}
+
 
     public void RunUpdateLogic()
     {
