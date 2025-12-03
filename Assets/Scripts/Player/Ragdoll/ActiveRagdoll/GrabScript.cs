@@ -18,10 +18,16 @@ public class GrabScript : MonoBehaviour
         playerSettings = LoadPlayerData.GetPlayerData();
         rc = GetComponent<RagdollController>();
     }
-
-    private void Start()
+    private void OnEnable()
     {
-        GenericEvent<OnGrabInputEvent>.GetEvent(gameObject.name).AddListener(OnGrabInput);  
+        GenericEvent<OnGrabInputEvent>.GetEvent(gameObject.name).AddListener(OnGrabInput);
+        GenericEvent<OnJointRemoved>.GetEvent(gameObject.transform.root.GetInstanceID().ToString()).AddListener(MakePlayerReleaseObject);
+    }
+
+    private void OnDisable()
+    {
+        GenericEvent<OnGrabInputEvent>.GetEvent(gameObject.name).RemoveListener(OnGrabInput);
+        GenericEvent<OnJointRemoved>.GetEvent(gameObject.transform.root.GetInstanceID().ToString()).RemoveListener(MakePlayerReleaseObject);
     }
 
     private Grabable GrabRayCastDetection()
@@ -59,6 +65,15 @@ public class GrabScript : MonoBehaviour
         if (!IsGrabbing)
         {
             grabable.Grab(gameObject);
+        }
+    }
+
+    public void MakePlayerReleaseObject()
+    {
+        Debug.Log("MakePlayerReleaseObject called");
+        if (IsGrabbing)
+        {
+            grabbedObject.Release();
         }
     }
 

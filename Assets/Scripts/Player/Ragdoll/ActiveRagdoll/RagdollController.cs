@@ -206,7 +206,6 @@ public class RagdollController : MonoBehaviour
         GenericEvent<OnLeanForwardCancel>.GetEvent(gameObject.name).AddListener(() => { _leanForward = false; });
         GenericEvent<OnLeanBackwardInput>.GetEvent(gameObject.name).AddListener(() => { _leanBackward = true; });
         GenericEvent<OnLeanBackwardCancel>.GetEvent(gameObject.name).AddListener(() => { _leanBackward = false; });
-        GenericEvent<OnRemoveJoint>.GetEvent(gameObject.name).AddListener(DisconnectJoint);
 
         GenericEvent<OnGrabStatusChanged>.GetEvent(gameObject.name).AddListener(ChangeGrabStatus);
     }
@@ -218,7 +217,6 @@ public class RagdollController : MonoBehaviour
         GenericEvent<OnLeanForwardCancel>.GetEvent(gameObject.name).RemoveListener(() => { _leanForward = false; });
         GenericEvent<OnLeanBackwardInput>.GetEvent(gameObject.name).RemoveListener(() => { _leanBackward = true; });
         GenericEvent<OnLeanBackwardCancel>.GetEvent(gameObject.name).RemoveListener(() => { _leanBackward = false; });
-        GenericEvent<OnRemoveJoint>.GetEvent(gameObject.name).RemoveListener(DisconnectJoint);
         GenericEvent<OnGrabStatusChanged>.GetEvent(gameObject.name).RemoveListener(ChangeGrabStatus);
     }
 
@@ -485,40 +483,40 @@ public class RagdollController : MonoBehaviour
     // completely reset the pose of all joints to original position
     public void HardResetPose()
     {
-        if (RagdollDict[ROOT].isConnected)
+        if (RagdollDict.ContainsKey(ROOT))
             TargetRotations[ROOT] = originalTargetRotations[ROOT];
 
-        if (RagdollDict[UPPER_RIGHT_ARM].isConnected)
+        if (RagdollDict.ContainsKey(UPPER_RIGHT_ARM))
             TargetRotations[UPPER_RIGHT_ARM] = originalTargetRotations[UPPER_RIGHT_ARM];
 
-        if (RagdollDict[LOWER_RIGHT_ARM].isConnected)
+        if (RagdollDict.ContainsKey(LOWER_RIGHT_ARM))
             TargetRotations[LOWER_RIGHT_ARM] = originalTargetRotations[LOWER_RIGHT_ARM];
 
-        if (RagdollDict[UPPER_LEFT_ARM].isConnected)
+        if (RagdollDict.ContainsKey(UPPER_LEFT_ARM))
             TargetRotations[UPPER_LEFT_ARM] = originalTargetRotations[UPPER_LEFT_ARM];
 
-        if (RagdollDict[LOWER_LEFT_ARM].isConnected)
+        if (RagdollDict.ContainsKey(LOWER_LEFT_ARM))
             TargetRotations[LOWER_LEFT_ARM] = originalTargetRotations[LOWER_LEFT_ARM];
 
-        if (RagdollDict[HEAD].isConnected)
+        if (RagdollDict.ContainsKey(HEAD))
             TargetRotations[HEAD] = originalTargetRotations[HEAD];
 
-        if (RagdollDict[UPPER_RIGHT_LEG].isConnected)
+        if (RagdollDict.ContainsKey(UPPER_RIGHT_LEG))
             TargetRotations[UPPER_RIGHT_LEG] = originalTargetRotations[UPPER_RIGHT_LEG];
 
-        if (RagdollDict[LOWER_RIGHT_LEG].isConnected)
+        if (RagdollDict.ContainsKey(LOWER_RIGHT_LEG))
             TargetRotations[LOWER_RIGHT_LEG] = originalTargetRotations[LOWER_RIGHT_LEG];
 
-        if (RagdollDict[UPPER_LEFT_LEG].isConnected)
+        if (RagdollDict.ContainsKey(UPPER_LEFT_LEG))
             TargetRotations[UPPER_LEFT_LEG] = originalTargetRotations[UPPER_LEFT_LEG];
 
-        if (RagdollDict[LOWER_LEFT_LEG].isConnected)
+        if (RagdollDict.ContainsKey(LOWER_LEFT_LEG))
             TargetRotations[LOWER_LEFT_LEG] = originalTargetRotations[LOWER_LEFT_LEG];
 
-        if (RagdollDict[RIGHT_FOOT].isConnected)
+        if (RagdollDict.ContainsKey(RIGHT_FOOT))
             TargetRotations[RIGHT_FOOT] = originalTargetRotations[RIGHT_FOOT];
 
-        if (RagdollDict[LEFT_FOOT].isConnected)
+        if (RagdollDict.ContainsKey(LEFT_FOOT))
             TargetRotations[LEFT_FOOT] = originalTargetRotations[LEFT_FOOT];
 
         //MouseYAxisArms = 0;
