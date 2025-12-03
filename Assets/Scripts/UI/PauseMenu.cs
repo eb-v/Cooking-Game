@@ -24,6 +24,11 @@ public class PauseMenu : MonoBehaviour
     private bool isPausedByMenu = false;
     private EventSystem eventSystem;
 
+    private Image sfxHandleImage;
+    private Image musicHandleImage;
+    private Color normalHandleColor = Color.white;
+    private Color selectedHandleColor = new Color(0.7f, 0.7f, 0.7f, 1f); // Darker gray
+
 
     void Awake()
     {
@@ -68,6 +73,17 @@ public class PauseMenu : MonoBehaviour
             musicVolumeSlider.onValueChanged.AddListener(OnMusicVolumeChanged);
             OnMusicVolumeChanged(musicVolumeSlider.value);
         }
+
+        // Get handle images for visual feedback
+        if (sfxVolumeSlider != null)
+        {
+            sfxHandleImage = sfxVolumeSlider.handleRect?.GetComponent<Image>();
+        }
+
+        if (musicVolumeSlider != null)
+        {
+            musicHandleImage = musicVolumeSlider.handleRect?.GetComponent<Image>();
+        }
     }
 
     void Update()
@@ -76,6 +92,9 @@ public class PauseMenu : MonoBehaviour
         {
             TogglePause();
         }
+
+        // Update slider handle colors based on selection
+        UpdateSliderHandleColors();
     }
 
     void OnEnable()
@@ -252,6 +271,39 @@ public class PauseMenu : MonoBehaviour
         else
         {
             Debug.LogWarning("AudioMixer is not assigned in PauseMenu!");
+        }
+    }
+
+    void UpdateSliderHandleColors()
+    {
+        if (eventSystem == null) return;
+
+        GameObject selected = eventSystem.currentSelectedGameObject;
+
+        // Update SFX slider handle
+        if (sfxHandleImage != null)
+        {
+            if (selected == sfxVolumeSlider?.gameObject)
+            {
+                sfxHandleImage.color = selectedHandleColor;
+            }
+            else
+            {
+                sfxHandleImage.color = normalHandleColor;
+            }
+        }
+
+        // Update Music slider handle
+        if (musicHandleImage != null)
+        {
+            if (selected == musicVolumeSlider?.gameObject)
+            {
+                musicHandleImage.color = selectedHandleColor;
+            }
+            else
+            {
+                musicHandleImage.color = normalHandleColor;
+            }
         }
     }
 }
