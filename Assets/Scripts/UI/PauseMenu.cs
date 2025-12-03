@@ -22,6 +22,8 @@ public class PauseMenu : MonoBehaviour
 
     private PlayerInput playerInput;
     private bool isPausedByMenu = false;
+    private EventSystem eventSystem;
+
 
     void Awake()
     {
