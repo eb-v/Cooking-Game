@@ -4,6 +4,7 @@ using UnityEngine.UI;
 using TMPro;
 using System.Collections.Generic;
 using UnityEngine.Audio;
+using UnityEngine.EventSystems;
 
 public class PauseMenu : MonoBehaviour
 {
@@ -16,6 +17,9 @@ public class PauseMenu : MonoBehaviour
     public Slider musicVolumeSlider;
     public AudioMixer audioMixer;
 
+    [Header("Navigation")]
+    public Button resumeButton;
+
     private PlayerInput playerInput;
     private bool isPausedByMenu = false;
 
@@ -26,6 +30,9 @@ public class PauseMenu : MonoBehaviour
         {
             playerInput.actions["Pause"].performed += OnPause;
         }
+
+        // Get EventSystem reference
+        eventSystem = EventSystem.current;
 
         // Hide the entire pause menu on start
         if (container != null)
@@ -139,6 +146,12 @@ public class PauseMenu : MonoBehaviour
             GameStartCountdownUI.CountdownIsPaused = true;
         }
 
+        // Set Resume button as first selected for keyboard/gamepad navigation
+        if (eventSystem != null && resumeButton != null)
+        {
+            eventSystem.SetSelectedGameObject(resumeButton.gameObject);
+        }
+
         // Pause SFX
         //AudioManager.Instance?.PlaySFX("Pause");
 
@@ -159,6 +172,12 @@ public class PauseMenu : MonoBehaviour
 
         isPausedByMenu = false;
 
+        // Clear selected object when closing menu
+        if (eventSystem != null)
+        {
+            eventSystem.SetSelectedGameObject(null);
+        }
+
         // Unpause SFX
         //AudioManager.Instance?.PlaySFX("Unpause");
 
@@ -172,6 +191,12 @@ public class PauseMenu : MonoBehaviour
 
         isPausedByMenu = false;
         GameStartCountdownUI.CountdownIsPaused = false;
+
+        // Clear selected object when leaving scene
+        if (eventSystem != null)
+        {
+            eventSystem.SetSelectedGameObject(null);
+        }
 
         PlayerStatsManager.ClearAllPlayers();
         PlayerManager.Instance.ClearAllPlayers();
