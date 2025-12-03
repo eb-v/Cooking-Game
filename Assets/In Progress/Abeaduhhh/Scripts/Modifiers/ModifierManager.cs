@@ -8,7 +8,7 @@ public class ModifierManager : MonoBehaviour {
     [SerializeField] private LightningModifier lightningSystem;
     [SerializeField] private EarthquakeModifier earthquakeSystem;
     [SerializeField] private RobberModifier robberSystem;
-    [SerializeField] private RocketBoost jetpackSystem;
+    //[SerializeField] private RocketBoost jetpackSystem;
     [SerializeField] private CloseProximityManager closeProximitySystem;
 
 
@@ -59,10 +59,10 @@ public class ModifierManager : MonoBehaviour {
                 robberSystem.SpawnRobber();
                 break;
 
-            case LevelModifiers.Jetpack:
-                Debug.Log("Starting Jetpack Modifier");
-                jetpackSystem.PerformRocketBoost();
-                break;
+            //case LevelModifiers.Jetpack:
+            //    Debug.Log("Starting Jetpack Modifier");
+            //    jetpackSystem.PerformRocketBoost();
+            //    break;
 
             case LevelModifiers.CloseProximity:
                 Debug.Log("Starting CloseProximity Modifier");
