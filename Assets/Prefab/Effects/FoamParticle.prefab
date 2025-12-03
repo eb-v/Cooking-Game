@@ -11,10 +11,8 @@ GameObject:
   - component: {fileID: 3624549148643827040}
   - component: {fileID: 6465986889121204498}
   - component: {fileID: 1558148876424413419}
-  - component: {fileID: 5307774394733342478}
   - component: {fileID: 5722140891765877541}
   - component: {fileID: 6993646779960029404}
-  - component: {fileID: 4386472709494395683}
   m_Layer: 0
   m_Name: FoamParticle
   m_TagString: Untagged
@@ -93,27 +91,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!135 &5307774394733342478
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3339871681955947375}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!54 &5722140891765877541
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -154,17 +131,3 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   lifeDuration: 3
---- !u!114 &4386472709494395683
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3339871681955947375}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7c14b512978f27143b426c550d9b4f53, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Extinguisher
-  speed: 10
-  extinguishRate: 0.3

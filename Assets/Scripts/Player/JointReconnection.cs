@@ -33,8 +33,9 @@ public class JointReconnection : MonoBehaviour
             {
                 if (CheckForJointObjMatch(ragdollJoint))
                 {
-
+                    
                     grabable.Release();
+                    grabable.grabCollider.enabled = false;
                     ConnectJoint(grabbedObj, otherPlayer);
                     return true;
                 }
@@ -98,32 +99,18 @@ public class JointReconnection : MonoBehaviour
 
         Quaternion desiredWorldRotation = backupData.parent.rotation * backupData.localRotation;
 
-        // 2. Apply the DESIRED WORLD ROTATION
-        // Apply World Rotation directly to the Transform.
-        // This forces the limb into the correct final orientation regardless of parent's current rotation.
         jointObjToAttach.transform.rotation = desiredWorldRotation;
-
 
 
         rc.RestoreJointData(joint, jointName);
 
 
-
         jointRb.isKinematic = true;
 
 
-        // Alligns the joint anchor to the correct position it should be at
         AdjustJointAnchor(joint, backupData, jointObjToAttach);
 
 
-
-
-
-
-
-
-
-        // move pelvis up to avoid clipping into ground when reconnecting joints
         Vector3 pelvisPos = pelvis.transform.position;
         pelvisPos.y += 1.3f;
         pelvis.transform.position = pelvisPos;
@@ -131,7 +118,6 @@ public class JointReconnection : MonoBehaviour
 
         foreach (RagdollJoint rj in jointObjToAttach.GetComponentsInChildren<RagdollJoint>())
         {
-            rj.isConnected = true;
             rc.ResetReconnectedLimbDrives(rj.GetJointName());
         }
 
@@ -141,35 +127,35 @@ public class JointReconnection : MonoBehaviour
             rc.ResetStepValues();
         }
 
+        // Track the joint reconnection stat for the player who helped
+        PlayerStats helperStats = playerWhoReconnected.GetComponent<PlayerStats>();
+        if (helperStats != null)
+        {
+            helperStats.IncrementJointsReconnected();
+            Debug.Log($"[JOINT RECONNECTED] Player {helperStats.playerNumber} reconnected a joint! Total reconnections: {helperStats.jointsReconnected}");
+        }
+        else
+        {
+            Debug.LogWarning($"[JOINT RECONNECTION] {playerWhoReconnected.name} has no PlayerStats component!");
+        }
+
+        // play joint reconnect SFX
+        AudioManager.Instance?.PlaySFX("Joint reconnect");
+
         jointRb.isKinematic = false;
         // update the dictionaries in RagdollController
         rc.UpdateJointDictionaries(jointObjToAttach);
-        // set target rotations to original rotations
         rc.HardResetPose();
+    }
 
 
-
-
-        // set the local pos/rot to original
-        //foreach (RagdollJoint rj in jointObjToAttach.GetComponentsInChildren<RagdollJoint>())
-        //{
-        //    rc.SetJointToOriginalLocalPosRot(rj);
-        //}
-
-
-        // play joint reconnect SFX
-        //AudioManager.Instance?.PlaySFX("Joint reconnect");
-        // Track the joint reconnection stat for the player who helped
-        //PlayerStats helperStats = playerWhoReconnected.GetComponent<PlayerStats>();
-        //if (helperStats != null)
-        //{
-        //    helperStats.IncrementJointsReconnected();
-        //    Debug.Log($"[JOINT RECONNECTED] Player {helperStats.playerNumber} reconnected a joint! Total reconnections: {helperStats.jointsReconnected}");
-        //}
-        //else
-        //{
-        //    Debug.LogWarning($"[JOINT RECONNECTION] {playerWhoReconnected.name} has no PlayerStats component!");
-        //}
+    private void SetTagRecursively(GameObject obj, string newTag)
+    {
+        obj.tag = newTag;
+        foreach (Transform child in obj.transform)
+        {
+            SetTagRecursively(child.gameObject, newTag);
+        }
     }
 
     private void AdjustJointAnchor(ConfigurableJoint joint, JointSettingsData backupData, GameObject jointObjToAttach)
@@ -194,15 +180,5 @@ public class JointReconnection : MonoBehaviour
 
         jointRb.linearVelocity = Vector3.zero;
         jointRb.angularVelocity = Vector3.zero;
-    }
-
-
-    private void SetTagRecursively(GameObject obj, string newTag)
-    {
-        obj.tag = newTag;
-        foreach (Transform child in obj.transform)
-        {
-            SetTagRecursively(child.gameObject, newTag);
-        }
     }
 }

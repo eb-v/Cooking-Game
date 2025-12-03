@@ -7,6 +7,7 @@ public class GrabScript : MonoBehaviour
     [SerializeField] private Transform pelvis;
     [SerializeField] private LayerMask grabLayerMask;
     private PlayerData playerSettings;
+    private RagdollController rc;
 
     [field: SerializeField] public Grabable grabbedObject { get; set; }
     public bool IsGrabbing => grabbedObject != null;
@@ -15,11 +16,18 @@ public class GrabScript : MonoBehaviour
     private void Awake()
     {
         playerSettings = LoadPlayerData.GetPlayerData();
+        rc = GetComponent<RagdollController>();
+    }
+    private void OnEnable()
+    {
+        GenericEvent<OnGrabInputEvent>.GetEvent(gameObject.name).AddListener(OnGrabInput);
+        GenericEvent<OnJointRemoved>.GetEvent(gameObject.transform.root.GetInstanceID().ToString()).AddListener(MakePlayerReleaseObject);
     }
 
-    private void Start()
+    private void OnDisable()
     {
-        GenericEvent<OnGrabInputEvent>.GetEvent(gameObject.name).AddListener(OnGrabInput);  
+        GenericEvent<OnGrabInputEvent>.GetEvent(gameObject.name).RemoveListener(OnGrabInput);
+        GenericEvent<OnJointRemoved>.GetEvent(gameObject.transform.root.GetInstanceID().ToString()).RemoveListener(MakePlayerReleaseObject);
     }
 
     private Grabable GrabRayCastDetection()
@@ -39,12 +47,15 @@ public class GrabScript : MonoBehaviour
 
     private void OnGrabInput()
     {
-        if (!IsGrabbing)
+        if (!rc.MissingArm())
         {
-            Grabable grabable = GrabRayCastDetection();
-            if (grabable != null)
+            if (!IsGrabbing)
             {
-                grabable.Grab(gameObject);
+                Grabable grabable = GrabRayCastDetection();
+                if (grabable != null)
+                {
+                    grabable.Grab(gameObject);
+                }
             }
         }
     }
@@ -54,6 +65,15 @@ public class GrabScript : MonoBehaviour
         if (!IsGrabbing)
         {
             grabable.Grab(gameObject);
+        }
+    }
+
+    public void MakePlayerReleaseObject()
+    {
+        Debug.Log("MakePlayerReleaseObject called");
+        if (IsGrabbing)
+        {
+            grabbedObject.Release();
         }
     }
 

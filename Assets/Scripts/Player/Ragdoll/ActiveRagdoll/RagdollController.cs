@@ -206,7 +206,6 @@ public class RagdollController : MonoBehaviour
         GenericEvent<OnLeanForwardCancel>.GetEvent(gameObject.name).AddListener(() => { _leanForward = false; });
         GenericEvent<OnLeanBackwardInput>.GetEvent(gameObject.name).AddListener(() => { _leanBackward = true; });
         GenericEvent<OnLeanBackwardCancel>.GetEvent(gameObject.name).AddListener(() => { _leanBackward = false; });
-        GenericEvent<OnRemoveJoint>.GetEvent(gameObject.name).AddListener(DisconnectJoint);
 
         GenericEvent<OnGrabStatusChanged>.GetEvent(gameObject.name).AddListener(ChangeGrabStatus);
     }
@@ -218,7 +217,6 @@ public class RagdollController : MonoBehaviour
         GenericEvent<OnLeanForwardCancel>.GetEvent(gameObject.name).RemoveListener(() => { _leanForward = false; });
         GenericEvent<OnLeanBackwardInput>.GetEvent(gameObject.name).RemoveListener(() => { _leanBackward = true; });
         GenericEvent<OnLeanBackwardCancel>.GetEvent(gameObject.name).RemoveListener(() => { _leanBackward = false; });
-        GenericEvent<OnRemoveJoint>.GetEvent(gameObject.name).RemoveListener(DisconnectJoint);
         GenericEvent<OnGrabStatusChanged>.GetEvent(gameObject.name).RemoveListener(ChangeGrabStatus);
     }
 
@@ -525,14 +523,7 @@ public class RagdollController : MonoBehaviour
         ResetPose = false;
     }
 
-    public void ResetRagdollRotations()
-    {
-        foreach (KeyValuePair<string, RagdollJoint> kvp in RagdollDict)
-        {
-            Transform jointTransform = kvp.Value.transform;
-            jointTransform.localRotation = originalLocalRotations[kvp.Key];
-        }
-    }
+    
 
     
 
@@ -571,11 +562,7 @@ public class RagdollController : MonoBehaviour
                 balanced = false;
             }
         }
-
-        if (!RagdollDict.ContainsKey(HEAD))
-        {
-            balanced = false;
-        }
+        
 
         if (knockedOut)
         {
@@ -607,6 +594,11 @@ public class RagdollController : MonoBehaviour
 
 
        // StartCoroutine(RecoverFromKnockOut(duration));
+    }
+
+    public bool MissingArm()
+    {
+        return !RagdollDict.ContainsKey(UPPER_LEFT_ARM) || !RagdollDict.ContainsKey(UPPER_RIGHT_ARM);
     }
 
     private IEnumerator RecoverFromKnockOut(float duration)
@@ -699,10 +691,6 @@ public class RagdollController : MonoBehaviour
         // Disable movement if player is missing legs
         //if (!RagdollDict.ContainsKey(UPPER_RIGHT_LEG) || !RagdollDict.ContainsKey(UPPER_LEFT_LEG))
         //    return;
-        if (!RagdollDict.ContainsKey(HEAD))
-        {
-            return;
-        }
 
         float newMoveSpeed;
         if (!RagdollDict[UPPER_RIGHT_LEG].isConnected || !RagdollDict[UPPER_LEFT_LEG].isConnected)
@@ -719,7 +707,7 @@ public class RagdollController : MonoBehaviour
         Direction.y = 0f;
         Rigidbody rootRigidbody = RagdollDict[ROOT].Rigidbody;
         var velocity = rootRigidbody.linearVelocity;
-        if (RagdollDict[HEAD].isConnected)
+        if (RagdollDict.ContainsKey(HEAD))
         {
             rootRigidbody.linearVelocity = Vector3.Lerp(velocity,
             (Direction * newMoveSpeed) + new Vector3(0, velocity.y, 0), 0.8f);
@@ -1163,7 +1151,6 @@ public class RagdollController : MonoBehaviour
     {
         ConfigurableJoint joint = RagdollDict[jointName].Joint;
         GameObject jointObj = joint.gameObject;
-        Rigidbody rb = jointObj.GetComponent<Rigidbody>();
 
         // get saved configurable joint settings
         JointSettingsData savedData = SaveJointData(joint);
@@ -1174,6 +1161,7 @@ public class RagdollController : MonoBehaviour
         Vector3 positionOffset = ragdollJoint.PositionOffset;
         Quaternion rotationOffset = ragdollJoint.RotationOffset;
 
+        Rigidbody rb = jointObj.GetComponent<Rigidbody>();
 
 
         RagdollDict.Remove(jointName);
@@ -1183,24 +1171,18 @@ public class RagdollController : MonoBehaviour
 
 
 
-       // rb.WakeUp();
+        rb.WakeUp();
 
         jointObj.transform.SetParent(null);
 
-        //rb.WakeUp();
+        rb.WakeUp();
 
 
         jointObj.transform.position = rb.position;
         jointObj.transform.rotation = rb.rotation;
 
-        rb.linearVelocity = Vector3.zero;
-        rb.angularVelocity = Vector3.zero;
-
-        //jointObj.transform.position += positionOffset;
-        //jointObj.transform.rotation *= rotationOffset;
         rb.position += positionOffset;
         rb.rotation *= rotationOffset;
-
 
         //foreach (ConfigurableJoint cj in jointObj.GetComponentsInChildren<ConfigurableJoint>())
         //{
@@ -1240,7 +1222,14 @@ public class RagdollController : MonoBehaviour
         grabable.grabCollider.enabled = true;
         disconnectedJoints.Add(jointObj);
 
+        rb.linearVelocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
+
+
+
         Destroy(joint);
+        rb.linearVelocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
         // GenericEvent<JointRemoved>.GetEvent(gameObject.name).Invoke(joint.gameObject, jointBackupData);
     }
 

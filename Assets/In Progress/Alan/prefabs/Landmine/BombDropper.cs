@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class BombManager : MonoBehaviour
+public class BombDropper : MonoBehaviour
 {
     [Header("Bomb Settings")]
     public GameObject bombPrefab;
@@ -32,6 +32,8 @@ public class BombManager : MonoBehaviour
             StartDropping();
         }
     }
+
+   
 
     public void StartDropping()
     {

@@ -12,8 +12,7 @@ public enum LevelModifiers {
     Robber = 3,
     LandMines = 4,
     OilSpill = 5,
-    Jetpack = 6,
-    CloseProximity = 7
+    CloseProximity = 6
 }
 
 public class SlotMachineScript : MonoBehaviour {
@@ -58,18 +57,19 @@ public class SlotMachineScript : MonoBehaviour {
         RunSpinCheckLogic(slot3);
     }
 
-    //private void Start() {
-    //    StartSlotMachine();
-    //}
+    private void Start()
+    {
+        StartSlotMachine();
+    }
 
     public void StartSlotMachine() {
         FreezeManager.FreezeGameplay();
 
         int num1, num2, num3;
 
-        num1 = Random.Range(1, 8);
-        do { num2 = Random.Range(1, 8); } while (num2 == num1);
-        do { num3 = Random.Range(1, 8); } while (num3 == num1 || num3 == num2);
+        num1 = Random.Range(1, 7);
+        do { num2 = Random.Range(1, 7); } while (num2 == num1);
+        do { num3 = Random.Range(1, 7); } while (num3 == num1 || num3 == num2);
 
         LevelModifiers mod1 = (LevelModifiers)num1;
         LevelModifiers mod2 = (LevelModifiers)num2;
@@ -239,9 +239,9 @@ public class SlotMachineScript : MonoBehaviour {
 
         int num1, num2, num3;
 
-        num1 = Random.Range(0, MaxRandomExclusive);
-        do { num2 = Random.Range(0, MaxRandomExclusive); } while (num2 == num1);
-        do { num3 = Random.Range(0, MaxRandomExclusive); } while (num3 == num1 || num3 == num2);
+        num1 = Random.Range(1, MaxRandomExclusive);
+        do { num2 = Random.Range(1, MaxRandomExclusive); } while (num2 == num1);
+        do { num3 = Random.Range(1, MaxRandomExclusive); } while (num3 == num1 || num3 == num2);
 
         randomInts.Add(num1);
         randomInts.Add(num2);
