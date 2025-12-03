@@ -13,14 +13,14 @@ public class TutorialState : BaseStateSO<TutorialState>
 
     private void EnableObjects() 
     {
-        TutorialManager.Instance.tutorialObjectContainers[this.stateName].SetActive(true);
-        TutorialManager.Instance.tutorialUIContainers[this.stateName].SetActive(true);
+        TutorialManager.Instance.tutorialObjectContainers[stateName].SetActive(true);
+        TutorialManager.Instance.tutorialUIContainers[stateName].SetActive(true);
     }
 
     private void DisableObjects() 
     {
-        TutorialManager.Instance.tutorialObjectContainers[this.stateName].SetActive(false);
-        TutorialManager.Instance.tutorialUIContainers[this.stateName].SetActive(false);
+        TutorialManager.Instance.tutorialObjectContainers[stateName].SetActive(false);
+        TutorialManager.Instance.tutorialUIContainers[stateName].SetActive(false);
     }
 
     public override void Initialize(GameObject gameObject, StateMachine<TutorialState> stateMachine)
@@ -57,7 +57,6 @@ public class TutorialState : BaseStateSO<TutorialState>
         {
             DialogueManager.Instance.StartDialogue(tutorialText[currentDialogueIndex]);
             Debug.Log("Displaying dialogue: " + tutorialText[currentDialogueIndex]);
-            currentDialogueIndex++;
         }
     }
     

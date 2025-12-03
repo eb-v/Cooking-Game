@@ -55,49 +55,15 @@ public class TutorialManager : MonoBehaviour
         grabbingInstance = Instantiate(grabbing);
         interactionInstance = Instantiate(interaction);
         reconnectingJointsInstance = Instantiate(reconnectingJoints);
+
     }
 
     private void Start()
     {
-        List<TutorialState> tutorialStates = new List<TutorialState>();
-
         movementInstance.Initialize(gameObject, stateMachine);
-        tutorialStates.Add(movementInstance);
         grabbingInstance.Initialize(gameObject, stateMachine);
-        tutorialStates.Add(grabbingInstance);
         interactionInstance.Initialize(gameObject, stateMachine);
-        tutorialStates.Add(interactionInstance);
         reconnectingJointsInstance.Initialize(gameObject, stateMachine);
-        tutorialStates.Add(reconnectingJointsInstance);
-
-        foreach (TutorialState state in tutorialStates)
-        {
-            GameObject objectContainer = GameObject.Find(state.objectContainerName);
-            GameObject uiContainer = GameObject.Find(state.uiContainerName);
-
-            if (objectContainer != null)
-            {
-                tutorialObjectContainers.Add(state.stateName, objectContainer);
-                objectContainer.SetActive(false);
-            }
-            else
-            {
-                Debug.LogWarning("TutorialManager: Object container not found for state: " + state.stateName);
-            }
-
-            if (uiContainer != null)
-            {
-                tutorialUIContainers.Add(state.stateName, uiContainer);
-                uiContainer.SetActive(false);
-            }
-            else
-            {
-                Debug.LogWarning("TutorialManager: UI container not found for state: " + state.stateName);
-            }
-
-
-        }
-
 
 
         stateMachine.Initialize(movementInstance);
