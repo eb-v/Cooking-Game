@@ -34,13 +34,12 @@ public class DialogueManager : MonoBehaviour
 
     public void StartDialogue(string line)
     {
-        if (isDisplaying)
+        if (!isDisplaying)
         {
-            StopAllCoroutines();
-            isDisplaying = false;
+            //StopAllCoroutines();
+            //isDisplaying = false;
+            StartCoroutine(DisplayLine(line));
         }
-
-        StartCoroutine(DisplayLine(line));
     }
 
     private IEnumerator DisplayLine(string line)
@@ -62,6 +61,7 @@ public class DialogueManager : MonoBehaviour
         yield return new WaitForSeconds(dialogueDisplayDuration);
         isDisplaying = false;
         GenericEvent<OnDialogueFinished>.GetEvent("DialogueManager").Invoke();
+        Debug.Log("Dialogue finished.");
     }
     
 
