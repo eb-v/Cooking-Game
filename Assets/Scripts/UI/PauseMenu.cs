@@ -8,22 +8,16 @@ using UnityEngine.Audio;
 public class PauseMenu : MonoBehaviour
 {
     public GameObject container;
-    public GameObject settingsPanel;
     public GameObject pauseMenuContent;
+    public GameObject controllerImageObject;
 
     [Header("Settings UI Elements")]
-    public Slider volumeSlider;
-    public TMP_Dropdown resolutionDropdown;
-    public TMP_Dropdown controllerTypeDropdown;
-    public Image controllerImage;
-
-    [Header("Controller Images")]
-    public Sprite ps5ControllerSprite;
-    public Sprite xboxControllerSprite;
+    public Slider sfxVolumeSlider;
+    public Slider musicVolumeSlider;
+    public AudioMixer audioMixer;
 
     private PlayerInput playerInput;
     private bool isPausedByMenu = false;
-    private Resolution[] resolutions;
 
     void Awake()
     {
@@ -33,54 +27,38 @@ public class PauseMenu : MonoBehaviour
             playerInput.actions["Pause"].performed += OnPause;
         }
 
-        if (settingsPanel != null)
+        // Hide the entire pause menu on start
+        if (container != null)
         {
-            settingsPanel.SetActive(false);
+            container.SetActive(false);
         }
 
-        SetupResolutionDropdown();
-
-        if (volumeSlider != null)
+        // Make sure pause menu content is visible, controller image is hidden
+        if (pauseMenuContent != null)
         {
-            AudioListener.volume = 0.5f;
-            volumeSlider.value = 50f;
-            volumeSlider.onValueChanged.AddListener(OnVolumeChanged);
+            pauseMenuContent.SetActive(true);
         }
 
-        if (controllerTypeDropdown != null)
+        if (controllerImageObject != null)
         {
-            controllerTypeDropdown.onValueChanged.AddListener(OnControllerTypeChanged);
-            OnControllerTypeChanged(controllerTypeDropdown.value);
-        }
-    }
-
-    void SetupResolutionDropdown()
-    {
-        if (resolutionDropdown == null) return;
-
-        resolutions = Screen.resolutions;
-        resolutionDropdown.ClearOptions();
-
-        List<string> options = new List<string>();
-        int currentResolutionIndex = 0;
-
-        for (int i = 0; i < resolutions.Length; i++)
-        {
-            string option = resolutions[i].width + " x " + resolutions[i].height + " @ " +
-                            resolutions[i].refreshRateRatio.value.ToString("F0") + "Hz";
-            options.Add(option);
-
-            if (resolutions[i].width == Screen.currentResolution.width &&
-                resolutions[i].height == Screen.currentResolution.height)
-            {
-                currentResolutionIndex = i;
-            }
+            controllerImageObject.SetActive(false);
         }
 
-        resolutionDropdown.AddOptions(options);
-        resolutionDropdown.value = currentResolutionIndex;
-        resolutionDropdown.RefreshShownValue();
-        resolutionDropdown.onValueChanged.AddListener(OnResolutionChanged);
+        // Initialize SFX slider
+        if (sfxVolumeSlider != null)
+        {
+            sfxVolumeSlider.value = 75f;
+            sfxVolumeSlider.onValueChanged.AddListener(OnSFXVolumeChanged);
+            OnSFXVolumeChanged(sfxVolumeSlider.value);
+        }
+
+        // Initialize Music slider
+        if (musicVolumeSlider != null)
+        {
+            musicVolumeSlider.value = 75f;
+            musicVolumeSlider.onValueChanged.AddListener(OnMusicVolumeChanged);
+            OnMusicVolumeChanged(musicVolumeSlider.value);
+        }
     }
 
     void Update()
@@ -129,12 +107,14 @@ public class PauseMenu : MonoBehaviour
             return;
         }
 
-        if (settingsPanel != null && settingsPanel.activeSelf)
+        // If controls are open, go back to pause menu
+        if (controllerImageObject != null && controllerImageObject.activeSelf)
         {
-            CloseSettings();
+            CloseControls();
             return;
         }
 
+        // Toggle pause menu on/off
         if (container.activeSelf)
         {
             ResumeGame();
@@ -160,7 +140,7 @@ public class PauseMenu : MonoBehaviour
         }
 
         // Pause SFX
-        AudioManager.Instance?.PlaySFX("Pause");
+        //AudioManager.Instance?.PlaySFX("Pause");
 
         Debug.Log("Game paused by pause menu");
     }
@@ -180,7 +160,7 @@ public class PauseMenu : MonoBehaviour
         isPausedByMenu = false;
 
         // Unpause SFX
-        AudioManager.Instance?.PlaySFX("Unpause");
+        //AudioManager.Instance?.PlaySFX("Unpause");
 
         Debug.Log("Game resumed from pause menu");
     }
@@ -198,49 +178,53 @@ public class PauseMenu : MonoBehaviour
         UnityEngine.SceneManagement.SceneManager.LoadScene("MainMenuScene");
     }
 
-    public void OpenSettings()
+    public void OpenControls()
     {
-        if (settingsPanel != null)
-            settingsPanel.SetActive(true);
-
         if (pauseMenuContent != null)
             pauseMenuContent.SetActive(false);
+
+        if (controllerImageObject != null)
+            controllerImageObject.SetActive(true);
     }
 
-    public void CloseSettings()
+    public void CloseControls()
     {
-        if (settingsPanel != null)
-            settingsPanel.SetActive(false);
+        if (controllerImageObject != null)
+            controllerImageObject.SetActive(false);
 
         if (pauseMenuContent != null)
             pauseMenuContent.SetActive(true);
     }
 
-    void OnVolumeChanged(float value)
+    void OnSFXVolumeChanged(float value)
     {
-        AudioListener.volume = value / 100f;
-    }
-
-    void OnResolutionChanged(int resolutionIndex)
-    {
-        Resolution resolution = resolutions[resolutionIndex];
-        Screen.SetResolution(resolution.width, resolution.height, Screen.fullScreen);
-    }
-
-    void OnControllerTypeChanged(int index)
-    {
-        if (controllerImage == null) return;
-
-        switch (index)
+        if (audioMixer != null)
         {
-            case 0:
-                if (ps5ControllerSprite != null)
-                    controllerImage.sprite = ps5ControllerSprite;
-                break;
-            case 1:
-                if (xboxControllerSprite != null)
-                    controllerImage.sprite = xboxControllerSprite;
-                break;
+            // Convert 0-100 slider to decibels (-80 to 0)
+            // When slider is at 0, volume should be -80dB (essentially muted)
+            // When slider is at 100, volume should be 0dB (full volume)
+            float volume = value > 0 ? Mathf.Log10(value / 100f) * 20f : -80f;
+            bool success = audioMixer.SetFloat("SFXVolume", volume);
+            Debug.Log($"SFX Volume Changed: Slider={value}, Decibels={volume:F2}, Success={success}");
+        }
+        else
+        {
+            Debug.LogWarning("AudioMixer is not assigned in PauseMenu!");
+        }
+    }
+
+    void OnMusicVolumeChanged(float value)
+    {
+        if (audioMixer != null)
+        {
+            // Convert 0-100 slider to decibels (-80 to 0)
+            float volume = value > 0 ? Mathf.Log10(value / 100f) * 20f : -80f;
+            bool success = audioMixer.SetFloat("MusicVolume", volume);
+            Debug.Log($"Music Volume Changed: Slider={value}, Decibels={volume:F2}, Success={success}");
+        }
+        else
+        {
+            Debug.LogWarning("AudioMixer is not assigned in PauseMenu!");
         }
     }
 }
