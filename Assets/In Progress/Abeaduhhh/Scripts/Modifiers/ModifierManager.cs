@@ -11,12 +11,6 @@ public class ModifierManager : MonoBehaviour {
     //[SerializeField] private RocketBoost jetpackSystem;
     [SerializeField] private CloseProximityManager closeProximitySystem;
 
-
-
-
-
-
-
     private void Awake() {
 
         Debug.Log("ModifierManager called!");
@@ -25,8 +19,6 @@ public class ModifierManager : MonoBehaviour {
             .GetEvent("OnModifiersChoosenEvent")
             .AddListener(OnModifiersChosen);
     }
-
-
     private void OnModifiersChosen(List<LevelModifiers> mods) {
         Debug.Log("Received modifiers: " + string.Join(", ", mods));
         foreach (var mod in mods) ApplyModifier(mod);

@@ -247,9 +247,17 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 4152079645270037006, guid: 6d9fb30bbee232e4cbaf5dc1a62d5fb1, type: 3}
+      propertyPath: KnifePrefab
+      value: 
+      objectReference: {fileID: 7020125767345049779, guid: 7faf413ddded778418c6fe63a2586002, type: 3}
+    - target: {fileID: 4152079645270037006, guid: 6d9fb30bbee232e4cbaf5dc1a62d5fb1, type: 3}
       propertyPath: _cuttingVFX
       value: 
       objectReference: {fileID: 1863451950}
+    - target: {fileID: 4152079645270037006, guid: 6d9fb30bbee232e4cbaf5dc1a62d5fb1, type: 3}
+      propertyPath: knifeSpawnPoint
+      value: 
+      objectReference: {fileID: 1570604355}
     - target: {fileID: 5306684461265963428, guid: 6d9fb30bbee232e4cbaf5dc1a62d5fb1, type: 3}
       propertyPath: m_Name
       value: CuttingCounter_1
@@ -1691,6 +1699,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 8775790378290876973, guid: 6d9fb30bbee232e4cbaf5dc1a62d5fb1, type: 3}
   m_PrefabInstance: {fileID: 96264326}
   m_PrefabAsset: {fileID: 0}
+--- !u!4 &1570604355 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3878922395292212282, guid: 49abeb7bbc1b6dc40827cfd8b8fb0409, type: 3}
+  m_PrefabInstance: {fileID: 1907883070}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1644953532 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2103231885910169065, guid: a8b05e0af95ec5742931f55bce4ca399, type: 3}
@@ -2119,9 +2132,17 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 11400000, guid: 1110e4700a6dec14a8e3a02cc8925c27, type: 2}
     - target: {fileID: 4152079645270037006, guid: 6d9fb30bbee232e4cbaf5dc1a62d5fb1, type: 3}
+      propertyPath: KnifePrefab
+      value: 
+      objectReference: {fileID: 7020125767345049779, guid: 7faf413ddded778418c6fe63a2586002, type: 3}
+    - target: {fileID: 4152079645270037006, guid: 6d9fb30bbee232e4cbaf5dc1a62d5fb1, type: 3}
       propertyPath: _cuttingVFX
       value: 
       objectReference: {fileID: 1059547091}
+    - target: {fileID: 4152079645270037006, guid: 6d9fb30bbee232e4cbaf5dc1a62d5fb1, type: 3}
+      propertyPath: knifeSpawnPoint
+      value: 
+      objectReference: {fileID: 1570604355}
     - target: {fileID: 4152079645270037006, guid: 6d9fb30bbee232e4cbaf5dc1a62d5fb1, type: 3}
       propertyPath: _ingredientForceMultiplier
       value: 11
@@ -2392,6 +2413,18 @@ PrefabInstance:
     - target: {fileID: 1671781964517461680, guid: 49abeb7bbc1b6dc40827cfd8b8fb0409, type: 3}
       propertyPath: verticalBoostForce
       value: 300
+      objectReference: {fileID: 0}
+    - target: {fileID: 3878922395292212282, guid: 49abeb7bbc1b6dc40827cfd8b8fb0409, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.03
+      objectReference: {fileID: 0}
+    - target: {fileID: 3878922395292212282, guid: 49abeb7bbc1b6dc40827cfd8b8fb0409, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.008
+      objectReference: {fileID: 0}
+    - target: {fileID: 3878922395292212282, guid: 49abeb7bbc1b6dc40827cfd8b8fb0409, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.034
       objectReference: {fileID: 0}
     - target: {fileID: 4777336152046692441, guid: 49abeb7bbc1b6dc40827cfd8b8fb0409, type: 3}
       propertyPath: m_Name
