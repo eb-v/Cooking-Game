@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class ModifierManager : MonoBehaviour {
     [Header("Gameplay Systems")]
-    [SerializeField] private BombManager bombSystem;
+    [SerializeField] private BombDropper bombSystem;
     [SerializeField] private OilSpawnManager oilSystem;
     [SerializeField] private LightningModifier lightningSystem;
     [SerializeField] private EarthquakeModifier earthquakeSystem;

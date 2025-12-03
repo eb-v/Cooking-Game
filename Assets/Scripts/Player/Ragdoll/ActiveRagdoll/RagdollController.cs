@@ -485,54 +485,47 @@ public class RagdollController : MonoBehaviour
     // completely reset the pose of all joints to original position
     public void HardResetPose()
     {
-        if (RagdollDict.ContainsKey(ROOT))
+        if (RagdollDict[ROOT].isConnected)
             TargetRotations[ROOT] = originalTargetRotations[ROOT];
 
-        if (RagdollDict.ContainsKey(UPPER_RIGHT_ARM))
+        if (RagdollDict[UPPER_RIGHT_ARM].isConnected)
             TargetRotations[UPPER_RIGHT_ARM] = originalTargetRotations[UPPER_RIGHT_ARM];
 
-        if (RagdollDict.ContainsKey(LOWER_RIGHT_ARM))
+        if (RagdollDict[LOWER_RIGHT_ARM].isConnected)
             TargetRotations[LOWER_RIGHT_ARM] = originalTargetRotations[LOWER_RIGHT_ARM];
 
-        if (RagdollDict.ContainsKey(UPPER_LEFT_ARM))
+        if (RagdollDict[UPPER_LEFT_ARM].isConnected)
             TargetRotations[UPPER_LEFT_ARM] = originalTargetRotations[UPPER_LEFT_ARM];
 
-        if (RagdollDict.ContainsKey(LOWER_LEFT_ARM))
+        if (RagdollDict[LOWER_LEFT_ARM].isConnected)
             TargetRotations[LOWER_LEFT_ARM] = originalTargetRotations[LOWER_LEFT_ARM];
 
-        if (RagdollDict.ContainsKey(HEAD))
+        if (RagdollDict[HEAD].isConnected)
             TargetRotations[HEAD] = originalTargetRotations[HEAD];
 
-        if (RagdollDict.ContainsKey(UPPER_RIGHT_LEG))
+        if (RagdollDict[UPPER_RIGHT_LEG].isConnected)
             TargetRotations[UPPER_RIGHT_LEG] = originalTargetRotations[UPPER_RIGHT_LEG];
 
-        if (RagdollDict.ContainsKey(LOWER_RIGHT_LEG))
+        if (RagdollDict[LOWER_RIGHT_LEG].isConnected)
             TargetRotations[LOWER_RIGHT_LEG] = originalTargetRotations[LOWER_RIGHT_LEG];
 
-        if (RagdollDict.ContainsKey(UPPER_LEFT_LEG))
+        if (RagdollDict[UPPER_LEFT_LEG].isConnected)
             TargetRotations[UPPER_LEFT_LEG] = originalTargetRotations[UPPER_LEFT_LEG];
 
-        if (RagdollDict.ContainsKey(LOWER_LEFT_LEG))
+        if (RagdollDict[LOWER_LEFT_LEG].isConnected)
             TargetRotations[LOWER_LEFT_LEG] = originalTargetRotations[LOWER_LEFT_LEG];
 
-        if (RagdollDict.ContainsKey(RIGHT_FOOT))
+        if (RagdollDict[RIGHT_FOOT].isConnected)
             TargetRotations[RIGHT_FOOT] = originalTargetRotations[RIGHT_FOOT];
 
-        if (RagdollDict.ContainsKey(LEFT_FOOT))
+        if (RagdollDict[LEFT_FOOT].isConnected)
             TargetRotations[LEFT_FOOT] = originalTargetRotations[LEFT_FOOT];
 
         //MouseYAxisArms = 0;
         ResetPose = false;
     }
 
-    public void ResetRagdollRotations()
-    {
-        foreach (KeyValuePair<string, RagdollJoint> kvp in RagdollDict)
-        {
-            Transform jointTransform = kvp.Value.transform;
-            jointTransform.localRotation = originalLocalRotations[kvp.Key];
-        }
-    }
+    
 
     
 
@@ -1159,7 +1152,6 @@ public class RagdollController : MonoBehaviour
     {
         ConfigurableJoint joint = RagdollDict[jointName].Joint;
         GameObject jointObj = joint.gameObject;
-        Rigidbody rb = jointObj.GetComponent<Rigidbody>();
 
         // get saved configurable joint settings
         JointSettingsData savedData = SaveJointData(joint);
@@ -1170,6 +1162,7 @@ public class RagdollController : MonoBehaviour
         Vector3 positionOffset = ragdollJoint.PositionOffset;
         Quaternion rotationOffset = ragdollJoint.RotationOffset;
 
+        Rigidbody rb = jointObj.GetComponent<Rigidbody>();
 
 
         RagdollDict.Remove(jointName);
@@ -1179,24 +1172,18 @@ public class RagdollController : MonoBehaviour
 
 
 
-       // rb.WakeUp();
+        rb.WakeUp();
 
         jointObj.transform.SetParent(null);
 
-        //rb.WakeUp();
+        rb.WakeUp();
 
 
         jointObj.transform.position = rb.position;
         jointObj.transform.rotation = rb.rotation;
 
-        rb.linearVelocity = Vector3.zero;
-        rb.angularVelocity = Vector3.zero;
-
-        //jointObj.transform.position += positionOffset;
-        //jointObj.transform.rotation *= rotationOffset;
-        rb.position += positionOffset;
-        rb.rotation *= rotationOffset;
-
+        jointObj.transform.position += positionOffset;
+        jointObj.transform.rotation *= rotationOffset;
 
         //foreach (ConfigurableJoint cj in jointObj.GetComponentsInChildren<ConfigurableJoint>())
         //{
@@ -1236,7 +1223,14 @@ public class RagdollController : MonoBehaviour
         grabable.grabCollider.enabled = true;
         disconnectedJoints.Add(jointObj);
 
+        rb.linearVelocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
+
+
+
         Destroy(joint);
+        rb.linearVelocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
         // GenericEvent<JointRemoved>.GetEvent(gameObject.name).Invoke(joint.gameObject, jointBackupData);
     }
 
