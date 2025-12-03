@@ -7,6 +7,8 @@ public class LimbHP : MonoBehaviour
     public float currentHP;
     public RagdollController rc;
 
+    public bool canBePoppedByProximity = true;
+    public bool IsBroken => currentHP <= 0f;
 
     private void Start()
     {
@@ -35,5 +37,9 @@ public class LimbHP : MonoBehaviour
         currentHP = maxHP;
     }
 
-
+    [ContextMenu("Inflict Max Damage")]
+    public void InflictMaxDamage()
+    {
+        ApplyDamage(maxHP);
+    }
 }
