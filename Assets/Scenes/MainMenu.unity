@@ -2202,8 +2202,9 @@ GameObject:
   - component: {fileID: 656268938}
   - component: {fileID: 656268937}
   - component: {fileID: 656268941}
-  - component: {fileID: 656268940}
   - component: {fileID: 656268942}
+  - component: {fileID: 656268943}
+  - component: {fileID: 656268944}
   m_Layer: 5
   m_Name: PlayButton
   m_TagString: Untagged
@@ -2228,7 +2229,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -796, y: -750}
+  m_AnchoredPosition: {x: -600, y: -170}
   m_SizeDelta: {x: 600, y: 500}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &656268937
@@ -2244,7 +2245,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Button
   m_Navigation:
-    m_Mode: 3
+    m_Mode: 2
     m_WrapAround: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
@@ -2325,26 +2326,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 656268935}
   m_CullTransparentMesh: 1
---- !u!114 &656268940
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 656268935}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 978d91e3ece14dc49ac503fe5348eea8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PositionSpringScript
-  yMultiplier: 132.1
-  xMultiplier: 60
-  zMultiplier: 0
-  _assignedChannel: PlayButton
-  nudgeStrength: 1
-  useGameObjectNameAsEventChannel: 1
-  useCustomEventChannelName: 0
-  useGameObjectIDAsEventChannel: 0
 --- !u!114 &656268941
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2429,6 +2410,55 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+--- !u!114 &656268943
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 656268935}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.EventSystems.EventTrigger
+  m_Delegates:
+  - eventID: 9
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 656268941}
+          m_TargetAssemblyTypeName: SpringAPI, Assembly-CSharp
+          m_MethodName: PlaySpring
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+--- !u!114 &656268944
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 656268935}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 978d91e3ece14dc49ac503fe5348eea8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PositionSpringScript
+  yMultiplier: 10
+  xMultiplier: 0
+  zMultiplier: 0
+  _assignedChannel: PlayButton
+  nudgeStrength: 1000
+  useGameObjectNameAsEventChannel: 1
+  useCustomEventChannelName: 0
+  useGameObjectIDAsEventChannel: 0
 --- !u!4 &691283495 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4525431197815690, guid: d2201b576d0da384fb8f681e57559ea8, type: 3}
@@ -2601,8 +2631,9 @@ GameObject:
   - component: {fileID: 771243621}
   - component: {fileID: 771243620}
   - component: {fileID: 771243624}
-  - component: {fileID: 771243623}
   - component: {fileID: 771243625}
+  - component: {fileID: 771243626}
+  - component: {fileID: 771243627}
   m_Layer: 5
   m_Name: QuitButton
   m_TagString: Untagged
@@ -2627,7 +2658,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -793.99963, y: -1224}
+  m_AnchoredPosition: {x: -600, y: -400}
   m_SizeDelta: {x: 600, y: 500}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &771243620
@@ -2643,7 +2674,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Button
   m_Navigation:
-    m_Mode: 3
+    m_Mode: 2
     m_WrapAround: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
@@ -2724,26 +2755,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 771243618}
   m_CullTransparentMesh: 1
---- !u!114 &771243623
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 771243618}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 978d91e3ece14dc49ac503fe5348eea8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PositionSpringScript
-  yMultiplier: 170
-  xMultiplier: 60
-  zMultiplier: 0
-  _assignedChannel: QuitButton
-  nudgeStrength: 1
-  useGameObjectNameAsEventChannel: 1
-  useCustomEventChannelName: 0
-  useGameObjectIDAsEventChannel: 0
 --- !u!114 &771243624
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2828,6 +2839,55 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+--- !u!114 &771243626
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 771243618}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.EventSystems.EventTrigger
+  m_Delegates:
+  - eventID: 9
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 771243624}
+          m_TargetAssemblyTypeName: SpringAPI, Assembly-CSharp
+          m_MethodName: PlaySpring
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+--- !u!114 &771243627
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 771243618}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 978d91e3ece14dc49ac503fe5348eea8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PositionSpringScript
+  yMultiplier: 2.5
+  xMultiplier: 0
+  zMultiplier: 0
+  _assignedChannel: QuitButton
+  nudgeStrength: 100
+  useGameObjectNameAsEventChannel: 1
+  useCustomEventChannelName: 0
+  useGameObjectIDAsEventChannel: 0
 --- !u!1001 &791386427
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4757,6 +4817,10 @@ MonoBehaviour:
   _persistentGamePlay:
     _sceneAsset: {fileID: 102900000, guid: 57d9cfda5b177c84e90f7fd070441c2c, type: 3}
     _sceneName: PersistentGamePlayScene
+  _firstSelectedButton: {fileID: 656268937}
+  _playButton: {fileID: 656268937}
+  _quitButton: {fileID: 771243620}
+  _highlightedColor: {r: 1, g: 0.698, b: 0, a: 1}
   _loadingBarBackground: {r: 0.1, g: 0.1, b: 0.14, a: 1}
   _loadingBarFill: {r: 1, g: 0.5756341, b: 0, a: 1}
 --- !u!1 &1851600859
