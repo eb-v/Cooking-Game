@@ -212,4 +212,12 @@ public class BombCollidedWithPlayer : UnityEvent { }
 
 public class OnDialogueFinished : UnityEvent { }
 
+public class TutorialZoneFinished : UnityEvent { }
+
+public class TutorialGoalCompleted : UnityEvent { }
+
+public class AllTutorialGoalsCompleted : UnityEvent { }
+
+public class AllPlayersStandingInProceedZone : UnityEvent { }
+
 

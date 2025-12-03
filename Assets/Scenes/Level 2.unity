@@ -316,53 +316,6 @@ Transform:
   - {fileID: 1560455586}
   m_Father: {fileID: 2074986398}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &244221404
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 244221406}
-  - component: {fileID: 244221405}
-  m_Layer: 0
-  m_Name: Scene Root
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &244221405
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 244221404}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d4a5f934be4ffff4ab7d2501a7164134, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: '::'
-  _persistantScene:
-    _sceneAsset: {fileID: 102900000, guid: 57d9cfda5b177c84e90f7fd070441c2c, type: 3}
-    _sceneName: PersistentGamePlayScene
---- !u!4 &244221406
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 244221404}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 5.49462, y: 4.30716, z: 27.87026}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &267137191
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1146,9 +1099,13 @@ MonoBehaviour:
   randomizeEachRound: 1
   randomDistanceRange: {x: 2, y: 5}
   graceTime: 1.5
+  popCooldown: 3
   explosionPrefab: {fileID: 5993216455294025333, guid: c8d68a5dcf98a344ba11ddff80bbee22, type: 3}
   proximityIconPrefab: {fileID: 4612312048819403327, guid: 9fce96f0cf1fa4bf9aa86a1b0e9e56e7, type: 3}
   iconOffset: {x: 0, y: 2, z: 0}
+  iconScale: 0.05
+  dangerPulseSpeed: 6
+  dangerPulseAmplitude: 0.25
 --- !u!1 &1644953530
 GameObject:
   m_ObjectHideFlags: 0
@@ -8216,14 +8173,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PauseMenu
   container: {fileID: 2642046848815113914}
-  settingsPanel: {fileID: 0}
   pauseMenuContent: {fileID: 0}
-  volumeSlider: {fileID: 0}
-  resolutionDropdown: {fileID: 0}
-  controllerTypeDropdown: {fileID: 0}
-  controllerImage: {fileID: 0}
-  ps5ControllerSprite: {fileID: 0}
-  xboxControllerSprite: {fileID: 0}
+  controllerImageObject: {fileID: 0}
+  sfxVolumeSlider: {fileID: 0}
+  musicVolumeSlider: {fileID: 0}
+  audioMixer: {fileID: 0}
 --- !u!1 &4095190629565410706
 GameObject:
   m_ObjectHideFlags: 0
@@ -10541,11 +10495,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 771166663963266065, guid: 5750a5d867d7af74e90066496d4a0993, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3051785974653957916, guid: 5750a5d867d7af74e90066496d4a0993, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4127382556527920951, guid: 5750a5d867d7af74e90066496d4a0993, type: 3}
       propertyPath: m_LocalPosition.x
@@ -10597,7 +10551,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5703134290545589181, guid: 5750a5d867d7af74e90066496d4a0993, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6652601639066271025, guid: 5750a5d867d7af74e90066496d4a0993, type: 3}
       propertyPath: orthographic
@@ -10610,6 +10564,10 @@ PrefabInstance:
     - target: {fileID: 6652601639066271025, guid: 5750a5d867d7af74e90066496d4a0993, type: 3}
       propertyPath: orthographic size
       value: 26.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6912464008282170535, guid: 5750a5d867d7af74e90066496d4a0993, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7460167433383535223, guid: 5750a5d867d7af74e90066496d4a0993, type: 3}
       propertyPath: m_LocalPosition.x
@@ -10652,7 +10610,9 @@ PrefabInstance:
       value: Recorder
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 8942141547097820384, guid: 5750a5d867d7af74e90066496d4a0993, type: 3}
+    - {fileID: 4288572360449708234, guid: 5750a5d867d7af74e90066496d4a0993, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5750a5d867d7af74e90066496d4a0993, type: 3}
@@ -14294,7 +14254,6 @@ SceneRoots:
   - {fileID: 1916208193}
   - {fileID: 5799052765075113544}
   - {fileID: 2086482997}
-  - {fileID: 244221406}
   - {fileID: 195560044656348420}
   - {fileID: 7195126795106689189}
   - {fileID: 1866202796}

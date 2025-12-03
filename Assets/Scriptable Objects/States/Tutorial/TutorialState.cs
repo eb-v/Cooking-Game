@@ -6,6 +6,7 @@ using System.Collections.Generic;
 public class TutorialState : BaseStateSO<TutorialState>
 {
     [SerializeField] private List<string> tutorialText;
+    [SerializeField] private UDictionary<string, bool> tutorialGoals = new UDictionary<string, bool>();
     private int currentDialogueIndex = 0;
     public string objectContainerName;
     public string uiContainerName;
@@ -33,8 +34,8 @@ public class TutorialState : BaseStateSO<TutorialState>
         base.Enter();
         EnableObjects();
         DialogueManager.Instance.StartDialogue(tutorialText[currentDialogueIndex]);
-        UpdateDialogue();
         GenericEvent<OnDialogueFinished>.GetEvent("DialogueManager").AddListener(UpdateIndex);
+        GenericEvent<AllTutorialGoalsCompleted>.GetEvent("TutorialManager").Invoke();
     }
 
     public override void Exit()
@@ -45,12 +46,7 @@ public class TutorialState : BaseStateSO<TutorialState>
         currentDialogueIndex = 0;
     }
 
-    public override void UpdateLogic()
-    {
-        base.UpdateLogic();
-        UpdateDialogue();
-    }
-
+    
     private void UpdateDialogue()
     {
         if (!DialogueManager.Instance.IsDisplaying && currentDialogueIndex < tutorialText.Count)
@@ -64,6 +60,26 @@ public class TutorialState : BaseStateSO<TutorialState>
     private void UpdateIndex()
     {
         currentDialogueIndex++;
+    }
+
+    private void OnGoalCompleted()
+    {
+        if (AllGoalsCompleted())
+        {
+            GenericEvent<TutorialZoneFinished>.GetEvent("TutorialManager").Invoke();
+        }
+    }
+
+    private bool AllGoalsCompleted()
+    {
+        foreach (bool goalCompleted in tutorialGoals.Values)
+        {
+            if (!goalCompleted)
+            {
+                return false;
+            }
+        }
+        return true;
     }
 
 

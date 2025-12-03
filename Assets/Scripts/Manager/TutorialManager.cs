@@ -9,17 +9,16 @@ public class TutorialManager : MonoBehaviour
     [SerializeField] private float delayBeforeEnablingNextTutorialZone = 15.0f;
 
     [Header("Tutorial Steps/states")]
-    [SerializeField] private TutorialState movement;
-    [SerializeField] private TutorialState grabbing;
-    [SerializeField] private TutorialState interaction;
-    [SerializeField] private TutorialState reconnectingJoints;
-
+    
+    [SerializeField] private List<TutorialState> tutorialStateBases = new List<TutorialState>();
+    private List<TutorialState> tutorialStateInstances = new List<TutorialState>();
     private StateMachine<TutorialState> stateMachine;
+    private int currentTutorialStateIndex = 0;
 
     [Header("References")]
     public UDictionary<string, GameObject> tutorialObjectContainers = new UDictionary<string, GameObject>();
     public UDictionary<string, GameObject> tutorialUIContainers = new UDictionary<string, GameObject>();
-    [SerializeField] private GameObject nextTutorialZone;
+    [SerializeField] private GameObject proceedZone;
 
     #region Singleton
     private static TutorialManager instance;
@@ -43,50 +42,46 @@ public class TutorialManager : MonoBehaviour
 
     #endregion
 
-    public TutorialState movementInstance;
-    public TutorialState grabbingInstance;
-    public TutorialState interactionInstance;
-    public TutorialState reconnectingJointsInstance;
 
     private void Awake()
     {
         stateMachine = new StateMachine<TutorialState>();
-        movementInstance = Instantiate(movement);
-        grabbingInstance = Instantiate(grabbing);
-        interactionInstance = Instantiate(interaction);
-        reconnectingJointsInstance = Instantiate(reconnectingJoints);
-
+        foreach (TutorialState tutorialStateBase in tutorialStateBases)
+        {
+            TutorialState tutorialStateInstance = Instantiate(tutorialStateBase);
+            tutorialStateInstance.Initialize(this.gameObject, stateMachine);
+            tutorialStateInstances.Add(tutorialStateInstance);
+        }
+        stateMachine.Initialize(tutorialStateInstances[currentTutorialStateIndex]);
     }
 
-    private void Start()
+    private void OnEnable()
     {
-        movementInstance.Initialize(gameObject, stateMachine);
-        grabbingInstance.Initialize(gameObject, stateMachine);
-        interactionInstance.Initialize(gameObject, stateMachine);
-        reconnectingJointsInstance.Initialize(gameObject, stateMachine);
-
-
-        stateMachine.Initialize(movementInstance);
+        GenericEvent<AllTutorialGoalsCompleted>.GetEvent("TutorialManager").AddListener(OnAllTutorialGoalsCompleted);
+        GenericEvent<AllPlayersStandingInProceedZone>.GetEvent("TutorialManager").AddListener(GoToNextTutorialStage);
     }
 
     private void Update()
     {
         stateMachine.GetCurrentState().UpdateLogic();
     }
-
-
-    private IEnumerator TutorialZoneCoroutine()
+    private void OnAllTutorialGoalsCompleted()
     {
-        nextTutorialZone.SetActive(false);
-        yield return new WaitForSeconds(delayBeforeEnablingNextTutorialZone);
-        nextTutorialZone.SetActive(true);
+        proceedZone.SetActive(true);
     }
 
-
-    public void StartTutorialZoneCoroutine()
+    private void GoToNextTutorialStage()
     {
-        StartCoroutine(TutorialZoneCoroutine());
+        currentTutorialStateIndex++;
+        if (currentTutorialStateIndex < tutorialStateInstances.Count)
+        {
+            stateMachine.ChangeState(tutorialStateInstances[currentTutorialStateIndex]);
+        }
+        else
+        {
+            // All tutorial stages completed
+            Debug.Log("All tutorial stages completed.");
+        }
     }
-
 
 }
