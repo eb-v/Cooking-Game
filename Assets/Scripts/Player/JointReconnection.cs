@@ -35,6 +35,7 @@ public class JointReconnection : MonoBehaviour
                 {
                     
                     grabable.Release();
+                    grabable.grabCollider.enabled = false;
                     ConnectJoint(grabbedObj, otherPlayer);
                     return true;
                 }
@@ -87,35 +88,36 @@ public class JointReconnection : MonoBehaviour
     private void ConnectJoint(GameObject jointObjToAttach, GameObject playerWhoReconnected)
     {
         RagdollController rc = gameObject.GetComponent<RagdollController>();
+        RagdollJoint ragdollJoint = jointObjToAttach.GetComponent<RagdollJoint>();
         string jointName = jointObjToAttach.GetComponent<RagdollJoint>().GetJointName();
+        Rigidbody jointRb = jointObjToAttach.GetComponent<Rigidbody>();
 
         ConfigurableJoint joint = jointObjToAttach.AddComponent<ConfigurableJoint>();
+        ragdollJoint.SetConfigurableJoint(joint);
+
+        JointSettingsData backupData = rc.GetJointBackUpData(jointName);
+
+        Quaternion desiredWorldRotation = backupData.parent.rotation * backupData.localRotation;
+
+        jointObjToAttach.transform.rotation = desiredWorldRotation;
+
 
         rc.RestoreJointData(joint, jointName);
 
-        foreach (RagdollJoint rj in jointObjToAttach.GetComponentsInChildren<RagdollJoint>())
-        {
-            rc.SetJointToOriginalLocalPosRot(rj);
-        }
+
+        jointRb.isKinematic = true;
 
 
-        SetTagRecursively(jointObjToAttach, "Player");
+        AdjustJointAnchor(joint, backupData, jointObjToAttach);
 
-        //ConfigurableJoint joint = jointObjToAttach.GetComponent<ConfigurableJoint>();
-        //joint.connectedBody = jointBackup.connectedBody;
-        //joint.connectedAnchor = jointBackup.connectedAnchor;
-        //joint.xMotion = ConfigurableJointMotion.Locked;
-        //joint.yMotion = ConfigurableJointMotion.Locked;
-        //joint.zMotion = ConfigurableJointMotion.Locked;
-        //RagdollJoint ragdollJoint = jointObjToAttach.GetComponent<RagdollJoint>();
 
         Vector3 pelvisPos = pelvis.transform.position;
         pelvisPos.y += 1.3f;
         pelvis.transform.position = pelvisPos;
 
+
         foreach (RagdollJoint rj in jointObjToAttach.GetComponentsInChildren<RagdollJoint>())
         {
-            rj.isConnected = true;
             rc.ResetReconnectedLimbDrives(rj.GetJointName());
         }
 
@@ -124,10 +126,6 @@ public class JointReconnection : MonoBehaviour
         {
             rc.ResetStepValues();
         }
-
-
-        rc.HardResetPose();
-        RemoveJointData(jointObjToAttach);
 
         // Track the joint reconnection stat for the player who helped
         PlayerStats helperStats = playerWhoReconnected.GetComponent<PlayerStats>();
@@ -143,6 +141,11 @@ public class JointReconnection : MonoBehaviour
 
         // play joint reconnect SFX
         AudioManager.Instance?.PlaySFX("Joint reconnect");
+
+        jointRb.isKinematic = false;
+        // update the dictionaries in RagdollController
+        rc.UpdateJointDictionaries(jointObjToAttach);
+        rc.HardResetPose();
     }
 
 
@@ -153,5 +156,29 @@ public class JointReconnection : MonoBehaviour
         {
             SetTagRecursively(child.gameObject, newTag);
         }
+    }
+
+    private void AdjustJointAnchor(ConfigurableJoint joint, JointSettingsData backupData, GameObject jointObjToAttach)
+    {
+        Vector3 targetWorldPosition = backupData.connectedBody.transform.TransformPoint(backupData.connectedAnchor);
+
+        joint.autoConfigureConnectedAnchor = false;
+        joint.connectedAnchor = backupData.connectedAnchor; // This must be set before anchor to avoid issues
+        joint.anchor = backupData.anchor;
+
+        Vector3 anchorWorldPosition = jointObjToAttach.transform.TransformPoint(joint.anchor);
+        Vector3 correctionVector = targetWorldPosition - anchorWorldPosition;
+
+
+        jointObjToAttach.transform.position += correctionVector;
+        jointObjToAttach.transform.localRotation = backupData.localRotation;
+
+        Rigidbody jointRb = jointObjToAttach.GetComponent<Rigidbody>();
+
+        jointRb.transform.position = jointObjToAttach.transform.position;
+        jointRb.transform.rotation = jointObjToAttach.transform.rotation;
+
+        jointRb.linearVelocity = Vector3.zero;
+        jointRb.angularVelocity = Vector3.zero;
     }
 }

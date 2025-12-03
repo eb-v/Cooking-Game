@@ -8,12 +8,19 @@ public class ModifierManager : MonoBehaviour {
     [SerializeField] private LightningModifier lightningSystem;
     [SerializeField] private EarthquakeModifier earthquakeSystem;
     [SerializeField] private RobberModifier robberSystem;
+    //[SerializeField] private RocketBoost jetpackSystem;
+    [SerializeField] private CloseProximityManager closeProximitySystem;
+
+
 
 
 
 
 
     private void Awake() {
+
+        Debug.Log("ModifierManager called!");
+
         GenericEvent<OnModifiersChoosenEvent>
             .GetEvent("OnModifiersChoosenEvent")
             .AddListener(OnModifiersChosen);
@@ -21,50 +28,46 @@ public class ModifierManager : MonoBehaviour {
 
 
     private void OnModifiersChosen(List<LevelModifiers> mods) {
-        foreach (var mod in mods) {
-            ApplyModifier(mod);
-        }
+        Debug.Log("Received modifiers: " + string.Join(", ", mods));
+        foreach (var mod in mods) ApplyModifier(mod);
     }
 
     private void ApplyModifier(LevelModifiers mod) {
         switch (mod) {
             case LevelModifiers.LandMines:
+                Debug.Log("Starting Landmine Modifier");
                 bombSystem.StartDropping();
                 break;
 
             case LevelModifiers.OilSpill:
+                Debug.Log("Starting OilSpill Modifier");
                 oilSystem.StartSpawning();
                 break;
 
             case LevelModifiers.Lightning:
-                lightningSystem.SpawnLightning();
+                Debug.Log("Starting Lightning Modifier");
+                lightningSystem.TriggerLightning();
                 break;
 
             case LevelModifiers.Earthquake:
-                earthquakeSystem.StartEarthquake();
+                Debug.Log("Starting Earthquake Modifier");
+                earthquakeSystem.EnableModifier();
                 break;
 
             case LevelModifiers.Robber:
+                Debug.Log("Starting Robber Modifier");
                 robberSystem.SpawnRobber();
                 break;
 
-                //case LevelModifiers.Jetpack:
-                //    jetpackSystem.EnableJetpacks();
-                //    break;
+            //case LevelModifiers.Jetpack:
+            //    Debug.Log("Starting Jetpack Modifier");
+            //    jetpackSystem.PerformRocketBoost();
+            //    break;
 
-                //case LevelModifiers.LowGravity:
-                //    Physics.gravity *= 0.5f;
-                //    break;
-
-                //case LevelModifiers.ReverseControls:
-                //    PlayerController.Instance.EnableReverseControls();
-                //    break;
-
-                //case LevelModifiers.SpeedBoost:
-                //    PlayerController.Instance.ModifySpeed(1.5f);
-                //    break;
-
-                // Add more here
+            case LevelModifiers.CloseProximity:
+                Debug.Log("Starting CloseProximity Modifier");
+                closeProximitySystem.ActivateModifier();
+                break;
         }
     }
 }

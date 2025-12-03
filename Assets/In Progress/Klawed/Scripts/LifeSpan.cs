@@ -5,9 +5,19 @@ public class LifeSpan : MonoBehaviour
 {
     [SerializeField] private float lifeDuration = 5f;
 
-    private void Start()
+    private void OnEnable()
     {
         DespawnObjectAfterDelay(lifeDuration);
+    }
+
+    private void OnDisable()
+    {
+        StopAllCoroutines();
+        if (TryGetComponent<Rigidbody>(out Rigidbody rb))
+        {
+            rb.linearVelocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+        }
     }
 
     private void DespawnObjectAfterDelay(float delay)
@@ -20,13 +30,6 @@ public class LifeSpan : MonoBehaviour
         yield return new WaitForSeconds(delay);
         if (ObjectPoolManager.IsPooledObject(gameObject))
         {
-            Rigidbody rb = gameObject.GetComponentInChildren<Rigidbody>();
-            if (rb != null)
-            {
-                rb.linearVelocity = Vector3.zero;
-                rb.angularVelocity = Vector3.zero;
-            }
-
             ObjectPoolManager.ReturnObjectToPool(gameObject);
         }
         else

@@ -6,10 +6,19 @@ public class RagdollJoint : MonoBehaviour
     [SerializeField] private ConfigurableJoint _joint;
     [SerializeField] private string _jointName;
     public bool isConnected = true;
+    private Vector3 positionOffset;
+    private Quaternion rotationOffset;
+    public Vector3 PositionOffset => positionOffset;
+    public Quaternion RotationOffset => rotationOffset;
 
     public Rigidbody Rigidbody => _rigidbody;
     public ConfigurableJoint Joint => _joint;
 
+    private void Start()
+    {
+        positionOffset = _joint.transform.position - _joint.GetComponent<Rigidbody>().position;
+        rotationOffset = Quaternion.Inverse(_joint.transform.rotation) * _joint.GetComponent<Rigidbody>().rotation;
+    }
 
     public void SetConfigurableJoint(ConfigurableJoint joint)
     {

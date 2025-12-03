@@ -4,8 +4,10 @@ public class EarthquakeKnockOff : MonoBehaviour {
     public float radius = 5f;
     public float force = 50f;
 
+    public LayerMask affectedLayers;
+
     public void TriggerEarthquake() {
-        Collider[] cols = Physics.OverlapSphere(transform.position, radius);
+        Collider[] cols = Physics.OverlapSphere(transform.position, radius, affectedLayers);
 
         foreach (Collider col in cols) {
             Rigidbody rb = col.attachedRigidbody;

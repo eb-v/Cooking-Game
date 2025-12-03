@@ -4,34 +4,43 @@ using UnityEngine;
 public class UnconsciousPlayerState : BasePlayerState
 {
     private RagdollController _rc;
+    private float unconsciousTime;
+    private PlayerData playerData;
+    private Player player;
 
     public override void Enter()
     {
         base.Enter();
-        _rc.EnterLogic();
-
+        _rc.ActivateRagdoll();
     }
 
     public override void Exit()
     {
         base.Exit();
-        _rc.ExitLogic();
+        _rc.DeactivateRagdoll();
+        unconsciousTime = 0f;
     }
 
     public override void Initialize(GameObject gameObject, PlayerStateMachine stateMachine)
     {
         base.Initialize(gameObject, stateMachine);
+        _rc = gameObject.GetComponent<RagdollController>();
+        playerData = LoadPlayerData.GetPlayerData();
+        player = gameObject.GetComponent<Player>();
     }
 
     public override void RunFixedUpdateLogic()
     {
         base.RunFixedUpdateLogic();
-        _rc.FixedUpdateLogic();
     }
 
     public override void RunUpdateLogic()
     {
         base.RunUpdateLogic();
-        _rc.UpdateLogic();
+        unconsciousTime += Time.deltaTime;
+        if (unconsciousTime >= playerData.UnconsciousDuration)
+        {
+            player.ChangeState(player._defaultStateInstance);
+        }
     }
 }

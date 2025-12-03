@@ -24,7 +24,7 @@ public class RocketBoost : MonoBehaviour
         GenericEvent<OnBoostInput>.GetEvent(gameObject.name).AddListener(PerformRocketBoost);
     }
 
-    private void PerformRocketBoost()
+    public void PerformRocketBoost()
     {
         //Play rocket boost SFX
         if (isOnCooldown) return;

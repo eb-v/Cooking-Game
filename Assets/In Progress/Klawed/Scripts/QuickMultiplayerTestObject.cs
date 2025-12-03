@@ -8,6 +8,9 @@ public class QuickMultiplayerTestObject : MonoBehaviour
     public void OnPlayerJoined(PlayerInput playerInput)
     {
         playerInput.gameObject.name = "Player_" + playercount;
-        playercount++;  
+        playercount++;
+
+        Transform rootTransform = playerInput.GetComponent<RagdollController>().GetPelvis().transform;
+        rootTransform.position = transform.position;
     }
 }
