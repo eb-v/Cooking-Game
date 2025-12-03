@@ -25,6 +25,13 @@ public class CuttingCounter : MonoBehaviour
     [Header("Cutting VFX")]
     [SerializeField] private ParticleSystem _cuttingVFX;
 
+
+    //[SerializeField] public Transform knifeSpawnPoint;
+    private Player_Knife _currentKnife;
+    //private GameObject heldKnife;
+
+
+
     [Header("Debug")]
     [ReadOnly]
     [SerializeField] private GameObject _currentObject;
@@ -232,11 +239,25 @@ public class CuttingCounter : MonoBehaviour
 
         GenericEvent<OnPerformStationAction>.GetEvent(player.name).AddListener(CutIngredient);
         GenericEvent<OnAlternateInteractInput>.GetEvent(player.name).AddListener(ExitCutState);
+        // heldKnife = Instantiate(
+        //    KnifePrefab,
+        //    knifeSpawnPoint.position,
+        //    KnifePrefab.transform.rotation,
+        //    knifeSpawnPoint
+        //);
+
+        _currentKnife = _currentPlayer.GetComponentInChildren<Player_Knife>();
+
+        if (_currentKnife != null)
+            _currentKnife.ShowKnife();
         ChangeState(CuttingState.Cutting);
     }
 
     private void ExitCutState()
     {
+
+        if (_currentKnife != null)
+            _currentKnife.HideKnife();
         PlayerInteraction pi = _currentPlayer.GetComponent<PlayerInteraction>();
         pi.enabled = true;
         _currentPlayer.ChangeState(_currentPlayer._defaultStateInstance);
@@ -246,6 +267,11 @@ public class CuttingCounter : MonoBehaviour
         GenericEvent<OnAlternateInteractInput>.GetEvent(_currentPlayer.name).RemoveListener(ExitCutState);
         UnAssignPlayer();
         ChangeState(CuttingState.Idle);
+
+        //if (heldKnife != null) {
+        //    Destroy(heldKnife);
+        //    heldKnife = null;
+        //}
     }
 
     private void UnAssignPlayer()

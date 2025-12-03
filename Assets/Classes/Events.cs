@@ -210,3 +210,6 @@ public class OnObjectThrown : UnityEvent { }
 
 public class BombCollidedWithPlayer : UnityEvent { }
 
+public class OnDialogueFinished : UnityEvent { }
+
+

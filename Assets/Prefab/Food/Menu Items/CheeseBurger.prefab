@@ -389,6 +389,7 @@ Transform:
   m_Children:
   - {fileID: 3845883654451848517}
   - {fileID: 7568701663223859105}
+  - {fileID: 2974637600235727763}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &3688919400850249411
@@ -404,8 +405,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MenuItemScript
   menuItem: {fileID: 11400000, guid: 5a314ab6b68806042a5defd24c43d756, type: 2}
-  <grabData>k__BackingField: {fileID: 11400000, guid: d15126afbe617cf478a88dc38f3c966b, type: 2}
-  <grabCollider>k__BackingField: {fileID: 7232967575276533174}
 --- !u!114 &539995482682489169
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -419,6 +418,75 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PhysicsTransform
   physicsTransform: {fileID: 3845883654451848517}
+--- !u!1 &7471185324191887970
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2974637600235727763}
+  - component: {fileID: 682047497746231163}
+  - component: {fileID: 1077384688671514452}
+  m_Layer: 21
+  m_Name: GrabCollider
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2974637600235727763
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7471185324191887970}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.000000021855694, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.110616684, y: 0.11799997, z: 0.056545258}
+  m_LocalScale: {x: 2, y: 3, z: 2}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 742599457728515101}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &682047497746231163
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7471185324191887970}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1.2705355, z: 1}
+  m_Center: {x: 0, y: 0.52683747, z: 1.1300533e-15}
+--- !u!114 &1077384688671514452
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7471185324191887970}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f7a392fdafc837541840dc10b0ea3749, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FollowPhysicsBody
+  physicsTransform: {fileID: 3845883654451848517}
+  followPosition: 1
+  followRotation: 0
 --- !u!1 &7699531976052848220
 GameObject:
   m_ObjectHideFlags: 0
@@ -534,6 +602,7 @@ GameObject:
   - component: {fileID: 3845883654451848517}
   - component: {fileID: 6760235745812638249}
   - component: {fileID: 4362193243907226173}
+  - component: {fileID: 8003039537946863494}
   m_Layer: 0
   m_Name: Physics
   m_TagString: Untagged
@@ -605,3 +674,18 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.8
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &8003039537946863494
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8354222218045945771}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 41130a3ebf6a0df4bb5cd4e7c0527b68, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Grabable
+  grabData: {fileID: 11400000, guid: d15126afbe617cf478a88dc38f3c966b, type: 2}
+  grabCollider: {fileID: 682047497746231163}
+  currentPlayer: {fileID: 0}
