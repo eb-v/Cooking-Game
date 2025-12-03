@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(Grabable))]
-public class FireExtinguisher : MonoBehaviour
+public class FireExtinguisher : Equipment
 {
     [SerializeField] private GameObject foamPrefab;
     [SerializeField] private Transform spawnTransform;
@@ -22,14 +22,13 @@ public class FireExtinguisher : MonoBehaviour
 
     private int layerMask = 1 << 6; // Layer 6 for Flamable objects
 
-    public void UseEquipment()
+    public override void UseEquipment()
     {
         SprayFoam();
         SprayFoam();
         SprayFoam();
 
         ExtinguishFlamablesInRange();
-
     }
 
     private void SprayFoam()
@@ -83,6 +82,7 @@ public class FireExtinguisher : MonoBehaviour
             if (flammable != null && flammable.IsOnFire)
             {
                 flammable.Extinguish();
+                Debug.Log($"[FIRE EXTINGUISHER] Extinguished fire on object: {obj.name}");
             }
         }
 

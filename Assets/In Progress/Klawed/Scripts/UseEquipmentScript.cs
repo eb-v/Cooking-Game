@@ -2,8 +2,13 @@ using UnityEngine;
 
 public class UseEquipmentScript : MonoBehaviour
 {
+    private GrabScript grabScript;
     private bool isUsingEquipment = false;
-    private GameObject currentEquipment;
+
+    private void Awake()
+    {
+        grabScript = GetComponent<GrabScript>();
+    }
 
     void Start()
     {
@@ -13,12 +18,19 @@ public class UseEquipmentScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (isUsingEquipment)
+        
+    }
+
+    private void FixedUpdate()
+    {
+        if (grabScript.IsGrabbing)
         {
-            if (IsPlayerHoldingEquipment())
+            if (grabScript.grabbedObject.TryGetComponent<Equipment>(out Equipment equipment))
             {
-                IEquipment equipment = GetComponent<GrabScript>().grabbedObject.gameObject.GetComponent<IEquipment>();
-                equipment.UseEquipment();
+                if (isUsingEquipment)
+                {
+                    equipment.UseEquipment();
+                }
             }
         }
     }
@@ -28,15 +40,5 @@ public class UseEquipmentScript : MonoBehaviour
         isUsingEquipment = status;
     }
 
-    private bool IsPlayerHoldingEquipment()
-    {
-        GrabScript gs = GetComponent<GrabScript>();
-
-        if (!gs.IsGrabbing)
-        {
-            return false;
-        }
-
-        return gs.grabbedObject.gameObject.GetComponent<IEquipment>() != null;
-    }
+    
 }

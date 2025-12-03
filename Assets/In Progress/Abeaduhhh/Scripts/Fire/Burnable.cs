@@ -36,17 +36,16 @@ public class Burnable : MonoBehaviour
 
     public void Ignite()
     {
-        FireManager.Instance.IgniteObject(ref isOnFire, ref burnProgress, fireEffects);
+        FireManager.Instance.IgniteObject(ref isOnFire, ref burnProgress, fireEffects, spreadRadius, transform.position, true);
         FireManager.Instance.RegisterBurningObject(this);
         GenericEvent<OnObjectIgnited>.GetEvent(gameObject.GetInstanceID().ToString()).Invoke();
     }
-
-    public void Update()
+    // Ignite without spreading fire to nearby objects
+    public void IgniteWithoutSpread()
     {
-        if (isOnFire)
-        {
-            FireManager.Instance.SpreadFire(transform.position, spreadRadius, this);
-        }
+        FireManager.Instance.IgniteObject(ref isOnFire, ref burnProgress, fireEffects, spreadRadius, transform.position, false);
+        FireManager.Instance.RegisterBurningObject(this);
+        GenericEvent<OnObjectIgnited>.GetEvent(gameObject.GetInstanceID().ToString()).Invoke();
     }
 
     private void OnDrawGizmosSelected()
@@ -54,27 +53,5 @@ public class Burnable : MonoBehaviour
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, spreadRadius);
     }
-
-    public void ModifyBurnProgress(float amount)
-    {
-        burnProgress += amount;
-        burnProgress = Mathf.Clamp01(burnProgress);
-        if (burnProgress <= 0f && isOnFire)
-        {
-            Extinguish();
-        }
-        else if (burnProgress >= 1f && !isOnFire)
-        {
-            Ignite();
-        }
-    }
-
-    //public IEnumerator LockBurnProgress(float duration)
-    //{
-    //    burnProgressLocked = true;
-    //    yield return new WaitForSeconds(duration);
-    //    burnProgressLocked = false;
-    //}
-    
 
 }
