@@ -1,18 +1,22 @@
 using UnityEngine;
+using System.Collections;
 
 public class LevelMusicTrigger : MonoBehaviour
 {
     [SerializeField] private MusicTrack trackToPlay;
 
-    private void Start()
+    private IEnumerator Start()
     {
-        if (MusicManager.Instance != null)
+        // Debug.Log($"[LevelMusicTrigger] Start in scene '{gameObject.scene.name}'.");
+
+        // Wait until MusicManager.Instance is set
+        while (MusicManager.Instance == null)
         {
-            MusicManager.Instance.PlayTrack(trackToPlay);
+            // Debug.Log("[LevelMusicTrigger] Waiting for MusicManager.Instance...");
+            yield return null;
         }
-        else
-        {
-            Debug.LogWarning("[LevelMusicTrigger] No MusicManager instance found.");
-        }
+
+        // Debug.Log($"[LevelMusicTrigger] MusicManager found: '{MusicManager.Instance.gameObject.name}', playing '{trackToPlay}'.");
+        MusicManager.Instance.PlayTrack(trackToPlay);
     }
 }
