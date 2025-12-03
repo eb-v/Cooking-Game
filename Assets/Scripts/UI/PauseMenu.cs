@@ -12,7 +12,9 @@ public class PauseMenu : MonoBehaviour
     public GameObject controllerImageObject;
 
     [Header("Settings UI Elements")]
-    public Slider volumeSlider;
+    public Slider sfxVolumeSlider;
+    public Slider musicVolumeSlider;
+    public AudioMixer audioMixer;
 
     private PlayerInput playerInput;
     private bool isPausedByMenu = false;
@@ -42,11 +44,20 @@ public class PauseMenu : MonoBehaviour
             controllerImageObject.SetActive(false);
         }
 
-        if (volumeSlider != null)
+        // Initialize SFX slider
+        if (sfxVolumeSlider != null)
         {
-            AudioListener.volume = 0.5f;
-            volumeSlider.value = 50f;
-            volumeSlider.onValueChanged.AddListener(OnVolumeChanged);
+            sfxVolumeSlider.value = 75f;
+            sfxVolumeSlider.onValueChanged.AddListener(OnSFXVolumeChanged);
+            OnSFXVolumeChanged(sfxVolumeSlider.value);
+        }
+
+        // Initialize Music slider
+        if (musicVolumeSlider != null)
+        {
+            musicVolumeSlider.value = 75f;
+            musicVolumeSlider.onValueChanged.AddListener(OnMusicVolumeChanged);
+            OnMusicVolumeChanged(musicVolumeSlider.value);
         }
     }
 
@@ -129,7 +140,7 @@ public class PauseMenu : MonoBehaviour
         }
 
         // Pause SFX
-        AudioManager.Instance?.PlaySFX("Pause");
+        //AudioManager.Instance?.PlaySFX("Pause");
 
         Debug.Log("Game paused by pause menu");
     }
@@ -149,7 +160,7 @@ public class PauseMenu : MonoBehaviour
         isPausedByMenu = false;
 
         // Unpause SFX
-        AudioManager.Instance?.PlaySFX("Unpause");
+        //AudioManager.Instance?.PlaySFX("Unpause");
 
         Debug.Log("Game resumed from pause menu");
     }
@@ -185,8 +196,35 @@ public class PauseMenu : MonoBehaviour
             pauseMenuContent.SetActive(true);
     }
 
-    void OnVolumeChanged(float value)
+    void OnSFXVolumeChanged(float value)
     {
-        AudioListener.volume = value / 100f;
+        if (audioMixer != null)
+        {
+            // Convert 0-100 slider to decibels (-80 to 0)
+            // When slider is at 0, volume should be -80dB (essentially muted)
+            // When slider is at 100, volume should be 0dB (full volume)
+            float volume = value > 0 ? Mathf.Log10(value / 100f) * 20f : -80f;
+            bool success = audioMixer.SetFloat("SFXVolume", volume);
+            Debug.Log($"SFX Volume Changed: Slider={value}, Decibels={volume:F2}, Success={success}");
+        }
+        else
+        {
+            Debug.LogWarning("AudioMixer is not assigned in PauseMenu!");
+        }
+    }
+
+    void OnMusicVolumeChanged(float value)
+    {
+        if (audioMixer != null)
+        {
+            // Convert 0-100 slider to decibels (-80 to 0)
+            float volume = value > 0 ? Mathf.Log10(value / 100f) * 20f : -80f;
+            bool success = audioMixer.SetFloat("MusicVolume", volume);
+            Debug.Log($"Music Volume Changed: Slider={value}, Decibels={volume:F2}, Success={success}");
+        }
+        else
+        {
+            Debug.LogWarning("AudioMixer is not assigned in PauseMenu!");
+        }
     }
 }
