@@ -58,9 +58,10 @@ public class SlotMachineScript : MonoBehaviour {
         RunSpinCheckLogic(slot3);
     }
 
-    //private void Start() {
-    //    StartSlotMachine();
-    //}
+    private void Start()
+    {
+        StartSlotMachine();
+    }
 
     public void StartSlotMachine() {
         FreezeManager.FreezeGameplay();
