@@ -4,6 +4,7 @@ using UnityEngine.UI;
 using TMPro;
 using System.Collections.Generic;
 using UnityEngine.Audio;
+using UnityEngine.EventSystems;
 
 public class PauseMenu : MonoBehaviour
 {
@@ -16,8 +17,18 @@ public class PauseMenu : MonoBehaviour
     public Slider musicVolumeSlider;
     public AudioMixer audioMixer;
 
+    [Header("Navigation")]
+    public Button resumeButton;
+
     private PlayerInput playerInput;
     private bool isPausedByMenu = false;
+    private EventSystem eventSystem;
+
+    private Image sfxHandleImage;
+    private Image musicHandleImage;
+    private Color normalHandleColor = Color.white;
+    private Color selectedHandleColor = new Color(0.7f, 0.7f, 0.7f, 1f); // Darker gray
+
 
     void Awake()
     {
@@ -26,6 +37,9 @@ public class PauseMenu : MonoBehaviour
         {
             playerInput.actions["Pause"].performed += OnPause;
         }
+
+        // Get EventSystem reference
+        eventSystem = EventSystem.current;
 
         // Hide the entire pause menu on start
         if (container != null)
@@ -59,6 +73,17 @@ public class PauseMenu : MonoBehaviour
             musicVolumeSlider.onValueChanged.AddListener(OnMusicVolumeChanged);
             OnMusicVolumeChanged(musicVolumeSlider.value);
         }
+
+        // Get handle images for visual feedback
+        if (sfxVolumeSlider != null)
+        {
+            sfxHandleImage = sfxVolumeSlider.handleRect?.GetComponent<Image>();
+        }
+
+        if (musicVolumeSlider != null)
+        {
+            musicHandleImage = musicVolumeSlider.handleRect?.GetComponent<Image>();
+        }
     }
 
     void Update()
@@ -67,6 +92,9 @@ public class PauseMenu : MonoBehaviour
         {
             TogglePause();
         }
+
+        // Update slider handle colors based on selection
+        UpdateSliderHandleColors();
     }
 
     void OnEnable()
@@ -139,6 +167,12 @@ public class PauseMenu : MonoBehaviour
             GameStartCountdownUI.CountdownIsPaused = true;
         }
 
+        // Set Resume button as first selected for keyboard/gamepad navigation
+        if (eventSystem != null && resumeButton != null)
+        {
+            eventSystem.SetSelectedGameObject(resumeButton.gameObject);
+        }
+
         // Pause SFX
         //AudioManager.Instance?.PlaySFX("Pause");
 
@@ -159,6 +193,12 @@ public class PauseMenu : MonoBehaviour
 
         isPausedByMenu = false;
 
+        // Clear selected object when closing menu
+        if (eventSystem != null)
+        {
+            eventSystem.SetSelectedGameObject(null);
+        }
+
         // Unpause SFX
         //AudioManager.Instance?.PlaySFX("Unpause");
 
@@ -172,6 +212,12 @@ public class PauseMenu : MonoBehaviour
 
         isPausedByMenu = false;
         GameStartCountdownUI.CountdownIsPaused = false;
+
+        // Clear selected object when leaving scene
+        if (eventSystem != null)
+        {
+            eventSystem.SetSelectedGameObject(null);
+        }
 
         PlayerStatsManager.ClearAllPlayers();
         PlayerManager.Instance.ClearAllPlayers();
@@ -225,6 +271,39 @@ public class PauseMenu : MonoBehaviour
         else
         {
             Debug.LogWarning("AudioMixer is not assigned in PauseMenu!");
+        }
+    }
+
+    void UpdateSliderHandleColors()
+    {
+        if (eventSystem == null) return;
+
+        GameObject selected = eventSystem.currentSelectedGameObject;
+
+        // Update SFX slider handle
+        if (sfxHandleImage != null)
+        {
+            if (selected == sfxVolumeSlider?.gameObject)
+            {
+                sfxHandleImage.color = selectedHandleColor;
+            }
+            else
+            {
+                sfxHandleImage.color = normalHandleColor;
+            }
+        }
+
+        // Update Music slider handle
+        if (musicHandleImage != null)
+        {
+            if (selected == musicVolumeSlider?.gameObject)
+            {
+                musicHandleImage.color = selectedHandleColor;
+            }
+            else
+            {
+                musicHandleImage.color = normalHandleColor;
+            }
         }
     }
 }
