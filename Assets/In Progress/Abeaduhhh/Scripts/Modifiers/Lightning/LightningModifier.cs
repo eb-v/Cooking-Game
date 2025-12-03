@@ -1,5 +1,6 @@
-using UnityEngine;
 using System.Collections;
+using UnityEngine;
+using UnityEngine.Audio;
 
 public class LightningModifier : MonoBehaviour {
     [Header("Lightning Settings")]
@@ -10,19 +11,33 @@ public class LightningModifier : MonoBehaviour {
     public int maxStrikes = 20;
 
     private int strikesSpawned = 0;
-    private float timer = 0f;
 
-    private void Update() {
+    [Header("Audio")]
+    public AudioClip lightningSound;
+    private AudioSource audioSource;
 
+    private void Awake() {
+        if (!TryGetComponent(out audioSource)) {
+            audioSource = gameObject.AddComponent<AudioSource>();
+        }
+    }
+
+    private void Start() {
+        TriggerLightning();
     }
 
     public void TriggerLightning() {
         StartCoroutine(LightningRoutine());
     }
+
     private void SpawnLightning() {
         Vector3 spawnPos = GetRandomPointInRect();
         Quaternion rot = Quaternion.Euler(90f, 0f, 0f);
         Instantiate(lightningPrefab, spawnPos, rot);
+
+        if (lightningSound != null && audioSource != null)
+            audioSource.PlayOneShot(lightningSound, 0.1f);
+
         strikesSpawned++;
         Debug.Log("Lightning spawned");
     }

@@ -8,22 +8,14 @@ using UnityEngine.Audio;
 public class PauseMenu : MonoBehaviour
 {
     public GameObject container;
-    public GameObject settingsPanel;
     public GameObject pauseMenuContent;
+    public GameObject controllerImageObject;
 
     [Header("Settings UI Elements")]
     public Slider volumeSlider;
-    public TMP_Dropdown resolutionDropdown;
-    public TMP_Dropdown controllerTypeDropdown;
-    public Image controllerImage;
-
-    [Header("Controller Images")]
-    public Sprite ps5ControllerSprite;
-    public Sprite xboxControllerSprite;
 
     private PlayerInput playerInput;
     private bool isPausedByMenu = false;
-    private Resolution[] resolutions;
 
     void Awake()
     {
@@ -33,12 +25,22 @@ public class PauseMenu : MonoBehaviour
             playerInput.actions["Pause"].performed += OnPause;
         }
 
-        if (settingsPanel != null)
+        // Hide the entire pause menu on start
+        if (container != null)
         {
-            settingsPanel.SetActive(false);
+            container.SetActive(false);
         }
 
-        SetupResolutionDropdown();
+        // Make sure pause menu content is visible, controller image is hidden
+        if (pauseMenuContent != null)
+        {
+            pauseMenuContent.SetActive(true);
+        }
+
+        if (controllerImageObject != null)
+        {
+            controllerImageObject.SetActive(false);
+        }
 
         if (volumeSlider != null)
         {
@@ -46,41 +48,6 @@ public class PauseMenu : MonoBehaviour
             volumeSlider.value = 50f;
             volumeSlider.onValueChanged.AddListener(OnVolumeChanged);
         }
-
-        if (controllerTypeDropdown != null)
-        {
-            controllerTypeDropdown.onValueChanged.AddListener(OnControllerTypeChanged);
-            OnControllerTypeChanged(controllerTypeDropdown.value);
-        }
-    }
-
-    void SetupResolutionDropdown()
-    {
-        if (resolutionDropdown == null) return;
-
-        resolutions = Screen.resolutions;
-        resolutionDropdown.ClearOptions();
-
-        List<string> options = new List<string>();
-        int currentResolutionIndex = 0;
-
-        for (int i = 0; i < resolutions.Length; i++)
-        {
-            string option = resolutions[i].width + " x " + resolutions[i].height + " @ " +
-                            resolutions[i].refreshRateRatio.value.ToString("F0") + "Hz";
-            options.Add(option);
-
-            if (resolutions[i].width == Screen.currentResolution.width &&
-                resolutions[i].height == Screen.currentResolution.height)
-            {
-                currentResolutionIndex = i;
-            }
-        }
-
-        resolutionDropdown.AddOptions(options);
-        resolutionDropdown.value = currentResolutionIndex;
-        resolutionDropdown.RefreshShownValue();
-        resolutionDropdown.onValueChanged.AddListener(OnResolutionChanged);
     }
 
     void Update()
@@ -129,12 +96,14 @@ public class PauseMenu : MonoBehaviour
             return;
         }
 
-        if (settingsPanel != null && settingsPanel.activeSelf)
+        // If controls are open, go back to pause menu
+        if (controllerImageObject != null && controllerImageObject.activeSelf)
         {
-            CloseSettings();
+            CloseControls();
             return;
         }
 
+        // Toggle pause menu on/off
         if (container.activeSelf)
         {
             ResumeGame();
@@ -198,19 +167,19 @@ public class PauseMenu : MonoBehaviour
         UnityEngine.SceneManagement.SceneManager.LoadScene("MainMenuScene");
     }
 
-    public void OpenSettings()
+    public void OpenControls()
     {
-        if (settingsPanel != null)
-            settingsPanel.SetActive(true);
-
         if (pauseMenuContent != null)
             pauseMenuContent.SetActive(false);
+
+        if (controllerImageObject != null)
+            controllerImageObject.SetActive(true);
     }
 
-    public void CloseSettings()
+    public void CloseControls()
     {
-        if (settingsPanel != null)
-            settingsPanel.SetActive(false);
+        if (controllerImageObject != null)
+            controllerImageObject.SetActive(false);
 
         if (pauseMenuContent != null)
             pauseMenuContent.SetActive(true);
@@ -219,28 +188,5 @@ public class PauseMenu : MonoBehaviour
     void OnVolumeChanged(float value)
     {
         AudioListener.volume = value / 100f;
-    }
-
-    void OnResolutionChanged(int resolutionIndex)
-    {
-        Resolution resolution = resolutions[resolutionIndex];
-        Screen.SetResolution(resolution.width, resolution.height, Screen.fullScreen);
-    }
-
-    void OnControllerTypeChanged(int index)
-    {
-        if (controllerImage == null) return;
-
-        switch (index)
-        {
-            case 0:
-                if (ps5ControllerSprite != null)
-                    controllerImage.sprite = ps5ControllerSprite;
-                break;
-            case 1:
-                if (xboxControllerSprite != null)
-                    controllerImage.sprite = xboxControllerSprite;
-                break;
-        }
     }
 }
