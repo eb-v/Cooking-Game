@@ -564,11 +564,7 @@ public class RagdollController : MonoBehaviour
                 balanced = false;
             }
         }
-
-        if (!RagdollDict.ContainsKey(HEAD))
-        {
-            balanced = false;
-        }
+        
 
         if (knockedOut)
         {
@@ -600,6 +596,11 @@ public class RagdollController : MonoBehaviour
 
 
        // StartCoroutine(RecoverFromKnockOut(duration));
+    }
+
+    public bool MissingArm()
+    {
+        return !RagdollDict.ContainsKey(UPPER_LEFT_ARM) || !RagdollDict.ContainsKey(UPPER_RIGHT_ARM);
     }
 
     private IEnumerator RecoverFromKnockOut(float duration)
@@ -1182,8 +1183,8 @@ public class RagdollController : MonoBehaviour
         jointObj.transform.position = rb.position;
         jointObj.transform.rotation = rb.rotation;
 
-        jointObj.transform.position += positionOffset;
-        jointObj.transform.rotation *= rotationOffset;
+        rb.position += positionOffset;
+        rb.rotation *= rotationOffset;
 
         //foreach (ConfigurableJoint cj in jointObj.GetComponentsInChildren<ConfigurableJoint>())
         //{
