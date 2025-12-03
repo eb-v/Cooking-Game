@@ -26,7 +26,7 @@ public class CuttingCounter : MonoBehaviour
     [SerializeField] private ParticleSystem _cuttingVFX;
 
 
-    [SerializeField] private Transform knifeSpawnPoint;
+    [SerializeField] public Transform knifeSpawnPoint;
     [SerializeField] private GameObject KnifePrefab;
     private GameObject heldKnife;
 
