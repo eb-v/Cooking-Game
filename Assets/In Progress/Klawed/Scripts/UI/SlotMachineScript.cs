@@ -1,12 +1,9 @@
-using NUnit.Framework;
 using System.Collections;
-using UnityEngine;
 using System.Collections.Generic;
-using JetBrains.Annotations;
+using UnityEngine;
 
 public enum LevelModifiers {
     None = 0,
-
     Earthquake = 1,
     Lightning = 2,
     Robber = 3,
@@ -15,13 +12,22 @@ public enum LevelModifiers {
     CloseProximity = 6
 }
 
-public class SlotMachineScript : MonoBehaviour {
+public class SlotMachineScript : MonoBehaviour
+{
     private const int MaxVisibleModifierIndex = 6;
     private const int MaxRandomExclusive = MaxVisibleModifierIndex + 1;
 
+    [Header("Debug")]
     [SerializeField] private bool debugForceModifiers = false;
     [SerializeField] private LevelModifiers[] debugModifiers = new LevelModifiers[3];
 
+    [Header("Cameras")]
+    [SerializeField] private Camera slotMachineCamera;     // camera in this level
+    [SerializeField] private float resultHoldTime = 1.5f;  // how long to show final result
+
+    private Camera gameplayCamera;                         // camera from persistent gameplay scene
+    private bool slotSequenceActive = false;
+    private bool resultsCoroutineStarted = false;
 
     private class SlotStruct {
         public NonNormalizedSpringAPI springSlot;
@@ -31,10 +37,12 @@ public class SlotMachineScript : MonoBehaviour {
         public bool isDone;
     }
 
+    [Header("Springs")]
     [SerializeField] private NonNormalizedSpringAPI springSlot1;
     [SerializeField] private NonNormalizedSpringAPI springSlot2;
     [SerializeField] private NonNormalizedSpringAPI springSlot3;
 
+    [Header("Spin Durations")]
     [SerializeField] private float spinDuration1 = 2f;
     [SerializeField] private float spinDuration2 = 3f;
     [SerializeField] private float spinDuration3 = 4f;
@@ -48,77 +56,157 @@ public class SlotMachineScript : MonoBehaviour {
     [ReadOnly]
     [SerializeField] private List<LevelModifiers> _activeModifiers = new List<LevelModifiers>();
 
-    private void Update() {
+    private void Start()
+    {
+        // Kick off the whole sequence when the level starts
+        StartSlotMachine();
+    }
+
+    private void Update()
+    {
         if (FreezeManager.PauseMenuOverride)
             return;
+
+        // Keep the slot camera in control while the sequence is active
+        if (slotSequenceActive)
+        {
+            EnsureSlotCameraHasPriority();
+        }
 
         RunSpinCheckLogic(slot1);
         RunSpinCheckLogic(slot2);
         RunSpinCheckLogic(slot3);
     }
 
-    private void Start()
-    {
-        StartSlotMachine();
-    }
-
+    // --------------------------------------------------
+    // PUBLIC ENTRY POINT
+    // --------------------------------------------------
     public void StartSlotMachine()
-{
-    FreezeManager.FreezeGameplay();
-
-    LevelModifiers mod1, mod2, mod3;
-
-    // use forced debug modifiers if enabled (testing)
-    if (debugForceModifiers && debugModifiers != null && debugModifiers.Length >= 3)
     {
-        mod1 = debugModifiers[0];
-        mod2 = debugModifiers[1];
-        mod3 = debugModifiers[2];
+        StartCoroutine(StartSlotMachineRoutine());
     }
-    else
+       private IEnumerator StartSlotMachineRoutine()
     {
-        // or random modifiers
-        int num1, num2, num3;
+        slotSequenceActive = true;
+        FreezeManager.FreezeGameplay();
 
-        num1 = Random.Range(1, 7);
-        do { num2 = Random.Range(1, 7); } while (num2 == num1);
-        do { num3 = Random.Range(1, 7); } while (num3 == num1 || num3 == num2);
+        // give the other scene a frame to start loading if needed
+        yield return null;
 
-        mod1 = (LevelModifiers)num1;
-        mod2 = (LevelModifiers)num2;
-        mod3 = (LevelModifiers)num3;
+        SetupCamerasForSlot();
+        LevelModifiers mod1, mod2, mod3;
+
+        if (debugForceModifiers && debugModifiers != null && debugModifiers.Length >= 3)
+        {
+            mod1 = debugModifiers[0];
+            mod2 = debugModifiers[1];
+            mod3 = debugModifiers[2];
+        }
+        else
+        {
+            int num1, num2, num3;
+            num1 = Random.Range(1, 7);
+            do { num2 = Random.Range(1, 7); } while (num2 == num1);
+            do { num3 = Random.Range(1, 7); } while (num3 == num1 || num3 == num2);
+
+            mod1 = (LevelModifiers)num1;
+            mod2 = (LevelModifiers)num2;
+            mod3 = (LevelModifiers)num3;
+        }
+
+        _activeModifiers.Clear();
+        _activeModifiers.Add(mod1);
+        _activeModifiers.Add(mod2);
+        _activeModifiers.Add(mod3);
+
+        Debug.Log($"[SlotMachine] Chosen Modifiers: {mod1}, {mod2}, {mod3}");
+
+        // ----- Configure the three slots -----
+        slot1 = new SlotStruct {
+            springSlot = springSlot1,
+            shouldSpin = false,
+            spinDuration = spinDuration1,
+            finalGoal = (int)mod1
+        };
+        slot2 = new SlotStruct {
+            springSlot = springSlot2,
+            shouldSpin = false,
+            spinDuration = spinDuration2,
+            finalGoal = (int)mod2
+        };
+        slot3 = new SlotStruct {
+            springSlot = springSlot3,
+            shouldSpin = false,
+            spinDuration = spinDuration3,
+            finalGoal = (int)mod3
+        };
+
+        // Start spinning all reels
+        StartSpinningAll();
     }
 
-    _activeModifiers.Clear();
-    _activeModifiers.Add(mod1);
-    _activeModifiers.Add(mod2);
-    _activeModifiers.Add(mod3);
+    // --------------------------------------------------
+    // CAMERA CONTROL
+    // --------------------------------------------------
+    private void SetupCamerasForSlot()
+    {
+        // gameplay camera is the "MainCamera" from the persistent scene
+        gameplayCamera = Camera.main; // may be null until that scene finishes loading
 
-    Debug.Log($"[SlotMachine] Chosen Modifiers: {mod1}, {mod2}, {mod3}");
+        // Ensure slot camera is on
+        if (slotMachineCamera != null)
+            slotMachineCamera.enabled = true;
 
-    slot1 = new SlotStruct {
-        springSlot = springSlot1,
-        shouldSpin = false,
-        spinDuration = spinDuration1,
-        finalGoal = (int)mod1
-    };
-    slot2 = new SlotStruct {
-        springSlot = springSlot2,
-        shouldSpin = false,
-        spinDuration = spinDuration2,
-        finalGoal = (int)mod2
-    };
-    slot3 = new SlotStruct {
-        springSlot = springSlot3,
-        shouldSpin = false,
-        spinDuration = spinDuration3,
-        finalGoal = (int)mod3
-    };
+        // If gameplay camera already exists, turn it off
+        if (gameplayCamera != null && gameplayCamera != slotMachineCamera)
+            gameplayCamera.enabled = false;
+    }
 
-    StartSpinningAll();
-}
+    private void EnsureSlotCameraHasPriority()
+    {
+        // If gameplay camera hasn't existed yet, try to grab it now
+        if (gameplayCamera == null)
+        {
+            // Camera.main should now be the persistent gameplay camera,
+            // because the slot camera is *not* tagged MainCamera.
+            Camera candidate = Camera.main;
+            if (candidate != null && candidate != slotMachineCamera)
+            {
+                gameplayCamera = candidate;
+            }
+        }
 
+        // Force gameplay cam off while slot sequence is active
+        if (gameplayCamera != null && gameplayCamera.enabled)
+            gameplayCamera.enabled = false;
 
+        // Make sure slot cam stays enabled
+        if (slotMachineCamera != null && !slotMachineCamera.enabled)
+            slotMachineCamera.enabled = true;
+    }
+
+    private void RestoreGameplayCamera()
+    {
+        slotSequenceActive = false;
+
+        if (slotMachineCamera != null)
+            slotMachineCamera.enabled = false;
+
+        if (gameplayCamera == null)
+        {
+            // grab again, just in case
+            Camera candidate = Camera.main;
+            if (candidate != null && candidate != slotMachineCamera)
+                gameplayCamera = candidate;
+        }
+
+        if (gameplayCamera != null)
+            gameplayCamera.enabled = true;
+    }
+
+    // --------------------------------------------------
+    // SLOT SPIN LOGIC
+    // --------------------------------------------------
     public void RunUpdateLogic()
     {
         if (slot1 != null)
@@ -132,9 +220,7 @@ public class SlotMachineScript : MonoBehaviour {
     private void StartSlotSpin(SlotStruct slot)
     {
         NonNormalizedSpringAPI springAPI = slot.springSlot;
-
-        // spin a little past the last visible index
-        float spinGoalValue = MaxRandomExclusive; // 8f
+        float spinGoalValue = MaxRandomExclusive; // spin past last visible index
         springAPI.SetGoalValue(spinGoalValue);
         slot.shouldSpin = true;
     }
@@ -150,23 +236,35 @@ public class SlotMachineScript : MonoBehaviour {
         springAPI.SetGoalValue(newGoal);
         slot.isDone = true;
 
-        //Debug.Log($"Slot {slot} landed on: {((LevelModifiers)newGoal).ToString()} (Index {newGoal})");
-
         CheckIfAllSlotsDone();
     }
 
     private void CheckIfAllSlotsDone()
     {
+        if (resultsCoroutineStarted)
+            return;
+
         if (slot1 != null && slot2 != null && slot3 != null &&
             slot1.isDone && slot2.isDone && slot3.isDone)
         {
-            // Unfreeze gameplay when slot finishes
-            FreezeManager.UnfreezeGameplay();
-
-            GenericEvent<OnModifiersChoosenEvent>
-                .GetEvent("OnModifiersChoosenEvent")
-                .Invoke(_activeModifiers);
+            resultsCoroutineStarted = true;
+            StartCoroutine(AllSlotsFinishedRoutine());
         }
+    }
+
+    private IEnumerator AllSlotsFinishedRoutine()
+    {
+        yield return new WaitForSecondsRealtime(resultHoldTime);
+
+        RestoreGameplayCamera();
+
+        FreezeManager.UnfreezeGameplay();
+
+        GenericEvent<OnModifiersChoosenEvent>
+            .GetEvent("OnModifiersChoosenEvent")
+            .Invoke(_activeModifiers);
+
+        Destroy(gameObject);
     }
 
     private void RunSpinCheckLogic(SlotStruct slot)
@@ -180,36 +278,15 @@ public class SlotMachineScript : MonoBehaviour {
             springAPI.ResetPosition();
         }
 
-        // Ensure spring updates during freeze
         springAPI.SetGoalValue(springAPI.goalValue);
     }
 
-    public void StartSpinningSlot1()
-    {
-        StartCoroutine(StartSlotCoroutine(slot1));
-    }
-
-    public void StartSpinningSlot2()
-    {
-        StartCoroutine(StartSlotCoroutine(slot2));
-    }
-
-    public void StartSpinningSlot3()
-    {
-        StartCoroutine(StartSlotCoroutine(slot3));
-    }
+    public void StartSpinningSlot1() => StartCoroutine(StartSlotCoroutine(slot1));
+    public void StartSpinningSlot2() => StartCoroutine(StartSlotCoroutine(slot2));
+    public void StartSpinningSlot3() => StartCoroutine(StartSlotCoroutine(slot3));
 
     public void StartSpinningAll()
     {
-        //if (usePresetGoals)
-        //{
-        //    UsePresetSlotGoals();
-        //}
-        //else
-        //{
-        //    RandomizeSlotGoals();
-        //}
-
         StartCoroutine(StartSlotCoroutine(slot1));
         StartCoroutine(StartSlotCoroutine(slot2));
         StartCoroutine(StartSlotCoroutine(slot3));
@@ -219,7 +296,6 @@ public class SlotMachineScript : MonoBehaviour {
     {
         StartSlotSpin(slot);
 
-        // Use a manual timer that respects pause state
         float elapsedTime = 0f;
         while (elapsedTime < slot.spinDuration)
         {
@@ -232,7 +308,6 @@ public class SlotMachineScript : MonoBehaviour {
 
         StopSlotSpin(slot);
     }
-
     private void RandomizeSlotGoals()
     {
         List<int> randomInts = GenerateRandomInts();
@@ -264,20 +339,4 @@ public class SlotMachineScript : MonoBehaviour {
 
         return randomInts;
     }
-
-    //testing visual art
-    //[ContextMenu("Test Reel1 Art 0..6")]
-    //private void TestReel1Art() {
-    //    StartCoroutine(TestReelArtCoroutine(springSlot1));
-    //}
-
-    //private IEnumerator TestReelArtCoroutine(NonNormalizedSpringAPI spring) {
-    //    if (spring == null) yield break;
-
-    //    for (int i = 0; i <= MaxVisibleModifierIndex; i++) {
-    //        spring.SetGoalValue(i);
-    //        Debug.Log($"[SlotMachine] Showing symbol index {i} ({(LevelModifiers)i})");
-    //        yield return new WaitForSecondsRealtime(1f);
-    //    }
-    //}
 }
