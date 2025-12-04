@@ -11,8 +11,22 @@ public class Eating : CustomerState
     public override void Enter()
     {
         base.Enter();
-        customer.Animator.SetBool("isEating", true); 
+        //customer.Animator.SetBool("isEating", true); 
         customer.SpawnFoodInHand();
+
+        if (customer.currentOrder != null)
+        {
+            if (customer.currentOrder.GetOrderType() == MenuItemType.Drink) 
+            {
+                customer.Animator.SetBool("isDrinking", true);
+                customer.Animator.SetBool("isEating", false);
+            }
+            else
+            {
+                customer.Animator.SetBool("isEating", true);
+                customer.Animator.SetBool("isDrinking", false);
+            }
+        }
     }
 
     public override void Exit()
@@ -20,6 +34,7 @@ public class Eating : CustomerState
         base.Exit();
         customer.DestroyFoodInHand();
         customer.Animator.SetBool("isEating", false); 
+        customer.Animator.SetBool("isDrinking", false); 
     }
 
     public override void FixedUpdateLogic()
