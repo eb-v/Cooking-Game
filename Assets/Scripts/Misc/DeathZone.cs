@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class PlayZone : MonoBehaviour
+public class DeathZone : MonoBehaviour
 {
     [SerializeField] private LayerMask playerLayer;
 

@@ -267,6 +267,7 @@ public class CuttingCounter : MonoBehaviour
         pi.enabled = true;
         _currentPlayer.ChangeState(_currentPlayer._defaultStateInstance);
         GenericEvent<OnPerformStationAction>.GetEvent(_currentPlayer.gameObject.GetInstanceID().ToString()).RemoveListener(CutIngredient);
+        GenericEvent<OnAlternateInteractInput>.GetEvent(_currentPlayer.gameObject.GetInstanceID().ToString()).RemoveListener(ExitCutState);
 
         UnAssignPlayer();
         ChangeState(CuttingState.Idle);
