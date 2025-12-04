@@ -211,5 +211,13 @@ public class PlayerController : MonoBehaviour
             GenericEvent<OnEquipmentUseInput>.GetEvent(gameObject.name).Invoke(false);
         }
     }
+
+    public void OnPauseGame(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            GenericEvent<OnPauseGameInput>.GetEvent("PauseManager").Invoke();
+        }
+    }
 }
 

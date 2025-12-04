@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -15,6 +16,11 @@ public class SceneField
     public string SceneName => _sceneName;
 
     public static implicit operator string(SceneField sceneField) => sceneField.SceneName;
+
+    public SceneField(Scene scene)
+    {
+        _sceneName = scene.name;
+    }
 
 }
 
