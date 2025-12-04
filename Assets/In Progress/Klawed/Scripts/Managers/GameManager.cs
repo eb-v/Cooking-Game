@@ -1,10 +1,8 @@
-using NUnit.Framework;
-using System.Runtime.CompilerServices;
-using Unity.VisualScripting.Dependencies.Sqlite;
 using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
 using UnityEngine.SceneManagement;
+
 
 public class GameManager : MonoBehaviour
 {

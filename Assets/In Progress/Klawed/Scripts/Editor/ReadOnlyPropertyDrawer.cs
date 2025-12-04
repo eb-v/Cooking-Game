@@ -1,9 +1,6 @@
-// Editor/ReadOnlyPropertyDrawer.cs
+#if UNITY_EDITOR
 using UnityEngine;
 using UnityEditor;
-
-
-public class ReadOnlyAttribute : PropertyAttribute { }
 
 [CustomPropertyDrawer(typeof(ReadOnlyAttribute))]
 public class ReadOnlyPropertyDrawer : PropertyDrawer
@@ -11,9 +8,9 @@ public class ReadOnlyPropertyDrawer : PropertyDrawer
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
     {
         bool previous = GUI.enabled;
-        GUI.enabled = false;  // disable editing
+        GUI.enabled = false;  
         EditorGUI.PropertyField(position, property, label, true);
-        GUI.enabled = previous;  // restore GUI state
+        GUI.enabled = previous;
     }
 
     public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
@@ -21,3 +18,4 @@ public class ReadOnlyPropertyDrawer : PropertyDrawer
         return EditorGUI.GetPropertyHeight(property, label, true);
     }
 }
+#endif
