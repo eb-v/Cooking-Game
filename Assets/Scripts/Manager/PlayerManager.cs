@@ -140,6 +140,13 @@ public class PlayerManager : MonoBehaviour
             return;
         }
 
+        Image faceImage = playerToDestroy.transform.Find("DEF_Pelvis/DEF_Body/DEF_Head/FaceCanvas/FaceImage").GetComponent<Image>();
+        List<Material> savedMaterials = new List<Material>();
+        SkinnedMeshRenderer meshRenderer = playerToDestroy.GetComponentInChildren<SkinnedMeshRenderer>();
+        savedMaterials.AddRange(meshRenderer.materials);
+
+
+
         players.Remove(playerToDestroy);
         Destroy(playerToDestroy);
 
@@ -154,6 +161,16 @@ public class PlayerManager : MonoBehaviour
 
         players.Add(newPlayerInput.gameObject);
 
+        GameObject newPlayerObj = newPlayerInput.gameObject;
+        List<SkinnedMeshRenderer> newMeshRenders = new List<SkinnedMeshRenderer>(newPlayerObj.GetComponentsInChildren<SkinnedMeshRenderer>());
+        foreach (var renderer in newMeshRenders)
+        {
+            renderer.materials = savedMaterials.ToArray();
+        }
+        Image newFaceImage = newPlayerObj.transform.Find("DEF_Pelvis/DEF_Body/DEF_Head/FaceCanvas/FaceImage").GetComponent<Image>();
+        newFaceImage.sprite = faceImage.sprite;
+
+
         List<Transform> spawnPoints = GetPlayerSpawnPoints();
         if (spawnPoints.Count > playerIndex)
         {
@@ -161,6 +178,11 @@ public class PlayerManager : MonoBehaviour
         }
 
         Debug.Log($"Player {playerIndex} successfully respawned and rebound to device: {deviceToReassign.displayName}");
+    }
+
+    private void SaveCosmetics()
+    {
+
     }
 
 

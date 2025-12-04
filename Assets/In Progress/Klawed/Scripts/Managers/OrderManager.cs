@@ -34,10 +34,24 @@ public class OrderManager : MonoBehaviour
             return null;
         }
 
+
+    //spawn weight
+        if (Random.value < 0.6f)
+        {
+            var foodItems = AvailableOrders.orderList.FindAll(item => 
+                item.GetOrderType() != MenuItemType.Drink);
+            
+            if (foodItems.Count > 0)
+                return foodItems[Random.Range(0, foodItems.Count)];
+        }
+ 
+        var drinkItems = AvailableOrders.orderList.FindAll(item => 
+            item.GetOrderType() == MenuItemType.Drink);
+        
+        if (drinkItems.Count > 0)
+            return drinkItems[Random.Range(0, drinkItems.Count)];
+
         return AvailableOrders.orderList[Random.Range(0, AvailableOrders.orderList.Count)];
     }
-
     
-
-
 }
