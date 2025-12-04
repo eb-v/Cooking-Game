@@ -20,18 +20,10 @@ public class MovmentTutorialGoal : TutorialGoal
 
     private void OnMovementMarkerReached()
     {
-        if (currentMarkerIndex < movementMarkers.Count)
+        currentMarkerIndex++;
+        if (currentMarkerIndex >= movementMarkers.Count)
         {
-            movementMarkers[currentMarkerIndex].SetActive(false);
-            currentMarkerIndex++;
-            if (currentMarkerIndex == movementMarkers.Count)
-            {
-                CompleteGoal();
-            }
-            else
-            {
-                movementMarkers[currentMarkerIndex].SetActive(true);
-            }
+           CompleteGoal();
         }
     }
 }
