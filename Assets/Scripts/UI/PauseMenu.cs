@@ -93,6 +93,12 @@ public class PauseMenu : MonoBehaviour
             TogglePause();
         }
 
+        // Check for Select/Back button on gamepad
+        if (Gamepad.current != null && Gamepad.current.selectButton.wasPressedThisFrame)
+        {
+            TogglePause();
+        }
+
         // Update slider handle colors based on selection
         UpdateSliderHandleColors();
     }
