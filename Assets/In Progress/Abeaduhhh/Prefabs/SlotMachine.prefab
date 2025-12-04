@@ -355,11 +355,11 @@ Transform:
   m_GameObject: {fileID: 1486603305879534872}
   serializedVersion: 2
   m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071067}
-  m_LocalPosition: {x: 2.0315697, y: 2.0353196, z: 0.24408719}
-  m_LocalScale: {x: 19.855207, y: 19.156992, z: 19.744568}
+  m_LocalPosition: {x: 0.08156967, y: 0.9923198, z: -0.0949204}
+  m_LocalScale: {x: 19.855207, y: 19.15699, z: 19.744566}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 7340803800628798379}
+  m_Father: {fileID: 8688587770523399286}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &4089638921364856019
 MeshFilter:
@@ -909,8 +909,7 @@ Transform:
   - {fileID: 7618881211716520353}
   - {fileID: 1556999072421276048}
   - {fileID: 1963519452492829323}
-  - {fileID: 6069906491127381489}
-  - {fileID: 4306055502064902677}
+  - {fileID: 8688587770523399286}
   m_Father: {fileID: 3876950008744672269}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2244215794784210204
@@ -1349,7 +1348,7 @@ MonoBehaviour:
   thumpSfxName: Slot_Thump
   winSfxName: Slot_Win
   slotMachineCamera: {fileID: 0}
-  resultHoldTime: 1.5
+  resultHoldTime: 7
   loadingCanvas: {fileID: 0}
   loadingFadeDuration: 0.5
   springSlot1: {fileID: 6795841615179078793}
@@ -1359,6 +1358,8 @@ MonoBehaviour:
   spinDuration2: 3
   spinDuration3: 4
   usePresetGoals: 0
+  leverAnimator: {fileID: 3421033369669341155}
+  leverAnimStateName: LeverPull
   _activeModifiers: 
 --- !u!1 &2783261675243438984
 GameObject:
@@ -1612,6 +1613,62 @@ MonoBehaviour:
   useGameObjectNameAsEventChannel: 0
   useCustomEventChannelName: 1
   useGameObjectIDAsEventChannel: 0
+--- !u!1 &4543328752864297854
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8688587770523399286}
+  - component: {fileID: 3421033369669341155}
+  m_Layer: 0
+  m_Name: LeverRoot
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8688587770523399286
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4543328752864297854}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1.95, y: 1.043, z: 0.339}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 6069906491127381489}
+  - {fileID: 4306055502064902677}
+  m_Father: {fileID: 7340803800628798379}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &3421033369669341155
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4543328752864297854}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 369e2e8545d7c4b4b949290ac5b147f3, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &4548200907892849393
 GameObject:
   m_ObjectHideFlags: 0
@@ -1728,11 +1785,11 @@ Transform:
   m_GameObject: {fileID: 4625954909397558391}
   serializedVersion: 2
   m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071067}
-  m_LocalPosition: {x: 2.0317745, y: 1.5135051, z: 0.24269131}
-  m_LocalScale: {x: 4.5456014, y: 5.5187535, z: 42.507538}
+  m_LocalPosition: {x: 0.081774235, y: 0.47050548, z: -0.09630895}
+  m_LocalScale: {x: 4.5456014, y: 5.518753, z: 42.507534}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 7340803800628798379}
+  m_Father: {fileID: 8688587770523399286}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &7642865905282733349
 MeshFilter:
@@ -2434,7 +2491,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6543180857162270807}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 31a19414c41e5ae4aae2af33fee712f6, type: 3}
   m_Name: 

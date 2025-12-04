@@ -60,6 +60,10 @@ public class SlotMachineScript : MonoBehaviour
 
     [SerializeField] private bool usePresetGoals = false;
 
+    [Header("Lever Animation")]
+    [SerializeField] private Animator leverAnimator;
+    [SerializeField] private string leverAnimStateName = "LeverPull";
+
     private SlotStruct slot1;
     private SlotStruct slot2;
     private SlotStruct slot3;
@@ -120,6 +124,13 @@ public class SlotMachineScript : MonoBehaviour
 
         // tiny delay just to avoid any frame-order weirdness
         yield return null;
+
+        // lever animation
+        if (leverAnimator != null && !string.IsNullOrEmpty(leverAnimStateName))
+        {
+            leverAnimator.updateMode = AnimatorUpdateMode.UnscaledTime;
+            leverAnimator.Play(leverAnimStateName, 0, 0f);
+        }
 
         LevelModifiers mod1, mod2, mod3;
 
