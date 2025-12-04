@@ -82,23 +82,39 @@ public class AudioManager : MonoBehaviour
         }
     }
 
+    // public void PlaySFX(string name)
+    // {
+    //     if (sfxSource == null)
+    //     {
+    //         Debug.LogWarning("[AudioManager] No sfxSource assigned.");
+    //         return;
+    //     }
+
+    //     if (!sfxLookup.TryGetValue(name, out var sound) || sound.clip == null)
+    //     {
+    //         Debug.LogWarning("[AudioManager] No SFX found with name '" + name + "'.");
+    //         return;
+    //     }
+
+    //     sfxSource.pitch = sound.pitch;
+    //     sfxSource.PlayOneShot(sound.clip, sound.volume);
+
+    //     // Debug.Log("[AudioManager] Play SFX '" + name + "'.");
+    // }
     public void PlaySFX(string name)
     {
-        if (sfxSource == null)
-        {
-            Debug.LogWarning("[AudioManager] No sfxSource assigned.");
-            return;
-        }
-
         if (!sfxLookup.TryGetValue(name, out var sound) || sound.clip == null)
         {
             Debug.LogWarning("[AudioManager] No SFX found with name '" + name + "'.");
             return;
         }
 
-        sfxSource.pitch = sound.pitch;
-        sfxSource.PlayOneShot(sound.clip, sound.volume);
+        Vector3 pos = Vector3.zero;
+        if (Camera.main != null)
+            pos = Camera.main.transform.position;
 
-        // Debug.Log("[AudioManager] Play SFX '" + name + "'.");
+        AudioSource.PlayClipAtPoint(sound.clip, pos, sound.volume);
+
+        Debug.Log("[AudioManager] PlayClipAtPoint SFX '" + name + "'.");
     }
 }
