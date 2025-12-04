@@ -15,5 +15,8 @@ public class HandlePlayerJoining : MonoBehaviour
         playerInput.SwitchCurrentActionMap("Lobby");
         GenericEvent<OnPlayerJoinedEvent>.GetEvent("PlayerJoined").Invoke(player);
         GameManager.Instance.MoveObjectToScene(player, persistentScene);
+
+        RagdollController rc = player.GetComponent<RagdollController>();
+        rc.SetMovementStatus(false);
     }
 }

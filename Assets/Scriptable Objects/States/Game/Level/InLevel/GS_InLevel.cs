@@ -13,6 +13,8 @@ public class GS_InLevel : GameState
         foreach (GameObject player in PlayerManager.Instance.Players)
         {
             PlayerSystemsManager.TurnOnPlayerMovement(player);
+            RagdollController ragdollController= player.GetComponent<RagdollController>();
+            ragdollController.SetMovementStatus(true);
         }
 
     }
@@ -20,6 +22,11 @@ public class GS_InLevel : GameState
     public override void Exit()
     {
         base.Exit();
+        foreach (GameObject player in PlayerManager.Instance.Players)
+        {
+            RagdollController ragdollController = player.GetComponent<RagdollController>();
+            ragdollController.SetMovementStatus(false);
+        }
     }
 
     public override void FixedUpdateLogic()
