@@ -48,8 +48,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EarthquakeModifier
   enabledInThisLevel: 0
   earthquake: {fileID: 379000009629302514}
-  minInterval: 5
-  maxInterval: 20
+  minInterval: 20
+  maxInterval: 60
 --- !u!114 &379000009629302514
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -64,7 +64,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EarthquakeController
   cameraShake: {fileID: 0}
   quakePhysics: {fileID: 2351582984111432789}
-  shakeDuration: 5.5
+  shakeDuration: 3
   shakeMagnitude: 0.15
 --- !u!114 &2351582984111432789
 MonoBehaviour:
@@ -80,3 +80,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EarthquakeKnockOff
   radius: 21.7
   force: 10
+  affectedLayers:
+    serializedVersion: 2
+    m_Bits: 0

@@ -116,11 +116,7 @@ public class CuttingCounter : MonoBehaviour
     {
         if (!notBeingUsed)
         {
-            if (_currentPlayer == player.GetComponent<Player>())
-            {
-                _currentPlayer.ChangeState(_currentPlayer._defaultStateInstance);
-                UnAssignPlayer();
-            }
+            
         }
         else
         {
@@ -231,14 +227,15 @@ public class CuttingCounter : MonoBehaviour
         pi.enabled = false;
         Player playerScript = player.GetComponent<Player>();
         _currentPlayer = playerScript;
+        Debug.Log("Current player assigned " + _currentPlayer.name);
         RagdollController rc = _currentPlayer.GetComponent<RagdollController>();
         Transform rootTransform = rc.GetPelvis().gameObject.transform;
         rootTransform.position = _playerSnapPoint.position;
         rootTransform.rotation = _playerSnapPoint.rotation;
         playerScript.SwitchToAnimationMode(_cuttingAnimator);
+        GenericEvent<OnPerformStationAction>.GetEvent(_currentPlayer.gameObject.GetInstanceID().ToString()).AddListener(CutIngredient);
+        GenericEvent<OnAlternateInteractInput>.GetEvent(_currentPlayer.gameObject.GetInstanceID().ToString()).AddListener(ExitCutState);
 
-        GenericEvent<OnPerformStationAction>.GetEvent(player.GetInstanceID().ToString()).AddListener(CutIngredient);
-        GenericEvent<OnAlternateInteractInput>.GetEvent(player.GetInstanceID().ToString()).AddListener(ExitCutState);
         // heldKnife = Instantiate(
         //    KnifePrefab,
         //    knifeSpawnPoint.position,
@@ -253,18 +250,24 @@ public class CuttingCounter : MonoBehaviour
         ChangeState(CuttingState.Cutting);
     }
 
+    private void Update()
+    {
+        
+    }
+
     private void ExitCutState()
     {
 
         if (_currentKnife != null)
             _currentKnife.HideKnife();
+        if (_currentPlayer == null)
+            return;
+
         PlayerInteraction pi = _currentPlayer.GetComponent<PlayerInteraction>();
         pi.enabled = true;
         _currentPlayer.ChangeState(_currentPlayer._defaultStateInstance);
+        GenericEvent<OnPerformStationAction>.GetEvent(_currentPlayer.gameObject.GetInstanceID().ToString()).RemoveListener(CutIngredient);
 
-
-        GenericEvent<OnPerformStationAction>.GetEvent(_currentPlayer.GetInstanceID().ToString()).RemoveListener(CutIngredient);
-        GenericEvent<OnAlternateInteractInput>.GetEvent(_currentPlayer.GetInstanceID().ToString()).RemoveListener(ExitCutState);
         UnAssignPlayer();
         ChangeState(CuttingState.Idle);
 
@@ -277,6 +280,7 @@ public class CuttingCounter : MonoBehaviour
     private void UnAssignPlayer()
     {
         _currentPlayer = null;
+        Debug.Log("unassigned current player from cutting counter");    
     }
 
     private void ChangeState(CuttingState newState)

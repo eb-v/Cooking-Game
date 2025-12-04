@@ -45,10 +45,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::OilSpawnManager
   oilPrefab: {fileID: 4006408576170327662, guid: adafdb44340efbe47b23856bd5daa02e, type: 3}
-  spawnPoints: []
+  minX: -10
+  maxX: 10
+  minZ: -10
+  maxZ: 10
+  spawnY: 0
   initialDelay: 5
   minSpawnInterval: 3
-  maxSpawnInterval: 8
-  maxActiveOils: 3
+  maxSpawnInterval: 60
+  maxActiveOils: 2
   despawnTime: 15
-  autoStart: 1

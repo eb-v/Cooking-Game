@@ -15,6 +15,7 @@ public class TutorialState : BaseStateSO<TutorialState>
     private void EnableObjects()
     {
         TutorialManager.Instance.tutorialObjectContainers[stateName].SetActive(true);
+        Debug.Log("Enabled objects for tutorial state: " + stateName);
     }
 
     private void DisableObjects()
@@ -32,17 +33,20 @@ public class TutorialState : BaseStateSO<TutorialState>
         base.Enter();
         DialogueManager.Instance.StartDialogue(tutorialText);
         GenericEvent<OnDialogueFinished>.GetEvent("DialogueManager").AddListener(OnDialogueFinished);
+        
     }
 
     private void OnDialogueFinished()
     {
         EnableObjects();
+        CoroutineRunner.Instance.StartCoroutine(EnableProceedZone());
     }
 
     public override void Exit()
     {
         base.Exit();
         DisableObjects();
+        GenericEvent<OnDialogueFinished>.GetEvent("DialogueManager").RemoveListener(OnDialogueFinished);
     }
 
     private IEnumerator EnableProceedZone()
