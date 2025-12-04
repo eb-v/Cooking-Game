@@ -8,7 +8,6 @@ public enum MusicTrack
     Tutorial,
     Level1,
     Level2,
-
     AwardsScene
 }
 
@@ -21,13 +20,12 @@ public class MusicManager : MonoBehaviour
     [SerializeField] private AudioMixerGroup musicMixerGroup;
 
     [Header("Music Clips")]
-    [SerializeField] private AudioClip mainMenuMusic;  // "main menu" file
-    [SerializeField] private AudioClip pregameMusic;   // music3
-    [SerializeField] private AudioClip tutorialMusic; 
-    [SerializeField] private AudioClip level1Music;    // music2
-    [SerializeField] private AudioClip level2Music;    // music4
-    [SerializeField] private AudioClip awardSceneMusic;    
-
+    [SerializeField] private AudioClip mainMenuMusic;   // "main menu" file
+    [SerializeField] private AudioClip pregameMusic;    // music3
+    [SerializeField] private AudioClip tutorialMusic;
+    [SerializeField] private AudioClip level1Music;     // music2
+    [SerializeField] private AudioClip level2Music;     // music4
+    [SerializeField] private AudioClip awardSceneMusic;
 
     private AudioSource audioSource;
 
@@ -40,12 +38,11 @@ public class MusicManager : MonoBehaviour
         }
 
         Instance = this;
-        // DontDestroyOnLoad(gameObject);
 
         audioSource = GetComponent<AudioSource>();
         audioSource.playOnAwake = false;
         audioSource.loop = true;
-        audioSource.spatialBlend = 0f; // 2D music
+        audioSource.spatialBlend = 0f; // 2D
 
         if (musicMixerGroup != null)
         {
@@ -59,13 +56,12 @@ public class MusicManager : MonoBehaviour
 
         switch (track)
         {
-            case MusicTrack.MainMenu: clip = mainMenuMusic; break;
-            case MusicTrack.Pregame:  clip = pregameMusic;  break;
-            case MusicTrack.Tutorial:  clip = tutorialMusic;  break;
-            case MusicTrack.Level1:   clip = level1Music;   break;
-            case MusicTrack.Level2:   clip = level2Music;   break;
-            case MusicTrack.AwardsScene:   clip = awardSceneMusic;   break;
-
+            case MusicTrack.MainMenu:   clip = mainMenuMusic;   break;
+            case MusicTrack.Pregame:    clip = pregameMusic;    break;
+            case MusicTrack.Tutorial:   clip = tutorialMusic;   break;
+            case MusicTrack.Level1:     clip = level1Music;     break;
+            case MusicTrack.Level2:     clip = level2Music;     break;
+            case MusicTrack.AwardsScene:clip = awardSceneMusic; break;
         }
 
         if (clip == null)
