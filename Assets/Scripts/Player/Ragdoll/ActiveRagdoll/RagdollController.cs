@@ -41,6 +41,8 @@ public class RagdollController : MonoBehaviour
     public float GrabLeftValue { get; set; } = 0;
     public float GrabRightValue { get; set; } = 0;
 
+    public bool movementEnabled = true;
+
     [Header("Balance Properties")] public bool autoGetUpWhenPossible = true;
     public bool useStepPrediction = true;
     public float balanceHeight = 2.5f;
@@ -1396,7 +1398,7 @@ public class RagdollController : MonoBehaviour
         return movementToggle;
     }
 
-    private void SetMovementStatus(bool status)
+    public void SetMovementStatus(bool status)
     {
         movementToggle = status;
     }
