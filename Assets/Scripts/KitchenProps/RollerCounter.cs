@@ -114,8 +114,8 @@ public class RollerCounter : MonoBehaviour
     {
         _currentPlayer = player.GetComponent<Player>();
         _currentPlayer.GetComponent<PlayerInteraction>().enabled = false;
-        GenericEvent<OnAlternateInteractInput>.GetEvent(_currentPlayer.name).AddListener(ExitInUseState);
-        GenericEvent<OnPerformStationAction>.GetEvent(_currentPlayer.name).AddListener(RollPizzaDough);
+        GenericEvent<OnAlternateInteractInput>.GetEvent(_currentPlayer.gameObject.GetInstanceID().ToString()).AddListener(ExitInUseState);
+        GenericEvent<OnPerformStationAction>.GetEvent(_currentPlayer.gameObject.GetInstanceID().ToString()).AddListener(RollPizzaDough);
         
         Transform rootTransform = _currentPlayer.GetComponent<RagdollController>().GetPelvis().gameObject.transform;
         rootTransform.position = _playerSnapPoint.position;
@@ -138,8 +138,8 @@ public class RollerCounter : MonoBehaviour
 
         _currentPlayer.ChangeState(_currentPlayer._defaultStateInstance);
 
-        GenericEvent<OnAlternateInteractInput>.GetEvent(_currentPlayer.name).RemoveListener(ExitInUseState);
-        GenericEvent<OnPerformStationAction>.GetEvent(_currentPlayer.name).RemoveListener(RollPizzaDough);
+        GenericEvent<OnAlternateInteractInput>.GetEvent(_currentPlayer.gameObject.GetInstanceID().ToString()).RemoveListener(ExitInUseState);
+        GenericEvent<OnPerformStationAction>.GetEvent(_currentPlayer.gameObject.GetInstanceID().ToString()).RemoveListener(RollPizzaDough);
         _currentPlayer.GetComponent<PlayerInteraction>().enabled = true;
         _currentPlayer = null;
         ChangeState(RollCounterState.Idle);
