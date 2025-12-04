@@ -8,6 +8,8 @@ using UnityEngine.EventSystems;
 
 public class PauseMenu : MonoBehaviour
 {
+    [Header("References")]
+    public SceneField mainMenuScene;
     public GameObject container;
     public GameObject pauseMenuContent;
     public GameObject controllerImageObject;
@@ -227,7 +229,7 @@ public class PauseMenu : MonoBehaviour
 
         PlayerStatsManager.ClearAllPlayers();
         PlayerManager.Instance.ClearAllPlayers();
-        UnityEngine.SceneManagement.SceneManager.LoadScene("MainMenuScene");
+        UnityEngine.SceneManagement.SceneManager.LoadScene(mainMenuScene);
     }
 
     public void OpenControls()
