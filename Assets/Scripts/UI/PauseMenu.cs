@@ -180,7 +180,7 @@ public class PauseMenu : MonoBehaviour
         }
 
         // Pause SFX
-        //AudioManager.Instance?.PlaySFX("Pause");
+        AudioManager.Instance?.PlaySFX("Pause");
 
         Debug.Log("Game paused by pause menu");
     }
@@ -206,7 +206,7 @@ public class PauseMenu : MonoBehaviour
         }
 
         // Unpause SFX
-        //AudioManager.Instance?.PlaySFX("Unpause");
+        AudioManager.Instance?.PlaySFX("Unpause");
 
         Debug.Log("Game resumed from pause menu");
     }
