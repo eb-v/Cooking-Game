@@ -93,8 +93,8 @@ public class PauseMenu : MonoBehaviour
             TogglePause();
         }
 
-        // Check for Select/Back button on gamepad
-        if (Gamepad.current != null && Gamepad.current.selectButton.wasPressedThisFrame)
+        // Check for Start button on gamepad (pause/unpause)
+        if (Gamepad.current != null && Gamepad.current.startButton.wasPressedThisFrame)
         {
             TogglePause();
         }
