@@ -61,11 +61,6 @@ public class SlotMachineScript : MonoBehaviour
     [ReadOnly]
     [SerializeField] private List<LevelModifiers> _activeModifiers = new List<LevelModifiers>();
 
-    private void Start()
-    {
-        StartSlotMachine();
-    }
-
     private void Update()
     {
         if (FreezeManager.PauseMenuOverride)
@@ -81,6 +76,11 @@ public class SlotMachineScript : MonoBehaviour
         RunSpinCheckLogic(slot1);
         RunSpinCheckLogic(slot2);
         RunSpinCheckLogic(slot3);
+    }
+
+    private void Start()
+    {
+        StartSlotMachine();
     }
 
     public void StartSlotMachine()
