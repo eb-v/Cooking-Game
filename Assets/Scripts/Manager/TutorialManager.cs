@@ -68,6 +68,7 @@ public class TutorialManager : MonoBehaviour
         if (currentTutorialStateIndex < tutorialStateInstances.Count)
         {
             stateMachine.ChangeState(tutorialStateInstances[currentTutorialStateIndex]);
+            Debug.Log("Moved to tutorial stage: " + currentTutorialStateIndex);
         }
         else
         {
