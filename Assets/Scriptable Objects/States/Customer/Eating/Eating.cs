@@ -11,11 +11,15 @@ public class Eating : CustomerState
     public override void Enter()
     {
         base.Enter();
+        customer.Animator.SetBool("isEating", true); 
+        customer.SpawnFoodInHand();
     }
 
     public override void Exit()
     {
         base.Exit();
+        customer.DestroyFoodInHand();
+        customer.Animator.SetBool("isEating", false); 
     }
 
     public override void FixedUpdateLogic()

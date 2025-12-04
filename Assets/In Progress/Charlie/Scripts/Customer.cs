@@ -117,7 +117,7 @@ public class Customer : MonoBehaviour, IOrder
     }
 
 
-    private void SpawnFoodInHand()
+    public void SpawnFoodInHand()
     {
         if (handHoldPoint == null)
         {
@@ -139,6 +139,15 @@ public class Customer : MonoBehaviour, IOrder
             }
         
             Debug.Log($"{name} spawned {currentOrder.GetOrderItemPrefab().name} in hand");
+        }
+    }
+
+    public void DestroyFoodInHand()
+    {
+        if (heldFoodItem != null)
+        {
+            Destroy(heldFoodItem);
+            heldFoodItem = null;
         }
     }
 
