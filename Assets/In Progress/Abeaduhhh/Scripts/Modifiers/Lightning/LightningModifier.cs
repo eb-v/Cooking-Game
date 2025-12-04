@@ -52,6 +52,10 @@ public class LightningModifier : MonoBehaviour {
 
     private IEnumerator LightningRoutine() {
         strikesSpawned = 0;
+        
+        //delay
+        yield return new WaitForSeconds(20f);
+
         while (strikesSpawned < maxStrikes) {
             SpawnLightning();
             yield return new WaitForSeconds(strikeInterval);
