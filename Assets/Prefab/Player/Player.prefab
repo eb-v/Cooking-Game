@@ -2734,6 +2734,7 @@ GameObject:
   - component: {fileID: 3596581983965660981}
   - component: {fileID: 8644494730890410333}
   - component: {fileID: 3148978629317209653}
+  - component: {fileID: 2409977918672417846}
   m_Layer: 10
   m_Name: Player
   m_TagString: Player
@@ -3368,6 +3369,7 @@ MonoBehaviour:
   _lockedStateBase: {fileID: 11400000, guid: ea09548f0ff867e4082d39a28cb52eaf, type: 2}
   _unconsciousStateBase: {fileID: 11400000, guid: fad65e87088d9a1479d3ee4113d074c0, type: 2}
   _animationState: {fileID: 11400000, guid: 643b9234c1bc8a34ba47a2d0efd1e018, type: 2}
+  _deathStateBase: {fileID: 11400000, guid: 9cb94fb66007a37498d30f34383090a1, type: 2}
   _currentState: {fileID: 0}
 --- !u!114 &1362008162283589234
 MonoBehaviour:
@@ -3461,6 +3463,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Player_Knife
   knife: {fileID: 2921777567944431686}
+--- !u!114 &2409977918672417846
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4777336152046692441}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6612e4b9cc08d48479632d84857a4259, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
 --- !u!1 &5173864254962227974
 GameObject:
   m_ObjectHideFlags: 0

@@ -128,7 +128,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 21408059}
-  - component: {fileID: 21408060}
   m_Layer: 0
   m_Name: MovementTutorialObjects
   m_TagString: Untagged
@@ -154,23 +153,6 @@ Transform:
   - {fileID: 1253143188}
   m_Father: {fileID: 901084810}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &21408060
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 21408058}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0f17555576f29a84aad7bd6c9514f800, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::MovmentTutorialGoal
-  text: {fileID: 0}
-  movementMarkers:
-  - {fileID: 651978946}
-  - {fileID: 429928664}
-  currentMarkerIndex: 0
 --- !u!1001 &59806060
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6405,7 +6387,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1126405333}
-  - component: {fileID: 1126405334}
   m_Layer: 0
   m_Name: PrepareIngredientsTutorialObjects
   m_TagString: Untagged
@@ -6430,21 +6411,6 @@ Transform:
   - {fileID: 1094858629}
   m_Father: {fileID: 901084810}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1126405334
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1126405332}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 18cb02fd1d1c9294da6496f20bb5133a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: '::'
-  text: {fileID: 0}
-  ingredientsToCut: 3
-  ingredientsToCook: 2
 --- !u!1001 &1126500622
 PrefabInstance:
   m_ObjectHideFlags: 0

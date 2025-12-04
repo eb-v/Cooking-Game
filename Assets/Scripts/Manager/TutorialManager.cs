@@ -54,10 +54,9 @@ public class TutorialManager : MonoBehaviour
 
     private void OnEnable()
     {
-        GenericEvent<AllTutorialGoalsCompleted>.GetEvent("TutorialManager").AddListener(OnAllTutorialGoalsCompleted);
         GenericEvent<AllPlayersStandingInProceedZone>.GetEvent("TutorialManager").AddListener(GoToNextTutorialStage);
     }
-    private void OnAllTutorialGoalsCompleted()
+    public void EnableProceedZone()
     {
         proceedZone.SetActive(true);
     }
