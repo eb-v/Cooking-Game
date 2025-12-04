@@ -134,6 +134,7 @@ public class StoveCookingState : StoveState
         rb.isKinematic = true;
         Destroy(stove._currentObject);
         stove._currentObject = cookedObjVersion;
+        GenericEvent<TutorialGoalCompleted>.GetEvent("IngredientCooked").Invoke();
         return cookedObjVersion;
     }
 

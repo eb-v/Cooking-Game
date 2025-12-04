@@ -100,6 +100,7 @@ GameObject:
   - component: {fileID: 3002131713100846119}
   - component: {fileID: 8652533549081554014}
   - component: {fileID: 2792456323591260414}
+  - component: {fileID: 8968394037174953079}
   m_Layer: 21
   m_Name: GrabCollider
   m_TagString: Untagged
@@ -156,6 +157,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UprightCollider
   colliders: []
+--- !u!114 &8968394037174953079
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 535059840910026265}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f7a392fdafc837541840dc10b0ea3749, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FollowPhysicsBody
+  physicsTransform: {fileID: 5723749386816978444}
+  followPosition: 1
+  followRotation: 0
 --- !u!1 &552650688953098519
 GameObject:
   m_ObjectHideFlags: 0

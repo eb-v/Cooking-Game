@@ -211,6 +211,7 @@ public class CuttingCounter : MonoBehaviour
         _currentObject = null;
         _currentRecipe = null;
         ExitCutState();
+        GenericEvent<TutorialGoalCompleted>.GetEvent("IngredientCut").Invoke();
     }
 
     private bool IsCuttable(IngredientScript ingredient)
