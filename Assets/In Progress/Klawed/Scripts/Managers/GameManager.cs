@@ -154,6 +154,43 @@ public class GameManager : MonoBehaviour
         SceneManager.SetActiveScene(SceneManager.GetSceneByName(sceneToLoad));
     }
 
+    public void LoadSceneAdditively(SceneField sceneToLoad)
+    {
+        StartCoroutine(LoadSceneAdditivelyCoroutine(sceneToLoad));
+    }
+
+    private IEnumerator LoadSceneAdditivelyCoroutine(SceneField sceneToLoad)
+    {
+        AsyncOperation loadOp = SceneManager.LoadSceneAsync(sceneToLoad, LoadSceneMode.Additive);
+        while (!loadOp.isDone)
+        {
+            yield return null;
+        }
+        SceneManager.SetActiveScene(SceneManager.GetSceneByName(sceneToLoad));
+    }
+
+    public void UnloadAdditiveScene(SceneField sceneToUnload)
+    {
+        StartCoroutine(UnloadAdditiveSceneCoroutine(sceneToUnload));
+    }
+
+    private IEnumerator UnloadAdditiveSceneCoroutine(SceneField sceneToUnload)
+    {
+        AsyncOperation unloadOp = SceneManager.UnloadSceneAsync(sceneToUnload);
+        while (!unloadOp.isDone)
+        {
+            yield return null;
+        }
+
+    }
+
+    public SceneField GetCurrentActiveScene()
+    {
+        Scene currentScene = SceneManager.GetActiveScene();
+        SceneField sceneField = new SceneField(currentScene);
+        return sceneField;
+    }
+
 
     public void RunOperations(List<AsyncOperation> operations)
     {
