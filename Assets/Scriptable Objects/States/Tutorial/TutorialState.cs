@@ -2,20 +2,22 @@ using NUnit.Framework;
 using UnityEngine;
 using System.Collections.Generic;
 using TMPro;
+using System.Collections;
 
 [CreateAssetMenu(fileName = "TS_", menuName = "Scriptable Objects/States/Tutorial")]
 public class TutorialState : BaseStateSO<TutorialState>
 {
     [SerializeField] private List<string> tutorialText;
+    [SerializeField] private float tutorialDuration;
     public string objectContainerName;
     public string stateName;
 
-    private void EnableObjects() 
+    private void EnableObjects()
     {
         TutorialManager.Instance.tutorialObjectContainers[stateName].SetActive(true);
     }
 
-    private void DisableObjects() 
+    private void DisableObjects()
     {
         TutorialManager.Instance.tutorialObjectContainers[stateName].SetActive(false);
     }
@@ -43,6 +45,9 @@ public class TutorialState : BaseStateSO<TutorialState>
         DisableObjects();
     }
 
-
-
+    private IEnumerator EnableProceedZone()
+    {
+        yield return new WaitForSeconds(tutorialDuration);
+        TutorialManager.Instance.EnableProceedZone();
+    }
 }
