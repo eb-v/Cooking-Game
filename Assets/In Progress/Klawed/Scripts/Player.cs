@@ -126,7 +126,8 @@ public class Player : MonoBehaviour
 
     public void Die()
     {
-        ChangeState(_deathStateInstance);
+        if (_currentState != _deathStateInstance)
+            ChangeState(_deathStateInstance);
     }
 
     public void SavePlayerCustomization()

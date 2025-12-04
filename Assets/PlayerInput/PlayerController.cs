@@ -30,7 +30,8 @@ public class PlayerController : MonoBehaviour
     {
         if (context.started) // pressed down
         {
-            GenericEvent<OnRespawnInput>.GetEvent("RespawnManager").Invoke(gameObject);
+            Player player = gameObject.GetComponent<Player>();
+            player.Die();
         }
     }
 

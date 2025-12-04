@@ -49,19 +49,11 @@ public class AS_Assemble : AssemblyState
         if (assemblyTimer >= assemblyStation.TimeToAssemble)
         {
             GameObject menuItemObj = AssembleItem();
-            PhysicsTransform physTrans = menuItemObj.GetComponent<PhysicsTransform>();
-            if (physTrans == null)
-            {
-                Debug.LogError("Menu Item does not have physics Transform");
-            }
-            else
-            {
-                Rigidbody rb = physTrans.physicsTransform.GetComponent<Rigidbody>();
-                Vector3 direction = GetDirection();
-                rb.AddForce(direction * assemblyStation.launchForce, ForceMode.Impulse);
-                //assemblyStation.ChangeState(assemblyStation.IdleStateInstance);
-                assemblyTimer = 0f;
-            }
+            Rigidbody rb = menuItemObj.GetComponent<Rigidbody>();
+            Vector3 direction = GetDirection();
+            rb.AddForce(direction * assemblyStation.launchForce, ForceMode.Impulse);
+            //assemblyStation.ChangeState(assemblyStation.IdleStateInstance);
+            assemblyTimer = 0f;
 
         }
 
