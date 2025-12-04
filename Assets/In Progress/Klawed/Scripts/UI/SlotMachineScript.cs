@@ -22,12 +22,11 @@ public class SlotMachineScript : MonoBehaviour
     [SerializeField] private LevelModifiers[] debugModifiers = new LevelModifiers[3];
 
     [Header("Cameras")]
-    [SerializeField] private Camera slotMachineCamera;     // camera in this level
+    [SerializeField] private Camera slotMachineCamera;     // camera in this slot machine scene (NOT MainCamera)
     [SerializeField] private float resultHoldTime = 1.5f;  // how long to show final result
 
-    private Camera gameplayCamera;                         // camera from persistent gameplay scene
+    private Camera gameplayCamera;                         // persistent gameplay camera
     private bool slotSequenceActive = false;
-    private bool resultsCoroutineStarted = false;
 
     private class SlotStruct {
         public NonNormalizedSpringAPI springSlot;
@@ -58,7 +57,6 @@ public class SlotMachineScript : MonoBehaviour
 
     private void Start()
     {
-        // Kick off the whole sequence when the level starts
         StartSlotMachine();
     }
 
@@ -67,10 +65,11 @@ public class SlotMachineScript : MonoBehaviour
         if (FreezeManager.PauseMenuOverride)
             return;
 
-        // Keep the slot camera in control while the sequence is active
         if (slotSequenceActive)
         {
-            EnsureSlotCameraHasPriority();
+            // just make sure slot camera stays on while we're in the sequence
+            if (slotMachineCamera != null && !slotMachineCamera.enabled)
+                slotMachineCamera.enabled = true;
         }
 
         RunSpinCheckLogic(slot1);
@@ -78,22 +77,24 @@ public class SlotMachineScript : MonoBehaviour
         RunSpinCheckLogic(slot3);
     }
 
-    // --------------------------------------------------
-    // PUBLIC ENTRY POINT
-    // --------------------------------------------------
     public void StartSlotMachine()
     {
         StartCoroutine(StartSlotMachineRoutine());
     }
-       private IEnumerator StartSlotMachineRoutine()
+
+    private IEnumerator StartSlotMachineRoutine()
     {
         slotSequenceActive = true;
+
+        // freeze gameplay
         FreezeManager.FreezeGameplay();
 
-        // give the other scene a frame to start loading if needed
+        // cache cameras and switch to slot camera
+        SetupCamerasForSlot();
+
+        // tiny delay just to avoid any frame-order weirdness
         yield return null;
 
-        SetupCamerasForSlot();
         LevelModifiers mod1, mod2, mod3;
 
         if (debugForceModifiers && debugModifiers != null && debugModifiers.Length >= 3)
@@ -121,7 +122,6 @@ public class SlotMachineScript : MonoBehaviour
 
         Debug.Log($"[SlotMachine] Chosen Modifiers: {mod1}, {mod2}, {mod3}");
 
-        // ----- Configure the three slots -----
         slot1 = new SlotStruct {
             springSlot = springSlot1,
             shouldSpin = false,
@@ -141,72 +141,58 @@ public class SlotMachineScript : MonoBehaviour
             finalGoal = (int)mod3
         };
 
-        // Start spinning all reels
         StartSpinningAll();
     }
-
-    // --------------------------------------------------
-    // CAMERA CONTROL
-    // --------------------------------------------------
     private void SetupCamerasForSlot()
     {
-        // gameplay camera is the "MainCamera" from the persistent scene
-        gameplayCamera = Camera.main; // may be null until that scene finishes loading
+        if (slotMachineCamera == null)
+            slotMachineCamera = GetComponentInChildren<Camera>();
 
-        // Ensure slot camera is on
-        if (slotMachineCamera != null)
-            slotMachineCamera.enabled = true;
+        if (slotMachineCamera == null)
+        {
+            Debug.LogError("[SlotMachine] No slotMachineCamera assigned or found!");
+            return;
+        }
 
-        // If gameplay camera already exists, turn it off
-        if (gameplayCamera != null && gameplayCamera != slotMachineCamera)
-            gameplayCamera.enabled = false;
-    }
-
-    private void EnsureSlotCameraHasPriority()
-    {
-        // If gameplay camera hasn't existed yet, try to grab it now
         if (gameplayCamera == null)
         {
-            // Camera.main should now be the persistent gameplay camera,
-            // because the slot camera is *not* tagged MainCamera.
-            Camera candidate = Camera.main;
-            if (candidate != null && candidate != slotMachineCamera)
+            Camera main = Camera.main;
+            if (main != null && main != slotMachineCamera)
             {
-                gameplayCamera = candidate;
+                gameplayCamera = main;
             }
         }
 
-        // Force gameplay cam off while slot sequence is active
-        if (gameplayCamera != null && gameplayCamera.enabled)
+        // disable gameplay camera while we show the slot
+        if (gameplayCamera != null)
             gameplayCamera.enabled = false;
 
-        // Make sure slot cam stays enabled
-        if (slotMachineCamera != null && !slotMachineCamera.enabled)
-            slotMachineCamera.enabled = true;
+        // enable slot camera
+        slotMachineCamera.enabled = true;
     }
 
     private void RestoreGameplayCamera()
     {
         slotSequenceActive = false;
 
+        // turn off slot cam
         if (slotMachineCamera != null)
             slotMachineCamera.enabled = false;
 
+        // if somehow gameplayCamera wasn't cached, try one more time
         if (gameplayCamera == null)
         {
-            // grab again, just in case
-            Camera candidate = Camera.main;
-            if (candidate != null && candidate != slotMachineCamera)
-                gameplayCamera = candidate;
+            Camera main = Camera.main;
+            if (main != null && main != slotMachineCamera)
+                gameplayCamera = main;
         }
 
+        // turn gameplay cam back on
         if (gameplayCamera != null)
             gameplayCamera.enabled = true;
+        else
+            Debug.LogWarning("[SlotMachine] No gameplayCamera found to restore!");
     }
-
-    // --------------------------------------------------
-    // SLOT SPIN LOGIC
-    // --------------------------------------------------
     public void RunUpdateLogic()
     {
         if (slot1 != null)
@@ -241,13 +227,9 @@ public class SlotMachineScript : MonoBehaviour
 
     private void CheckIfAllSlotsDone()
     {
-        if (resultsCoroutineStarted)
-            return;
-
         if (slot1 != null && slot2 != null && slot3 != null &&
             slot1.isDone && slot2.isDone && slot3.isDone)
         {
-            resultsCoroutineStarted = true;
             StartCoroutine(AllSlotsFinishedRoutine());
         }
     }
@@ -263,8 +245,6 @@ public class SlotMachineScript : MonoBehaviour
         GenericEvent<OnModifiersChoosenEvent>
             .GetEvent("OnModifiersChoosenEvent")
             .Invoke(_activeModifiers);
-
-        Destroy(gameObject);
     }
 
     private void RunSpinCheckLogic(SlotStruct slot)
