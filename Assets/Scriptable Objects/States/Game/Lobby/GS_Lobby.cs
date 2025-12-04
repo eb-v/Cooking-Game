@@ -10,12 +10,18 @@ public class GS_Lobby : GameState
     {
         base.Enter();
         Debug.Log("Entered Lobby State");
+        
+        // Disable stats tracking in lobby
+        PlayerStatsManager.DisableTracking();
     }
 
     public override void Exit()
     {
         base.Exit();
         Debug.Log("Exited Lobby State");
+        
+        // Enable stats tracking when leaving lobby
+        PlayerStatsManager.EnableTracking();
     }
 
     public override void FixedUpdateLogic()
