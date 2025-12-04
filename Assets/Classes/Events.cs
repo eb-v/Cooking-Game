@@ -222,4 +222,6 @@ public class AllPlayersStandingInProceedZone : UnityEvent { }
 
 public class OnDialogueStarted : UnityEvent { }
 
+public class OnPauseGameInput : UnityEvent { }
+
 
