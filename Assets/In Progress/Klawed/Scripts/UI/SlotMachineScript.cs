@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public enum LevelModifiers {
     None = 0,
@@ -34,6 +35,12 @@ public class SlotMachineScript : MonoBehaviour
     private Camera gameplayCamera;                         // persistent gameplay camera
     private bool slotSequenceActive = false;
 
+    [Header("Loading Screen")]
+    [SerializeField] private Canvas loadingCanvas;
+    [SerializeField] private float loadingFadeDuration = 0.5f; // fade in/out
+
+    private CanvasGroup loadingCanvasGroup;
+
     private class SlotStruct {
         public NonNormalizedSpringAPI springSlot;
         public bool shouldSpin;
@@ -61,6 +68,21 @@ public class SlotMachineScript : MonoBehaviour
     [ReadOnly]
     [SerializeField] private List<LevelModifiers> _activeModifiers = new List<LevelModifiers>();
 
+    private void Start()
+    {
+        if (loadingCanvas != null)
+        {
+            loadingCanvasGroup = loadingCanvas.GetComponent<CanvasGroup>();
+            if (loadingCanvasGroup == null)
+                loadingCanvasGroup = loadingCanvas.gameObject.AddComponent<CanvasGroup>();
+
+            loadingCanvasGroup.alpha = 0f;
+            loadingCanvas.gameObject.SetActive(false);
+        }
+
+        StartSlotMachine();
+    }
+
     private void Update()
     {
         if (FreezeManager.PauseMenuOverride)
@@ -78,13 +100,12 @@ public class SlotMachineScript : MonoBehaviour
         RunSpinCheckLogic(slot3);
     }
 
-    private void Start()
-    {
-        StartSlotMachine();
-    }
-
     public void StartSlotMachine()
     {
+        // 🔹 Prevent double-starting slot sequence & audio
+        if (slotSequenceActive)
+            return;
+
         StartCoroutine(StartSlotMachineRoutine());
     }
 
@@ -121,8 +142,9 @@ public class SlotMachineScript : MonoBehaviour
             mod3 = (LevelModifiers)num3;
         }
 
-        // Start audio sequence
+        // Start audio sequence (only once)
         StartCoroutine(SlotAudioRoutine());
+
         _activeModifiers.Clear();
         _activeModifiers.Add(mod1);
         _activeModifiers.Add(mod2);
@@ -150,10 +172,8 @@ public class SlotMachineScript : MonoBehaviour
         };
 
         StartSpinningAll();
-
-        // Start audio sequence
-        StartCoroutine(SlotAudioRoutine());
     }
+
     private void SetupCamerasForSlot()
     {
         if (slotMachineCamera == null)
@@ -204,6 +224,7 @@ public class SlotMachineScript : MonoBehaviour
         else
             Debug.LogWarning("[SlotMachine] No gameplayCamera found to restore!");
     }
+
     public void RunUpdateLogic()
     {
         if (slot1 != null)
@@ -247,16 +268,131 @@ public class SlotMachineScript : MonoBehaviour
 
     private IEnumerator AllSlotsFinishedRoutine()
     {
+        // show the final slot result
         yield return new WaitForSecondsRealtime(resultHoldTime);
 
+        // handle loading screen/gameplay return
+        yield return StartCoroutine(ShowLoadingThenReturnToGameplay());
+    }
+
+    private IEnumerator ShowLoadingThenReturnToGameplay()
+    {
+        if (loadingCanvas != null)
+        {
+            loadingCanvas.gameObject.SetActive(true);
+
+            if (loadingCanvasGroup == null)
+            {
+                loadingCanvasGroup = loadingCanvas.GetComponent<CanvasGroup>();
+                if (loadingCanvasGroup == null)
+                    loadingCanvasGroup = loadingCanvas.gameObject.AddComponent<CanvasGroup>();
+            }
+
+            loadingCanvasGroup.alpha = 0f;
+            yield return StartCoroutine(FadeCanvasGroup(loadingCanvasGroup, 0f, 1f, loadingFadeDuration));
+        }
+
+        // switch back to gameplay camera behind the loading screen
         RestoreGameplayCamera();
 
+        // 🔹 Now wait until the player actually presses something (with debounce)
+        yield return StartCoroutine(WaitForLoadingDismissInput());
+
+        if (loadingCanvas != null && loadingCanvasGroup != null)
+        {
+            yield return StartCoroutine(FadeCanvasGroup(loadingCanvasGroup, 1f, 0f, loadingFadeDuration));
+            loadingCanvas.gameObject.SetActive(false);
+        }
+
+        // unfreeze gameplay
         FreezeManager.UnfreezeGameplay();
 
+        // fire modifiers event
         GenericEvent<OnModifiersChoosenEvent>
             .GetEvent("OnModifiersChoosenEvent")
             .Invoke(_activeModifiers);
     }
+
+    private IEnumerator FadeCanvasGroup(CanvasGroup cg, float from, float to, float duration)
+    {
+        if (duration <= 0f)
+        {
+            cg.alpha = to;
+            yield break;
+        }
+
+        float t = 0f;
+        cg.alpha = from;
+
+        while (t < duration)
+        {
+            t += Time.unscaledDeltaTime;
+            float normalized = Mathf.Clamp01(t / duration);
+            cg.alpha = Mathf.Lerp(from, to, normalized);
+            yield return null;
+        }
+
+        cg.alpha = to;
+    }
+
+        private IEnumerator WaitForLoadingDismissInput()
+    {
+        yield return new WaitForSecondsRealtime(0.2f);
+
+        while (IsAnyInputPressed())
+            yield return null;
+
+        while (!WasAnyInputPressedThisFrame())
+            yield return null;
+    }
+
+    private bool IsAnyInputPressed()
+    {
+        if (Keyboard.current != null && Keyboard.current.anyKey.isPressed)
+            return true;
+
+        if (Mouse.current != null &&
+            (Mouse.current.leftButton.isPressed ||
+            Mouse.current.rightButton.isPressed ||
+            Mouse.current.middleButton.isPressed))
+            return true;
+
+        if (Gamepad.current != null &&
+            (Gamepad.current.buttonSouth.isPressed ||   
+            Gamepad.current.buttonEast.isPressed ||    
+            Gamepad.current.buttonWest.isPressed ||    
+            Gamepad.current.buttonNorth.isPressed ||  
+            Gamepad.current.startButton.isPressed ||
+            Gamepad.current.selectButton.isPressed))
+            return true;
+
+        return false;
+    }
+
+    private bool WasAnyInputPressedThisFrame()
+    {
+        if (Keyboard.current != null && Keyboard.current.anyKey.wasPressedThisFrame)
+            return true;
+
+        if (Mouse.current != null &&
+            (Mouse.current.leftButton.wasPressedThisFrame ||
+            Mouse.current.rightButton.wasPressedThisFrame ||
+            Mouse.current.middleButton.wasPressedThisFrame))
+            return true;
+
+        if (Gamepad.current != null &&
+            (Gamepad.current.buttonSouth.wasPressedThisFrame ||
+            Gamepad.current.buttonEast.wasPressedThisFrame ||
+            Gamepad.current.buttonWest.wasPressedThisFrame ||
+            Gamepad.current.buttonNorth.wasPressedThisFrame ||
+            Gamepad.current.startButton.wasPressedThisFrame ||
+            Gamepad.current.selectButton.wasPressedThisFrame))
+            return true;
+
+        return false;
+    }
+
+
 
     private void RunSpinCheckLogic(SlotStruct slot)
     {
@@ -301,38 +437,21 @@ public class SlotMachineScript : MonoBehaviour
     }
 
     private IEnumerator SlotAudioRoutine()
-{
-    // Lever pull + start spin sound
-    AudioManager.Instance?.PlaySFX(leverSfxName);
-    AudioManager.Instance?.PlaySFX(spinSfxName);
-
-    // Thumps when each reel stops
-    yield return new WaitForSeconds(spinDuration1);
-    AudioManager.Instance?.PlaySFX(thumpSfxName);
-
-    yield return new WaitForSeconds(spinDuration2 - spinDuration1);
-    AudioManager.Instance?.PlaySFX(thumpSfxName);
-
-    yield return new WaitForSeconds(spinDuration3 - spinDuration2);
-    AudioManager.Instance?.PlaySFX(thumpSfxName);
-
-    // Small delay, then win sound
-    yield return new WaitForSeconds(0.2f);
-    AudioManager.Instance?.PlaySFX(winSfxName);
-}
-    private void RandomizeSlotGoals()
     {
-        List<int> randomInts = GenerateRandomInts();
-        slot1.finalGoal = randomInts[0];
-        slot2.finalGoal = randomInts[1];
-        slot3.finalGoal = randomInts[2];
-    }
+        AudioManager.Instance?.PlaySFX(leverSfxName);
+        AudioManager.Instance?.PlaySFX(spinSfxName);
 
-    private void UsePresetSlotGoals()
-    {
-        slot1.finalGoal = 0;
-        slot2.finalGoal = 1;
-        slot3.finalGoal = 2;
+        yield return new WaitForSecondsRealtime(spinDuration1);
+        AudioManager.Instance?.PlaySFX(thumpSfxName);
+
+        yield return new WaitForSecondsRealtime(spinDuration2 - spinDuration1);
+        AudioManager.Instance?.PlaySFX(thumpSfxName);
+
+        yield return new WaitForSecondsRealtime(spinDuration3 - spinDuration2);
+        AudioManager.Instance?.PlaySFX(thumpSfxName);
+
+        yield return new WaitForSecondsRealtime(0.2f);
+        AudioManager.Instance?.PlaySFX(winSfxName);
     }
 
     private List<int> GenerateRandomInts()
