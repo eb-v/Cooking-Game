@@ -1,19 +1,28 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class ProceedZone : MonoBehaviour
 {
     [SerializeField] private LayerMask playerLayer;
-    [ReadOnly]
-    [SerializeField] private int numOfPlayersInZone = 0;
+    private HashSet<Player> playersInZone = new HashSet<Player>();
+    [SerializeField] private int playersInsideZone = 0;
 
     private void OnTriggerEnter(Collider other)
     {
         if(IsPlayerLayerCollider(other))
         {
-            numOfPlayersInZone++;
-            if (AllPlayersInZone())
+            GameObject playerRootObject = other.transform.root.gameObject;
+            if (playerRootObject.TryGetComponent<Player>(out Player player))
             {
-                GenericEvent<AllPlayersStandingInProceedZone>.GetEvent("TutorialManager").Invoke();
+                if (!playersInZone.Contains(player))
+                {
+                    playersInZone.Add(player);
+
+                    if (AllPlayersInZone())
+                    {
+                        GenericEvent<AllPlayersStandingInProceedZone>.GetEvent("TutorialManager").Invoke();
+                    }
+                }
             }
         }
     }
@@ -22,8 +31,20 @@ public class ProceedZone : MonoBehaviour
     {
         if (IsPlayerLayerCollider(other))
         {
-            numOfPlayersInZone--;
+            GameObject playerRootObject = other.transform.root.gameObject;
+            if (playerRootObject.TryGetComponent<Player>(out Player player))
+            {
+                if (playersInZone.Contains(player))
+                {
+                    playersInZone.Remove(player);
+                }
+            }
         }
+    }
+
+    private void Update()
+    {
+        playersInsideZone = playersInZone.Count;
     }
 
     private bool IsPlayerLayerCollider(Collider other)
@@ -33,7 +54,7 @@ public class ProceedZone : MonoBehaviour
 
     private bool AllPlayersInZone()
     {
-        if (numOfPlayersInZone < PlayerManager.Instance.PlayerCount)
+        if (playersInZone.Count < PlayerManager.Instance.PlayerCount)
         {
             return false;
         }

@@ -17,7 +17,6 @@ public class TutorialManager : MonoBehaviour
 
     [Header("References")]
     public UDictionary<string, GameObject> tutorialObjectContainers = new UDictionary<string, GameObject>();
-    public UDictionary<string, GameObject> tutorialUIContainers = new UDictionary<string, GameObject>();
     [SerializeField] private GameObject proceedZone;
 
     #region Singleton

@@ -8,7 +8,7 @@ public class TutorialGoal : MonoBehaviour
 
     protected void CompleteGoal()
     {
-        GenericEvent<AllTutorialGoalsCompleted>.GetEvent("Tutorial").Invoke();
+        GenericEvent<AllTutorialGoalsCompleted>.GetEvent("TutorialManager").Invoke();
     }
 
 }

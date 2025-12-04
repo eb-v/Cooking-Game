@@ -220,4 +220,6 @@ public class AllTutorialGoalsCompleted : UnityEvent { }
 
 public class AllPlayersStandingInProceedZone : UnityEvent { }
 
+public class OnDialogueStarted : UnityEvent { }
+
 

@@ -4,8 +4,6 @@ using UnityEngine;
 public class TS_Movement : TutorialState
 {
 
-
-
     public override void UpdateLogic()
     {
         

@@ -1,6 +1,8 @@
 using System.Collections;
 using UnityEngine;
 using TMPro;
+using NUnit.Framework;
+using System.Collections.Generic;
 
 public class DialogueManager : MonoBehaviour
 {
@@ -10,10 +12,15 @@ public class DialogueManager : MonoBehaviour
     [Header("Dialogue Settings")]
     [SerializeField] private float textSpeed = 0.05f;
     [SerializeField] private float dialogueDisplayDuration = 3.0f;
+    [Header("References")]
+    [SerializeField] private GameObject textBubble;
     [SerializeField] private TextMeshProUGUI dialogueText;
-
+    [SerializeField] private DialogueCam dialogueCam;
 
     private static DialogueManager _instance;
+
+    private int currentLineIndex = 0;
+    private List<string> currentDialogueLines = new List<string>();
 
     public static DialogueManager Instance
     {
@@ -31,20 +38,22 @@ public class DialogueManager : MonoBehaviour
             return _instance;
         }
     }
-
-    public void StartDialogue(string line)
+    // if called during an active dialogue, it stops the current dialogue and starts the new one
+    public void StartDialogue(List<string> dialogue)
     {
-        if (!isDisplaying)
+        currentDialogueLines = dialogue;
+        StopAllCoroutines();
+        currentLineIndex = 0;
+        if (!textBubble.activeSelf)
         {
-            //StopAllCoroutines();
-            //isDisplaying = false;
-            StartCoroutine(DisplayLine(line));
+            textBubble.SetActive(true);
         }
+        dialogueCam.SetCameraActive();
+        StartCoroutine(DisplayLine(currentDialogueLines[currentLineIndex]));
     }
 
     private IEnumerator DisplayLine(string line)
     {
-        isDisplaying = true; 
 
         dialogueText.text = "";
         foreach (char letter in line.ToCharArray())
@@ -53,16 +62,26 @@ public class DialogueManager : MonoBehaviour
             yield return new WaitForSeconds(textSpeed);
         }
 
-        StartCoroutine(ResetIsDisplaying());
+        currentLineIndex++;
+        if (currentLineIndex >= currentDialogueLines.Count)
+        {
+            Debug.Log("All dialogue lines displayed.");
+            GenericEvent<OnDialogueFinished>.GetEvent("DialogueManager").Invoke();
+            dialogueCam.SetCameraInactive();
+        }
+        else
+        {
+            StartCoroutine(StartNextLine());
+        }
     }
 
-    private IEnumerator ResetIsDisplaying()
+    private IEnumerator StartNextLine()
     {
         yield return new WaitForSeconds(dialogueDisplayDuration);
-        isDisplaying = false;
-        GenericEvent<OnDialogueFinished>.GetEvent("DialogueManager").Invoke();
-        Debug.Log("Dialogue finished.");
+        StartCoroutine(DisplayLine(currentDialogueLines[currentLineIndex]));
+        //GenericEvent<OnDialogueFinished>.GetEvent("DialogueManager").Invoke();
+
     }
-    
+
 
 }
