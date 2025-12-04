@@ -7,7 +7,7 @@ public class ModifierManager : MonoBehaviour {
     [SerializeField] private OilSpawnManager oilSystem;
     [SerializeField] private LightningModifier lightningSystem;
     [SerializeField] private EarthquakeModifier earthquakeSystem;
-    [SerializeField] private RobberModifier robberSystem;
+    //[SerializeField] private RobberModifier robberSystem;
     //[SerializeField] private RocketBoost jetpackSystem;
     [SerializeField] private CloseProximityManager closeProximitySystem;
 
@@ -46,10 +46,10 @@ public class ModifierManager : MonoBehaviour {
                 earthquakeSystem.EnableModifier();
                 break;
 
-            case LevelModifiers.Robber:
-                Debug.Log("Starting Robber Modifier");
-                robberSystem.SpawnRobber();
-                break;
+            //case LevelModifiers.Robber:
+            //    Debug.Log("Starting Robber Modifier");
+            //    robberSystem.SpawnRobber();
+            //    break;
 
             //case LevelModifiers.Jetpack:
             //    Debug.Log("Starting Jetpack Modifier");

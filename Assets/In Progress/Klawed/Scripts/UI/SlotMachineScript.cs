@@ -7,15 +7,14 @@ public enum LevelModifiers {
     None = 0,
     Earthquake = 1,
     Lightning = 2,
-    Robber = 3,
-    LandMines = 4,
-    OilSpill = 5,
-    CloseProximity = 6
+    LandMines = 3,
+    OilSpill = 4,
+    CloseProximity = 5
 }
 
 public class SlotMachineScript : MonoBehaviour
 {
-    private const int MaxVisibleModifierIndex = 6;
+    private const int MaxVisibleModifierIndex = 5;
     private const int MaxRandomExclusive = MaxVisibleModifierIndex + 1;
 
     [Header("Debug")]
@@ -133,9 +132,9 @@ public class SlotMachineScript : MonoBehaviour
         else
         {
             int num1, num2, num3;
-            num1 = Random.Range(1, 7);
-            do { num2 = Random.Range(1, 7); } while (num2 == num1);
-            do { num3 = Random.Range(1, 7); } while (num3 == num1 || num3 == num2);
+            num1 = Random.Range(1, 6);
+            do { num2 = Random.Range(1, 6); } while (num2 == num1);
+            do { num3 = Random.Range(1, 6); } while (num3 == num1 || num3 == num2);
 
             mod1 = (LevelModifiers)num1;
             mod2 = (LevelModifiers)num2;

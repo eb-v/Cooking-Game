@@ -7,6 +7,12 @@ public class RobberModifier : MonoBehaviour {
 
     private int robbersSpawned = 0;
 
+    private void Awake() {
+        if (customerManager == null) {
+            customerManager = Object.FindFirstObjectByType<CustomerManager>();
+        }
+    }
+
     public void SpawnRobber() {
         if (robbersSpawned >= maxRobbers) {
             Debug.Log("Maximum robbers spawned already.");
@@ -22,6 +28,7 @@ public class RobberModifier : MonoBehaviour {
         robbersSpawned++;
         Debug.Log("Robber spawned!");
     }
+
     private void OnDrawGizmosSelected() {
         if (customerManager == null) return;
 
