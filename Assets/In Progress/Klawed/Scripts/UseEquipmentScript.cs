@@ -12,7 +12,7 @@ public class UseEquipmentScript : MonoBehaviour
 
     void Start()
     {
-        GenericEvent<OnEquipmentUseInput>.GetEvent(gameObject.name).AddListener(ChangeUseStatus);
+        GenericEvent<OnEquipmentUseInput>.GetEvent(gameObject.GetInstanceID().ToString()).AddListener(ChangeUseStatus);
     }
 
     // Update is called once per frame

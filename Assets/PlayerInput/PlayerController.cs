@@ -22,7 +22,7 @@ public class PlayerController : MonoBehaviour
         if (context.performed || context.canceled)
         {
             Vector2 moveInput = context.ReadValue<Vector2>();
-            GenericEvent<OnMoveInput>.GetEvent(gameObject.name).Invoke(moveInput);
+            GenericEvent<OnMoveInput>.GetEvent(gameObject.GetInstanceID().ToString()).Invoke(moveInput);
         }
     }
 
@@ -37,7 +37,7 @@ public class PlayerController : MonoBehaviour
     public void OnBoost(InputAction.CallbackContext context) {
         if (context.started) // pressed down
         {
-            GenericEvent<OnBoostInput>.GetEvent(gameObject.name).Invoke();
+            GenericEvent<OnBoostInput>.GetEvent(gameObject.GetInstanceID().ToString()).Invoke();
         }
     }
 
@@ -45,11 +45,11 @@ public class PlayerController : MonoBehaviour
     {
         if (context.performed) // pressed down
         {
-            GenericEvent<OnPerformStationAction>.GetEvent(gameObject.name).Invoke();
+            GenericEvent<OnPerformStationAction>.GetEvent(gameObject.GetInstanceID().ToString()).Invoke();
         }
         else if (context.canceled) // button released
         {
-            GenericEvent<OnPerformStationActionCancel>.GetEvent(gameObject.name).Invoke();
+            GenericEvent<OnPerformStationActionCancel>.GetEvent(gameObject.GetInstanceID().ToString()).Invoke();
         }
     }
 
@@ -58,11 +58,11 @@ public class PlayerController : MonoBehaviour
     {
         if (context.started) // pressed down
         {
-            GenericEvent<OnLeanForwardInput>.GetEvent(gameObject.name).Invoke();
+            GenericEvent<OnLeanForwardInput>.GetEvent(gameObject.GetInstanceID().ToString()).Invoke();
         }
         else if (context.canceled) // button released
         {
-            GenericEvent<OnLeanForwardCancel>.GetEvent(gameObject.name).Invoke();
+            GenericEvent<OnLeanForwardCancel>.GetEvent(gameObject.GetInstanceID().ToString()).Invoke();
         }
     }
 
@@ -70,11 +70,11 @@ public class PlayerController : MonoBehaviour
     {
         if (context.started) // pressed down
         {
-            GenericEvent<OnLeanBackwardInput>.GetEvent(gameObject.name).Invoke();
+            GenericEvent<OnLeanBackwardInput>.GetEvent(gameObject.GetInstanceID().ToString()).Invoke();
         }
         else if (context.canceled) // button released
         {
-            GenericEvent<OnLeanBackwardCancel>.GetEvent(gameObject.name).Invoke();
+            GenericEvent<OnLeanBackwardCancel>.GetEvent(gameObject.GetInstanceID().ToString()).Invoke();
         }
     }
     public bool IsInteractPressed { get; private set; } = false;
@@ -83,7 +83,7 @@ public class PlayerController : MonoBehaviour
     {
         if (context.started)
         {
-            GenericEvent<OnInteractInput>.GetEvent(gameObject.name).Invoke();
+            GenericEvent<OnInteractInput>.GetEvent(gameObject.GetInstanceID().ToString()).Invoke();
         }
     }
 
@@ -91,7 +91,7 @@ public class PlayerController : MonoBehaviour
     {
         if (context.started)
         {
-            GenericEvent<OnAlternateInteractInput>.GetEvent(gameObject.name).Invoke();
+            GenericEvent<OnAlternateInteractInput>.GetEvent(gameObject.GetInstanceID().ToString()).Invoke();
         }
     }
 
@@ -99,7 +99,7 @@ public class PlayerController : MonoBehaviour
     {
         if (context.started)
         {
-            GenericEvent<OnGrabInputEvent>.GetEvent(gameObject.name).Invoke();
+            GenericEvent<OnGrabInputEvent>.GetEvent(gameObject.GetInstanceID().ToString()).Invoke();
         }
     }
 
@@ -107,11 +107,11 @@ public class PlayerController : MonoBehaviour
     {
         if (context.performed)
         {
-            GenericEvent<OnThrowStatusChanged>.GetEvent(gameObject.name).Invoke(true);
+            GenericEvent<OnThrowStatusChanged>.GetEvent(gameObject.GetInstanceID().ToString()).Invoke(true);
         }
         else if (context.canceled)
         {
-            GenericEvent<OnThrowStatusChanged>.GetEvent(gameObject.name).Invoke(false);
+            GenericEvent<OnThrowStatusChanged>.GetEvent(gameObject.GetInstanceID().ToString()).Invoke(false);
         }
 
     }
@@ -122,7 +122,7 @@ public class PlayerController : MonoBehaviour
         {
             Vector2 dpadInput = context.ReadValue<Vector2>();
             if (dpadInput == Vector2.zero) return;
-            GenericEvent<DPadInteractEvent>.GetEvent(gameObject.name).Invoke(dpadInput);
+            GenericEvent<DPadInteractEvent>.GetEvent(gameObject.GetInstanceID().ToString()).Invoke(dpadInput);
         }
     }
 
@@ -148,7 +148,7 @@ public class PlayerController : MonoBehaviour
     {
         if (context.started)
         {
-            GenericEvent<OnPlaceIngredientInput>.GetEvent(gameObject.name).Invoke();
+            GenericEvent<OnPlaceIngredientInput>.GetEvent(gameObject.GetInstanceID().ToString()).Invoke();
         }
     }
 
@@ -156,7 +156,7 @@ public class PlayerController : MonoBehaviour
     {
         if (context.started)
         {
-            GenericEvent<OnExplodeInput>.GetEvent(gameObject.name).Invoke();
+            GenericEvent<OnExplodeInput>.GetEvent(gameObject.GetInstanceID().ToString()).Invoke();
         }
     }
 
@@ -204,11 +204,11 @@ public class PlayerController : MonoBehaviour
     {
         if (context.performed)
         {
-            GenericEvent<OnEquipmentUseInput>.GetEvent(gameObject.name).Invoke(true);
+            GenericEvent<OnEquipmentUseInput>.GetEvent(gameObject.GetInstanceID().ToString()).Invoke(true);
         }
         else if (context.canceled)
         {
-            GenericEvent<OnEquipmentUseInput>.GetEvent(gameObject.name).Invoke(false);
+            GenericEvent<OnEquipmentUseInput>.GetEvent(gameObject.GetInstanceID().ToString()).Invoke(false);
         }
     }
 

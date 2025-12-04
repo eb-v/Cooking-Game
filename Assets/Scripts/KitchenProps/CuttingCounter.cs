@@ -178,7 +178,6 @@ public class CuttingCounter : MonoBehaviour
             _cuttingVFX.Play();
         }
 
-        RagdollController rc = _currentPlayer.GetComponent<RagdollController>();
 
         if (cuttingProgress >= _cutsNeeded)
         {
@@ -238,8 +237,8 @@ public class CuttingCounter : MonoBehaviour
         rootTransform.rotation = _playerSnapPoint.rotation;
         playerScript.SwitchToAnimationMode(_cuttingAnimator);
 
-        GenericEvent<OnPerformStationAction>.GetEvent(player.name).AddListener(CutIngredient);
-        GenericEvent<OnAlternateInteractInput>.GetEvent(player.name).AddListener(ExitCutState);
+        GenericEvent<OnPerformStationAction>.GetEvent(player.GetInstanceID().ToString()).AddListener(CutIngredient);
+        GenericEvent<OnAlternateInteractInput>.GetEvent(player.GetInstanceID().ToString()).AddListener(ExitCutState);
         // heldKnife = Instantiate(
         //    KnifePrefab,
         //    knifeSpawnPoint.position,
@@ -264,8 +263,8 @@ public class CuttingCounter : MonoBehaviour
         _currentPlayer.ChangeState(_currentPlayer._defaultStateInstance);
 
 
-        GenericEvent<OnPerformStationAction>.GetEvent(_currentPlayer.name).RemoveListener(CutIngredient);
-        GenericEvent<OnAlternateInteractInput>.GetEvent(_currentPlayer.name).RemoveListener(ExitCutState);
+        GenericEvent<OnPerformStationAction>.GetEvent(_currentPlayer.GetInstanceID().ToString()).RemoveListener(CutIngredient);
+        GenericEvent<OnAlternateInteractInput>.GetEvent(_currentPlayer.GetInstanceID().ToString()).RemoveListener(ExitCutState);
         UnAssignPlayer();
         ChangeState(CuttingState.Idle);
 

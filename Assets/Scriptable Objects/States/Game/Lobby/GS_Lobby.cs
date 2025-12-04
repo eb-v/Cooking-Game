@@ -22,6 +22,7 @@ public class GS_Lobby : GameState
         
         // Enable stats tracking when leaving lobby
         PlayerStatsManager.EnableTracking();
+        SavePlayerCosmetics();
     }
 
     public override void FixedUpdateLogic()
@@ -47,5 +48,14 @@ public class GS_Lobby : GameState
     public override void UpdateLogic()
     {
         base.UpdateLogic();
+    }
+
+    private void SavePlayerCosmetics()
+    {
+        foreach (GameObject playerObj in PlayerManager.Instance.Players)
+        {
+            Player player = playerObj.GetComponent<Player>();
+            player.SavePlayerCustomization();
+        }
     }
 }

@@ -10,14 +10,14 @@ public class PlayerInteraction : MonoBehaviour
 
     private void OnEnable()
     {
-        GenericEvent<OnInteractInput>.GetEvent(gameObject.name).AddListener(HandleInteract);
-        GenericEvent<OnAlternateInteractInput>.GetEvent(gameObject.name).AddListener(HandleAltInteract);
+        GenericEvent<OnInteractInput>.GetEvent(gameObject.GetInstanceID().ToString()).AddListener(HandleInteract);
+        GenericEvent<OnAlternateInteractInput>.GetEvent(gameObject.GetInstanceID().ToString()).AddListener(HandleAltInteract);
     }
 
     private void OnDisable()
     {
-        GenericEvent<OnInteractInput>.GetEvent(gameObject.name).RemoveListener(HandleInteract);
-        GenericEvent<OnAlternateInteractInput>.GetEvent(gameObject.name).RemoveListener(HandleAltInteract);
+        GenericEvent<OnInteractInput>.GetEvent(gameObject.GetInstanceID().ToString()).RemoveListener(HandleInteract);
+        GenericEvent<OnAlternateInteractInput>.GetEvent(gameObject.GetInstanceID().ToString()).RemoveListener(HandleAltInteract);
     }
 
     private void HandleInteract()

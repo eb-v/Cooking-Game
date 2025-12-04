@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.InputSystem;
+using UnityEngine.UI;
 [RequireComponent(typeof(RagdollController))]
 [RequireComponent(typeof(Animator))]
 public class Player : MonoBehaviour
@@ -31,6 +32,16 @@ public class Player : MonoBehaviour
     [ReadOnly]
     public BasePlayerState _currentState;
 
+    [Header("Cosmetics")]
+    [SerializeField] private Image face;
+    [ReadOnly]
+    [SerializeField] private Material[] materials;
+    [ReadOnly]
+    [SerializeField] private Sprite faceSprite;
+
+    public Material[] Materials => materials;
+    public Sprite FaceSprite => faceSprite;
+
     private void Awake()
     {
         _stateMachine = new PlayerStateMachine();
@@ -41,6 +52,7 @@ public class Player : MonoBehaviour
         _unconsciousStateInstance = Instantiate(_unconsciousStateBase);
         _animationStateInstance = Instantiate(_animationState);
         _deathStateInstance = Instantiate(_deathStateBase);
+
     }
 
     private void Start()
@@ -111,5 +123,26 @@ public class Player : MonoBehaviour
         animator.runtimeAnimatorController = animController;
         ChangeState(_animationStateInstance);
     }
+
+    public void Die()
+    {
+        ChangeState(_deathStateInstance);
+    }
+
+    public void SavePlayerCustomization()
+    {
+        materials = GetComponentInChildren<SkinnedMeshRenderer>().materials;
+        faceSprite = face.sprite;
+    }
+
+    public void LoadPlayerCustomization(Material[] materials, Sprite faceSprite)
+    {
+        foreach (SkinnedMeshRenderer renderer in GetComponentsInChildren<SkinnedMeshRenderer>())
+        {
+            renderer.materials = materials;
+        }
+        face.sprite = faceSprite;
+    }
+
 
 }

@@ -200,24 +200,24 @@ public class RagdollController : MonoBehaviour
 
     private void OnEnable()
     {
-        GenericEvent<OnMoveInput>.GetEvent(gameObject.name).AddListener(SetDirection);
+        GenericEvent<OnMoveInput>.GetEvent(gameObject.GetInstanceID().ToString()).AddListener(SetDirection);
 
-        GenericEvent<OnLeanForwardInput>.GetEvent(gameObject.name).AddListener(() => { _leanForward = true; });
-        GenericEvent<OnLeanForwardCancel>.GetEvent(gameObject.name).AddListener(() => { _leanForward = false; });
-        GenericEvent<OnLeanBackwardInput>.GetEvent(gameObject.name).AddListener(() => { _leanBackward = true; });
-        GenericEvent<OnLeanBackwardCancel>.GetEvent(gameObject.name).AddListener(() => { _leanBackward = false; });
+        GenericEvent<OnLeanForwardInput>.GetEvent(gameObject.GetInstanceID().ToString()).AddListener(() => { _leanForward = true; });
+        GenericEvent<OnLeanForwardCancel>.GetEvent(gameObject.GetInstanceID().ToString()).AddListener(() => { _leanForward = false; });
+        GenericEvent<OnLeanBackwardInput>.GetEvent(gameObject.GetInstanceID().ToString()).AddListener(() => { _leanBackward = true; });
+        GenericEvent<OnLeanBackwardCancel>.GetEvent(gameObject.GetInstanceID().ToString()).AddListener(() => { _leanBackward = false; });
 
-        GenericEvent<OnGrabStatusChanged>.GetEvent(gameObject.name).AddListener(ChangeGrabStatus);
+        GenericEvent<OnGrabStatusChanged>.GetEvent(gameObject.GetInstanceID().ToString()).AddListener(ChangeGrabStatus);
     }
 
     private void OnDisable()
     {
-        GenericEvent<OnMoveInput>.GetEvent(gameObject.name).RemoveListener(SetDirection);
-        GenericEvent<OnLeanForwardInput>.GetEvent(gameObject.name).RemoveListener(() => { _leanForward = true; });
-        GenericEvent<OnLeanForwardCancel>.GetEvent(gameObject.name).RemoveListener(() => { _leanForward = false; });
-        GenericEvent<OnLeanBackwardInput>.GetEvent(gameObject.name).RemoveListener(() => { _leanBackward = true; });
-        GenericEvent<OnLeanBackwardCancel>.GetEvent(gameObject.name).RemoveListener(() => { _leanBackward = false; });
-        GenericEvent<OnGrabStatusChanged>.GetEvent(gameObject.name).RemoveListener(ChangeGrabStatus);
+        GenericEvent<OnMoveInput>.GetEvent(gameObject.GetInstanceID().ToString()).RemoveListener(SetDirection);
+        GenericEvent<OnLeanForwardInput>.GetEvent(gameObject.GetInstanceID().ToString()).RemoveListener(() => { _leanForward = true; });
+        GenericEvent<OnLeanForwardCancel>.GetEvent(gameObject.GetInstanceID().ToString()).RemoveListener(() => { _leanForward = false; });
+        GenericEvent<OnLeanBackwardInput>.GetEvent(gameObject.GetInstanceID().ToString()).RemoveListener(() => { _leanBackward = true; });
+        GenericEvent<OnLeanBackwardCancel>.GetEvent(gameObject.GetInstanceID().ToString()).RemoveListener(() => { _leanBackward = false; });
+        GenericEvent<OnGrabStatusChanged>.GetEvent(gameObject.GetInstanceID().ToString()).RemoveListener(ChangeGrabStatus);
     }
 
 
@@ -461,19 +461,19 @@ public class RagdollController : MonoBehaviour
         if (ResetPose)
         {
             Debug.Log("Resetting Pose");
-            if (RagdollDict[BODY].isConnected)
+            if (RagdollDict.ContainsKey(BODY))
                 TargetRotations[BODY] = originalTargetRotations[BODY];
 
-            if (RagdollDict[UPPER_RIGHT_ARM].isConnected)
+            if (RagdollDict.ContainsKey(UPPER_RIGHT_ARM))
                 TargetRotations[UPPER_RIGHT_ARM] = originalTargetRotations[UPPER_RIGHT_ARM];
 
-            if (RagdollDict[LOWER_RIGHT_ARM].isConnected)
+            if (RagdollDict.ContainsKey(LOWER_RIGHT_ARM))
                 TargetRotations[LOWER_RIGHT_ARM] = originalTargetRotations[LOWER_RIGHT_ARM];
 
-            if (RagdollDict[UPPER_LEFT_ARM].isConnected)
+            if (RagdollDict.ContainsKey(UPPER_LEFT_ARM))
                 TargetRotations[UPPER_LEFT_ARM] = originalTargetRotations[UPPER_LEFT_ARM];
 
-            if (RagdollDict[LOWER_LEFT_ARM].isConnected)
+            if (RagdollDict.ContainsKey(LOWER_LEFT_ARM))
                 TargetRotations[LOWER_LEFT_ARM] = originalTargetRotations[LOWER_LEFT_ARM];
 
             //MouseYAxisArms = 0;
@@ -1149,6 +1149,12 @@ public class RagdollController : MonoBehaviour
     // this function "disconnects" a joint by unlocking its xyz motions and setting connected body to null
     public void DisconnectJoint(string jointName)
     {
+        if (!RagdollDict.ContainsKey(jointName))
+        {
+            Debug.LogWarning($"Joint {jointName} not found in RagdollDict.");
+            return;
+        }
+
         ConfigurableJoint joint = RagdollDict[jointName].Joint;
         GameObject jointObj = joint.gameObject;
 

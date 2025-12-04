@@ -119,7 +119,7 @@ public class SodaDispenser : MonoBehaviour
         SodaMenu.SetActive(true);
 
         Soda_menu menu = SodaMenu.GetComponent<Soda_menu>();
-        menu.ListenToPlayer(player.name);
+        menu.ListenToPlayer(player.GetInstanceID().ToString());
         GenericEvent<InteractEvent>.GetEvent("SodaDispenser").Invoke(player);
 }
 

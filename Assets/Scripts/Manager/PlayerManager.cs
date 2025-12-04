@@ -57,9 +57,10 @@ public class PlayerManager : MonoBehaviour
         players.Add(player);
         if (player.TryGetComponent<PlayerInput>(out PlayerInput playerInput))
         {
-            // Save the mapping using the player's unique index
-            playerIndexDeviceMappings[playerInput.playerIndex] = playerInput.devices[0];
-            // Assuming the first device is the primary one
+            if (playerInput.devices.Count > 0)
+                playerIndexDeviceMappings[playerInput.playerIndex] = playerInput.devices[0];
+            else
+                Debug.LogWarning($"Player {playerInput.playerIndex} has no devices assigned on join.");
         }
     }
 
@@ -123,6 +124,11 @@ public class PlayerManager : MonoBehaviour
 
     public void RespawnPlayer(GameObject playerToDestroy)
     {
+        if (playerToDestroy == null)
+        {
+            Debug.LogError("Cannot respawn a null player.");
+            return;
+        }
         PlayerInput destroyedInput = playerToDestroy.GetComponent<PlayerInput>();
         if (destroyedInput == null)
         {
@@ -140,14 +146,14 @@ public class PlayerManager : MonoBehaviour
             return;
         }
 
-        Image faceImage = playerToDestroy.transform.Find("DEF_Pelvis/DEF_Body/DEF_Head/FaceCanvas/FaceImage").GetComponent<Image>();
-        List<Material> savedMaterials = new List<Material>();
-        SkinnedMeshRenderer meshRenderer = playerToDestroy.GetComponentInChildren<SkinnedMeshRenderer>();
-        savedMaterials.AddRange(meshRenderer.materials);
+        Player playerComponentToDestroy = playerToDestroy.GetComponent<Player>();
+        playerComponentToDestroy.SavePlayerCustomization();
 
-
+        Material[] savedMaterials = playerComponentToDestroy.Materials;
+        Sprite savedFace = playerComponentToDestroy.FaceSprite;
 
         players.Remove(playerToDestroy);
+        GenericEvent<PlayerDestroy>.GetEvent(playerToDestroy.GetInstanceID().ToString()).Invoke();
         Destroy(playerToDestroy);
 
         PlayerInput newPlayerInput = PlayerInput.Instantiate(
@@ -161,14 +167,6 @@ public class PlayerManager : MonoBehaviour
 
         players.Add(newPlayerInput.gameObject);
 
-        GameObject newPlayerObj = newPlayerInput.gameObject;
-        List<SkinnedMeshRenderer> newMeshRenders = new List<SkinnedMeshRenderer>(newPlayerObj.GetComponentsInChildren<SkinnedMeshRenderer>());
-        foreach (var renderer in newMeshRenders)
-        {
-            renderer.materials = savedMaterials.ToArray();
-        }
-        Image newFaceImage = newPlayerObj.transform.Find("DEF_Pelvis/DEF_Body/DEF_Head/FaceCanvas/FaceImage").GetComponent<Image>();
-        newFaceImage.sprite = faceImage.sprite;
 
 
         List<Transform> spawnPoints = GetPlayerSpawnPoints();
@@ -176,6 +174,11 @@ public class PlayerManager : MonoBehaviour
         {
             newPlayerInput.gameObject.transform.position = spawnPoints[playerIndex].position;
         }
+
+
+        GameObject newPlayerObj = newPlayerInput.gameObject;
+        Player newPlayer = newPlayerObj.GetComponent<Player>();
+        newPlayer.LoadPlayerCustomization(savedMaterials, savedFace);
 
         Debug.Log($"Player {playerIndex} successfully respawned and rebound to device: {deviceToReassign.displayName}");
     }

@@ -14,6 +14,7 @@ public class LimbHP : MonoBehaviour
     private void Awake()
     {
         ragdollJoint = GetComponent<RagdollJoint>();
+        GenericEvent<PlayerDestroy>.GetEvent(transform.root.gameObject.GetInstanceID().ToString()).AddListener(DestoryLimb);
     }
 
     private void Start()
@@ -52,5 +53,10 @@ public class LimbHP : MonoBehaviour
     {
         GenericEvent<OnJointRemoved>.GetEvent(gameObject.transform.root.GetInstanceID().ToString()).Invoke();
         rc.DisconnectJoint(ragdollJoint.GetJointName());
+    }
+    
+    public void DestoryLimb()
+    {
+        Destroy(gameObject);
     }
 }
