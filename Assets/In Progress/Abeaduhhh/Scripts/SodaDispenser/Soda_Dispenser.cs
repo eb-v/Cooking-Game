@@ -36,6 +36,9 @@ public class SodaDispenser : MonoBehaviour
     private bool isShaking = false;
     private float shakeTime = 0f;
 
+
+    private bool drinkReady = false;
+
     private void Awake()
     {
         if (shakeTarget == null)
@@ -145,8 +148,7 @@ public class SodaDispenser : MonoBehaviour
         GenericEvent<SodaSelectedEvent>.GetEvent("SodaDispenser").AddListener(OnDrinkSelected);
     }
 
-    private GameObject RemoveCupFromDispenser(GameObject player)
-    {
+    private GameObject RemoveCupFromDispenser(GameObject player) {
         if (_currentCup == null) return null;
 
         GameObject cupObj = _currentCup.gameObject;
@@ -162,14 +164,22 @@ public class SodaDispenser : MonoBehaviour
         isDispensing = false;
         StopShake();
 
-        if (progressBar != null) progressBar.fillAmount = 0f;
-        if (SodaMenu != null) SodaMenu.SetActive(false);
-        if (CompleteText != null) CompleteText.SetActive(false);
+        if (progressBar != null)
+            progressBar.fillAmount = 0f;
+
+        if (SodaMenu != null)
+            SodaMenu.SetActive(false);
+
+        if (CompleteText != null)
+            CompleteText.SetActive(false);
+
+        drinkReady = false;
 
         GenericEvent<SodaSelectedEvent>.GetEvent("SodaDispenser").RemoveListener(OnDrinkSelected);
 
         return cupObj;
     }
+
 
     public void Dispense(string drinkName, Color color)
     {
@@ -202,6 +212,15 @@ public class SodaDispenser : MonoBehaviour
 
                 GameObject newCup = Instantiate(finalPrefab, oldPos, oldRot);
 
+                Rigidbody rb = newCup.GetComponent<Rigidbody>();
+                if (rb != null) rb.isKinematic = true;
+
+                newCup.transform.SetParent(_cupSnapPoint);
+                newCup.transform.position = _cupSnapPoint.position;
+                newCup.transform.rotation = _cupSnapPoint.rotation;
+
+                _currentCup = newCup.GetComponent<Cup>();
+
                 Debug.Log("Spawned final drink cup: " + newCup.name);
             }
         }
@@ -211,7 +230,11 @@ public class SodaDispenser : MonoBehaviour
         StopShake();
 
         if (progressBar != null) progressBar.fillAmount = 1f;
-        if (CompleteText != null) CompleteText.SetActive(true);
+
+        if (CompleteText != null)
+            CompleteText.SetActive(true);
+
+        drinkReady = true;
 
         Debug.Log("Finished dispensing " + drinkToDispense);
     }
