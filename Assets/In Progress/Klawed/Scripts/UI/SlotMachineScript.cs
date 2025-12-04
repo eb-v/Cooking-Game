@@ -21,6 +21,12 @@ public class SlotMachineScript : MonoBehaviour
     [SerializeField] private bool debugForceModifiers = false;
     [SerializeField] private LevelModifiers[] debugModifiers = new LevelModifiers[3];
 
+    [Header("Slot SFX Names (AudioManager)")]
+    [SerializeField] private string leverSfxName  = "Slot_Lever";
+    [SerializeField] private string spinSfxName   = "Slot_Spin";
+    [SerializeField] private string thumpSfxName  = "Slot_Thump";
+    [SerializeField] private string winSfxName    = "Slot_Win";
+
     [Header("Cameras")]
     [SerializeField] private Camera slotMachineCamera;     // camera in this slot machine scene (NOT MainCamera)
     [SerializeField] private float resultHoldTime = 1.5f;  // how long to show final result
@@ -115,6 +121,8 @@ public class SlotMachineScript : MonoBehaviour
             mod3 = (LevelModifiers)num3;
         }
 
+        // Start audio sequence
+        StartCoroutine(SlotAudioRoutine());
         _activeModifiers.Clear();
         _activeModifiers.Add(mod1);
         _activeModifiers.Add(mod2);
@@ -142,6 +150,9 @@ public class SlotMachineScript : MonoBehaviour
         };
 
         StartSpinningAll();
+
+        // Start audio sequence
+        StartCoroutine(SlotAudioRoutine());
     }
     private void SetupCamerasForSlot()
     {
@@ -288,6 +299,27 @@ public class SlotMachineScript : MonoBehaviour
 
         StopSlotSpin(slot);
     }
+
+    private IEnumerator SlotAudioRoutine()
+{
+    // Lever pull + start spin sound
+    AudioManager.Instance?.PlaySFX(leverSfxName);
+    AudioManager.Instance?.PlaySFX(spinSfxName);
+
+    // Thumps when each reel stops
+    yield return new WaitForSeconds(spinDuration1);
+    AudioManager.Instance?.PlaySFX(thumpSfxName);
+
+    yield return new WaitForSeconds(spinDuration2 - spinDuration1);
+    AudioManager.Instance?.PlaySFX(thumpSfxName);
+
+    yield return new WaitForSeconds(spinDuration3 - spinDuration2);
+    AudioManager.Instance?.PlaySFX(thumpSfxName);
+
+    // Small delay, then win sound
+    yield return new WaitForSeconds(0.2f);
+    AudioManager.Instance?.PlaySFX(winSfxName);
+}
     private void RandomizeSlotGoals()
     {
         List<int> randomInts = GenerateRandomInts();

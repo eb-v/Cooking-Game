@@ -12,6 +12,7 @@ public class Player : MonoBehaviour
     [SerializeField] private BasePlayerState _lockedStateBase;
     [SerializeField] private BasePlayerState _unconsciousStateBase;
     [SerializeField] private BasePlayerState _animationState;
+    [SerializeField] private BasePlayerState _deathStateBase;
     #endregion
 
 
@@ -23,6 +24,7 @@ public class Player : MonoBehaviour
     [HideInInspector] public BasePlayerState _lockedStateInstance { get; private set; }
     [HideInInspector] public BasePlayerState _unconsciousStateInstance { get; private set; }
     [HideInInspector] public BasePlayerState _animationStateInstance { get; private set; }
+    [HideInInspector] public BasePlayerState _deathStateInstance { get; private set; }
     #endregion
 
     [Header("Debug")]
@@ -38,6 +40,7 @@ public class Player : MonoBehaviour
         _lockedStateInstance = Instantiate(_lockedStateBase);
         _unconsciousStateInstance = Instantiate(_unconsciousStateBase);
         _animationStateInstance = Instantiate(_animationState);
+        _deathStateInstance = Instantiate(_deathStateBase);
     }
 
     private void Start()
@@ -52,6 +55,7 @@ public class Player : MonoBehaviour
         _lockedStateInstance.Initialize(gameObject, _stateMachine);
         _unconsciousStateInstance.Initialize(gameObject, _stateMachine);
         _animationStateInstance.Initialize(gameObject, _stateMachine);
+        _deathStateInstance.Initialize(gameObject, _stateMachine);
 
         _stateMachine.Initialize(_defaultStateInstance);
         _currentState = _defaultStateInstance;

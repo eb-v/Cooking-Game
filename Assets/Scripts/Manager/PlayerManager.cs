@@ -5,6 +5,9 @@ using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using Unity.VisualScripting;
+using System.Runtime.CompilerServices;
+using UnityEngine.InputSystem.Users;
+
 
 public class PlayerManager : MonoBehaviour
 {
@@ -29,11 +32,13 @@ public class PlayerManager : MonoBehaviour
     [ReadOnly] [SerializeField] private int m_playerCount = 0;
     public int PlayerCount => players.Count;
 
-    
-    private Dictionary<PlayerInput, InputDevice> playerInputDeviceMappings = new Dictionary<PlayerInput, InputDevice>();
+    [SerializeField] private GameObject playerPrefab;
+
+
+    private Dictionary<int, InputDevice> playerIndexDeviceMappings = new Dictionary<int, InputDevice>();
     private HashSet<int> registeredPlayerNumbers = new HashSet<int>();
     
-    public Dictionary<PlayerInput, InputDevice> PlayerInputDeviceMappings => playerInputDeviceMappings;
+    public Dictionary<int, InputDevice> PlayerIndexDeviceMappings => playerIndexDeviceMappings;
 
 
     private void OnEnable()
@@ -50,6 +55,12 @@ public class PlayerManager : MonoBehaviour
     private void OnPlayerJoined(GameObject player)
     {
         players.Add(player);
+        if (player.TryGetComponent<PlayerInput>(out PlayerInput playerInput))
+        {
+            // Save the mapping using the player's unique index
+            playerIndexDeviceMappings[playerInput.playerIndex] = playerInput.devices[0];
+            // Assuming the first device is the primary one
+        }
     }
 
     public void MovePlayersToSpawnPositions()
@@ -94,7 +105,7 @@ public class PlayerManager : MonoBehaviour
         }
         
         players.Clear();
-        playerInputDeviceMappings.Clear();
+        playerIndexDeviceMappings.Clear();
         registeredPlayerNumbers.Clear();
         m_playerCount = 0;
     }
@@ -109,4 +120,48 @@ public class PlayerManager : MonoBehaviour
             }
         }
     }
+
+    public void RespawnPlayer(GameObject playerToDestroy)
+    {
+        PlayerInput destroyedInput = playerToDestroy.GetComponent<PlayerInput>();
+        if (destroyedInput == null)
+        {
+            Debug.LogError("Player object does not have a PlayerInput component.");
+            return;
+        }
+
+        int playerIndex = destroyedInput.playerIndex;
+        string controlScheme = destroyedInput.currentControlScheme;
+        string actionMapName = destroyedInput.currentActionMap.name;
+
+        if (!playerIndexDeviceMappings.TryGetValue(playerIndex, out InputDevice deviceToReassign))
+        {
+            Debug.LogError($"Cannot find saved device for Player Index {playerIndex}. Aborting respawn.");
+            return;
+        }
+
+        players.Remove(playerToDestroy);
+        Destroy(playerToDestroy);
+
+        PlayerInput newPlayerInput = PlayerInput.Instantiate(
+        playerPrefab,
+        controlScheme: controlScheme,
+        playerIndex: playerIndex,
+        pairWithDevices: new InputDevice[] { deviceToReassign } // <-- Use the array overload
+        );
+
+        InputUser.PerformPairingWithDevice(deviceToReassign, newPlayerInput.user);
+
+        players.Add(newPlayerInput.gameObject);
+
+        List<Transform> spawnPoints = GetPlayerSpawnPoints();
+        if (spawnPoints.Count > playerIndex)
+        {
+            newPlayerInput.gameObject.transform.position = spawnPoints[playerIndex].position;
+        }
+
+        Debug.Log($"Player {playerIndex} successfully respawned and rebound to device: {deviceToReassign.displayName}");
+    }
+
+
 }

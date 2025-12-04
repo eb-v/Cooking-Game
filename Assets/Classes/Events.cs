@@ -224,4 +224,6 @@ public class OnDialogueStarted : UnityEvent { }
 
 public class OnPauseGameInput : UnityEvent { }
 
+public class PlayerRespawn : UnityEvent { }
+
 

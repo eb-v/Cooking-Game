@@ -7,6 +7,8 @@ public class Respawn : MonoBehaviour
         GenericEvent<OnRespawnInput>.GetEvent("RespawnManager").AddListener(OnRespawn);
     }
 
+
+
     private void OnRespawn(GameObject player)
     {
         Debug.Log("Respawning player: " + player.name);
