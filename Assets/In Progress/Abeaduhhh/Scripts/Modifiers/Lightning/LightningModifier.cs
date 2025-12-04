@@ -22,9 +22,9 @@ public class LightningModifier : MonoBehaviour {
         }
     }
 
-    private void Start() {
-        TriggerLightning();
-    }
+    //private void Start() {
+    //    TriggerLightning();
+    //}
 
     public void TriggerLightning() {
         StartCoroutine(LightningRoutine());
