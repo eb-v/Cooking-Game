@@ -130,7 +130,7 @@ GameObject:
   - component: {fileID: 21408059}
   - component: {fileID: 21408060}
   m_Layer: 0
-  m_Name: T_1
+  m_Name: MovementTutorialObjects
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -165,6 +165,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f17555576f29a84aad7bd6c9514f800, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MovmentTutorialGoal
+  text: {fileID: 0}
   goalDescription: Move to the markers to advance
   movementMarkers:
   - {fileID: 651978946}
@@ -320,7 +321,7 @@ GameObject:
   m_Component:
   - component: {fileID: 80415572}
   m_Layer: 0
-  m_Name: T_3
+  m_Name: InteractionTutorialObjects
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1021,7 +1022,7 @@ PrefabInstance:
       objectReference: {fileID: 11400000, guid: 18c7204c29f3f1b438733a4df5f92da2, type: 2}
     - target: {fileID: 8287982841159680818, guid: e6fc8be3d19e06745b058dd5a918fb87, type: 3}
       propertyPath: tutorialStateBases.Array.size
-      value: 2
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8287982841159680818, guid: e6fc8be3d19e06745b058dd5a918fb87, type: 3}
       propertyPath: 'tutorialStateBases.Array.data[0]'
@@ -1031,6 +1032,14 @@ PrefabInstance:
       propertyPath: 'tutorialStateBases.Array.data[1]'
       value: 
       objectReference: {fileID: 11400000, guid: e66668cfe8f1e1541b2b3245b7b064e9, type: 2}
+    - target: {fileID: 8287982841159680818, guid: e6fc8be3d19e06745b058dd5a918fb87, type: 3}
+      propertyPath: 'tutorialStateBases.Array.data[2]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 3b4c0540be5ec0a4a97ea2bd9f32e975, type: 2}
+    - target: {fileID: 8287982841159680818, guid: e6fc8be3d19e06745b058dd5a918fb87, type: 3}
+      propertyPath: 'tutorialStateBases.Array.data[3]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 18c7204c29f3f1b438733a4df5f92da2, type: 2}
     - target: {fileID: 8287982841159680818, guid: e6fc8be3d19e06745b058dd5a918fb87, type: 3}
       propertyPath: tutorialUIContainers.keys.Array.size
       value: 0
@@ -1045,7 +1054,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8287982841159680818, guid: e6fc8be3d19e06745b058dd5a918fb87, type: 3}
       propertyPath: tutorialObjectContainers.keys.Array.size
-      value: 1
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8287982841159680818, guid: e6fc8be3d19e06745b058dd5a918fb87, type: 3}
       propertyPath: 'tutorialUIContainers.values.Array.data[0]'
@@ -1053,16 +1062,40 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8287982841159680818, guid: e6fc8be3d19e06745b058dd5a918fb87, type: 3}
       propertyPath: tutorialObjectContainers.values.Array.size
-      value: 1
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8287982841159680818, guid: e6fc8be3d19e06745b058dd5a918fb87, type: 3}
       propertyPath: 'tutorialObjectContainers.keys.Array.data[0]'
       value: Movement
       objectReference: {fileID: 0}
     - target: {fileID: 8287982841159680818, guid: e6fc8be3d19e06745b058dd5a918fb87, type: 3}
+      propertyPath: 'tutorialObjectContainers.keys.Array.data[1]'
+      value: Grabbing
+      objectReference: {fileID: 0}
+    - target: {fileID: 8287982841159680818, guid: e6fc8be3d19e06745b058dd5a918fb87, type: 3}
+      propertyPath: 'tutorialObjectContainers.keys.Array.data[2]'
+      value: Interaction
+      objectReference: {fileID: 0}
+    - target: {fileID: 8287982841159680818, guid: e6fc8be3d19e06745b058dd5a918fb87, type: 3}
+      propertyPath: 'tutorialObjectContainers.keys.Array.data[3]'
+      value: ReconnectingJoints
+      objectReference: {fileID: 0}
+    - target: {fileID: 8287982841159680818, guid: e6fc8be3d19e06745b058dd5a918fb87, type: 3}
       propertyPath: 'tutorialObjectContainers.values.Array.data[0]'
       value: 
       objectReference: {fileID: 21408058}
+    - target: {fileID: 8287982841159680818, guid: e6fc8be3d19e06745b058dd5a918fb87, type: 3}
+      propertyPath: 'tutorialObjectContainers.values.Array.data[1]'
+      value: 
+      objectReference: {fileID: 1126405332}
+    - target: {fileID: 8287982841159680818, guid: e6fc8be3d19e06745b058dd5a918fb87, type: 3}
+      propertyPath: 'tutorialObjectContainers.values.Array.data[2]'
+      value: 
+      objectReference: {fileID: 80415571}
+    - target: {fileID: 8287982841159680818, guid: e6fc8be3d19e06745b058dd5a918fb87, type: 3}
+      propertyPath: 'tutorialObjectContainers.values.Array.data[3]'
+      value: 
+      objectReference: {fileID: 1737312625}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2978,6 +3011,7 @@ Transform:
   - {fileID: 21408059}
   - {fileID: 1126405333}
   - {fileID: 80415572}
+  - {fileID: 1737312626}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &916170223
@@ -3475,7 +3509,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1126405333}
   m_Layer: 0
-  m_Name: T_2
+  m_Name: GrabbingTutorialObjects
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5961,6 +5995,37 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5643601533647582177, guid: 4f7847c7fae870c479ff541812f1ae5b, type: 3}
   m_PrefabInstance: {fileID: 1732537666}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1737312625
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1737312626}
+  m_Layer: 0
+  m_Name: ReconnectingJointsObjects
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &1737312626
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1737312625}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 901084810}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1738583876
 GameObject:
   m_ObjectHideFlags: 0

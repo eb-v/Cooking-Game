@@ -5,8 +5,6 @@ using System.Collections.Generic;
 
 public class TutorialManager : MonoBehaviour
 {
-    [Header("Tutorial Settings")]
-    [SerializeField] private float delayBeforeEnablingNextTutorialZone = 15.0f;
 
     [Header("Tutorial Steps/states")]
     
@@ -59,11 +57,6 @@ public class TutorialManager : MonoBehaviour
         GenericEvent<AllTutorialGoalsCompleted>.GetEvent("TutorialManager").AddListener(OnAllTutorialGoalsCompleted);
         GenericEvent<AllPlayersStandingInProceedZone>.GetEvent("TutorialManager").AddListener(GoToNextTutorialStage);
     }
-
-    private void Update()
-    {
-        stateMachine.GetCurrentState().UpdateLogic();
-    }
     private void OnAllTutorialGoalsCompleted()
     {
         proceedZone.SetActive(true);
@@ -71,6 +64,7 @@ public class TutorialManager : MonoBehaviour
 
     private void GoToNextTutorialStage()
     {
+        proceedZone.SetActive(false);
         currentTutorialStateIndex++;
         if (currentTutorialStateIndex < tutorialStateInstances.Count)
         {

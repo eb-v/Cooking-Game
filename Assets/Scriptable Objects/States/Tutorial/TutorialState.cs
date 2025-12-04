@@ -1,13 +1,13 @@
 using NUnit.Framework;
 using UnityEngine;
 using System.Collections.Generic;
+using TMPro;
 
 [CreateAssetMenu(fileName = "TS_", menuName = "Scriptable Objects/States/Tutorial")]
 public class TutorialState : BaseStateSO<TutorialState>
 {
     [SerializeField] private List<string> tutorialText;
     public string objectContainerName;
-    public string uiContainerName;
     public string stateName;
 
     private void EnableObjects() 
@@ -28,42 +28,20 @@ public class TutorialState : BaseStateSO<TutorialState>
     public override void Enter()
     {
         base.Enter();
-        EnableObjects();
         DialogueManager.Instance.StartDialogue(tutorialText);
-        GenericEvent<OnDialogueFinished>.GetEvent("DialogueManager").AddListener(UpdateIndex);
+        GenericEvent<OnDialogueFinished>.GetEvent("DialogueManager").AddListener(OnDialogueFinished);
+    }
+
+    private void OnDialogueFinished()
+    {
+        EnableObjects();
     }
 
     public override void Exit()
     {
         base.Exit();
         DisableObjects();
-        GenericEvent<OnDialogueFinished>.GetEvent("DialogueManager").RemoveListener(UpdateIndex);
     }
-
-    public override void UpdateLogic()
-    {
-        base.UpdateLogic();
-        UpdateDialogue();
-    }
-
-
-    private void UpdateDialogue()
-    {
-        //if (!DialogueManager.Instance.IsDisplaying && currentDialogueIndex < tutorialText.Count)
-        //{
-        //    DialogueManager.Instance.StartDialogue(tutorialText[currentDialogueIndex]);
-        //    Debug.Log("Displaying dialogue: " + tutorialText[currentDialogueIndex]);
-        //}
-    }
-    
-
-    private void UpdateIndex()
-    {
-        //currentDialogueIndex++;
-    }
-
-    
-
 
 
 
