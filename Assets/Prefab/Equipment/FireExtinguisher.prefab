@@ -448,7 +448,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5723749386816978444}
-  - component: {fileID: 6592992983340961323}
+  - component: {fileID: 7667102332868521457}
   - component: {fileID: 6000131695374130694}
   m_Layer: 0
   m_Name: Physics
@@ -475,8 +475,8 @@ Transform:
   - {fileID: 3539553526511087865}
   m_Father: {fileID: 4167148832282478695}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!136 &6592992983340961323
-CapsuleCollider:
+--- !u!65 &7667102332868521457
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -493,11 +493,9 @@ CapsuleCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5150101
-  m_Height: 3.389526
-  m_Direction: 1
-  m_Center: {x: -0.01939249, y: 0.64159083, z: 0.009255171}
+  serializedVersion: 3
+  m_Size: {x: 1, y: 3.3961978, z: 1}
+  m_Center: {x: 0, y: 0.9407282, z: 0}
 --- !u!54 &6000131695374130694
 Rigidbody:
   m_ObjectHideFlags: 0

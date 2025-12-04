@@ -226,4 +226,6 @@ public class OnPauseGameInput : UnityEvent { }
 
 public class PlayerRespawn : UnityEvent { }
 
+public class PlayerDestroy : UnityEvent { } 
+
 

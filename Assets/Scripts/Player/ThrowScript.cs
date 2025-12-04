@@ -19,9 +19,14 @@ public class ThrowScript : MonoBehaviour
         playerData = LoadPlayerData.GetPlayerData();
     }
 
-    private void Start()
+    private void OnEnable()
     {
-        GenericEvent<OnThrowStatusChanged>.GetEvent(gameObject.name).AddListener(ChangeIsChargingStatus);
+        GenericEvent<OnThrowStatusChanged>.GetEvent(gameObject.GetInstanceID().ToString()).AddListener(ChangeIsChargingStatus);
+    }
+
+    private void OnDisable()
+    {
+        GenericEvent<OnThrowStatusChanged>.GetEvent(gameObject.GetInstanceID().ToString()).RemoveListener(ChangeIsChargingStatus);
     }
 
     private void Update()

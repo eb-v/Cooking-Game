@@ -21,7 +21,7 @@ public class RocketBoost : MonoBehaviour
 
     private void Start()
     {
-        GenericEvent<OnBoostInput>.GetEvent(gameObject.name).AddListener(PerformRocketBoost);
+        GenericEvent<OnBoostInput>.GetEvent(gameObject.GetInstanceID().ToString()).AddListener(PerformRocketBoost);
     }
 
     public void PerformRocketBoost()

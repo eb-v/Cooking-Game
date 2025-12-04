@@ -26,6 +26,5 @@ public class DeathScript : MonoBehaviour
         {
             limbHp.DisconnectLimb();
         }
-        player.ChangeState(player._deathStateInstance);
     }
 }

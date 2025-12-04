@@ -20,13 +20,13 @@ public class GrabScript : MonoBehaviour
     }
     private void OnEnable()
     {
-        GenericEvent<OnGrabInputEvent>.GetEvent(gameObject.name).AddListener(OnGrabInput);
+        GenericEvent<OnGrabInputEvent>.GetEvent(gameObject.GetInstanceID().ToString()).AddListener(OnGrabInput);
         GenericEvent<OnJointRemoved>.GetEvent(gameObject.transform.root.GetInstanceID().ToString()).AddListener(MakePlayerReleaseObject);
     }
 
     private void OnDisable()
     {
-        GenericEvent<OnGrabInputEvent>.GetEvent(gameObject.name).RemoveListener(OnGrabInput);
+        GenericEvent<OnGrabInputEvent>.GetEvent(gameObject.GetInstanceID().ToString()).RemoveListener(OnGrabInput);
         GenericEvent<OnJointRemoved>.GetEvent(gameObject.transform.root.GetInstanceID().ToString()).RemoveListener(MakePlayerReleaseObject);
     }
 
