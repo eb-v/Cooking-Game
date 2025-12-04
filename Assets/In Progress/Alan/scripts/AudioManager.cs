@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Audio;
 
 [Serializable]
 public class SfxSound
@@ -15,6 +16,9 @@ public class SfxSound
 public class AudioManager : MonoBehaviour
 {
     public static AudioManager Instance { get; private set; }
+
+    [Header("Mixer Routing")]
+    [SerializeField] private AudioMixerGroup sfxMixerGroup;
 
     [Header("SFX Settings")]
     [SerializeField] private AudioSource sfxSource;
@@ -32,7 +36,6 @@ public class AudioManager : MonoBehaviour
         }
 
         Instance = this;
-        // DontDestroyOnLoad(gameObject);
 
         if (sfxSource == null)
             sfxSource = GetComponent<AudioSource>();
@@ -46,6 +49,11 @@ public class AudioManager : MonoBehaviour
             sfxSource.playOnAwake = false;
             sfxSource.loop = false;
             sfxSource.spatialBlend = 0f; // 2D
+
+            if (sfxMixerGroup != null)
+            {
+                sfxSource.outputAudioMixerGroup = sfxMixerGroup;
+            }
         }
 
         BuildLookup();
@@ -76,18 +84,21 @@ public class AudioManager : MonoBehaviour
 
     public void PlaySFX(string name)
     {
+        if (sfxSource == null)
+        {
+            Debug.LogWarning("[AudioManager] No sfxSource assigned.");
+            return;
+        }
+
         if (!sfxLookup.TryGetValue(name, out var sound) || sound.clip == null)
         {
             Debug.LogWarning("[AudioManager] No SFX found with name '" + name + "'.");
             return;
         }
 
-        Vector3 pos = Vector3.zero;
-        if (Camera.main != null)
-            pos = Camera.main.transform.position;
+        sfxSource.pitch = sound.pitch;
+        sfxSource.PlayOneShot(sound.clip, sound.volume);
 
-        AudioSource.PlayClipAtPoint(sound.clip, pos, sound.volume);
-
-        Debug.Log("[AudioManager] PlayClipAtPoint SFX '" + name + "'.");
+        // Debug.Log("[AudioManager] Play SFX '" + name + "'.");
     }
 }
