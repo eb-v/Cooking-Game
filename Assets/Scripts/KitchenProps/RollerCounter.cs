@@ -19,6 +19,8 @@ public class RollerCounter : MonoBehaviour
     public bool counterHasDough => _currentObject != null;
     public bool notInUse => _currentPlayer == null;
 
+    private Player_RollingPin _currentRollingPin;
+
     private enum RollCounterState
     {
         Idle,
@@ -122,10 +124,18 @@ public class RollerCounter : MonoBehaviour
         _currentPlayer.SwitchToAnimationMode(_rollingAnimator);       
         ChangeState(RollCounterState.InUse);
 
+        _currentRollingPin = _currentPlayer.GetComponentInChildren<Player_RollingPin>();
+
+        if (_currentRollingPin != null)
+            _currentRollingPin.ShowRollingPin();
+
     }
 
     private void ExitInUseState()
     {
+        if (_currentRollingPin!= null)
+            _currentRollingPin.HideRollingPin();
+
         _currentPlayer.ChangeState(_currentPlayer._defaultStateInstance);
 
         GenericEvent<OnAlternateInteractInput>.GetEvent(_currentPlayer.name).RemoveListener(ExitInUseState);
