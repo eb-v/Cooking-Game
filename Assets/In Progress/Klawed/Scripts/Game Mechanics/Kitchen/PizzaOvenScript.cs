@@ -26,8 +26,6 @@ public class PizzaOvenScript : MonoBehaviour
     [ReadOnly]
     [SerializeField] private GameObject currentPizzaInside = null;
     [ReadOnly]
-    [SerializeField] private GameObject currentFinishedPizzaInside = null;
-    [ReadOnly]
     [SerializeField] private bool isCooking = false;
 
     [Header("Possible Pizzas")]

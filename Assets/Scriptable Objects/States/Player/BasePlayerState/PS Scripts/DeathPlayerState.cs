@@ -8,7 +8,6 @@ public class DeathPlayerState : BasePlayerState
 {
     [SerializeField] private float despawnDelay = 8f;
     private float timer = 0f;
-    private DeathScript deathScript;
     List<LimbHP> limbHps = new List<LimbHP>();
 
     public override void Enter()
@@ -26,7 +25,6 @@ public class DeathPlayerState : BasePlayerState
     public override void Initialize(GameObject gameObject, PlayerStateMachine stateMachine)
     {
         base.Initialize(gameObject, stateMachine);
-        deathScript = gameObject.GetComponent<DeathScript>();
         foreach (LimbHP limbHp in gameObject.GetComponentsInChildren<LimbHP>())
         {
             limbHps.Add(limbHp);

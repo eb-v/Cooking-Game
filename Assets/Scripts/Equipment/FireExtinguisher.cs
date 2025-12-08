@@ -18,9 +18,7 @@ public class FireExtinguisher : Equipment
     [SerializeField] private float offsetRange = 0.1f;
     [SerializeField] private float minForce = 800f;
     [SerializeField] private float maxForce = 1200f;
-    [SerializeField] private float extinguishRate = -0.3f;
 
-    private int layerMask = 1 << 6; // Layer 6 for Flamable objects
 
     public override void UseEquipment()
     {

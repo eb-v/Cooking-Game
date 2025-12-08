@@ -29,7 +29,6 @@ public class PlayerManager : MonoBehaviour
     private List<GameObject> players = new List<GameObject>();
     public List<GameObject> Players => players;
 
-    [ReadOnly] [SerializeField] private int m_playerCount = 0;
     public int PlayerCount => players.Count;
 
     [SerializeField] private GameObject playerPrefab;
@@ -108,7 +107,6 @@ public class PlayerManager : MonoBehaviour
         players.Clear();
         playerIndexDeviceMappings.Clear();
         registeredPlayerNumbers.Clear();
-        m_playerCount = 0;
     }
 
     public void SwitchPlayerActionMaps(string actionMapName)

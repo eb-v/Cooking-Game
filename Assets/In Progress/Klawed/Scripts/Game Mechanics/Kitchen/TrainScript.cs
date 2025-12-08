@@ -10,9 +10,6 @@ public class TrainScript : MonoBehaviour
     private Vector3 initialPosition;
     private Quaternion initialRotation;
     
-    [Header("Camera Shake")]
-    [SerializeField] private float shakeDuration  = 0.35f;
-    [SerializeField] private float shakeMagnitude = 0.9f;
     
     public void Initialize(TrainData trainData)
     {

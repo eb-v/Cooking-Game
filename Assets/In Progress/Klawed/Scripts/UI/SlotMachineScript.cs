@@ -53,7 +53,6 @@ public class SlotMachineScript : MonoBehaviour
     [SerializeField] private float spinDuration2 = 3f;
     [SerializeField] private float spinDuration3 = 4f;
 
-    [SerializeField] private bool usePresetGoals = false;
 
     [Header("Lever Animation")]
     [SerializeField] private Animator leverAnimator;

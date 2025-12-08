@@ -31,8 +31,6 @@ public class Stove : MonoBehaviour
     [field: SerializeField] public float cookingDuration { get; private set; } = 5f;
     [field: SerializeField] public float burnDuration { get; private set; } = 8f;
 
-    [Header("Removal Settings")]
-    [SerializeField] private float forceMultiplier = 10f;
 
     public StoveState _idleStateInstance { get; private set; }
     public StoveState _cookingStateInstance { get; private set; }
