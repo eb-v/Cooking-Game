@@ -28,8 +28,6 @@ public class FireSystem : ScriptableObject
     [Header("Settings")]
     [SerializeField] private FireSettings settings;
 
-    // (Burnable) -> (Fire GameObject)
-    private HashSet<Burnable> spreadThisFrame = new HashSet<Burnable>();
 
     public static bool SystemEnabled
     {
@@ -69,24 +67,6 @@ public class FireSystem : ScriptableObject
             return;
     }
 
-    public void SpreadFire(Vector3 position, float spreadRadius)
-    {
-        if (!SystemEnabled)
-            return;
-
-        List<Burnable> burnablesInRange = GetFlammableObjectsInRange(position, spreadRadius);
-
-        foreach (Burnable burnable in burnablesInRange)
-        {
-            if (!spreadThisFrame.Contains(burnable))
-            {
-                //burnable.ModifyBurnProgress(Instance.settings.burnMultiplier * Time.deltaTime);
-            }
-        }
-    }
-
-   
-
     private static List<Burnable> GetFlammableObjectsInRange(Vector3 pos, float spreadRadius)
     {
         Collider[] hits = Physics.OverlapSphere(pos, spreadRadius);
@@ -103,11 +83,6 @@ public class FireSystem : ScriptableObject
         }
 
         return flammable;
-    }
-
-    public void EndFrame()
-    {
-        spreadThisFrame.Clear();
     }
 
 }

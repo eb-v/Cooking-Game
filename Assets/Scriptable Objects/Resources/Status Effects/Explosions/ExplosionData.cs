@@ -39,8 +39,6 @@ public class ExplosionData : ScriptableObject
             Instantiate(explosionEffectPrefab, objTransform.position, Quaternion.identity);
         }
 
-        // play explosion SFX
-        AudioManager.Instance?.PlaySFX("Explosion");
 
         ResetExplosionChance();
     }

@@ -49,7 +49,6 @@ public class ExplosionSystem : ScriptableObject
         if (roll <= explosionData.explosionChance)
         {
             //explosion sfx
-            AudioManager.Instance?.PlaySFX("Explosion");
 
             // Trigger explosion
             // Note: The actual explosion logic should be handled elsewhere, this is just a chance check

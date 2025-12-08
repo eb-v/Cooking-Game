@@ -5,7 +5,6 @@ public class TrainManager : MonoBehaviour
 {
     private TrainScript trainScript;
     [SerializeField] private TrainData trainData;
-    [SerializeField] private TrafficLightController trafficLight; // Reference to traffic light
 
     private bool hasLaunched = false;
     private bool isResetting = false;

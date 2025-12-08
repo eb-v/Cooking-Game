@@ -3,7 +3,6 @@ using System.Collections;
 
 public class TrainScript : MonoBehaviour
 {
-    [SerializeField] private TrafficLightController trafficLight; // Reference to traffic light
     private TrainData trainData;
     private Rigidbody trainRb;
     public bool hasLaunched = false;
@@ -127,10 +126,6 @@ public class TrainScript : MonoBehaviour
     private IEnumerator TrainMovementCoroutine()
     {
         // Turn light red when train is about to move
-        if (trafficLight != null)
-        {
-            trafficLight.SetTrainActive(true);
-        }
         
         yield return new WaitForSeconds(trainData.delayBeforeLaunch);
         LaunchTrain();
@@ -139,9 +134,6 @@ public class TrainScript : MonoBehaviour
     public void LaunchTrain()
     {
         hasLaunched = true;
-
-        if (CameraShake.Instance != null)
-            CameraShake.Instance.Shake();
 
         //AudioManager.Instance?.PlaySFX("Train");
     }
@@ -174,9 +166,5 @@ public class TrainScript : MonoBehaviour
         isResetting = false;
         
         // Turn light back to green
-        if (trafficLight != null)
-        {
-            trafficLight.SetTrainActive(false);
-        }
     }
 }

@@ -8,7 +8,6 @@ public class MechanicalFailureStatus : MonoBehaviour
     [SerializeField] private RagdollController ragdollController;
     [SerializeField] private GameObject[] damageableLimbs;
     private Env_Interaction env_interaction;
-    private PlayerStats playerStats;
 
     private GameObject root;
     private float value;
@@ -25,7 +24,6 @@ public class MechanicalFailureStatus : MonoBehaviour
         GenericEvent<OnExplodeInput>.GetEvent(gameObject.name).AddListener(Explode);
 
         env_interaction = GetComponent<Env_Interaction>();
-        playerStats = GetComponent<PlayerStats>();
         root = gameObject.transform.Find("DEF_Pelvis").gameObject;
     }
 
@@ -105,11 +103,6 @@ public class MechanicalFailureStatus : MonoBehaviour
         // invoke event to apply damage to limbs
         ApplyDamageToLimbs();
         
-        // Track explosion in player stats
-        if (playerStats != null)
-        {
-            playerStats.IncrementExplosionsReceived();
-        }
     }
 
     private void ResetInstability()

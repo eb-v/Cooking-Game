@@ -32,7 +32,6 @@ public class SlotMachineManager : MonoBehaviour
     public IEnumerator InitiateSlotMachineAnimation(GameObject slotMachine, float startDelay)
     {
         // Freeze everything EXCEPT the slot machine
-        FreezeManager.FreezeGameplay();
 
         SlotMachineScript slotMachineScript = slotMachine.GetComponentInChildren<SlotMachineScript>();
         SpringAPI slotMachineSpring = slotMachine.GetComponentInChildren<SpringAPI>();
@@ -69,7 +68,6 @@ public class SlotMachineManager : MonoBehaviour
 
         yield return new WaitForSecondsRealtime(1.5f);
 
-        FreezeManager.UnfreezeGameplay();
 
         GenericEvent<OnSlotMachineAnimationCompleteEvent>
             .GetEvent("OnSlotMachineAnimationCompleteEvent")

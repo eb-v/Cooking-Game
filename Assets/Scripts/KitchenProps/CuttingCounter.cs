@@ -27,7 +27,6 @@ public class CuttingCounter : MonoBehaviour
 
 
     //[SerializeField] public Transform knifeSpawnPoint;
-    private Player_Knife _currentKnife;
     //private GameObject heldKnife;
 
 
@@ -166,7 +165,6 @@ public class CuttingCounter : MonoBehaviour
     {
         cuttingProgress++;
 
-        AudioManager.Instance?.PlaySFX("Cut");
 
         if (_cuttingVFX != null)
         {
@@ -243,10 +241,6 @@ public class CuttingCounter : MonoBehaviour
         //    knifeSpawnPoint
         //);
 
-        _currentKnife = _currentPlayer.GetComponentInChildren<Player_Knife>();
-
-        if (_currentKnife != null)
-            _currentKnife.ShowKnife();
         ChangeState(CuttingState.Cutting);
     }
 
@@ -257,9 +251,6 @@ public class CuttingCounter : MonoBehaviour
 
     private void ExitCutState()
     {
-
-        if (_currentKnife != null)
-            _currentKnife.HideKnife();
         if (_currentPlayer == null)
             return;
 

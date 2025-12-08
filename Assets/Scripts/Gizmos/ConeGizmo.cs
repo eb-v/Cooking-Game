@@ -7,7 +7,6 @@ public class ConeGizmo : MonoBehaviour
     [SerializeField] private float distance = 10f;
     [SerializeField] private float angle = 30f;
     [SerializeField] private Vector3 posOffset;
-    [SerializeField] private float directionAngle = 0f;
     [SerializeField] private Vector3 forwardDirection;
 
     [SerializeField] private LayerMask layerMask;

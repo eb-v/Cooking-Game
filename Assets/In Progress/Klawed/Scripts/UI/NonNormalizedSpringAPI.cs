@@ -22,8 +22,6 @@ public class NonNormalizedSpringAPI : MonoBehaviour
 
     private void Update()
     {
-        if (FreezeManager.PauseMenuOverride)
-            return;
             
         float springPosValue = CalculateSpringValue();
         OnUpdateSpring(springPosValue);

@@ -21,11 +21,6 @@ public class SlotMachineScript : MonoBehaviour
     [SerializeField] private bool debugForceModifiers = false;
     [SerializeField] private LevelModifiers[] debugModifiers = new LevelModifiers[3];
 
-    [Header("Slot SFX Names (AudioManager)")]
-    [SerializeField] private string leverSfxName  = "Slot_Lever";
-    [SerializeField] private string spinSfxName   = "Slot_Spin";
-    [SerializeField] private string thumpSfxName  = "Slot_Thump";
-    [SerializeField] private string winSfxName    = "Slot_Win";
 
     [Header("Cameras")]
     [SerializeField] private Camera slotMachineCamera;     // camera in this slot machine scene (NOT MainCamera)
@@ -88,8 +83,6 @@ public class SlotMachineScript : MonoBehaviour
 
     private void Update()
     {
-        if (FreezeManager.PauseMenuOverride)
-            return;
 
         if (slotSequenceActive)
         {
@@ -116,8 +109,6 @@ public class SlotMachineScript : MonoBehaviour
     {
         slotSequenceActive = true;
 
-        // freeze gameplay
-        FreezeManager.FreezeGameplay();
 
         // cache cameras and switch to slot camera
         SetupCamerasForSlot();
@@ -152,8 +143,6 @@ public class SlotMachineScript : MonoBehaviour
             mod3 = (LevelModifiers)num3;
         }
 
-        // Start audio sequence (only once)
-        StartCoroutine(SlotAudioRoutine());
 
         _activeModifiers.Clear();
         _activeModifiers.Add(mod1);
@@ -314,8 +303,6 @@ public class SlotMachineScript : MonoBehaviour
             loadingCanvas.gameObject.SetActive(false);
         }
 
-        // unfreeze gameplay
-        FreezeManager.UnfreezeGameplay();
 
         // fire modifiers event
         GenericEvent<OnModifiersChoosenEvent>
@@ -436,33 +423,14 @@ public class SlotMachineScript : MonoBehaviour
         float elapsedTime = 0f;
         while (elapsedTime < slot.spinDuration)
         {
-            if (!FreezeManager.PauseMenuOverride)
-            {
-                elapsedTime += Time.unscaledDeltaTime;
-            }
+            
             yield return null;
         }
 
         StopSlotSpin(slot);
     }
 
-    private IEnumerator SlotAudioRoutine()
-    {
-        AudioManager.Instance?.PlaySFX(leverSfxName);
-        AudioManager.Instance?.PlaySFX(spinSfxName);
-
-        yield return new WaitForSecondsRealtime(spinDuration1);
-        AudioManager.Instance?.PlaySFX(thumpSfxName);
-
-        yield return new WaitForSecondsRealtime(spinDuration2 - spinDuration1);
-        AudioManager.Instance?.PlaySFX(thumpSfxName);
-
-        yield return new WaitForSecondsRealtime(spinDuration3 - spinDuration2);
-        AudioManager.Instance?.PlaySFX(thumpSfxName);
-
-        yield return new WaitForSecondsRealtime(0.2f);
-        AudioManager.Instance?.PlaySFX(winSfxName);
-    }
+    
 
     private List<int> GenerateRandomInts()
     {

@@ -26,7 +26,6 @@ public class PlayerInteraction : MonoBehaviour
         Interactable interactable = InteractRayCastDetection();
         if (interactable != null)
         {
-            AudioManager.Instance?.PlaySFX("Item Interact");
             interactable.Interact(gameObject);
         }
     }
@@ -37,7 +36,6 @@ public class PlayerInteraction : MonoBehaviour
         Interactable interactable = InteractRayCastDetection();
         if (interactable != null)
         {
-            AudioManager.Instance?.PlaySFX("Item Interact");
             interactable.AltInteract(gameObject);
         }
 

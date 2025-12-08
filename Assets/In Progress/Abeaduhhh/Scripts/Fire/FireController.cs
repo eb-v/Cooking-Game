@@ -30,7 +30,6 @@ public class FireController : MonoBehaviour
         if (burning)
         {
             burning = false;
-            FireAudioManager.Instance?.UnregisterFire();
         }
     }
 
@@ -51,7 +50,6 @@ public class FireController : MonoBehaviour
             }
         }
 
-        FireAudioManager.Instance?.RegisterFire();
 
         if (burnDuration > 0)
             StartCoroutine(AutoStopFire());
@@ -74,7 +72,6 @@ public class FireController : MonoBehaviour
                 ps.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
         }
 
-        FireAudioManager.Instance?.UnregisterFire();
     }
 
     public void StopFireImmediate()
@@ -89,7 +86,6 @@ public class FireController : MonoBehaviour
                 ps.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
         }
 
-        FireAudioManager.Instance?.UnregisterFire();
     }
 
     public void ResetFire()

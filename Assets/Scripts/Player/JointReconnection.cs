@@ -127,20 +127,6 @@ public class JointReconnection : MonoBehaviour
             rc.ResetStepValues();
         }
 
-        // Track the joint reconnection stat for the player who helped
-        PlayerStats helperStats = playerWhoReconnected.GetComponent<PlayerStats>();
-        if (helperStats != null)
-        {
-            helperStats.IncrementJointsReconnected();
-            Debug.Log($"[JOINT RECONNECTED] Player {helperStats.playerNumber} reconnected a joint! Total reconnections: {helperStats.jointsReconnected}");
-        }
-        else
-        {
-            Debug.LogWarning($"[JOINT RECONNECTION] {playerWhoReconnected.name} has no PlayerStats component!");
-        }
-
-        // play joint reconnect SFX
-        AudioManager.Instance?.PlaySFX("Joint reconnect");
 
         jointRb.isKinematic = false;
         // update the dictionaries in RagdollController

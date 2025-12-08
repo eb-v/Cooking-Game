@@ -25,11 +25,6 @@ public class ScoreManager : MonoBehaviour
         int scoreAdded = Mathf.RoundToInt(amount * multiplier);
         currentScore += scoreAdded;
 
-        // Track via PlayerStatsManager using player number
-
-        PlayerStatsManager.AddPoints(player, scoreAdded);
-
-
         GenericEvent<UpdateScoreDisplayEvent>.GetEvent("UpdateScoreDisplayEvent").Invoke(currentScore);
     }
 

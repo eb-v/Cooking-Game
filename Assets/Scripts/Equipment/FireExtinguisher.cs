@@ -28,7 +28,7 @@ public class FireExtinguisher : Equipment
         SprayFoam();
         SprayFoam();
 
-        ExtinguishFlamablesInRange();
+        //ExtinguishFlamablesInRange();
     }
 
     private void SprayFoam()
@@ -72,26 +72,26 @@ public class FireExtinguisher : Equipment
         scale = new Vector3(randomScale, randomScale, randomScale);
     }
 
-    private void ExtinguishFlamablesInRange()
-    {
+    //private void ExtinguishFlamablesInRange()
+    //{
 
-        List<GameObject> objectsInSphere = cone.GetObjectsInSphere();
-        foreach (GameObject obj in objectsInSphere)
-        {
-            Burnable flammable = obj.GetComponentInChildren<Burnable>();
-            if (flammable != null && flammable.IsOnFire)
-            {
-                flammable.Extinguish();
-                Debug.Log($"[FIRE EXTINGUISHER] Extinguished fire on object: {obj.name}");
-            }
-        }
+    //    List<GameObject> objectsInSphere = cone.GetObjectsInSphere();
+    //    foreach (GameObject obj in objectsInSphere)
+    //    {
+    //        Burnable flammable = obj.GetComponentInChildren<Burnable>();
+    //        if (flammable != null && flammable.IsOnFire)
+    //        {
+    //            flammable.Extinguish();
+    //            Debug.Log($"[FIRE EXTINGUISHER] Extinguished fire on object: {obj.name}");
+    //        }
+    //    }
 
-    }
+    //}
 
 
-    private void ExtinguishFire(IFlammable flammable)
-    {
-        flammable.Extinguish();
-    }
+    //private void ExtinguishFire(IFlammable flammable)
+    //{
+    //    flammable.Extinguish();
+    //}
 
 }

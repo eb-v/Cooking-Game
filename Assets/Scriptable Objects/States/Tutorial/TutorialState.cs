@@ -14,13 +14,11 @@ public class TutorialState : BaseStateSO<TutorialState>
 
     private void EnableObjects()
     {
-        TutorialManager.Instance.tutorialObjectContainers[stateName].SetActive(true);
         Debug.Log("Enabled objects for tutorial state: " + stateName);
     }
 
     private void DisableObjects()
     {
-        TutorialManager.Instance.tutorialObjectContainers[stateName].SetActive(false);
     }
 
     public override void Initialize(GameObject gameObject, StateMachine<TutorialState> stateMachine)
@@ -52,6 +50,5 @@ public class TutorialState : BaseStateSO<TutorialState>
     private IEnumerator EnableProceedZone()
     {
         yield return new WaitForSeconds(tutorialDuration);
-        TutorialManager.Instance.EnableProceedZone();
     }
 }

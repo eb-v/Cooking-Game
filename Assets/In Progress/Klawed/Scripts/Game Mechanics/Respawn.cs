@@ -14,7 +14,6 @@ public class Respawn : MonoBehaviour
         Debug.Log("Respawning player: " + player.name);
 
         // Play respawn sound via AudioManager
-        AudioManager.Instance?.PlaySFX("Respawn");
 
         // Optionally reset velocity if there's a Rigidbody component
         RagdollController rc = player.GetComponent<RagdollController>();

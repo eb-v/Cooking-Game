@@ -24,7 +24,6 @@ public class FireManager : MonoBehaviour
     [SerializeField] private GameObject firePrefab;
     [SerializeField] private FireSettings settings;
 
-    [SerializeField] private bool systemEnabled = true;
 
     private List<Burnable> objectsBurning = new List<Burnable>();
 

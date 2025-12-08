@@ -9,8 +9,6 @@ public class SlotMachinePanelScript : MonoBehaviour
     [SerializeField] private float resumeTimeDelay = 9f;
     [SerializeField] private SlotMachineScript slotMachineScript;
 
-    // reference to existing audio script
-    [SerializeField] private SlotMachineAudio slotMachineAudio;
 
     private void Awake()
     {
@@ -36,11 +34,7 @@ public class SlotMachinePanelScript : MonoBehaviour
         yield return new WaitForSecondsRealtime(slotMachineSpinDelay);
 
         // audio + spin happen together
-        if (slotMachineAudio != null)
-        {
-            slotMachineAudio.OnSpinButtonClicked();
-        }
-        else if (slotMachineScript != null)
+        if (slotMachineScript != null)
         {
             slotMachineScript.StartSpinningAll();
         }
